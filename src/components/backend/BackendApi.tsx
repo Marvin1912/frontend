@@ -2,7 +2,7 @@ import {format, subMonths} from "date-fns";
 import {DailyCost} from "@/components/model/costs/DailyCosts";
 import {SpecialCost, SpecialCostEntry} from "@/components/model/costs/SpecialCost";
 
-const host: String = 'https://192.168.178.27:8443/wildfly_domain_web_app/api-web'
+const host: String = 'http://192.168.178.27:8081/wildfly_domain_web_app/api-web'
 
 function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
