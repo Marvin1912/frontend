@@ -1,0 +1,10 @@
+<div>
+  <h1>Backend Interaction</h1>
+
+  <input type="file" (change)="onFileSelected($event)" />
+  <button (click)="uploadFile()">Upload File</button>
+
+  <hr />
+
+  <app-table [data]="responseData"></app-table>
+</div>
