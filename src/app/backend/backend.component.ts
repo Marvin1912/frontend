@@ -42,6 +42,18 @@ export class BackendComponent {
     });
   }
 
+  backupCostData(): void {
+    this.http.post(`${this.BASE_URL}/export/costs`, '').subscribe({
+      next: () => {
+        console.log('Cost export and upload successful!');
+      },
+      error: (error) => {
+        console.error('Export error:', error);
+        alert('Error exporting and uploading costs.');
+      }
+    })
+  }
+
   onFileSelected(event: any): void {
     this.uploadedFile = event.target.files[0];
   }
