@@ -1,11 +1,14 @@
-<div>
-  <h1>Backend Interaction</h1>
+<div class="backend">
 
-  <input type="file" (change)="onFileSelected($event)" />
-  <button (click)="uploadFile()">Upload File</button>
-  <button (click)="backupCostData()">Backup Cost Data</button>
+  <div class="backend-interaction">
+    <h1>Backend Interaction</h1>
+    <input type="file" (change)="onFileSelected($event)"/>
+    <button (click)="uploadFile()">Upload File</button>
+    <button (click)="backupCostData()">Backup Cost Data</button>
+    <hr/>
+  </div>
 
-  <hr />
-
-  <app-table [data]="responseData"></app-table>
+  <div class="backend-table">
+    <app-table [data]="responseData"></app-table>
+  </div>
 </div>
