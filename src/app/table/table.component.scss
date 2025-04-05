@@ -1,14 +1,38 @@
-@use '@angular/material' as mat;
+.mat-mdc-row:hover,
+.mat-mdc-header-row:hover {
+  background-color: bisque;
+}
+
+.mat-column-action {
+  text-align: center;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.table-header {
+  padding: 10px;
+}
 
 .table-filter {
   display: flex;
   flex-direction: row;
+  padding: 10px;
+}
+
+.table-filter-form {
+  padding-right: 5px;
 }
 
 .table-ops {
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding: 10px;
 }
 
 .table-ops-card {
@@ -18,4 +42,13 @@
   justify-content: center;
   height: 40px;
   width: 120px;
+}
+
+.table-table {
+  overflow: auto;
+  padding: 10px;
+}
+
+.table-table-content {
+  background-color: aqua;
 }

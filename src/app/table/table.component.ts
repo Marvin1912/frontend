@@ -30,7 +30,8 @@ export class TableComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'] && this.data && this.data.length > 0) {
-      this.displayedColumns = Object.keys(this.data[0]);
+      this.displayedColumns = Object.keys(this.data[0])
+        .filter(value => ['creditDebitCode', 'debitIban', 'debitName', 'firstOfMonth'].indexOf(value) === -1);
       this.filteredData = [...this.data];
 
       this.filterableColumns.forEach(column => {
