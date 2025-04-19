@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {TableComponent} from '../table/table.component';
+import {BookingEntry} from '../model/BookingEntry';
 
 @Component({
   selector: 'app-backend',
@@ -16,7 +17,7 @@ export class BackendComponent {
   private readonly BASE_URL = 'http://192.168.178.29:9001';
 
   uploadedFile?: File;
-  responseData?: any;
+  responseData?: BookingEntry[];
 
   constructor(private http: HttpClient) {
   }
@@ -30,16 +31,15 @@ export class BackendComponent {
     const formData = new FormData();
     formData.append('file', this.uploadedFile);
 
-    this.http.post(`${this.BASE_URL}/camt-entries`, formData).subscribe({
-      next: (response) => {
-        console.log('Upload successful:', response);
-        this.responseData = response;
-      },
-      error: (error) => {
-        console.error('Upload error:', error);
-        alert('Error uploading file.');
-      }
-    });
+    this.http.post<BookingEntry[]>(`${this.BASE_URL}/camt-entries`, formData)
+      .subscribe({
+        next: (response) => {
+          this.responseData = response;
+        },
+        error: (error) => {
+          alert('Error uploading file.');
+        }
+      });
   }
 
   backupCostData(): void {

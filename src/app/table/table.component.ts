@@ -7,6 +7,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
 import {FormsModule} from '@angular/forms';
 import {MatCard} from '@angular/material/card';
+import {BookingEntry} from '../model/BookingEntry';
 
 @Component({
   selector: 'app-table',
@@ -17,10 +18,12 @@ import {MatCard} from '@angular/material/card';
 })
 export class TableComponent implements OnChanges {
 
-  @Input() data: any[] = [];
+  static readonly COLUMN_FILTER = ['creditDebitCode', 'debitIban', 'debitName', 'firstOfMonth']
+
+  @Input() data?: BookingEntry[] = [];
 
   displayedColumns: string[] = [];
-  filteredData: any[] = [];
+  filteredData?: BookingEntry[] = [];
   filterValues: { [key: string]: any } = {};
   uniqueColumnValues: { [key: string]: any[] } = {};
 
@@ -31,11 +34,12 @@ export class TableComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'] && this.data && this.data.length > 0) {
       this.displayedColumns = Object.keys(this.data[0])
-        .filter(value => ['creditDebitCode', 'debitIban', 'debitName', 'firstOfMonth'].indexOf(value) === -1);
+        .filter(value => TableComponent.COLUMN_FILTER.indexOf(value) === -1);
       this.filteredData = [...this.data];
 
       this.filterableColumns.forEach(column => {
-        this.uniqueColumnValues[column] = Array.from(new Set(this.data.map(row => row[column])));
+        const key = column as keyof BookingEntry;
+        this.uniqueColumnValues[key] = Array.from(new Set(this.data?.map(row => row[key])));
       });
 
       this.calculateAmountSum();
@@ -45,14 +49,16 @@ export class TableComponent implements OnChanges {
   sortData(sort: Sort): void {
     const {active, direction} = sort;
 
-    if (!active || direction === '') {
-      this.filteredData = [...this.filteredData];
+    const key = active as keyof BookingEntry;
+
+    if (!key || direction === '') {
+      this.filteredData = [...this.filteredData ?? []];
       return;
     }
 
-    this.filteredData = [...this.filteredData].sort((a, b) => {
-      const valueA = a[active];
-      const valueB = b[active];
+    this.filteredData = [...this.filteredData ?? []].sort((a, b) => {
+      const valueA = a[key];
+      const valueB = b[key];
 
       let comparison = 0;
 
@@ -67,12 +73,13 @@ export class TableComponent implements OnChanges {
   }
 
   applyFilter(): void {
-    this.filteredData = this.data.filter(row => {
+    this.filteredData = this.data?.filter(row => {
       return this.filterableColumns.every(column => {
-        if (!this.filterValues[column]) {
+        let key = column as keyof BookingEntry;
+        if (!this.filterValues[key]) {
           return true;
         }
-        return row[column] === this.filterValues[column];
+        return row[key] === this.filterValues[key];
       });
     });
     this.calculateAmountSum();
@@ -80,16 +87,17 @@ export class TableComponent implements OnChanges {
 
   resetFilters(): void {
     this.filterValues = {};
-    this.filteredData = [...this.data];
+    this.filteredData = [...this.data ?? []];
     this.calculateAmountSum();
   }
 
   calculateAmountSum(): void {
-    this.amountSum = Math.round(this.filteredData.reduce((sum, row) => sum + (row.amount || 0), 0) * 100) / 100;
+    let reduction = this.filteredData?.reduce((sum, row) => sum + (row.amount || 0), 0) ?? 0;
+    this.amountSum = Math.round(reduction * 100) / 100;
   }
 
   removeEntry(row: any): void {
-    this.filteredData = this.filteredData.filter((item) => item !== row);
+    this.filteredData = this.filteredData?.filter((item) => item !== row);
     this.calculateAmountSum();
   }
 }

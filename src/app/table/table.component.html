@@ -32,7 +32,7 @@
         matSort
         matSortDisableClear
         (matSortChange)="sortData($event)"
-        [dataSource]="filteredData"
+        [dataSource]="filteredData ?? []"
         class="table-table-content"
       >
         <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
