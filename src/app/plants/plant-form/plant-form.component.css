@@ -1,0 +1,30 @@
+.card-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 1.5rem;
+  padding: 2% 10% 0 10%;
+}
+
+.card {
+  padding: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.card-name,
+.card-description{
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+}
+
+.card:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}

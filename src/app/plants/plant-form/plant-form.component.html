@@ -1,0 +1,15 @@
+<div>
+  <form (ngSubmit)="onSubmit()" class="card-container">
+    <div class="card card-name">
+      <label>Name:</label>
+      <input type="text" [(ngModel)]="plant.name" name="name" required>
+    </div>
+
+    <div class="card card-description">
+      <label>Description:</label>
+      <textarea [(ngModel)]="plant.description" name="description" required></textarea>
+    </div>
+
+    <button type="submit">Fill Data</button>
+  </form>
+</div>
