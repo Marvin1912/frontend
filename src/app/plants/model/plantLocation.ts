@@ -1,0 +1,6 @@
+export enum PlantLocation {
+  UNDEFINED = 'UNDEFINED',
+  LIVING_ROOM = 'LIVING_ROOM',
+  BEDROOM = 'BEDROOM',
+  KITCHEN = 'KITCHEN'
+}

@@ -1,0 +1,37 @@
+<div class="container h-100 d-flex flex-column">
+  <header class="row header-row p-2">
+    <div class="col-2 d-flex justify-content-between">
+      <button mat-fab [routerLink]="homeLink">
+        <mat-icon>home</mat-icon>
+      </button>
+      <button mat-fab [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="/plant-root/plant-overview">
+          <span>Plants</span>
+        </button>
+        <button mat-menu-item routerLink="/plant-root/plant-list">
+          <span>Edit Plants</span>
+        </button>
+        <button mat-menu-item routerLink="/plant-root/plant-form">
+          <span>Create Plant</span>
+        </button>
+        <button mat-menu-item routerLink="/plant-root">
+          <span>Home</span>
+        </button>
+      </mat-menu>
+    </div>
+    <div class="col-10 d-flex flex-column align-items-center">
+      <h1 class="plant-root-header-title">Plants</h1>
+    </div>
+  </header>
+  <div class="row image-row">
+    <div class="col plant-root-image"></div>
+  </div>
+  <main class="row data-row">
+    <div class="col h-100">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

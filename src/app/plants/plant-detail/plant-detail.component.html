@@ -1,0 +1,102 @@
+<div class="container h-100 d-flex flex-column">
+  <div class="row header-row p-1">
+    <div class="col-10 d-flex flex-column justify-content-center align-items-center">
+      <h2 class="plant-name">{{ plant?.name }}</h2>
+    </div>
+    <div class="col-2 d-flex justify-content-end align-items-center p-0">
+      <ng-container *ngIf="isEditMode">
+        <button mat-mini-fab (click)="saveChanges()" class="save-button">
+          <mat-icon>download_done</mat-icon>
+        </button>
+      </ng-container>
+      <button mat-mini-fab (click)="toggleEditMode()">
+        <mat-icon *ngIf="!isEditMode;else editIconButton">construction</mat-icon>
+        <ng-template #editIconButton>
+          <mat-icon>close</mat-icon>
+        </ng-template>
+      </button>
+    </div>
+  </div>
+  <div class="row data-row p-1 h-100">
+    <div class="col h-100 d-flex flex-column justify-content-center">
+      <img *ngIf="plant?.image && imageUrl" [src]="imageUrl" alt="Plant image" class="img-fluid img rounded-3"/>
+    </div>
+    <div
+      *ngIf="plant"
+      class="col h-100 d-flex flex-column align-items-center justify-content-around rounded-3 p-2"
+      [ngClass]="{'bg-info': isEditMode}"
+    >
+
+      <div class="w-100 d-flex flex-column" style="height: 40%">
+        <mat-label>Description</mat-label>
+        <ng-container *ngIf="!isEditMode; else editDescription">
+          <div class="meta description h-100">{{ plant.description }}</div>
+        </ng-container>
+        <ng-template #editDescription>
+          <ng-container *ngIf="tempPlant">
+            <textarea [(ngModel)]="tempPlant.description" class="meta description"></textarea>
+          </ng-container>
+        </ng-template>
+      </div>
+
+      <div class="w-100 d-flex flex-column">
+        <mat-label>Species</mat-label>
+        <ng-container *ngIf="!isEditMode; else editSpecies">
+          <span class="meta species">{{ plant.species }}</span>
+        </ng-container>
+        <ng-template #editSpecies>
+          <ng-container *ngIf="tempPlant">
+            <input [(ngModel)]="tempPlant.species" class="meta species"/>
+          </ng-container>
+        </ng-template>
+      </div>
+
+      <div class="w-100 d-flex flex-column">
+        <mat-label>Room</mat-label>
+        <ng-container *ngIf="!isEditMode; else editLocation">
+          <span class="meta location">{{ plant.location }}</span>
+        </ng-container>
+        <ng-template #editLocation>
+          <ng-container *ngIf="tempPlant">
+            <mat-select [(ngModel)]="tempPlant.location" class="meta location">
+              <mat-option *ngFor="let loc of plantLocationOptions" [value]="loc">
+                {{ loc }}
+              </mat-option>
+            </mat-select>
+          </ng-container>
+        </ng-template>
+      </div>
+
+      <div class="w-100 d-flex flex-column">
+        <mat-label>Last watered</mat-label>
+        <ng-container *ngIf="!isEditMode; else editLastWatered">
+          <span class="meta last-watered">{{ plant.lastWateredDate | date:'dd.MM.yyyy'}}</span>
+        </ng-container>
+        <ng-template #editLastWatered>
+          <ng-container *ngIf="tempPlant">
+            <div class="w-100 d-flex align-items-center">
+              <input matInput [matDatepicker]="picker" [(ngModel)]="tempPlant.lastWateredDate"
+                     class="last-watered-edit"/>
+              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </div>
+          </ng-container>
+        </ng-template>
+      </div>
+
+      <div class="w-100 d-flex flex-column">
+        <mat-label>Watering frequency</mat-label>
+        <ng-container *ngIf="!isEditMode; else editWateringFrequency">
+          <span class="meta watering-frequency">{{ plant.wateringFrequency }}</span>
+        </ng-container>
+        <ng-template #editWateringFrequency>
+          <ng-container *ngIf="tempPlant">
+            <input [(ngModel)]="tempPlant.wateringFrequency" class="meta watering-frequency"/>
+          </ng-container>
+        </ng-template>
+      </div>
+    </div>
+
+  </div>
+</div>
+

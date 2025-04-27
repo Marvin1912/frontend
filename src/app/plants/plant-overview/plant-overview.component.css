@@ -1,0 +1,9 @@
+.mat-mdc-card-image {
+  height: 35%;
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.sub-header {
+  padding-top: 1px;
+}

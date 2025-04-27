@@ -1,0 +1,39 @@
+.plant-box {
+  height: 400px;
+  width: 400px;
+  background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+  padding: 15px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.plant-box-info {
+  padding: 10px;
+  color: #003366;
+}
+
+.plant-box-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.plant-meta {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.plant-box-image {
+  padding-left: 15px;
+}
+
+.plant-img {
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+mat-icon {
+  font-size: 1.5rem;
+  vertical-align: middle;
+}

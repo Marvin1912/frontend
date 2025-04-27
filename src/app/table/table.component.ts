@@ -13,7 +13,7 @@ import {MatCard} from '@angular/material/card';
   standalone: true,
   imports: [CommonModule, MatTableModule, MatInputModule, MatButtonModule, MatSortModule, MatSelectModule, FormsModule, MatCard],
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss']
+  styleUrls: ['./table.component.css']
 })
 export class TableComponent implements OnChanges {
 

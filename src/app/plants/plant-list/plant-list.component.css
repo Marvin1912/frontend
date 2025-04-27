@@ -1,0 +1,21 @@
+.table-container {
+  padding: 2% 10% 0 10%;
+}
+
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    background-color: rgba(63, 81, 181, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: scale(1.01);
+    z-index: 1;
+    position: relative;
+  }
+}
+
+.mat-column-image,
+.mat-column-delete {
+  width: 10%;
+}

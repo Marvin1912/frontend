@@ -1,0 +1,65 @@
+h2 {
+  margin: 0;
+}
+
+mat-label {
+  width: 100%;
+  font-weight: bold;
+}
+
+mat-select,
+input,
+span {
+  padding: 6px 12px;
+}
+
+textarea {
+  resize: none;
+  height: 100%;
+}
+
+.header-row {
+  max-height: 10%;
+}
+
+.data-row {
+  max-height: 90%;
+}
+
+.meta {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  text-align: center;
+  width: 100%;
+  transition: box-shadow 0.3s ease;
+}
+
+.plant-name {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.description {
+  text-align: left;
+  padding: 6px 12px;
+  white-space: pre-wrap;
+  overflow-y: auto;
+}
+
+.last-watered-edit {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  text-align: center;
+  width: 100%;
+  transition: box-shadow 0.3s ease;
+}
+
+.img {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  max-height: 100%;
+}
+
+.save-button {
+  margin-right: 4px;
+}

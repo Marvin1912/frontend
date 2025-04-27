@@ -9,7 +9,7 @@ import {TableComponent} from '../table/table.component';
   imports: [
     TableComponent
   ],
-  styleUrls: ['./backend.component.scss']
+  styleUrls: ['./backend.component.css']
 })
 export class BackendComponent {
 

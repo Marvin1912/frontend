@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>Delete Plant {{ data.plant.name }}</h2>
+
+<mat-dialog-content>
+  <span>Do you really want to delete the plant {{ data.plant.name }}?</span>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button mat-mini-fab mat-dialog-close (click)="deletePlant()">
+    <mat-icon>check_circle</mat-icon>
+  </button>
+  <button mat-mini-fab mat-dialog-close>
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-dialog-actions>

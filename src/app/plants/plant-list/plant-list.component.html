@@ -1,0 +1,49 @@
+<div class="table-container">
+  <table mat-table [dataSource]="plants">
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let plant">{{ plant.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="species">
+      <th mat-header-cell *matHeaderCellDef>Species</th>
+      <td mat-cell *matCellDef="let plant">{{ plant.species }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="image">
+      <th mat-header-cell *matHeaderCellDef>Image</th>
+      <td mat-cell *matCellDef="let plant">
+        <div *ngIf="plant.image; else noImage">
+          <button mat-icon-button (click)="openImageDialog(plant); $event.stopPropagation()">
+            <mat-icon>image</mat-icon>
+          </button>
+        </div>
+        <ng-template #noImage>
+          <button mat-icon-button (click)="openCreateImageDialog(plant); $event.stopPropagation()">
+            <mat-icon fontIcon="broken_image"></mat-icon>
+          </button>
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef>Delete</th>
+      <td mat-cell *matCellDef="let plant">
+        <button mat-icon-button (click)="openDeletePlantDialog(plant); $event.stopPropagation()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr
+      mat-row *matRowDef="let plant; columns: columnsToDisplay;"
+      class="clickable-row"
+      (click)="navigateToPlant(plant.id)"
+      (mouseenter)="openPlantDetailDialog($event, plant)"
+      (mouseleave)="closePlantDetailDialog()">
+    </tr>
+
+  </table>
+</div>

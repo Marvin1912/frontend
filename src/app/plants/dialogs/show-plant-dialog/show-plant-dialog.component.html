@@ -1,0 +1,24 @@
+<div class="plant-box">
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col d-flex flex-column align-items-center">
+        <h4 class="plant-box-name">{{ plant.name }}</h4>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col d-flex flex-column align-items-start justify-content-around plant-box-info">
+        <span class="plant-meta">Room: <mat-icon>{{ getIcon(plant) }}</mat-icon></span>
+        <span class="plant-meta">Species: {{ plant.species }}</span>
+      </div>
+
+      <div class="col plant-box-image">
+        <img [src]="imageUrl" alt="Plant image" class="plant-img img-fluid"/>
+      </div>
+    </div>
+
+  </div>
+
+</div>
