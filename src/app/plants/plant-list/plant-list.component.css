@@ -1,0 +1,12 @@
+.table-container {
+  padding: 2% 10% 0 10%;
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.mat-column-image,
+.mat-column-delete {
+  width: 10%;
+}
