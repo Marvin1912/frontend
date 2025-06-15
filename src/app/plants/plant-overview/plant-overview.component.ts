@@ -6,6 +6,7 @@ import {PlantService} from '../plant-service/plant.service';
 import {Plant} from '../model/plant';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {tap} from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-plant-overview',
@@ -40,7 +41,7 @@ export class PlantOverviewComponent implements OnInit {
   }
 
   getImageUrl(plant: Plant) {
-    return `http://localhost:9001/images/${plant.image}`
+    return `${environment.apiUrl}/images/${plant.image}`
   }
 
   setWateredNow(plant: Plant) {

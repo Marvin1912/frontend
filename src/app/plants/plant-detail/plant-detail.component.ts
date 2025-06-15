@@ -12,6 +12,7 @@ import {PlantLocation} from '../model/plantLocation';
 import {MatInput} from '@angular/material/input';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-plant-detail',
@@ -62,7 +63,7 @@ export class PlantDetailComponent implements OnInit {
           next: plantResponse => {
             this.plant = plantResponse;
             if (plantResponse.image !== null) {
-              this.imageUrl = `http://localhost:9001/images/${plantResponse.image}`
+              this.imageUrl = `${environment.apiUrl}/images/${plantResponse.image}`
             }
           },
           error: err => console.log(err)

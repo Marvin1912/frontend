@@ -27,6 +27,7 @@ import {Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {ComponentPortal} from '@angular/cdk/portal';
 import {PLANT_DATA} from '../tokens/plant-overlay-token';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-plant-list',
@@ -102,7 +103,7 @@ export class PlantListComponent implements OnInit, OnDestroy {
   }
 
   openImageDialog(plant: Plant) {
-    const imageUrl = `http://localhost:9001/images/${plant.image}`
+    const imageUrl = `${environment.apiUrl}/images/${plant.image}`
 
     this.dialog.open(ShowImageDialogComponent, {
       data: {imageUrl, name: plant.name}

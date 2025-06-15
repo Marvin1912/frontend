@@ -2,13 +2,14 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Plant} from '../model/plant';
 import {Observable} from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlantService {
 
-  host: string = 'http://localhost:9001'
+  host: string = environment.apiUrl
 
   constructor(private http: HttpClient) {
   }
