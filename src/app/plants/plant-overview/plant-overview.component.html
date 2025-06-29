@@ -7,7 +7,7 @@
           <mat-card-subtitle>{{ plant.species }}</mat-card-subtitle>
         </mat-card-header>
         <img mat-card-image [src]="getImageUrl(plant)" alt="{{ plant.name }}">
-        <mat-card-content class="h-100">
+        <mat-card-content class="h-100 overflow-auto">
           <div class="container h-100">
             <div class="row h-100 d-flex flex-column justify-content-between">
               <div class="col d-flex flex-column align-items-center justify-content-center">

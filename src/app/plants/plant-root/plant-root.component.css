@@ -1,3 +1,8 @@
+.header-button {
+  height: 35px;
+  width: 35px;
+}
+
 .plant-root-header-title {
   position: absolute;
   left: 50%;
@@ -26,4 +31,11 @@
 .mat-mdc-menu-content {
   display: flex;
   flex-direction: column;
+}
+
+@media (min-width: 480px) {
+  .header-button {
+    height: 50px;
+    width: 50px;
+  }
 }

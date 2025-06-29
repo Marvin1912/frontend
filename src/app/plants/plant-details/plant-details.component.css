@@ -11,9 +11,3 @@ span {
 .plant-card-header {
   height: 10%;
 }
-
-@media (min-width: 780px) {
-  .plant-card {
-    height: 100%;
-  }
-}
