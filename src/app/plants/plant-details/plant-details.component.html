@@ -1,0 +1,41 @@
+<div class="container h-100 pt-2">
+  <mat-card appearance="raised" *ngIf="plant" class="d-flex flex-column align-items-center plant-card">
+    <mat-card-header class="d-flex justify-content-center align-items-center py-2 plant-card-header">
+      <mat-card-title class="fs-1">{{ plant.name }}</mat-card-title>
+    </mat-card-header>
+    <div class="container row">
+      <div class="col-md-5">
+        <img mat-card-image [src]="getImageUrl(plant)" alt="{{ plant.name }}" class="img-fluid py-2">
+      </div>
+      <div class="col-md-7">
+        <div class="row">
+          <mat-card-content
+            class="
+                    d-flex flex-column justify-content-between align-items-center
+                    flex-md-row
+                  ">
+            <span matTooltip="Spezies" matTooltipPosition="below" class="shadow p-1 rounded w-100">
+              {{ plant.species }}
+            </span>
+            <span matTooltip="Standort" matTooltipPosition="below" class="shadow p-1 rounded w-100">
+              {{ plant.location }}
+            </span>
+            <span matTooltip="Zuletzt gewässert" matTooltipPosition="below" class="shadow p-1 rounded w-100">
+              {{ plant.lastWateredDate | date: 'dd.MM.yyyy' }}
+            </span>
+          </mat-card-content>
+        </div>
+        <div class="row">
+          <mat-tab-group>
+            <mat-tab label="Beschreibung">
+              <div class="p-2">
+                {{ plant.description }}
+              </div>
+            </mat-tab>
+            <mat-tab label="Pflegehinweise"></mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</div>

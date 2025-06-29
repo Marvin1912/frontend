@@ -7,10 +7,11 @@ import {Plant} from '../model/plant';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {tap} from 'rxjs';
 import { environment } from '../../../environments/environment';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-plant-overview',
-  imports: [MatCardModule, MatButtonModule, NgForOf, DatePipe],
+  imports: [MatCardModule, MatButtonModule, NgForOf, DatePipe, RouterLink],
   templateUrl: './plant-overview.component.html',
   styleUrl: './plant-overview.component.css',
   providers: [DatePipe]

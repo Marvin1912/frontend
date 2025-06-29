@@ -7,3 +7,11 @@
 .sub-header {
   padding-top: 1px;
 }
+
+.plant-link {
+  cursor: pointer;
+}
+
+.plant-link:hover {
+  text-decoration: underline;
+}

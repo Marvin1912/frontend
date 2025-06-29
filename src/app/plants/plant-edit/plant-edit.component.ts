@@ -34,10 +34,10 @@ import {environment} from '../../../environments/environment';
     MatSuffix,
     DatePipe
   ],
-  templateUrl: './plant-detail.component.html',
-  styleUrl: './plant-detail.component.css'
+  templateUrl: './plant-edit.component.html',
+  styleUrl: './plant-edit.component.css'
 })
-export class PlantDetailComponent implements OnInit {
+export class PlantEditComponent implements OnInit {
 
   plant: Plant | null = null;
   tempPlant: Plant | null = null;
@@ -68,8 +68,7 @@ export class PlantDetailComponent implements OnInit {
           },
           error: err => console.log(err)
         }
-      )
-      ;
+      );
     }
   }
 

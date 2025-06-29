@@ -3,7 +3,7 @@
     <div *ngFor="let plant of plants()" class="col-sm-12 col-md-6 col-xl-4 h-100 p-2">
       <mat-card appearance="outlined" class="h-100">
         <mat-card-header>
-          <mat-card-title>{{ plant.name }}</mat-card-title>
+          <mat-card-title routerLink="/plant-root/plant/{{plant.id}}" class="plant-link">{{ plant.name }}</mat-card-title>
           <mat-card-subtitle>{{ plant.species }}</mat-card-subtitle>
         </mat-card-header>
         <img mat-card-image [src]="getImageUrl(plant)" alt="{{ plant.name }}">
@@ -15,7 +15,7 @@
                   <mat-card-header class="sub-header">
                     <mat-card-title class="fs-5">Last watered</mat-card-title>
                   </mat-card-header>
-                  <mat-card-content> {{ plant.lastWateredDate | date:'dd.MM.yyyy'}}</mat-card-content>
+                  <mat-card-content class="pb-sm-0 pb-md-2"> {{ plant.lastWateredDate | date:'dd.MM.yyyy'}}</mat-card-content>
                 </mat-card>
               </div>
               <div class="col d-flex flex-column align-items-center justify-content-center">
@@ -23,7 +23,7 @@
                   <mat-card-header class="sub-header">
                     <mat-card-title class="fs-5">Next watered</mat-card-title>
                   </mat-card-header>
-                  <mat-card-content> {{ (plant?.nextWateredDate | date:'dd.MM.yyyy') ?? 'n/a' }}</mat-card-content>
+                  <mat-card-content class="pb-sm-0 pb-md-2"> {{ (plant?.nextWateredDate | date:'dd.MM.yyyy') ?? 'n/a' }}</mat-card-content>
                 </mat-card>
               </div>
               <div class="col d-flex flex-column align-items-center justify-content-center">
@@ -31,13 +31,13 @@
                   <mat-card-header class="sub-header">
                     <mat-card-title class="fs-5">Location</mat-card-title>
                   </mat-card-header>
-                  <mat-card-content> {{ plant.location }}</mat-card-content>
+                  <mat-card-content class="pb-sm-0 pb-md-2"> {{ plant.location }}</mat-card-content>
                 </mat-card>
               </div>
             </div>
           </div>
         </mat-card-content>
-        <mat-card-actions>
+        <mat-card-actions class="py-sm-0 py-md-2">
           <button mat-button (click)="setWateredNow(plant)">Watered</button>
         </mat-card-actions>
       </mat-card>

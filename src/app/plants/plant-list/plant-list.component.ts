@@ -111,7 +111,7 @@ export class PlantListComponent implements OnInit, OnDestroy {
   }
 
   navigateToPlant(id: number) {
-    void this.router.navigate(['/plant-root/plants', id]);
+    void this.router.navigate(['/plant-root/plant-edit', id]);
   }
 
   openDeletePlantDialog(plant: Plant) {
