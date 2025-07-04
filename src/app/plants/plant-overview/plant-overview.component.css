@@ -15,3 +15,13 @@
 .plant-link:hover {
   text-decoration: underline;
 }
+
+.info-card {
+  scroll-snap-align: start;
+}
+
+@media (max-width: 480px) {
+  .info-card {
+    flex: 0 0 100%;
+  }
+}
