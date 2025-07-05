@@ -40,6 +40,10 @@ textarea {
   transform: translateX(-50%);
 }
 
+.description-container {
+  height: 40%
+}
+
 .description {
   text-align: left;
   padding: 6px 12px;

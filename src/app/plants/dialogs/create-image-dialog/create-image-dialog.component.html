@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Upload a File</h2>
 
 <mat-dialog-content>
-  <form (ngSubmit)="onSubmit()" #uploadForm="ngForm">
+  <form (ngSubmit)="onSubmit()">
     <input type="file" (change)="onFileSelected($event)" required/>
   </form>
 </mat-dialog-content>

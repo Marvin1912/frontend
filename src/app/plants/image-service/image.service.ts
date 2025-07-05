@@ -13,6 +13,11 @@ export class ImageService {
   constructor(private http: HttpClient) {
   }
 
+  extractUuidFromResponse(response: HttpResponse<any>) {
+    const location = response.headers.get('Location');
+    return location?.replace('/images/', '');
+  }
+
   createImage(file: File): Observable<HttpResponse<any>> {
 
     const formData = new FormData();
@@ -21,9 +26,5 @@ export class ImageService {
     const contentType = encodeURIComponent(file.type);
 
     return this.http.post<any>(`${this.host}/images?content-type=${contentType}`, formData, {observe: 'response'});
-  }
-
-  getImage(uuid: string): Observable<HttpResponse<any>> {
-    return this.http.get<any>(`${this.host}/images/${uuid}`, {observe: 'response'});
   }
 }

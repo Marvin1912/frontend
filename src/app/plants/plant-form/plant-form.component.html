@@ -1,8 +1,10 @@
-<mat-horizontal-stepper linear>
+<mat-horizontal-stepper linear class="d-flex flex-column p-0">
 
   <mat-step [stepControl]="basicInfoForm">
     <form [formGroup]="basicInfoForm">
-      <ng-template matStepLabel>Basic Info</ng-template>
+      <ng-template matStepLabel>
+        <ng-container *ngIf="!isSmallScreen">Basic Info</ng-container>
+      </ng-template>
 
       <mat-form-field appearance="fill">
         <mat-label>Name</mat-label>
@@ -27,7 +29,9 @@
 
   <mat-step [stepControl]="locationForm">
     <form [formGroup]="locationForm">
-      <ng-template matStepLabel>Location</ng-template>
+      <ng-template matStepLabel>
+        <ng-container *ngIf="!isSmallScreen">Location</ng-container>
+      </ng-template>
 
       <mat-form-field appearance="fill">
         <mat-label>Location</mat-label>
@@ -47,7 +51,9 @@
 
   <mat-step [stepControl]="careForm">
     <form [formGroup]="careForm">
-      <ng-template matStepLabel>Care Details</ng-template>
+      <ng-template matStepLabel>
+        <ng-container *ngIf="!isSmallScreen">Care Details</ng-container>
+      </ng-template>
 
       <mat-form-field appearance="fill">
         <mat-label>Watering Frequency (days)</mat-label>
@@ -70,7 +76,9 @@
 
   <mat-step [stepControl]="imageForm">
     <form [formGroup]="imageForm">
-      <ng-template matStepLabel>Image</ng-template>
+      <ng-template matStepLabel>
+        <ng-container *ngIf="!isSmallScreen">Image</ng-container>
+      </ng-template>
 
       <input type="file" (change)="onFileChange($event)">
 

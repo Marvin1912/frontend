@@ -19,7 +19,14 @@
   </div>
   <div class="row data-row p-1 h-100">
     <div class="col h-100 d-flex flex-column justify-content-center">
-      <img *ngIf="plant?.image && imageUrl" [src]="imageUrl" alt="Plant image" class="img-fluid img rounded-3"/>
+      <ng-container *ngIf="!isEditMode; else editImage">
+        <img *ngIf="plant?.image && imageUrl" [src]="imageUrl" alt="Plant image" class="img-fluid img rounded-3"/>
+      </ng-container>
+      <ng-template #editImage>
+        <form>
+          <input type="file" (change)="onFileSelected($event)" required/>
+        </form>
+      </ng-template>
     </div>
     <div
       *ngIf="plant"
@@ -27,7 +34,7 @@
       [ngClass]="{'bg-info': isEditMode}"
     >
 
-      <div class="w-100 d-flex flex-column" style="height: 40%">
+      <div class="w-100 d-flex flex-column description-container">
         <mat-label>Description</mat-label>
         <ng-container *ngIf="!isEditMode; else editDescription">
           <div class="meta description h-100">{{ plant.description }}</div>
@@ -70,7 +77,7 @@
       <div class="w-100 d-flex flex-column">
         <mat-label>Last watered</mat-label>
         <ng-container *ngIf="!isEditMode; else editLastWatered">
-          <span class="meta last-watered">{{ plant.lastWateredDate | date:'dd.MM.yyyy'}}</span>
+          <span class="meta last-watered">{{ plant.lastWateredDate | date:'dd.MM.yyyy' }}</span>
         </ng-container>
         <ng-template #editLastWatered>
           <ng-container *ngIf="tempPlant">

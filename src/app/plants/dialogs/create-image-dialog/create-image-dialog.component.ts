@@ -48,8 +48,7 @@ export class CreateImageDialogComponent {
 
     this.imageService.createImage(this.selectedFile).subscribe({
       next: (response) => {
-        const location = response.headers.get('Location');
-        let uuid = location?.replace('/images/', '');
+        let uuid = this.imageService.extractUuidFromResponse(response);
         this.dialogRef.close(uuid);
       },
       error: (err) => {

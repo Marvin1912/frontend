@@ -9,9 +9,10 @@ import {Plant} from '../model/plant';
 import {MatStep, MatStepLabel, MatStepper, MatStepperNext, MatStepperPrevious} from '@angular/material/stepper';
 import {MatInput} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {Router} from '@angular/router';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-plant-form',
@@ -33,7 +34,8 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/m
     NgForOf,
     MatDatepicker,
     MatDatepickerInput,
-    MatDatepickerToggle
+    MatDatepickerToggle,
+    NgIf
   ],
   standalone: true,
   styleUrl: './plant-form.component.css',
@@ -49,12 +51,14 @@ export class PlantFormComponent {
   plantLocationOptions = Object.values(PlantLocation)
     .filter(value => PlantLocation.UNDEFINED !== value);
   selectedFile: File | null = null;
+  isSmallScreen = false;
 
   constructor(
     private fb: FormBuilder,
     private plantService: PlantService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private breakpointObserver: BreakpointObserver
   ) {
     this.basicInfoForm = this.fb.group({
       name: ['', Validators.required],
@@ -73,6 +77,10 @@ export class PlantFormComponent {
 
     this.imageForm = this.fb.group({
       image: [null]
+    });
+
+    this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.XSmall]).subscribe({
+      next: value => this.isSmallScreen = value.matches
     });
   }
 

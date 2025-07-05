@@ -13,6 +13,7 @@ import {MatInput} from '@angular/material/input';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {environment} from '../../../environments/environment';
+import {ImageService} from '../image-service/image.service';
 
 @Component({
   selector: 'app-plant-detail',
@@ -43,6 +44,7 @@ export class PlantEditComponent implements OnInit {
   tempPlant: Plant | null = null;
 
   imageUrl: String | null = null;
+  selectedFile?: File;
   isEditMode: boolean = false;
 
   plantLocationOptions = Object
@@ -52,6 +54,7 @@ export class PlantEditComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private platService: PlantService,
+    private imageService: ImageService,
     private snackBar: MatSnackBar
   ) {
   }
@@ -83,25 +86,41 @@ export class PlantEditComponent implements OnInit {
     this.isEditMode = !this.isEditMode;
   }
 
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+      this.selectedFile = input.files[0];
+    }
+  }
+
   saveChanges() {
     this.isEditMode = !this.isEditMode;
-    if (this.tempPlant !== null) {
-      this.platService.updatePlant(this.tempPlant).subscribe({
-        next: value => {
-          this.plant = {...this.tempPlant} as Plant;
-          this.snackBar.open(`Plant updated!`, 'Dismiss',
-            {
-              duration: 5000
+
+    if (this.selectedFile) {
+      this.imageService.createImage(this.selectedFile).subscribe({
+        next: response => {
+          let imageUuid = this.imageService.extractUuidFromResponse(response) ?? this.plant?.image ?? '';
+          if (this.tempPlant) {
+            this.tempPlant.image = imageUuid;
+            this.platService.updatePlant(this.tempPlant).subscribe({
+              next: _ => {
+                this.plant = {...this.tempPlant} as Plant;
+                this.imageUrl = `${environment.apiUrl}/images/${this.plant.image}`
+                this.snackBar.open(`Plant updated!`, 'Dismiss', {duration: 5000})
+              },
+              error: _ => {
+                this.snackBar.open('Failed to update plant.', 'Dismiss', {duration: 5000})
+              }
             })
+          }
         },
-        error: err => {
-          this.snackBar.open('Failed to create plant.', 'Dismiss',
-            {
-              duration: 5000
-            })
+        error: _ => {
+          this.snackBar.open('Failed to update image.', 'Dismiss', {duration: 5000})
         }
       })
     }
+
   }
+
 }
 
