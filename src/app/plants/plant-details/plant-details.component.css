@@ -11,3 +11,8 @@ span {
 .plant-card-header {
   height: 10%;
 }
+
+.care-instructions,
+.description {
+  white-space: pre-wrap;
+}

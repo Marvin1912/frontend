@@ -118,6 +118,18 @@ export class PlantEditComponent implements OnInit {
           this.snackBar.open('Failed to update image.', 'Dismiss', {duration: 5000})
         }
       })
+    } else {
+      if (this.tempPlant) {
+        this.platService.updatePlant(this.tempPlant).subscribe({
+          next: _ => {
+            this.plant = {...this.tempPlant} as Plant;
+            this.snackBar.open(`Plant updated!`, 'Dismiss', {duration: 5000})
+          },
+          error: _ => {
+            this.snackBar.open('Failed to update plant.', 'Dismiss', {duration: 5000})
+          }
+        })
+      }
     }
 
   }

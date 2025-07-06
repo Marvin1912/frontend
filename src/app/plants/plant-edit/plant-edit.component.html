@@ -30,80 +30,97 @@
     </div>
     <div
       *ngIf="plant"
-      class="col h-100 d-flex flex-column align-items-center justify-content-around rounded-3 p-2"
+      class="col h-100 d-flex flex-column align-items-center justify-content-start rounded-3 p-2"
       [ngClass]="{'bg-info': isEditMode}"
     >
 
-      <div class="w-100 d-flex flex-column description-container">
-        <mat-label>Description</mat-label>
-        <ng-container *ngIf="!isEditMode; else editDescription">
-          <div class="meta description h-100">{{ plant.description }}</div>
-        </ng-container>
-        <ng-template #editDescription>
-          <ng-container *ngIf="tempPlant">
-            <textarea [(ngModel)]="tempPlant.description" class="meta description"></textarea>
+      <div class="h-50 d-flex flex-column justify-content-evenly align-items-center flex-grow-1">
+        <div class="row h-50 w-100 d-flex flex-column">
+          <mat-label>Description</mat-label>
+          <ng-container *ngIf="!isEditMode; else editDescription">
+            <div class="meta description">{{ plant.description }}</div>
           </ng-container>
-        </ng-template>
+          <ng-template #editDescription>
+            <ng-container *ngIf="tempPlant">
+              <textarea [(ngModel)]="tempPlant.description" class="meta text-start" rows="7" cols="60"></textarea>
+            </ng-container>
+          </ng-template>
+        </div>
+
+        <div class="row h-50 w-100 d-flex flex-column">
+          <mat-label>Care instructions</mat-label>
+          <ng-container *ngIf="!isEditMode; else editCareInstructions">
+            <div class="meta care-instruction">{{ plant.careInstructions }}</div>
+          </ng-container>
+          <ng-template #editCareInstructions>
+            <ng-container *ngIf="tempPlant">
+              <textarea [(ngModel)]="tempPlant.careInstructions" class="meta text-start" rows="7" cols="60"></textarea>
+            </ng-container>
+          </ng-template>
+        </div>
       </div>
 
-      <div class="w-100 d-flex flex-column">
-        <mat-label>Species</mat-label>
-        <ng-container *ngIf="!isEditMode; else editSpecies">
-          <span class="meta species">{{ plant.species }}</span>
-        </ng-container>
-        <ng-template #editSpecies>
-          <ng-container *ngIf="tempPlant">
-            <input [(ngModel)]="tempPlant.species" class="meta species"/>
+      <div class="row w-100 d-flex">
+        <div class="w-50 d-flex flex-column bla">
+          <mat-label>Species</mat-label>
+          <ng-container *ngIf="!isEditMode; else editSpecies">
+            <span class="meta species">{{ plant.species }}</span>
           </ng-container>
-        </ng-template>
+          <ng-template #editSpecies>
+            <ng-container *ngIf="tempPlant">
+              <input [(ngModel)]="tempPlant.species" class="meta species"/>
+            </ng-container>
+          </ng-template>
+        </div>
+
+        <div class="w-50 d-flex flex-column bla">
+          <mat-label>Room</mat-label>
+          <ng-container *ngIf="!isEditMode; else editLocation">
+            <span class="meta location">{{ plant.location }}</span>
+          </ng-container>
+          <ng-template #editLocation>
+            <ng-container *ngIf="tempPlant">
+              <mat-select [(ngModel)]="tempPlant.location" class="meta location">
+                <mat-option *ngFor="let loc of plantLocationOptions" [value]="loc">
+                  {{ loc }}
+                </mat-option>
+              </mat-select>
+            </ng-container>
+          </ng-template>
+        </div>
       </div>
 
-      <div class="w-100 d-flex flex-column">
-        <mat-label>Room</mat-label>
-        <ng-container *ngIf="!isEditMode; else editLocation">
-          <span class="meta location">{{ plant.location }}</span>
-        </ng-container>
-        <ng-template #editLocation>
-          <ng-container *ngIf="tempPlant">
-            <mat-select [(ngModel)]="tempPlant.location" class="meta location">
-              <mat-option *ngFor="let loc of plantLocationOptions" [value]="loc">
-                {{ loc }}
-              </mat-option>
-            </mat-select>
+      <div class="row w-100">
+        <div class="col w-100 d-flex flex-column bla">
+          <mat-label>Last watered</mat-label>
+          <ng-container *ngIf="!isEditMode; else editLastWatered">
+            <span class="meta last-watered">{{ plant.lastWateredDate | date:'dd.MM.yyyy' }}</span>
           </ng-container>
-        </ng-template>
-      </div>
+          <ng-template #editLastWatered>
+            <ng-container *ngIf="tempPlant">
+              <div class="w-100 d-flex align-items-center">
+                <input matInput [matDatepicker]="picker" [(ngModel)]="tempPlant.lastWateredDate"
+                       class="last-watered-edit"/>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </div>
+            </ng-container>
+          </ng-template>
+        </div>
 
-      <div class="w-100 d-flex flex-column">
-        <mat-label>Last watered</mat-label>
-        <ng-container *ngIf="!isEditMode; else editLastWatered">
-          <span class="meta last-watered">{{ plant.lastWateredDate | date:'dd.MM.yyyy' }}</span>
-        </ng-container>
-        <ng-template #editLastWatered>
-          <ng-container *ngIf="tempPlant">
-            <div class="w-100 d-flex align-items-center">
-              <input matInput [matDatepicker]="picker" [(ngModel)]="tempPlant.lastWateredDate"
-                     class="last-watered-edit"/>
-              <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </div>
+        <div class="col w-100 d-flex flex-column bla">
+          <mat-label>Watering frequency</mat-label>
+          <ng-container *ngIf="!isEditMode; else editWateringFrequency">
+            <span class="meta watering-frequency">{{ plant.wateringFrequency }}</span>
           </ng-container>
-        </ng-template>
-      </div>
-
-      <div class="w-100 d-flex flex-column">
-        <mat-label>Watering frequency</mat-label>
-        <ng-container *ngIf="!isEditMode; else editWateringFrequency">
-          <span class="meta watering-frequency">{{ plant.wateringFrequency }}</span>
-        </ng-container>
-        <ng-template #editWateringFrequency>
-          <ng-container *ngIf="tempPlant">
-            <input [(ngModel)]="tempPlant.wateringFrequency" class="meta watering-frequency"/>
-          </ng-container>
-        </ng-template>
+          <ng-template #editWateringFrequency>
+            <ng-container *ngIf="tempPlant">
+              <input [(ngModel)]="tempPlant.wateringFrequency" class="meta watering-frequency"/>
+            </ng-container>
+          </ng-template>
+        </div>
       </div>
     </div>
-
   </div>
 </div>
 

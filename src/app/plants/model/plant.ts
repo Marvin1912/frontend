@@ -5,6 +5,7 @@ export interface Plant {
   name: string,
   species: string,
   description: string,
+  careInstructions: string,
   location: PlantLocation,
   wateringFrequency: number,
   lastWateredDate: Date | null,

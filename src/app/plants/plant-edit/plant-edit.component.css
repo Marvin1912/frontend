@@ -5,17 +5,17 @@ h2 {
 mat-label {
   width: 100%;
   font-weight: bold;
+  padding: 0;
 }
 
 mat-select,
 input,
 span {
-  padding: 6px 12px;
+  padding: 6px;
 }
 
 textarea {
   resize: none;
-  height: 100%;
 }
 
 .header-row {
@@ -30,7 +30,6 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 10px;
   text-align: center;
-  width: 100%;
   transition: box-shadow 0.3s ease;
 }
 
@@ -40,15 +39,13 @@ textarea {
   transform: translateX(-50%);
 }
 
-.description-container {
-  height: 40%
-}
-
+.care-instruction,
 .description {
   text-align: left;
-  padding: 6px 12px;
+  padding: 6px;
   white-space: pre-wrap;
-  overflow-y: auto;
+  height: 80%;
+  overflow: auto;
 }
 
 .last-watered-edit {
@@ -66,4 +63,8 @@ textarea {
 
 .save-button {
   margin-right: 4px;
+}
+
+.bla {
+  padding-left: 0;
 }

@@ -23,3 +23,15 @@ form {
 .mat-mdc-form-field:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
+
+.care-info,
+.basic-info {
+  width: 75%;
+}
+
+@media (max-width: 480px) {
+  .care-info,
+  .basic-info {
+    width: 100%;
+  }
+}
