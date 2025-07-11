@@ -6,12 +6,12 @@ import {PlantService} from '../plant-service/plant.service';
 import {Plant} from '../model/plant';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {tap} from 'rxjs';
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
 import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-plant-overview',
-  imports: [MatCardModule, MatButtonModule, NgForOf, DatePipe, RouterLink],
+  imports: [MatCardModule, MatButtonModule, NgForOf, RouterLink],
   templateUrl: './plant-overview.component.html',
   styleUrl: './plant-overview.component.css',
   providers: [DatePipe]
@@ -46,14 +46,15 @@ export class PlantOverviewComponent implements OnInit {
   }
 
   setWateredNow(plant: Plant) {
-    let now: Date = new Date();
+    const now: Date = new Date();
+    const lastWateredDate = this.datePipe.transform(now, 'yyyy-MM-dd') ?? '1970-01-01';
 
-    this.plantService.wateredPlant(plant.id, now).subscribe({
+    this.plantService.wateredPlant(plant.id, lastWateredDate).subscribe({
       next: ({nextWateredDate}) => {
         this.plants.update(plants => {
           return plants.map(p =>
             p.id === plant.id ? {
-              ...p, lastWateredDate: now, nextWateredDate: nextWateredDate ?? null
+              ...p, lastWateredDate: lastWateredDate , nextWateredDate: nextWateredDate ?? null
             } : p
           ).sort((a, b) => a.id - b.id);
         });

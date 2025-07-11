@@ -8,7 +8,7 @@ export interface Plant {
   careInstructions: string,
   location: PlantLocation,
   wateringFrequency: number,
-  lastWateredDate: Date | null,
-  nextWateredDate: Date | null,
+  lastWateredDate: string | null,
+  nextWateredDate: string | null,
   image: string | null
 }

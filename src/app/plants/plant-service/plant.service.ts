@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Plant} from '../model/plant';
 import {Observable} from 'rxjs';
-import { environment } from '../../../environments/environment';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +27,7 @@ export class PlantService {
     const formData = new FormData();
     formData.append('plant', new Blob([JSON.stringify(plant)], {type: 'application/json'}))
 
-    let path = ''
+    let path: string
     if (image != null) {
       formData.append('image', image);
       const contentType = encodeURIComponent(image.type);
@@ -47,8 +47,8 @@ export class PlantService {
     return this.http.delete<any>(`${this.host}/plants/${id}`, {observe: 'response'})
   }
 
-  wateredPlant(id: number, lastWatered: Date): Observable<Plant> {
-    return this.http.patch<any>(`${this.host}/plants/${id}/watered?last-watered=${lastWatered.toISOString().split('T')[0]}`, {observe: 'response'})
+  wateredPlant(id: number, lastWatered: string): Observable<Plant> {
+    return this.http.patch<any>(`${this.host}/plants/${id}/watered?last-watered=${lastWatered}`, {observe: 'response'})
   }
 
 }
