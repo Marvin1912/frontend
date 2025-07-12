@@ -32,11 +32,11 @@ import {ImageService} from '../image-service/image.service';
     MatDatepickerInput,
     MatDatepicker,
     MatDatepickerToggle,
-    MatSuffix,
-    DatePipe
+    MatSuffix
   ],
   templateUrl: './plant-edit.component.html',
-  styleUrl: './plant-edit.component.css'
+  styleUrl: './plant-edit.component.css',
+  providers: [DatePipe]
 })
 export class PlantEditComponent implements OnInit {
 
@@ -46,6 +46,7 @@ export class PlantEditComponent implements OnInit {
   imageUrl: String | null = null;
   selectedFile?: File;
   isEditMode: boolean = false;
+  tmpLastWatered: Date | null = null;
 
   plantLocationOptions = Object
     .values(PlantLocation)
@@ -55,7 +56,8 @@ export class PlantEditComponent implements OnInit {
     private route: ActivatedRoute,
     private platService: PlantService,
     private imageService: ImageService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private datePipe: DatePipe
   ) {
   }
 
@@ -79,6 +81,9 @@ export class PlantEditComponent implements OnInit {
 
     if (!this.isEditMode) {
       this.tempPlant = {...this.plant} as Plant;
+      if (this.plant) {
+        this.tmpLastWatered = new Date(Date.parse(this.plant.lastWateredDate ?? '1970-01-01'));
+      }
     } else {
       this.tempPlant = null;
     }
@@ -93,6 +98,8 @@ export class PlantEditComponent implements OnInit {
     }
   }
 
+  // TODO: Extract the calls to plantService
+  // TODO: Introduce a general component or function to map the string format
   saveChanges() {
     this.isEditMode = !this.isEditMode;
 
@@ -102,6 +109,11 @@ export class PlantEditComponent implements OnInit {
           let imageUuid = this.imageService.extractUuidFromResponse(response) ?? this.plant?.image ?? '';
           if (this.tempPlant) {
             this.tempPlant.image = imageUuid;
+
+            const lastWateredDate =
+              this.datePipe.transform(this.tmpLastWatered, 'yyyy-MM-dd') ?? this.plant?.lastWateredDate;
+            this.tempPlant = {...this.tempPlant, lastWateredDate: lastWateredDate} as Plant;
+
             this.platService.updatePlant(this.tempPlant).subscribe({
               next: _ => {
                 this.plant = {...this.tempPlant} as Plant;
@@ -120,6 +132,11 @@ export class PlantEditComponent implements OnInit {
       })
     } else {
       if (this.tempPlant) {
+
+        const lastWateredDate =
+          this.datePipe.transform(this.tmpLastWatered, 'yyyy-MM-dd') ?? this.plant?.lastWateredDate;
+        this.tempPlant = {...this.tempPlant, lastWateredDate: lastWateredDate} as Plant;
+
         this.platService.updatePlant(this.tempPlant).subscribe({
           next: _ => {
             this.plant = {...this.tempPlant} as Plant;

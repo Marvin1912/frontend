@@ -16,7 +16,7 @@
                   <mat-card-title class="fs-5">Last watered</mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="pb-sm-0 pb-md-2">
-                  {{ plant.lastWateredDate | date:'dd.MM.yyyy' }}
+                  {{ plant.lastWateredDate }}
                 </mat-card-content>
               </mat-card>
             </div>
@@ -26,7 +26,7 @@
                   <mat-card-title class="fs-5">Next watered</mat-card-title>
                 </mat-card-header>
                 <mat-card-content class="pb-sm-0 pb-md-2">
-                  {{ (plant?.nextWateredDate | date:'dd.MM.yyyy') ?? 'n/a' }}
+                  {{ (plant?.nextWateredDate) ?? 'n/a' }}
                 </mat-card-content>
               </mat-card>
             </div>
