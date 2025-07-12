@@ -24,15 +24,17 @@
   <div class="row-md d-flex flex-column flex-md-row flex-grow-1 gap-md-5">
 
     <!--    Image-->
-    <div class="col-md h-100 d-flex flex-column justify-content-center">
-      <ng-container *ngIf="!isEditMode; else editImage">
-        <img *ngIf="plant?.image && imageUrl" [src]="imageUrl" alt="Plant image" class="img-fluid img rounded-3"/>
-      </ng-container>
-      <ng-template #editImage>
-        <form>
-          <input type="file" (change)="onFileSelected($event)" required/>
-        </form>
-      </ng-template>
+    <div class="col-md d-flex flex-column justify-content-center pb-3">
+      <div class="d-flex flex-column img-container">
+        <ng-container *ngIf="!isEditMode; else editImage">
+          <img *ngIf="plant?.image && imageUrl" [src]="imageUrl" alt="Plant image" class="img-fluid img rounded-3"/>
+        </ng-container>
+        <ng-template #editImage>
+          <form>
+            <input type="file" (change)="onFileSelected($event)" required/>
+          </form>
+        </ng-template>
+      </div>
     </div>
 
     <!--    Infos-->

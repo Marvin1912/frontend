@@ -50,6 +50,7 @@ textarea {
   flex-direction: column;
   overflow: auto;
   padding: 0 0 5px 0;
+  flex: 1 0 auto;
 }
 
 .text-container {
@@ -59,6 +60,7 @@ textarea {
   padding-left: 5px;
   padding-right: 5px;
   overflow: auto;
+  flex: 1 0 0;
 }
 
 .care-instruction,
@@ -75,8 +77,14 @@ textarea {
   transition: box-shadow 0.3s ease;
 }
 
+.img-container {
+  overflow: auto;
+  flex: 1 1 0;
+}
+
 .img {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  flex: 1 1 auto;
 }
 
 .save-button {
