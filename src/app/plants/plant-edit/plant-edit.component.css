@@ -38,12 +38,6 @@ textarea {
   flex: 1 0 0;
 }
 
-@media (max-width: 480px) {
-  .description-care-container {
-    flex: 1 0 auto;
-  }
-}
-
 .description-container,
 .care-container {
   display: flex;
@@ -89,4 +83,25 @@ textarea {
 
 .save-button {
   margin-right: 4px;
+}
+
+@media (max-width: 480px) {
+  .description-care-container {
+    flex: 1 0 auto;
+  }
+
+  .img-container {
+    overflow: auto;
+    flex: 1 1 auto;
+  }
+
+  .text-container {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+    overflow: auto;
+    flex: 1 0 auto;
+  }
 }
