@@ -1,7 +1,7 @@
 <div class="container-fluid h-100 d-flex flex-column">
 
   <!--  Header-->
-  <div class="row">
+  <div class="row py-1">
     <div class="col-10">
       <h2 class="plant-name">{{ plant?.name }}</h2>
     </div>
@@ -54,9 +54,7 @@
         <div class="description-container">
           <mat-label>Description</mat-label>
           <div class="text-container">
-            <div *ngIf="!isEditMode; else editDescription" class="description">
-              {{ plant.description }}
-            </div>
+            <div *ngIf="!isEditMode; else editDescription" class="description">{{ plant.description }}</div>
           </div>
           <ng-template #editDescription>
             <ng-container *ngIf="tempPlant">
@@ -68,9 +66,10 @@
         <div class="care-container">
           <mat-label>Care instructions</mat-label>
           <div class="text-container">
-            <div *ngIf="!isEditMode; else editCareInstructions" class="care-instruction">
-              {{ plant.careInstructions }}
-            </div>
+            <div
+              *ngIf="!isEditMode; else editCareInstructions"
+              class="care-instruction"
+            >{{ plant.careInstructions }}</div>
           </div>
           <ng-template #editCareInstructions>
             <ng-container *ngIf="tempPlant">
