@@ -1,14 +1,13 @@
-<div class="backend">
+<div class="container-fluid h-100 d-flex flex-column">
 
-  <div class="backend-interaction">
+  <div style="height: 10%">
     <h1>Backend Interaction</h1>
     <input type="file" (change)="onFileSelected($event)"/>
     <button (click)="uploadFile()">Upload File</button>
     <button (click)="backupCostData()">Backup Cost Data</button>
-    <hr/>
   </div>
 
-  <div class="backend-table">
-    <app-table [data]="responseData"></app-table>
+  <div style="height: 90%">
+    <app-bookings [bookings]="responseData"></app-bookings>
   </div>
 </div>

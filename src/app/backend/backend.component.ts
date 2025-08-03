@@ -1,22 +1,23 @@
 import {Component} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {TableComponent} from '../table/table.component';
+import {BookingsDTO} from './model/BookingsDTO';
+import {BookingsComponent} from './bookings/bookings.component';
 
 @Component({
   selector: 'app-backend',
   templateUrl: './backend.component.html',
   standalone: true,
   imports: [
-    TableComponent
+    BookingsComponent
   ],
   styleUrls: ['./backend.component.css']
 })
 export class BackendComponent {
 
-  private readonly BASE_URL = 'http://192.168.178.29:9001';
+  private readonly BASE_URL = 'http://localhost:9001';
 
   uploadedFile?: File;
-  responseData?: any;
+  responseData?: BookingsDTO;
 
   constructor(private http: HttpClient) {
   }
@@ -30,10 +31,10 @@ export class BackendComponent {
     const formData = new FormData();
     formData.append('file', this.uploadedFile);
 
-    this.http.post(`${this.BASE_URL}/camt-entries`, formData).subscribe({
-      next: (response) => {
+    this.http.post<BookingsDTO>(`${this.BASE_URL}/camt-entries`, formData).subscribe({
+      next: (response: BookingsDTO) => {
         console.log('Upload successful:', response);
-        this.responseData = response;
+        this.responseData = response; // Type-safe access to response data
       },
       error: (error) => {
         console.error('Upload error:', error);

@@ -1,0 +1,86 @@
+<div class="h-100 d-flex flex-column justify-content-center align-items-center">
+  <div class="h-100 w-100 d-flex flex-column overflow-auto gap-5">
+
+    @for (booking of bookings?.bookingsPerMonth; track $index) {
+      <div class="d-flex flex-column overflow-auto" style="border: 1px solid black; flex: 0 0 100%">
+        <div class="row m-0" style="height: 5%">
+          <div class="d-flex justify-content-center">
+            <h1>{{ booking.year }}-{{ booking.month }}</h1>
+          </div>
+        </div>
+
+        <div class="row m-0 p-2" style="height: 95%">
+          <div class="col h-100 overflow-auto">
+            <table mat-table [dataSource]="booking.usualBookings">
+              <ng-container matColumnDef="additionalInfo">
+                <th mat-header-cell *matHeaderCellDef>Buchungstext</th>
+                <td mat-cell *matCellDef="let element">{{ element.additionalInfo }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="amount">
+                <th mat-header-cell *matHeaderCellDef>Betrag</th>
+                <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="creditName">
+                <th mat-header-cell *matHeaderCellDef>An</th>
+                <td mat-cell *matCellDef="let element">{{ element.creditName }}</td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
+
+          <div class="col h-100 d-flex flex-column gap-2">
+            <div class="h-100 overflow-auto">
+              <table mat-table [dataSource]="booking.dailyCosts">
+                <ng-container matColumnDef="additionalInfo">
+                  <th mat-header-cell *matHeaderCellDef>Buchungstext</th>
+                  <td mat-cell *matCellDef="let element">{{ element.additionalInfo }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef>Betrag</th>
+                  <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="creditName">
+                  <th mat-header-cell *matHeaderCellDef>An</th>
+                  <td mat-cell *matCellDef="let element">{{ element.creditName }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+
+            <div class="h-100 overflow-auto">
+              <table mat-table [dataSource]="booking.incomes">
+                <ng-container matColumnDef="additionalInfo">
+                  <th mat-header-cell *matHeaderCellDef>Buchungstext</th>
+                  <td mat-cell *matCellDef="let element">{{ element.additionalInfo }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="amount">
+                  <th mat-header-cell *matHeaderCellDef>Betrag</th>
+                  <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="creditName">
+                  <th mat-header-cell *matHeaderCellDef>An</th>
+                  <td mat-cell *matCellDef="let element">{{ element.creditName }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    }
+
+  </div>
+</div>
