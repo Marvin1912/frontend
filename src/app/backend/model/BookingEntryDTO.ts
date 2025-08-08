@@ -3,7 +3,7 @@ import {CreditDebitCodeDTO} from './CreditDebitCodeDTO';
 export interface BookingEntryDTO {
   creditDebitCode: CreditDebitCodeDTO;
   entryInfo: string;
-  amount: string;
+  amount: number;
   bookingDate: string;
   firstOfMonth: string;
   debitName: string;

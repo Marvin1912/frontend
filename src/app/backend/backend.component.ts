@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BookingsDTO} from './model/BookingsDTO';
 import {BookingsComponent} from './bookings/bookings.component';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-backend',
@@ -13,8 +14,6 @@ import {BookingsComponent} from './bookings/bookings.component';
   styleUrls: ['./backend.component.css']
 })
 export class BackendComponent {
-
-  private readonly BASE_URL = 'http://localhost:9001';
 
   uploadedFile?: File;
   responseData?: BookingsDTO;
@@ -31,10 +30,10 @@ export class BackendComponent {
     const formData = new FormData();
     formData.append('file', this.uploadedFile);
 
-    this.http.post<BookingsDTO>(`${this.BASE_URL}/camt-entries`, formData).subscribe({
+    this.http.post<BookingsDTO>(`${environment.apiUrl}/camt-entries`, formData).subscribe({
       next: (response: BookingsDTO) => {
         console.log('Upload successful:', response);
-        this.responseData = response; // Type-safe access to response data
+        this.responseData = response;
       },
       error: (error) => {
         console.error('Upload error:', error);
@@ -44,7 +43,7 @@ export class BackendComponent {
   }
 
   backupCostData(): void {
-    this.http.post(`${this.BASE_URL}/export/costs`, '').subscribe({
+    this.http.post(`${environment.apiUrl}/export/costs`, '').subscribe({
       next: () => {
         console.log('Cost export and upload successful!');
       },
