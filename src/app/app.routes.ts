@@ -8,10 +8,22 @@ import {PlantRootComponent} from './plants/plant-root/plant-root.component';
 import {PlantEditComponent} from './plants/plant-edit/plant-edit.component';
 import {PlantOverviewComponent} from './plants/plant-overview/plant-overview.component';
 import {PlantDetailsComponent} from './plants/plant-details/plant-details.component';
+import {AddWordComponent} from './vocabulary/components/add-word/add-word.component';
+import {VocabularyListComponent} from './vocabulary/components/vocabulary-list/vocabulary-list.component';
+import {VocabularyHomeComponent} from './vocabulary/components/vocabulary-home/vocabulary-home.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'account', component: BackendComponent},
+  {
+    path: 'vocabulary',
+    component: VocabularyHomeComponent,
+    children: [
+      {path: 'add', component: AddWordComponent},
+      {path: 'add/:id', component: AddWordComponent},
+      {path: 'list', component: VocabularyListComponent}
+    ]
+  },
   {
     path: 'plant-root',
     component: PlantRootComponent,

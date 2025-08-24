@@ -1,0 +1,15 @@
+.mini-button:hover {
+  background-color: cyan;
+}
+
+.chosen {
+  background-color: deepskyblue;
+}
+
+.mini-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px
+}

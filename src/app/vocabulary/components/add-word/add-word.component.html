@@ -1,0 +1,144 @@
+<div class="h-100 container-fluid p-2 d-flex flex-column align-items-center">
+
+  @if (!isFromRouteCall) {
+    <div style="height: 10%">
+      <mat-form-field>
+        <mat-label>Get the english word</mat-label>
+        <input matInput type="text" [(ngModel)]="word" (keyup.enter)="getWord(word)">
+        @if (word) {
+          <button matSuffix mat-icon-button aria-label="Send" (click)="getWord(word)">
+            <mat-icon>send</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+    </div>
+  }
+
+  <div class="row h-100 w-100" style="height: 90%">
+
+    <div class="col h-100 d-flex flex-column gap-2">
+      @if (wordToShow) {
+        <h1>{{ wordToShow }}</h1>
+      }
+      <div class="row h-50 overflow-auto border border-black border-1 rounded-2">
+        <div class="d-flex flex-column gap-2">
+          @for (wordEntry of wordEntries(); track a; let a = $index) {
+            <div class="d-flex flex-column gap-2">
+              @for (meaning of wordEntry?.meanings; track aa; let aa = $index) {
+                <div class="d-flex flex-column p-2 gap-2 border border-2 rounded-2">
+                <span
+                  class="bg-body-secondary border border-1 rounded-1 fw-bold p-2 text-center"
+                  style="min-width: 10%; max-width: 20%"
+                >{{ meaning.partOfSpeech }}</span>
+                  @for (definition of meaning?.definitions; track aaa; let aaa = $index) {
+                    <div
+                      class="d-flex align-items-center border border-1 rounded-2 gap-1 px-2"
+                      [ngClass]="{chosen: isChosen(a + '-' + aa + '-' + aaa)}"
+                    >
+                      <div class="definition flex-grow-1">{{ definition.definition }}</div>
+                      <button
+                        class="mini-button border border-1 border-black rounded-2"
+                        (click)="setChosenText(a + '-' + aa + '-' + aaa, definition.definition)">
+                        @if (isChosen(a + '-' + aa + '-' + aaa)) {
+                          x
+                        }
+                      </button>
+                      <button
+                        class="mini-button border border-1 border-black rounded-2"
+                        (click)="setChosenForContext(a + '-' + aa + '-' + aaa, definition.definition)">
+                        @if (isChosenForContext(a + '-' + aa + '-' + aaa)) {
+                          x
+                        }
+                      </button>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+      <div class="row h-50 border border-black border-1 rounded-2 p-2">
+        <h4>Translation</h4>
+        <form [formGroup]="wordFormTranslation" (ngSubmit)="onSubmitTranslation()">
+          <div class="d-flex flex-column gap-1">
+            <span>Word</span>
+            <mat-form-field>
+              <input matInput formControlName="word">
+            </mat-form-field>
+            <span>Context</span>
+            <mat-form-field>
+              <textarea matInput formControlName="context"></textarea>
+            </mat-form-field>
+
+            <div class="d-flex justify-content-between gap-5">
+              <button
+                mat-flat-button
+                color="primary"
+                [disabled]="!wordFormTranslation.valid"
+                style="width: 10%"
+              >Submit
+              </button>
+              <div class="flex-grow-1 d-flex justify-content-center align-items-center">
+                @if (translation()) {
+                  <h4>{{ translation() }}</h4>
+                }
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="d-flex flex-column col h-100 w-100 pt-2">
+      @if (wordToShow) {
+        <div>
+          <h1>Save Word</h1>
+        </div>
+
+        <div class="flex-grow-1 d-flex flex-column border border-black border-1 rounded-2">
+          <div class="d-flex gap-3 p-2">
+            <mat-button-toggle-group [(ngModel)]="partOfSpeech" name="partOfSpeech">
+              @for (partOfSpeech of partsOfSpeech; track $index) {
+                <mat-button-toggle
+                  (click)="addArticleToWord(partOfSpeech)"
+                  value="{{partOfSpeech}}">{{ partOfSpeech }}
+                </mat-button-toggle>
+              }
+            </mat-button-toggle-group>
+          </div>
+
+          <form class="d-flex flex-column p-2" [formGroup]="wordForm" (ngSubmit)="onSubmit()">
+            <span>Deck</span>
+            <mat-form-field>
+              <input matInput formControlName="deck">
+            </mat-form-field>
+            <span>Front</span>
+            <mat-form-field>
+              <input matInput formControlName="front">
+            </mat-form-field>
+            <span>Back</span>
+            <mat-form-field>
+              <input matInput formControlName="back">
+            </mat-form-field>
+            <span>Description</span>
+            <mat-form-field>
+              <textarea matInput formControlName="description"></textarea>
+            </mat-form-field>
+            <button
+              mat-flat-button
+              color="primary"
+              [disabled]="!wordForm.valid"
+              style="width: 10%"
+            >Submit
+            </button>
+          </form>
+        </div>
+      }
+    </div>
+
+  </div>
+
+</div>
