@@ -17,24 +17,29 @@ import {DecimalPipe, NgClass} from '@angular/common';
 export class BookingsComponent {
 
   @Input() bookings?: BookingsDTO;
+  totalAmount = 0;
 
-  getTotalAmount(booking: MonthlyBookingEntriesDTO) {
-
-    let usualCosts = booking.usualBookings
-      .map(b => b.amount)
-      .reduce((amount, sum) => amount + sum, 0) ?? 0;
-
-    let dailyCosts = booking.dailyCosts
-      .map(b => b.amount)
-      .reduce((amount, sum) => amount + sum, 0) ?? 0;
-
-    return usualCosts + dailyCosts;
+  private sumAmounts(items: { amount: number }[] | undefined): number {
+    if (!items?.length) {
+      return 0;
+    }
+    return items.reduce((sum, b) => sum + (b?.amount ?? 0), 0);
   }
 
-  areExpensesHigherThanIncome(booking: MonthlyBookingEntriesDTO) {
-    return this.getTotalAmount(booking) >
-      booking.incomes.map(b => b.amount)
-        .reduce((amount, sum) => amount + sum, 0);
+  private round2(n: number): number {
+    return Math.round((n + Number.EPSILON) * 100) / 100;
+  }
+
+  getTotalAmount(booking: MonthlyBookingEntriesDTO): number {
+    const usual = this.sumAmounts(booking.usualBookings);
+    const daily = this.sumAmounts(booking.dailyCosts);
+    return this.round2(usual + daily);
+  }
+
+  areExpensesHigherThanIncome(booking: MonthlyBookingEntriesDTO): boolean {
+    const total = this.getTotalAmount(booking);
+    const income = this.round2(this.sumAmounts(booking.incomes));
+    return total > income;
   }
 
 }

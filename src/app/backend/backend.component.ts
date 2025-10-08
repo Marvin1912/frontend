@@ -32,7 +32,6 @@ export class BackendComponent {
 
     this.http.post<BookingsDTO>(`${environment.apiUrl}/camt-entries`, formData).subscribe({
       next: (response: BookingsDTO) => {
-        console.log('Upload successful:', response);
         this.responseData = response;
       },
       error: (error) => {
