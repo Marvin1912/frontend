@@ -42,4 +42,14 @@ export class BookingsComponent {
     return total > income;
   }
 
+  getIncomeAmount(booking: MonthlyBookingEntriesDTO): number {
+    return this.round2(this.sumAmounts(booking.incomes));
+  }
+
+  getEarningsDifference(booking: MonthlyBookingEntriesDTO): number {
+    const income = this.getIncomeAmount(booking);
+    const expenses = this.getTotalAmount(booking);
+    return this.round2(income - expenses);
+  }
+
 }
