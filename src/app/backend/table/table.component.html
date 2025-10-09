@@ -6,6 +6,7 @@
       <mat-icon class="text-light">{{ sortDirection === 'desc' ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
     </button>
   </div>
+  <div class="table-header-separator"></div>
   <div class="flex-grow-1 overflow-auto px-2">
     <table mat-table [dataSource]="getSortedBookings() || []" class="text-light">
 
