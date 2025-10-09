@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -11,7 +11,6 @@ import {
   MatRowDef,
   MatTable
 } from '@angular/material/table';
-import {MatButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {BookingEntryDTO} from '../model/BookingEntryDTO';
@@ -31,7 +30,6 @@ import {DecimalPipe} from '@angular/common';
     MatRowDef,
     MatTable,
     MatHeaderCellDef,
-    MatButton,
     MatIconModule,
     MatTooltipModule,
     DecimalPipe
@@ -43,17 +41,16 @@ export class TableComponent {
 
   @Input() bookings?: BookingEntryDTO[];
   @Input() title?: string;
-  @Output() itemRemoved = EventEmitter<{ booking: BookingEntryDTO, category: string }>();
+  @Output() itemRemoved = new EventEmitter<{ booking: BookingEntryDTO, category: string }>();
 
   displayedColumns: string[] = ['creditName', 'additionalInfo', 'amount', 'actions'];
   sortDirection: 'asc' | 'desc' = 'desc';
 
   getSortedBookings() {
     if (!this.bookings) return [];
-    const sorted = [...this.bookings].sort((a, b) => {
+    return [...this.bookings].sort((a, b) => {
       return this.sortDirection === 'desc' ? b.amount - a.amount : a.amount - b.amount;
     });
-    return sorted;
   }
 
   getTotalAmount() {
