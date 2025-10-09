@@ -1,22 +1,112 @@
+.home-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.metadata-section {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 1rem 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  flex-shrink: 0;
+}
+
+.metadata-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 800px;
+  width: 100%;
+}
+
+.metadata-card h3 {
+  margin: 0 0 0.75rem 0;
+  color: #333;
+  font-size: 1.25rem;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.metadata-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metadata-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.metadata-label {
+  font-weight: 600;
+  color: #555;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metadata-value {
+  font-weight: 500;
+  color: #2563eb;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  background: rgba(37, 99, 235, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+}
+
 .card-container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: 100vh;
+  flex-grow: 1;
   gap: 1.5rem;
+  padding: 1rem;
+  min-height: 0;
 }
 
 .card {
-  padding: 2rem;
+  padding: 1.5rem;
   border: 1px solid #ccc;
   border-radius: 10px;
   width: 300px;
   text-align: center;
   cursor: pointer;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  background: white;
 }
 
 .card:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+}
+
+.card h2 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.card p {
+  margin: 0;
+  color: #666;
 }
