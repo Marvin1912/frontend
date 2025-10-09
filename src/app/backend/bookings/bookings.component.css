@@ -1,8 +1,9 @@
 /* Minimal custom CSS - Bootstrap handles most styling */
-.h-10 {
-  height: 10%;
+.booking-header {
+  flex-shrink: 0;
 }
 
-.h-90 {
-  height: 90%;
+.booking-content {
+  flex: 1;
+  overflow: hidden;
 }

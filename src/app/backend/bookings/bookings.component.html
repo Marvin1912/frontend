@@ -4,7 +4,7 @@
     @for (booking of bookings?.bookingsPerMonth; track $index) {
       <div class="d-flex flex-column justify-content-between overflow-auto border border-secondary"
            style="flex: 0 0 100%">
-        <div class="row m-0 h-10">
+        <div class="row m-0 booking-header" style="flex: 0 0 auto; padding: 0.5rem;">
           <div class="d-flex flex-column align-items-center">
             <h2 class="text-light">{{ booking.year }}-{{ booking.month }}</h2>
             <div class="d-flex gap-3">
@@ -21,7 +21,7 @@
           </div>
         </div>
 
-        <div class="row m-0 p-2 h-90">
+        <div class="row m-0 p-2 booking-content" style="flex: 1 1 auto; overflow: hidden;">
           <div class="col h-100">
             <app-table title="Generelle Buchungen" [bookings]="booking.usualBookings"
                        (itemRemoved)="onItemRemoved($event, booking)"></app-table>
