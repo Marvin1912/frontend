@@ -24,7 +24,27 @@ span {
   background-color: var(--bs-gray-800) !important;
 }
 
-/* Material icon button styling */
+/* FAB mini button styling for dark theme */
+button.mat-mdc-fab {
+  background-color: var(--bs-secondary) !important;
+  color: var(--bs-light) !important;
+}
+
+button.mat-mdc-fab:hover {
+  background-color: var(--bs-primary) !important;
+}
+
+button.mat-mdc-fab.mat-warn {
+  background-color: var(--bs-danger) !important;
+  color: var(--bs-light) !important;
+}
+
+button.mat-mdc-fab.mat-warn:hover {
+  background-color: #dc3545 !important;
+  color: var(--bs-light) !important;
+}
+
+/* Legacy icon button styling (if any remain) */
 button.mat-mdc-icon-button {
   color: var(--bs-light) !important;
 }

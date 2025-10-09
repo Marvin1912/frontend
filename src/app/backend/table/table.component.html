@@ -1,9 +1,10 @@
 <div class="h-100 d-flex flex-column border border-secondary bg-dark text-light">
   <div class="d-flex justify-content-between align-items-center bg-secondary p-2">
     <h4 class="m-0 text-light">{{ title || 'n/a' }}</h4>
-    <button mat-icon-button (click)="toggleSort()"
-            matTooltip="Sortierung umschalten ({{ sortDirection === 'desc' ? 'Höchste zuerst' : 'Niedrigste zuerst' }})">
-      <mat-icon class="text-light">{{ sortDirection === 'desc' ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
+    <button mat-fab-mini (click)="toggleSort()"
+            matTooltip="Sortierung umschalten ({{ sortDirection === 'desc' ? 'Höchste zuerst' : 'Niedrigste zuerst' }}"
+            class="mat-dark">
+      <mat-icon>{{ sortDirection === 'desc' ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
     </button>
   </div>
   <div class="table-header-separator"></div>
@@ -28,7 +29,7 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef class="text-light"></th>
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button color="warn" (click)="removeItem(element)"
+          <button mat-fab-mini color="warn" (click)="removeItem(element)"
                   matTooltip="Entfernen">
             <mat-icon>delete</mat-icon>
           </button>

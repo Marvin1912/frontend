@@ -3,6 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {inject} from '@angular/core';
 import {BookingsDTO} from './model/BookingsDTO';
 import {BookingsComponent} from './bookings/bookings.component';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 import {environment} from '../../environments/environment';
 
 @Component({
@@ -10,7 +12,9 @@ import {environment} from '../../environments/environment';
   templateUrl: './backend.component.html',
   standalone: true,
   imports: [
-    BookingsComponent
+    BookingsComponent,
+    MatButtonModule,
+    MatIconModule
   ],
   styleUrls: ['./backend.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
