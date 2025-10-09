@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {inject} from '@angular/core';
 import {BookingsDTO} from './model/BookingsDTO';
@@ -20,6 +20,7 @@ export class BackendComponent {
   uploadedFile?: File;
   responseData?: BookingsDTO;
   private readonly http = inject(HttpClient);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   uploadFile(): void {
     if (!this.uploadedFile) {
@@ -33,10 +34,12 @@ export class BackendComponent {
     this.http.post<BookingsDTO>(`${environment.apiUrl}/camt-entries`, formData).subscribe({
       next: (response: BookingsDTO) => {
         this.responseData = response;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Upload error:', error);
         alert('Error uploading file.');
+        this.cdr.markForCheck();
       }
     });
   }
