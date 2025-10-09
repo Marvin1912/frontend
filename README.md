@@ -1,6 +1,6 @@
 # Frontend Application
 
-A comprehensive Angular 19 application with two main modules for financial management and plant care tracking.
+A comprehensive Angular 20 application with two main modules for financial management and plant care tracking.
 
 ## 🏦 Banking Module
 
@@ -52,8 +52,8 @@ npm test
 
 ## 🏗️ Architecture
 
-- **Angular 19** with standalone components
-- **Angular Material 19** with Azure Blue theme
+- **Angular 20** with standalone components
+- **Angular Material 20** with Azure Blue theme
 - **Bootstrap 5.3.6** + SASS for styling
 - **TypeScript** strict mode
 - **Docker** + Nginx for deployment
