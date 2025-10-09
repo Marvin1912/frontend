@@ -59,13 +59,19 @@ export class BookingsComponent {
 
     switch (category) {
       case 'usualBookings':
-        monthBooking.usualBookings = monthBooking.usualBookings?.filter(b => b !== booking);
+        if (monthBooking.usualBookings) {
+          monthBooking.usualBookings = [...monthBooking.usualBookings.filter(b => b !== booking)];
+        }
         break;
       case 'dailyCosts':
-        monthBooking.dailyCosts = monthBooking.dailyCosts?.filter(b => b !== booking);
+        if (monthBooking.dailyCosts) {
+          monthBooking.dailyCosts = [...monthBooking.dailyCosts.filter(b => b !== booking)];
+        }
         break;
       case 'incomes':
-        monthBooking.incomes = monthBooking.incomes?.filter(b => b !== booking);
+        if (monthBooking.incomes) {
+          monthBooking.incomes = [...monthBooking.incomes.filter(b => b !== booking)];
+        }
         break;
     }
   }

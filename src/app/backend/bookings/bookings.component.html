@@ -1,17 +1,17 @@
-<div class="h-100 d-flex flex-column justify-content-center align-items-center">
+<div class="h-100 d-flex flex-column justify-content-center align-items-center bg-dark text-light">
   <div class="h-100 w-100 d-flex flex-column overflow-auto gap-5">
 
     @for (booking of bookings?.bookingsPerMonth; track $index) {
-      <div class="d-flex flex-column justify-content-between overflow-auto"
-           style="border: 1px solid black; flex: 0 0 100%">
-        <div class="row m-0" style="height: 10%">
+      <div class="d-flex flex-column justify-content-between overflow-auto border border-secondary"
+           style="flex: 0 0 100%">
+        <div class="row m-0 booking-header" style="flex: 0 0 auto; padding: 0.5rem;">
           <div class="d-flex flex-column align-items-center">
-            <h2>{{ booking.year }}-{{ booking.month }}</h2>
+            <h2 class="text-light">{{ booking.year }}-{{ booking.month }}</h2>
             <div class="d-flex gap-3">
-              <span class="bg-info-subtle">Gesamtausgaben: {{ getTotalAmount(booking) | number: '.2' : 'de' }}</span>
-              <span class="bg-success-subtle">Einnahmen: {{ getIncomeAmount(booking) | number: '.2' : 'de' }}</span>
-              <span
-                [ngClass]="getEarningsDifference(booking) >= 0 ? 'bg-primary-subtle' : 'bg-danger'"
+              <span class="badge bg-secondary">Gesamtausgaben: {{ getTotalAmount(booking) | number: '.2' : 'de' }}</span>
+              <span class="badge bg-success">Einnahmen: {{ getIncomeAmount(booking) | number: '.2' : 'de' }}</span>
+              <span class="badge"
+                [ngClass]="getEarningsDifference(booking) >= 0 ? 'bg-primary' : 'bg-danger'"
               >Differenz: {{ getEarningsDifference(booking) | number: '.2' : 'de' }}
                 @if (getEarningsDifference(booking) < 0) {
                   (Die Ausgaben sind höher als die Einnahmen!)
@@ -21,7 +21,7 @@
           </div>
         </div>
 
-        <div class="row m-0 p-2" style="height: 90%">
+        <div class="row m-0 p-2 booking-content" style="flex: 1 1 auto; overflow: hidden;">
           <div class="col h-100">
             <app-table title="Generelle Buchungen" [bookings]="booking.usualBookings"
                        (itemRemoved)="onItemRemoved($event, booking)"></app-table>

@@ -13,6 +13,7 @@ import {
 } from '@angular/material/table';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatButtonModule} from '@angular/material/button';
 import {BookingEntryDTO} from '../model/BookingEntryDTO';
 import {DecimalPipe} from '@angular/common';
 
@@ -32,6 +33,7 @@ import {DecimalPipe} from '@angular/common';
     MatHeaderCellDef,
     MatIconModule,
     MatTooltipModule,
+    MatButtonModule,
     DecimalPipe
   ],
   templateUrl: './table.component.html',

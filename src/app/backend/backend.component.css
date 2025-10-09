@@ -1,0 +1,9 @@
+/* Minimal custom CSS - Bootstrap handles most styling */
+.header-section {
+  flex-shrink: 0;
+}
+
+.content-section {
+  flex: 1;
+  overflow: hidden;
+}

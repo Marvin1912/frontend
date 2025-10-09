@@ -71,3 +71,4 @@ src/app/
 - `src/environments/environment.ts` - API endpoints
 - `angular.json` - Build configuration and styles
 - When a new feature request comes in, go to master and pull --rebase and create a new feature branch.
+- Create a pull request after you've finished your work.

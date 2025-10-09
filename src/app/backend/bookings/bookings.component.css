@@ -1,0 +1,9 @@
+/* Minimal custom CSS - Bootstrap handles most styling */
+.booking-header {
+  flex-shrink: 0;
+}
+
+.booking-content {
+  flex: 1;
+  overflow: hidden;
+}

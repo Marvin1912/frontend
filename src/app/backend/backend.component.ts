@@ -1,8 +1,10 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {inject} from '@angular/core';
 import {BookingsDTO} from './model/BookingsDTO';
 import {BookingsComponent} from './bookings/bookings.component';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 import {environment} from '../../environments/environment';
 
 @Component({
@@ -10,7 +12,9 @@ import {environment} from '../../environments/environment';
   templateUrl: './backend.component.html',
   standalone: true,
   imports: [
-    BookingsComponent
+    BookingsComponent,
+    MatButtonModule,
+    MatIconModule
   ],
   styleUrls: ['./backend.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -20,6 +24,7 @@ export class BackendComponent {
   uploadedFile?: File;
   responseData?: BookingsDTO;
   private readonly http = inject(HttpClient);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   uploadFile(): void {
     if (!this.uploadedFile) {
@@ -33,10 +38,12 @@ export class BackendComponent {
     this.http.post<BookingsDTO>(`${environment.apiUrl}/camt-entries`, formData).subscribe({
       next: (response: BookingsDTO) => {
         this.responseData = response;
+        this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Upload error:', error);
         alert('Error uploading file.');
+        this.cdr.markForCheck();
       }
     });
   }
