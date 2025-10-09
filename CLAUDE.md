@@ -89,6 +89,15 @@ Before creating a pull request, ensure:
 - [ ] Code follows project patterns
 - [ ] Documentation is updated if needed
 
+### 🚨 CRITICAL REMINDER - PULL REQUESTS ARE MANDATORY
+**ALWAYS CREATE A PULL REQUEST AFTER COMPLETING ANY WORK**
+- **NO EXCEPTIONS** - Every task, fix, or feature requires a PR
+- **NO EXCUSES** - "I forgot" is not acceptable
+- **IMMEDIATE ACTION** - Create PR immediately after committing changes
+- **REVIEW FIRST** - Wait for review before considering work "done"
+
+**This is the most important rule in this project. Pull requests are not optional.**
+
 ## Key Files
 - `src/app/app.config.ts` - Main application configuration
 - `src/app/app.routes.ts` - Routing structure
