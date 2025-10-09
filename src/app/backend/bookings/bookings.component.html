@@ -1,40 +1,46 @@
-<div class="h-100 d-flex flex-column justify-content-center align-items-center">
-  <div class="h-100 w-100 d-flex flex-column overflow-auto gap-5">
+<div class="bookings-container">
+  <div class="monthly-sections">
 
     @for (booking of bookings?.bookingsPerMonth; track $index) {
-      <div class="d-flex flex-column justify-content-between overflow-auto"
-           style="border: 1px solid black; flex: 0 0 100%">
-        <div class="row m-0" style="height: 10%">
-          <div class="d-flex flex-column align-items-center">
-            <h2>{{ booking.year }}-{{ booking.month }}</h2>
-            <div class="d-flex gap-3">
-              <span class="bg-info-subtle">Gesamtausgaben: {{ getTotalAmount(booking) | number: '.2' : 'de' }}</span>
-              <span class="bg-success-subtle">Einnahmen: {{ getIncomeAmount(booking) | number: '.2' : 'de' }}</span>
-              <span
-                [ngClass]="getEarningsDifference(booking) >= 0 ? 'bg-primary-subtle' : 'bg-danger'"
-              >Differenz: {{ getEarningsDifference(booking) | number: '.2' : 'de' }}
-                @if (getEarningsDifference(booking) < 0) {
-                  (Die Ausgaben sind höher als die Einnahmen!)
-                }
-              </span>
+      <div class="monthly-section">
+        <div class="month-header">
+          <h2 class="month-title">{{ booking.year }}-{{ booking.month }}</h2>
+          <div class="financial-summary"
+               [ngClass]="getEarningsDifference(booking) >= 0 ? 'positive' : 'negative'">
+            <div class="financial-item">
+              <span class="financial-label">Ausgaben</span>
+              <span class="financial-value">{{ getTotalAmount(booking) | number: '.2' : 'de' }}</span>
+            </div>
+            <div class="financial-item">
+              <span class="financial-label">Einnahmen</span>
+              <span class="financial-value">{{ getIncomeAmount(booking) | number: '.2' : 'de' }}</span>
+            </div>
+            <div class="financial-item">
+              <span class="financial-label">Differenz</span>
+              <span class="financial-value">{{ getEarningsDifference(booking) | number: '.2' : 'de' }}</span>
+              @if (getEarningsDifference(booking) < 0) {
+                <span class="financial-warning">Die Ausgaben sind höher als die Einnahmen!</span>
+              }
             </div>
           </div>
         </div>
 
-        <div class="row m-0 p-2" style="height: 90%">
-          <div class="col h-100">
-            <app-table title="Generelle Buchungen" [bookings]="booking.usualBookings"
-                       (itemRemoved)="onItemRemoved($event, booking)"></app-table>
-          </div>
-
-          <div class="col h-100 d-flex flex-column gap-2">
-            <div class="overflow-auto" style="max-height: 70%">
-              <app-table title="Täglicher Bedarf" [bookings]="booking.dailyCosts"
+        <div class="month-content">
+          <div class="table-column">
+            <div class="table-container">
+              <app-table title="Generelle Buchungen" [bookings]="booking.usualBookings"
                          (itemRemoved)="onItemRemoved($event, booking)"></app-table>
             </div>
-            <div class="overflow-auto flex-grow-1">
+          </div>
+
+          <div class="table-column-right">
+            <div class="table-container-small">
+              <app-table title="Täglicher Bedarf" [bookings]="booking.dailyCosts"
+                           (itemRemoved)="onItemRemoved($event, booking)"></app-table>
+            </div>
+            <div class="table-container-large">
               <app-table title="Einkommen" [bookings]="booking.incomes"
-                         (itemRemoved)="onItemRemoved($event, booking)"></app-table>
+                           (itemRemoved)="onItemRemoved($event, booking)"></app-table>
             </div>
           </div>
         </div>

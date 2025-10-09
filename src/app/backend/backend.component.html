@@ -1,21 +1,29 @@
-<div class="container-fluid h-100 d-flex flex-column">
+<div class="banking-container">
 
-  <div style="height: 10%">
-    <div class="d-flex justify-content-center">
-      <h1>Auswertung der Kontoauszüge</h1>
-    </div>
-    <div class="d-flex justify-content-between">
-      <div>
-        <input type="file" (change)="onFileSelected($event)"/>
-        <button (click)="uploadFile()">Upload File</button>
+  <div class="banking-header">
+    <h1 class="banking-title">Auswertung der Kontoauszüge</h1>
+    <div class="banking-controls">
+      <div class="file-upload-section">
+        <div class="file-input-wrapper">
+          <input type="file" (change)="onFileSelected($event)" class="file-input" id="fileInput"/>
+          <label for="fileInput" class="file-input-label">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <span>Datei auswählen</span>
+          </label>
+        </div>
+        <button (click)="uploadFile()" class="banking-button">Hochladen</button>
       </div>
-      <div>
-        <button (click)="backupCostData()">Backup Cost Data</button>
-      </div>
+      <button (click)="backupCostData()" class="banking-button banking-button-secondary">
+        Daten sichern
+      </button>
     </div>
   </div>
 
-  <div style="height: 90%">
+  <div class="banking-content">
     <app-bookings [bookings]="responseData"></app-bookings>
   </div>
 </div>
