@@ -1,105 +1,64 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
 ## Project Overview
+Angular 20 frontend with two modules:
+1. **Banking** - camt file processing, monthly bookings, cost outliers
+2. **Plant Management** - CRUD for plants with images & watering schedules
 
-This is an Angular 20 frontend application with two main modules:
-1. **Banking/Accounting Module** - Processes camt files to display monthly booking entries and identify cost outliers
-2. **Plant Management System** - Complete CRUD application for managing plants with images and watering schedules
-
-## Development Commands
-
+## Commands
 ```bash
-npm start            # Start development server
-npm run build        # Build for production
-npm run watch        # Build in watch mode for development
+npm start            # Dev server
+npm run build        # Production build
+npm run watch        # Watch build
 npm test             # Run tests
 ```
 
 ## Architecture
+- **Stack**: Angular 20 standalone, Angular Material 20, Bootstrap 5.3.6, TypeScript ES2022
+- **API**: `http://localhost:9001` - `/camt-entries`, `/export/costs`, `/plants`, `/images`
+- **Locale**: German (`de-DE`), date format `DD.MM.YYYY`
 
-### Technology Stack
-- **Angular 20** with standalone components (no NgModule)
-- **Angular Material 20** with Azure Blue theme
-- **Bootstrap 5.3.6** + SASS for styling
-- **TypeScript** strict mode with ES2022 target
-- **Docker** + Nginx for deployment
+## Workflow Process
 
-### Project Structure
-```
-src/app/
-├── backend/          # Banking/accounting module
-│   ├── model/       # DTOs for camt file processing (BookingsDTO, MonthlyBookingEntriesDTO)
-│   ├── bookings/    # Booking entries component
-│   └── table/       # Table display component
-├── plants/          # Plant management system
-│   ├── model/       # Plant data models (Plant, PlantLocation)
-│   ├── plant-*/     # Various plant components
-│   ├── dialogs/     # Dialog components
-│   ├── plant-service/ # Plant CRUD API service
-│   └── image-service/ # Image handling service
-└── home/            # Home component
-```
+### 📝 TODO Lists - ALWAYS CREATE BEFORE ANY TASK
+Use TodoWrite tool for:
+- Multi-step implementation work
+- Breaking down user requests into items
+- Feature development planning
+- Bug fix investigation & implementation
+- Code refactoring tracking
 
-### Key Patterns
-- **Standalone Components**: All components use standalone architecture with direct imports
-- **Service Layer**: HTTP services use Observable pattern with RxJS
-- **Strong TypeScript Typing**: Interface-based models throughout
-- **Nested Routing**: Parent/child route relationships with navigation context
-
-### API Integration
-- **Development API**: `http://localhost:9001`
-- **Banking endpoints**: `/camt-entries`, `/export/costs`
-- **Plant endpoints**: `/plants`, `/images`
-
-## Configuration
-
-### Environment
-- German locale configured (`de-DE`)
-- Date format: `DD.MM.YYYY` using Moment.js adapter
-- Production bundle size limits: 4.5MB warning, 5MB error
-
-### Deployment
-- Multi-stage Docker build (Node.js build + Nginx serving)
-- Pushes to private registry: `192.168.178.29:5000`
-- Nginx configured for SPA routing with asset caching
-
-## Workflow & Development Process
+**Best Practices:**
+- Specific, actionable items
+- Mark `in_progress` when starting, `completed` when finished
+- Only ONE task `in_progress` at a time
+- Add new tasks discovered during implementation
 
 ### 🔄 Git Workflow
-1. **Start New Work**: Always begin on the `master` branch
-2. **Update Master**: Pull latest changes with `git pull --rebase`
-3. **Create Feature Branch**: Create a new branch for your work
-4. **Complete Task**: Implement your changes thoroughly
-5. **Create Pull Request**: **ALWAYS** create a PR after finishing work
+1. Start on `master` branch
+2. `git pull --rebase` for latest changes
+3. Create feature branch
+4. Implement thoroughly
+5. **ALWAYS** create PR after finishing
 
-### 📋 Pull Request Requirements
-- **Create a PR after EVERY completed task or feature**
-- **Include clear description** of changes made
-- **Reference any related issues** if applicable
-- **Ensure code is tested** and builds successfully
-- **Wait for review** before merging
-
-### ✅ Completion Checklist
-Before creating a pull request, ensure:
-- [ ] Code compiles without errors (`npm run build`)
+### ✅ Pre-PR Checklist
+- [ ] Code compiles (`npm run build`)
 - [ ] Tests pass (`npm test`)
-- [ ] Feature is fully implemented
-- [ ] Code follows project patterns
-- [ ] Documentation is updated if needed
+- [ ] Feature fully implemented
+- [ ] Code follows patterns
+- [ ] Documentation updated
 
-### 🚨 CRITICAL REMINDER - PULL REQUESTS ARE MANDATORY
-**ALWAYS CREATE A PULL REQUEST AFTER COMPLETING ANY WORK**
-- **NO EXCEPTIONS** - Every task, fix, or feature requires a PR
-- **NO EXCUSES** - "I forgot" is not acceptable
-- **IMMEDIATE ACTION** - Create PR immediately after committing changes
-- **REVIEW FIRST** - Wait for review before considering work "done"
+### 🚨 PULL REQUESTS ARE MANDATORY
+**ALWAYS CREATE A PR AFTER COMPLETING ANY WORK**
+- NO EXCEPTIONS - Every task/fix/feature requires a PR
+- NO EXCUSES - "I forgot" is not acceptable
+- IMMEDIATE ACTION - Create PR immediately after committing
+- REVIEW FIRST - Wait for review before considering work "done"
 
-**This is the most important rule in this project. Pull requests are not optional.**
+**This is the most important rule. Pull requests are not optional.**
 
 ## Key Files
-- `src/app/app.config.ts` - Main application configuration
-- `src/app/app.routes.ts` - Routing structure
+- `src/app/app.config.ts` - Main configuration
+- `src/app/app.routes.ts` - Routing
 - `src/environments/environment.ts` - API endpoints
-- `angular.json` - Build configuration and styles
+- `angular.json` - Build configuration
