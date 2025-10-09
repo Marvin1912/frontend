@@ -36,6 +36,6 @@ button.mat-mdc-icon-button:hover {
 /* Clear separation between component header and table */
 .table-header-separator {
   border-bottom: 2px solid var(--bs-primary);
-  margin: 0;
+  margin: 8px 0;
   padding: 0;
 }
