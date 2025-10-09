@@ -1,42 +1,44 @@
-<div class="metadata-section">
-  <div class="metadata-card">
-    <h3>System Information</h3>
-    <div class="metadata-grid">
-      <div class="metadata-item">
-        <span class="metadata-label">Node.js:</span>
-        <span class="metadata-value">{{ metadata.nodeVersion }}</span>
-      </div>
-      <div class="metadata-item">
-        <span class="metadata-label">npm:</span>
-        <span class="metadata-value">{{ metadata.npmVersion }}</span>
-      </div>
-      <div class="metadata-item">
-        <span class="metadata-label">Angular:</span>
-        <span class="metadata-value">{{ metadata.angularVersion }}</span>
-      </div>
-      <div class="metadata-item">
-        <span class="metadata-label">Version:</span>
-        <span class="metadata-value">{{ metadata.projectVersion }}</span>
-      </div>
-      <div class="metadata-item">
-        <span class="metadata-label">Environment:</span>
-        <span class="metadata-value">{{ metadata.environment }}</span>
-      </div>
-      <div class="metadata-item">
-        <span class="metadata-label">Built:</span>
-        <span class="metadata-value">{{ metadata.buildTime | date:'dd.MM.yyyy HH:mm:ss' }}</span>
+<div class="home-container">
+  <div class="metadata-section">
+    <div class="metadata-card">
+      <h3>System Information</h3>
+      <div class="metadata-grid">
+        <div class="metadata-item">
+          <span class="metadata-label">Node.js:</span>
+          <span class="metadata-value">{{ metadata.nodeVersion }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">npm:</span>
+          <span class="metadata-value">{{ metadata.npmVersion }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Angular:</span>
+          <span class="metadata-value">{{ metadata.angularVersion }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Version:</span>
+          <span class="metadata-value">{{ metadata.projectVersion }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Environment:</span>
+          <span class="metadata-value">{{ metadata.environment }}</span>
+        </div>
+        <div class="metadata-item">
+          <span class="metadata-label">Built:</span>
+          <span class="metadata-value">{{ metadata.buildTime | date:'dd.MM.yyyy HH:mm:ss' }}</span>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="card-container">
-  <div class="card" routerLink="/account">
-    <h2>Account</h2>
-    <p>Account analysis</p>
-  </div>
-  <div class="card" routerLink="/plant-root">
-    <h2>Plants</h2>
-    <p>Manage plants</p>
+  <div class="card-container">
+    <div class="card" routerLink="/account">
+      <h2>Account</h2>
+      <p>Account analysis</p>
+    </div>
+    <div class="card" routerLink="/plant-root">
+      <h2>Plants</h2>
+      <p>Manage plants</p>
+    </div>
   </div>
 </div>
