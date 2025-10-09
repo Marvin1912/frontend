@@ -1,6 +1,7 @@
 import js from '@eslint/js';
 import typescript from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
+import angular from '@angular-eslint/eslint-plugin';
 
 export default [
   js.configs.recommended,
@@ -26,10 +27,14 @@ export default [
     },
     plugins: {
       '@typescript-eslint': typescript,
+      '@angular-eslint': angular,
     },
     rules: {
       // TypeScript recommended rules
       ...typescript.configs.recommended.rules,
+
+      // Angular recommended rules
+      ...angular.configs.recommended.rules,
 
       // Custom rules for this project
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
@@ -39,6 +44,20 @@ export default [
       '@typescript-eslint/no-wrapper-object-types': 'warn',
       'prefer-const': 'error',
       'no-unused-vars': 'off', // Turn off base rule as TypeScript version is used
+
+      // Angular specific rules
+      '@angular-eslint/directive-selector': [
+        'error',
+        { type: 'attribute', prefix: 'app', style: 'camelCase' },
+      ],
+      '@angular-eslint/component-selector': [
+        'error',
+        { type: 'element', prefix: 'app', style: 'kebab-case' },
+      ],
+      '@angular-eslint/no-input-rename': 'error',
+      '@angular-eslint/no-output-rename': 'error',
+      '@angular-eslint/use-lifecycle-interface': 'error',
+      '@angular-eslint/prefer-on-push-component-change-detection': 'warn',
     },
   },
   {
