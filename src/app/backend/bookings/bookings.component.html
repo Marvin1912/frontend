@@ -23,15 +23,18 @@
 
         <div class="row m-0 p-2" style="height: 90%">
           <div class="col h-100">
-            <app-table title="Generelle Buchungen" [bookings]="booking.usualBookings"></app-table>
+            <app-table title="Generelle Buchungen" [bookings]="booking.usualBookings"
+                       (itemRemoved)="onItemRemoved($event, booking)"></app-table>
           </div>
 
           <div class="col h-100 d-flex flex-column gap-2">
             <div class="overflow-auto" style="max-height: 70%">
-              <app-table title="Täglicher Bedarf" [bookings]="booking.dailyCosts"></app-table>
+              <app-table title="Täglicher Bedarf" [bookings]="booking.dailyCosts"
+                         (itemRemoved)="onItemRemoved($event, booking)"></app-table>
             </div>
             <div class="overflow-auto flex-grow-1">
-              <app-table title="Einkommen" [bookings]="booking.incomes"></app-table>
+              <app-table title="Einkommen" [bookings]="booking.incomes"
+                         (itemRemoved)="onItemRemoved($event, booking)"></app-table>
             </div>
           </div>
         </div>

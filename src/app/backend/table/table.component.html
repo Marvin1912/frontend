@@ -1,5 +1,11 @@
 <div class="h-100 d-flex flex-column border border-black border-1">
-  <h4 class="bg-dark-subtle">{{ title || 'n/a' }}</h4>
+  <div class="d-flex justify-content-between align-items-center bg-dark-subtle p-2">
+    <h4 class="m-0">{{ title || 'n/a' }}</h4>
+    <button mat-icon-button (click)="toggleSort()"
+            matTooltip="Sortierung umschalten ({{ sortDirection === 'desc' ? 'Höchste zuerst' : 'Niedrigste zuerst' }})">
+      <mat-icon>{{ sortDirection === 'desc' ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
+    </button>
+  </div>
   <div class="flex-grow-1 overflow-auto px-2">
     <table mat-table [dataSource]="getSortedBookings() || []">
 
@@ -15,7 +21,17 @@
 
       <ng-container matColumnDef="amount">
         <th mat-header-cell *matHeaderCellDef>Betrag</th>
-        <td mat-cell *matCellDef="let element">{{ element.amount }}</td>
+        <td mat-cell *matCellDef="let element">{{ element.amount | number: '.2' : 'de' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button color="warn" (click)="removeItem(element)"
+                  matTooltip="Entfernen">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -2,6 +2,7 @@ import {Component, Input} from '@angular/core';
 import {BookingsDTO} from '../model/BookingsDTO';
 import {TableComponent} from '../table/table.component';
 import {MonthlyBookingEntriesDTO} from '../model/MonthlyBookingEntriesDTO';
+import {BookingEntryDTO} from '../model/BookingEntryDTO';
 import {DecimalPipe, NgClass} from '@angular/common';
 
 @Component({
@@ -50,6 +51,22 @@ export class BookingsComponent {
     const income = this.getIncomeAmount(booking);
     const expenses = this.getTotalAmount(booking);
     return this.round2(income - expenses);
+  }
+
+  onItemRemoved(event: { booking: BookingEntryDTO, category: string }, monthBooking: MonthlyBookingEntriesDTO) {
+    const { booking, category } = event;
+
+    switch (category) {
+      case 'usualBookings':
+        monthBooking.usualBookings = monthBooking.usualBookings?.filter(b => b !== booking);
+        break;
+      case 'dailyCosts':
+        monthBooking.dailyCosts = monthBooking.dailyCosts?.filter(b => b !== booking);
+        break;
+      case 'incomes':
+        monthBooking.incomes = monthBooking.incomes?.filter(b => b !== booking);
+        break;
+    }
   }
 
 }
