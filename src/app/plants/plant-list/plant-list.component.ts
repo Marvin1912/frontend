@@ -76,16 +76,16 @@ export class PlantListComponent implements OnInit, OnDestroy {
   }
 
   openCreateImageDialog(plant: Plant): void {
-    let matDialogRef = this.dialog.open(CreateImageDialogComponent, {
+    const matDialogRef = this.dialog.open(CreateImageDialogComponent, {
       width: '400px',
       data: plant
     });
 
     matDialogRef.afterClosed().subscribe((result: string | null) => {
       if (result) {
-        let tmpPlant = {...plant, image: result};
+        const tmpPlant = {...plant, image: result};
         this.plantService.updatePlant(tmpPlant).subscribe({
-          next: value => {
+          next: () => {
             this.snackBar.open(`Plant updated!`, 'Dismiss', {
               duration: 5000
             })
@@ -115,7 +115,7 @@ export class PlantListComponent implements OnInit, OnDestroy {
   }
 
   openDeletePlantDialog(plant: Plant) {
-    let matDialogRef = this.dialog.open(DeletePlantDialogComponent, {
+    const matDialogRef = this.dialog.open(DeletePlantDialogComponent, {
       data: {plant}
     });
 

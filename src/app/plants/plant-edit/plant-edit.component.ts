@@ -43,7 +43,7 @@ export class PlantEditComponent implements OnInit {
   plant: Plant | null = null;
   tempPlant: Plant | null = null;
 
-  imageUrl: String | null = null;
+  imageUrl: string | null = null;
   selectedFile?: File;
   isEditMode: boolean = false;
   tmpLastWatered: Date | null = null;
@@ -62,7 +62,7 @@ export class PlantEditComponent implements OnInit {
   }
 
   ngOnInit() {
-    let rawId: string | null = this.route.snapshot.paramMap.get('id');
+    const rawId: string | null = this.route.snapshot.paramMap.get('id');
     if (rawId != null) {
       this.platService.getPlant(parseInt(rawId)).subscribe({
           next: plantResponse => {
@@ -106,7 +106,7 @@ export class PlantEditComponent implements OnInit {
     if (this.selectedFile) {
       this.imageService.createImage(this.selectedFile).subscribe({
         next: response => {
-          let imageUuid = this.imageService.extractUuidFromResponse(response) ?? this.plant?.image ?? '';
+          const imageUuid = this.imageService.extractUuidFromResponse(response) ?? this.plant?.image ?? '';
           if (this.tempPlant) {
             this.tempPlant.image = imageUuid;
 

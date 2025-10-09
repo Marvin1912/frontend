@@ -28,7 +28,7 @@ import {MatTooltip} from '@angular/material/tooltip';
 export class PlantDetailsComponent implements OnInit {
 
   plant: Plant | null = null;
-  imageUrl: String | null = null;
+  imageUrl: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,7 +37,7 @@ export class PlantDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let rawId: string | null = this.route.snapshot.paramMap.get('id');
+    const rawId: string | null = this.route.snapshot.paramMap.get('id');
     if (rawId != null) {
       this.platService.getPlant(parseInt(rawId)).subscribe({
           next: plantResponse => {

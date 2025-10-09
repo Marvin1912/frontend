@@ -38,7 +38,7 @@ export class DeletePlantDialogComponent {
   deletePlant() {
     this.plantService.deletePlant(this.data.plant.id)
       .subscribe({
-        next: (response) => {
+        next: () => {
           this.snackBar.open(
             `Plant ${this.data.plant.name} deleted!`,
             'Dissmiss', {

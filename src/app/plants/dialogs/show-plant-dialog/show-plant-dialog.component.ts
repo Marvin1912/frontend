@@ -15,7 +15,7 @@ import {environment} from '../../../../environments/environment';
 })
 export class ShowPlantDialogComponent {
 
-  imageUrl: String | null = null;
+  imageUrl: string | null = null;
 
   constructor(@Inject(PLANT_DATA) public plant: Plant) {
     this.imageUrl = `${environment.apiUrl}/images/${plant.image}`

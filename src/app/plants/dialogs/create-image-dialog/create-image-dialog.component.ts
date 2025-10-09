@@ -48,7 +48,7 @@ export class CreateImageDialogComponent {
 
     this.imageService.createImage(this.selectedFile).subscribe({
       next: (response) => {
-        let uuid = this.imageService.extractUuidFromResponse(response);
+        const uuid = this.imageService.extractUuidFromResponse(response);
         this.dialogRef.close(uuid);
       },
       error: (err) => {
