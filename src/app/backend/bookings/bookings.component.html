@@ -7,13 +7,17 @@
         <div class="row m-0" style="height: 10%">
           <div class="d-flex flex-column align-items-center">
             <h2>{{ booking.year }}-{{ booking.month }}</h2>
-            <span
-              [ngClass]="areExpensesHigherThanIncome(booking) ? 'bg-danger' : 'bg-info-subtle'"
-            >Gesamtausgaben: {{ getTotalAmount(booking) | number: '.2' : 'de' }}
-              @if (areExpensesHigherThanIncome(booking)) {
-                (Die Ausgaben sind höher als die Einnahmen!)
-              }
-            </span>
+            <div class="d-flex gap-3">
+              <span class="bg-info-subtle">Gesamtausgaben: {{ getTotalAmount(booking) | number: '.2' : 'de' }}</span>
+              <span class="bg-success-subtle">Einnahmen: {{ getIncomeAmount(booking) | number: '.2' : 'de' }}</span>
+              <span
+                [ngClass]="getEarningsDifference(booking) >= 0 ? 'bg-primary-subtle' : 'bg-danger'"
+              >Differenz: {{ getEarningsDifference(booking) | number: '.2' : 'de' }}
+                @if (getEarningsDifference(booking) < 0) {
+                  (Die Ausgaben sind höher als die Einnahmen!)
+                }
+              </span>
+            </div>
           </div>
         </div>
 
