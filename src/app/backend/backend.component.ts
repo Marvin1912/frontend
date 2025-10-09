@@ -6,6 +6,7 @@ import {BookingsComponent} from './bookings/bookings.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {environment} from '../../environments/environment';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-backend',
@@ -14,7 +15,8 @@ import {environment} from '../../environments/environment';
   imports: [
     BookingsComponent,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltip
   ],
   styleUrls: ['./backend.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
