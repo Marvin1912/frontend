@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -11,6 +11,8 @@ import {
   MatRowDef,
   MatTable
 } from '@angular/material/table';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {BookingEntryDTO} from '../model/BookingEntryDTO';
 import {DecimalPipe} from '@angular/common';
 
@@ -28,6 +30,8 @@ import {DecimalPipe} from '@angular/common';
     MatRowDef,
     MatTable,
     MatHeaderCellDef,
+    MatIconModule,
+    MatTooltipModule,
     DecimalPipe
   ],
   templateUrl: './table.component.html',
@@ -37,16 +41,47 @@ export class TableComponent {
 
   @Input() bookings?: BookingEntryDTO[];
   @Input() title?: string;
+  @Output() itemRemoved = new EventEmitter<{ booking: BookingEntryDTO, category: string }>();
 
-  displayedColumns: string[] = ['creditName', 'additionalInfo', 'amount'];
+  displayedColumns: string[] = ['creditName', 'additionalInfo', 'amount', 'actions'];
+  sortDirection: 'asc' | 'desc' = 'desc';
 
   getSortedBookings() {
-    return this.bookings?.sort((a, b) => b.amount - a.amount);
+    if (!this.bookings) return [];
+    return [...this.bookings].sort((a, b) => {
+      return this.sortDirection === 'desc' ? b.amount - a.amount : a.amount - b.amount;
+    });
   }
 
   getTotalAmount() {
     return this.bookings?.map(b => b.amount)
       .reduce((amount, sum) => amount + sum, 0);
+  }
+
+  toggleSort() {
+    this.sortDirection = this.sortDirection === 'desc' ? 'asc' : 'desc';
+  }
+
+  removeItem(booking: BookingEntryDTO) {
+    this.itemRemoved.emit({
+      booking,
+      category: this.getCategoryFromTitle()
+    });
+  }
+
+  private getCategoryFromTitle(): string {
+    if (!this.title) return 'unknown';
+
+    switch (this.title) {
+      case 'Generelle Buchungen':
+        return 'usualBookings';
+      case 'Täglicher Bedarf':
+        return 'dailyCosts';
+      case 'Einkommen':
+        return 'incomes';
+      default:
+        return 'unknown';
+    }
   }
 
 }
