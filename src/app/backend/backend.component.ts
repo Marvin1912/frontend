@@ -1,5 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {inject} from '@angular/core';
 import {BookingsDTO} from './model/BookingsDTO';
 import {BookingsComponent} from './bookings/bookings.component';
 import {environment} from '../../environments/environment';
@@ -11,15 +12,14 @@ import {environment} from '../../environments/environment';
   imports: [
     BookingsComponent
   ],
-  styleUrls: ['./backend.component.css']
+  styleUrls: ['./backend.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BackendComponent {
 
   uploadedFile?: File;
   responseData?: BookingsDTO;
-
-  constructor(private http: HttpClient) {
-  }
+  private readonly http = inject(HttpClient);
 
   uploadFile(): void {
     if (!this.uploadedFile) {
@@ -53,7 +53,8 @@ export class BackendComponent {
     })
   }
 
-  onFileSelected(event: any): void {
-    this.uploadedFile = event.target.files[0];
+  onFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.uploadedFile = target.files?.[0];
   }
 }

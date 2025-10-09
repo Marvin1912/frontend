@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
 import {BookingsDTO} from '../model/BookingsDTO';
 import {TableComponent} from '../table/table.component';
 import {MonthlyBookingEntriesDTO} from '../model/MonthlyBookingEntriesDTO';
@@ -13,7 +13,8 @@ import {DecimalPipe, NgClass} from '@angular/common';
     NgClass
   ],
   templateUrl: './bookings.component.html',
-  styleUrl: './bookings.component.css'
+  styleUrl: './bookings.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookingsComponent {
 
