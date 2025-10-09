@@ -28,11 +28,11 @@
           </div>
 
           <div class="col h-100 d-flex flex-column gap-1">
-            <div class="overflow-auto" style="flex: 1 1 auto;">
+            <div style="flex: 1 1 auto; overflow: hidden;">
               <app-table title="Täglicher Bedarf" [bookings]="booking.dailyCosts"
                          (itemRemoved)="onItemRemoved($event, booking)"></app-table>
             </div>
-            <div class="overflow-auto" style="flex: 1 1 auto;">
+            <div style="flex: 1 1 auto; overflow: hidden;">
               <app-table title="Einkommen" [bookings]="booking.incomes"
                          (itemRemoved)="onItemRemoved($event, booking)"></app-table>
             </div>
