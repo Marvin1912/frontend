@@ -1,13 +1,13 @@
 <div class="h-100 d-flex flex-column justify-content-center align-items-center bg-dark text-light">
-  <div class="h-100 w-100 d-flex flex-column overflow-auto gap-5">
+  <div class="h-100 w-100 d-flex flex-column overflow-auto gap-3">
 
     @for (booking of bookings?.bookingsPerMonth; track $index) {
       <div class="d-flex flex-column justify-content-between overflow-auto border border-secondary"
            style="flex: 0 0 100%">
-        <div class="row m-0 booking-header" style="flex: 0 0 auto; padding: 0.5rem;">
+        <div class="row m-0 booking-header" style="flex: 0 0 auto; padding: 0.25rem;">
           <div class="d-flex flex-column align-items-center">
-            <h2 class="text-light">{{ booking.year }}-{{ booking.month }}</h2>
-            <div class="d-flex gap-3">
+            <h3 class="text-light fs-5 mb-2">{{ booking.year }}-{{ booking.month }}</h3>
+            <div class="d-flex gap-2">
               <span class="badge bg-secondary">Gesamtausgaben: {{ getTotalAmount(booking) | number: '.2' : 'de' }}</span>
               <span class="badge bg-success">Einnahmen: {{ getIncomeAmount(booking) | number: '.2' : 'de' }}</span>
               <span class="badge"
@@ -21,18 +21,18 @@
           </div>
         </div>
 
-        <div class="row m-0 p-2 booking-content" style="flex: 1 1 auto; overflow: hidden;">
+        <div class="row m-0 p-1 booking-content" style="flex: 1 1 auto; overflow: hidden;">
           <div class="col h-100">
             <app-table title="Generelle Buchungen" [bookings]="booking.usualBookings"
                        (itemRemoved)="onItemRemoved($event, booking)"></app-table>
           </div>
 
-          <div class="col h-100 d-flex flex-column gap-2">
-            <div class="overflow-auto" style="max-height: 70%">
+          <div class="col h-100 d-flex flex-column gap-1">
+            <div style="flex: 0 0 50%; overflow: hidden;">
               <app-table title="Täglicher Bedarf" [bookings]="booking.dailyCosts"
                          (itemRemoved)="onItemRemoved($event, booking)"></app-table>
             </div>
-            <div class="overflow-auto flex-grow-1">
+            <div style="flex: 0 0 50%; overflow: hidden;">
               <app-table title="Einkommen" [bookings]="booking.incomes"
                          (itemRemoved)="onItemRemoved($event, booking)"></app-table>
             </div>
