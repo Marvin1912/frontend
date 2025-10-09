@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an Angular 19 frontend application with two main modules:
+This is an Angular 20 frontend application with two main modules:
 1. **Banking/Accounting Module** - Processes camt files to display monthly booking entries and identify cost outliers
 2. **Plant Management System** - Complete CRUD application for managing plants with images and watering schedules
 
@@ -20,8 +20,8 @@ npm test             # Run tests
 ## Architecture
 
 ### Technology Stack
-- **Angular 19** with standalone components (no NgModule)
-- **Angular Material 19** with Azure Blue theme
+- **Angular 20** with standalone components (no NgModule)
+- **Angular Material 20** with Azure Blue theme
 - **Bootstrap 5.3.6** + SASS for styling
 - **TypeScript** strict mode with ES2022 target
 - **Docker** + Nginx for deployment
@@ -88,6 +88,15 @@ Before creating a pull request, ensure:
 - [ ] Feature is fully implemented
 - [ ] Code follows project patterns
 - [ ] Documentation is updated if needed
+
+### 🚨 CRITICAL REMINDER - PULL REQUESTS ARE MANDATORY
+**ALWAYS CREATE A PULL REQUEST AFTER COMPLETING ANY WORK**
+- **NO EXCEPTIONS** - Every task, fix, or feature requires a PR
+- **NO EXCUSES** - "I forgot" is not acceptable
+- **IMMEDIATE ACTION** - Create PR immediately after committing changes
+- **REVIEW FIRST** - Wait for review before considering work "done"
+
+**This is the most important rule in this project. Pull requests are not optional.**
 
 ## Key Files
 - `src/app/app.config.ts` - Main application configuration
