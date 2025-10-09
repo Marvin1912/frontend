@@ -15,8 +15,12 @@ span {
   font-weight: 500 !important;
   font-size: 0.75rem !important;
   padding: 4px 8px !important;
-  height: 28px !important;
   line-height: 1.2 !important;
+}
+
+.mat-mdc-header-row {
+  height: 28px !important;
+  min-height: 28px !important;
 }
 
 .mat-mdc-cell {
@@ -32,7 +36,7 @@ span {
 }
 
 /* FAB mini button styling for dark theme */
-button.mat-mdc-fab {
+button.mat-mdc-mini-fab {
   background-color: var(--bs-secondary) !important;
   color: var(--bs-light) !important;
   width: 32px !important;
@@ -40,11 +44,11 @@ button.mat-mdc-fab {
   font-size: 14px !important;
 }
 
-button.mat-mdc-fab:hover {
+button.mat-mdc-mini-fab:hover {
   background-color: var(--bs-primary) !important;
 }
 
-button.mat-mdc-fab.mat-warn {
+button.mat-mdc-mini-fab.mat-warn {
   background-color: var(--bs-danger) !important;
   color: var(--bs-light) !important;
   width: 32px !important;
@@ -52,13 +56,13 @@ button.mat-mdc-fab.mat-warn {
   font-size: 14px !important;
 }
 
-button.mat-mdc-fab.mat-warn:hover {
+button.mat-mdc-mini-fab.mat-warn:hover {
   background-color: #dc3545 !important;
   color: var(--bs-light) !important;
 }
 
 /* Backend header buttons */
-.header-section button.mat-mdc-fab {
+.header-section button.mat-mdc-mini-fab {
   width: 36px !important;
   height: 36px !important;
   font-size: 16px !important;
