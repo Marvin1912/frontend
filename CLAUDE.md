@@ -65,10 +65,32 @@ src/app/
 - Pushes to private registry: `192.168.178.29:5000`
 - Nginx configured for SPA routing with asset caching
 
+## Workflow & Development Process
+
+### 🔄 Git Workflow
+1. **Start New Work**: Always begin on the `master` branch
+2. **Update Master**: Pull latest changes with `git pull --rebase`
+3. **Create Feature Branch**: Create a new branch for your work
+4. **Complete Task**: Implement your changes thoroughly
+5. **Create Pull Request**: **ALWAYS** create a PR after finishing work
+
+### 📋 Pull Request Requirements
+- **Create a PR after EVERY completed task or feature**
+- **Include clear description** of changes made
+- **Reference any related issues** if applicable
+- **Ensure code is tested** and builds successfully
+- **Wait for review** before merging
+
+### ✅ Completion Checklist
+Before creating a pull request, ensure:
+- [ ] Code compiles without errors (`npm run build`)
+- [ ] Tests pass (`npm test`)
+- [ ] Feature is fully implemented
+- [ ] Code follows project patterns
+- [ ] Documentation is updated if needed
+
 ## Key Files
 - `src/app/app.config.ts` - Main application configuration
 - `src/app/app.routes.ts` - Routing structure
 - `src/environments/environment.ts` - API endpoints
 - `angular.json` - Build configuration and styles
-- When a new feature request comes in, go to master and pull --rebase and create a new feature branch.
-- Create a pull request after you've finished your work.
