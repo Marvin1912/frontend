@@ -1,60 +1,8 @@
-/* Dark theme for banking/accounting module */
-
-.h-100.d-flex.flex-column {
-  background-color: #000000;
-  color: #d3d3d3;
+/* Minimal custom CSS - Bootstrap handles most styling */
+.h-10 {
+  height: 10%;
 }
 
-.h-100.d-flex.flex-column h2 {
-  color: #d3d3d3;
-}
-
-.h-100.w-100.d-flex.flex-column {
-  background-color: #000000;
-}
-
-.d-flex.justify-content-between.overflow-auto {
-  background-color: #0a0a0a;
-  border: 1px solid #404040 !important;
-}
-
-.d-flex.justify-content-between.overflow-auto h2 {
-  color: #d3d3d3;
-}
-
-/* Span elements for financial summaries */
-.d-flex.gap-3 span {
-  background-color: #1a1a1a !important;
-  color: #d3d3d3 !important;
-  border: 1px solid #404040;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-.d-flex.gap-3 .bg-info-subtle,
-.d-flex.gap-3 .bg-success-subtle,
-.d-flex.gap-3 .bg-primary-subtle {
-  background-color: #1a1a1a !important;
-  color: #d3d3d3 !important;
-  border: 1px solid #404040;
-}
-
-.d-flex.gap-3 .bg-danger {
-  background-color: #2a0000 !important;
-  color: #ffcccc !important;
-  border: 1px solid #800000;
-}
-
-/* Column styling */
-.col.h-100 {
-  background-color: #0a0a0a;
-}
-
-/* Gap styling */
-.d-flex.gap-2 {
-  background-color: #0a0a0a;
-}
-
-.overflow-auto {
-  background-color: #0a0a0a;
+.h-90 {
+  height: 90%;
 }

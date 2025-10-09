@@ -2,59 +2,31 @@ span {
   font-weight: bold;
 }
 
-/* Dark theme for table component */
-.h-100.d-flex.flex-column {
-  background-color: #000000;
-  border: 1px solid #404040 !important;
-}
-
-.h-100.d-flex.flex-column .bg-dark-subtle {
-  background-color: #1a1a1a !important;
-  color: #d3d3d3 !important;
-}
-
-.h-100.d-flex.flex-column h4 {
-  color: #d3d3d3;
-}
-
-/* Angular Material Table overrides */
+/* Angular Material Table dark theme overrides - Bootstrap can't handle these */
 .mat-mdc-table {
-  background-color: #0a0a0a !important;
+  background-color: transparent !important;
 }
 
 .mat-mdc-header-cell {
-  background-color: #1a1a1a !important;
-  color: #d3d3d3 !important;
-  border-bottom: 1px solid #404040 !important;
+  background-color: var(--bs-secondary) !important;
+  color: var(--bs-light) !important;
+  border-bottom: 1px solid var(--bs-secondary) !important;
 }
 
 .mat-mdc-cell {
-  color: #d3d3d3 !important;
-  border-bottom: 1px solid #404040 !important;
+  color: var(--bs-light) !important;
+  border-bottom: 1px solid var(--bs-secondary) !important;
 }
 
 .mat-mdc-row:hover .mat-mdc-cell {
-  background-color: #1a1a1a !important;
+  background-color: var(--bs-gray-800) !important;
 }
 
-/* Button styling */
+/* Material icon button styling */
 button.mat-mdc-icon-button {
-  color: #d3d3d3 !important;
+  color: var(--bs-light) !important;
 }
 
 button.mat-mdc-icon-button:hover {
-  background-color: #1a1a1a !important;
-}
-
-/* Sum footer */
-.border-top.bg-info-subtle {
-  background-color: #1a1a1a !important;
-  color: #d3d3d3 !important;
-  border-top: 1px solid #404040 !important;
-  border-bottom: 1px solid #404040 !important;
-  padding: 8px !important;
-}
-
-.border-top.bg-info-subtle strong {
-  color: #d3d3d3 !important;
+  background-color: var(--bs-gray-700) !important;
 }
