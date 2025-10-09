@@ -4,10 +4,10 @@
     <div class="d-flex justify-content-center">
       <h1 class="text-light">Auswertung der Kontoauszüge</h1>
     </div>
-    <div class="d-flex justify-content-between">
-      <div>
-        <input type="file" class="form-control bg-secondary text-light border-secondary" (change)="onFileSelected($event)"/>
-        <button class="btn btn-secondary mt-2" (click)="uploadFile()">Upload File</button>
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex gap-2 align-items-center">
+        <input type="file" class="form-control bg-secondary text-light border-secondary" (change)="onFileSelected($event)" style="width: auto;"/>
+        <button class="btn btn-secondary" (click)="uploadFile()">Upload File</button>
       </div>
       <div>
         <button class="btn btn-secondary" (click)="backupCostData()">Backup Cost Data</button>
