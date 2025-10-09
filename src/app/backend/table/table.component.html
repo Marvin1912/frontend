@@ -1,14 +1,14 @@
 <div class="h-100 d-flex flex-column border border-secondary bg-dark text-light">
-  <div class="d-flex justify-content-between align-items-center bg-secondary p-2">
-    <h4 class="m-0 text-light">{{ title || 'n/a' }}</h4>
+  <div class="d-flex justify-content-between align-items-center bg-secondary p-1">
+    <h5 class="m-0 text-light fs-6">{{ title || 'n/a' }}</h5>
     <button mat-mini-fab (click)="toggleSort()"
             matTooltip="Sortierung umschalten ({{ sortDirection === 'desc' ? 'Höchste zuerst' : 'Niedrigste zuerst' }}"
             class="mat-dark">
       <mat-icon>{{ sortDirection === 'desc' ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
     </button>
   </div>
-  <div class="table-header-separator"></div>
-  <div class="flex-grow-1 overflow-auto px-2">
+  <div class="table-header-separator" style="margin: 2px 0;"></div>
+  <div class="flex-grow-1 overflow-auto px-1">
     <table mat-table [dataSource]="getSortedBookings() || []" class="text-light">
 
       <ng-container matColumnDef="creditName">
@@ -41,8 +41,8 @@
     </table>
   </div>
 
-  <div class="border-top border-secondary bg-secondary mx-2 my-3 p-2">
-    <strong class="text-light">Summe: {{ getTotalAmount() | number: '.2' : 'de' }}</strong>
+  <div class="border-top border-secondary bg-secondary mx-1 my-1 p-1">
+    <strong class="text-light fs-6">Summe: {{ getTotalAmount() | number: '.2' : 'de' }}</strong>
   </div>
 
 </div>

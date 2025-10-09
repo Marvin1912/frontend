@@ -5,19 +5,25 @@ span {
 /* Angular Material Table dark theme overrides - Bootstrap can't handle these */
 .mat-mdc-table {
   background-color: transparent !important;
-  border-top: 2px solid var(--bs-primary) !important;
+  border-top: 1px solid var(--bs-primary) !important;
 }
 
 .mat-mdc-header-cell {
   background-color: var(--bs-gray-800) !important;
   color: var(--bs-light) !important;
-  border-bottom: 2px solid var(--bs-primary) !important;
-  font-weight: 600 !important;
+  border-bottom: 1px solid var(--bs-primary) !important;
+  font-weight: 500 !important;
+  font-size: 0.875rem !important;
+  padding: 8px 12px !important;
+  height: auto !important;
 }
 
 .mat-mdc-cell {
   color: var(--bs-light) !important;
   border-bottom: 1px solid var(--bs-gray-700) !important;
+  padding: 6px 12px !important;
+  height: auto !important;
+  font-size: 0.875rem !important;
 }
 
 .mat-mdc-row:hover .mat-mdc-cell {
