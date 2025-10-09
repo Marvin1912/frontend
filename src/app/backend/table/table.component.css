@@ -1,3 +1,60 @@
 span {
   font-weight: bold;
 }
+
+/* Dark theme for table component */
+.h-100.d-flex.flex-column {
+  background-color: #000000;
+  border: 1px solid #404040 !important;
+}
+
+.h-100.d-flex.flex-column .bg-dark-subtle {
+  background-color: #1a1a1a !important;
+  color: #d3d3d3 !important;
+}
+
+.h-100.d-flex.flex-column h4 {
+  color: #d3d3d3;
+}
+
+/* Angular Material Table overrides */
+.mat-mdc-table {
+  background-color: #0a0a0a !important;
+}
+
+.mat-mdc-header-cell {
+  background-color: #1a1a1a !important;
+  color: #d3d3d3 !important;
+  border-bottom: 1px solid #404040 !important;
+}
+
+.mat-mdc-cell {
+  color: #d3d3d3 !important;
+  border-bottom: 1px solid #404040 !important;
+}
+
+.mat-mdc-row:hover .mat-mdc-cell {
+  background-color: #1a1a1a !important;
+}
+
+/* Button styling */
+button.mat-mdc-icon-button {
+  color: #d3d3d3 !important;
+}
+
+button.mat-mdc-icon-button:hover {
+  background-color: #1a1a1a !important;
+}
+
+/* Sum footer */
+.border-top.bg-info-subtle {
+  background-color: #1a1a1a !important;
+  color: #d3d3d3 !important;
+  border-top: 1px solid #404040 !important;
+  border-bottom: 1px solid #404040 !important;
+  padding: 8px !important;
+}
+
+.border-top.bg-info-subtle strong {
+  color: #d3d3d3 !important;
+}

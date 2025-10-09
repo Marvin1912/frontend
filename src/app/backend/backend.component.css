@@ -1,0 +1,29 @@
+.container-fluid {
+  background-color: #000000;
+  color: #d3d3d3;
+  min-height: 100vh;
+}
+
+h1 {
+  color: #d3d3d3;
+}
+
+input[type="file"] {
+  background-color: #1a1a1a;
+  color: #d3d3d3;
+  border: 1px solid #404040;
+  padding: 8px;
+}
+
+button {
+  background-color: #1a1a1a;
+  color: #d3d3d3;
+  border: 1px solid #404040;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #333333;
+  border-color: #666666;
+}
