@@ -1,24 +1,28 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Plant} from '../../model/plant';
-import {PLANT_DATA} from '../../tokens/plant-overlay-token';
 import {MatIcon} from '@angular/material/icon';
 import {PlantLocation} from '../../model/plantLocation';
 import {environment} from '../../../../environments/environment';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-show-plant-dialog',
   imports: [
-    MatIcon
+    MatIcon,
+    NgIf
   ],
   templateUrl: './show-plant-dialog.component.html',
   styleUrl: './show-plant-dialog.component.css'
 })
-export class ShowPlantDialogComponent {
+export class ShowPlantDialogComponent implements OnChanges {
 
+  @Input() plant: Plant | null = null;
   imageUrl: string | null = null;
 
-  constructor(@Inject(PLANT_DATA) public plant: Plant) {
-    this.imageUrl = `${environment.apiUrl}/images/${plant.image}`
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['plant'] && this.plant) {
+      this.imageUrl = this.plant.image ? `${environment.apiUrl}/images/${this.plant.image}` : null;
+    }
   }
 
   getIcon(plant: Plant) {
