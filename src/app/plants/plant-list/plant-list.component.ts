@@ -14,7 +14,6 @@ import {
   MatTable,
   MatTableDataSource
 } from '@angular/material/table';
-import {NgIf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
@@ -39,7 +38,6 @@ import {environment} from '../../../environments/environment';
     MatHeaderRowDef,
     MatRow,
     MatRowDef,
-    NgIf,
     MatIcon,
     MatIconButton,
     ShowPlantDialogComponent
