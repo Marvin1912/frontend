@@ -1,4 +1,4 @@
-import {Component, Injector, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Plant} from '../model/plant';
 import {PlantService} from '../plant-service/plant.service';
 import {
@@ -14,7 +14,6 @@ import {
   MatTable,
   MatTableDataSource
 } from '@angular/material/table';
-import {NgIf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
@@ -23,9 +22,6 @@ import {ShowImageDialogComponent} from '../dialogs/show-image-dialog/show-image-
 import {Router} from '@angular/router';
 import {DeletePlantDialogComponent} from '../dialogs/delete-plant-dialog/delete-plant-dialog.component';
 import {ShowPlantDialogComponent} from '../dialogs/show-plant-dialog/show-plant-dialog.component';
-import {Overlay, OverlayRef} from '@angular/cdk/overlay';
-import {ComponentPortal} from '@angular/cdk/portal';
-import {PLANT_DATA} from '../tokens/plant-overlay-token';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {environment} from '../../../environments/environment';
 
@@ -42,9 +38,9 @@ import {environment} from '../../../environments/environment';
     MatHeaderRowDef,
     MatRow,
     MatRowDef,
-    NgIf,
     MatIcon,
-    MatIconButton
+    MatIconButton,
+    ShowPlantDialogComponent
   ],
   templateUrl: './plant-list.component.html',
   styleUrl: './plant-list.component.css'
@@ -53,14 +49,18 @@ export class PlantListComponent implements OnInit, OnDestroy {
 
   plants = new MatTableDataSource<Plant>();
   columnsToDisplay = ['name', 'species', 'image', 'delete'];
+
+  // Preview popup properties
+  previewVisible = false;
+  currentPreviewPlant: Plant | null = null;
+  previewPosition = { x: 0, y: 0 };
   hoverTimeout: ReturnType<typeof setTimeout> | null = null;
-  overlayRef: OverlayRef | null = null;
+  hideTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private plantService: PlantService,
     private dialog: MatDialog,
     private router: Router,
-    private overlay: Overlay,
     private snackBar: MatSnackBar
   ) {
   }
@@ -126,43 +126,44 @@ export class PlantListComponent implements OnInit, OnDestroy {
     });
   }
 
-  createInjector(plant: Plant): Injector {
-    return Injector.create({
-      providers: [{provide: PLANT_DATA, useValue: plant}]
-    });
-  }
-
-  openPlantDetailDialog(event: MouseEvent, plant: Plant) {
-
-    const positionStrategy = this.overlay.position()
-      .global()
-      .left(`${event.clientX + 15}px`)
-      .top(`${event.clientY}px`);
+  // Simplified preview methods
+  showPlantPreview(plant: Plant, event: MouseEvent): void {
+    clearTimeout(this.hoverTimeout ?? 0);
+    clearTimeout(this.hideTimeout ?? 0);
 
     this.hoverTimeout = setTimeout(() => {
+      this.currentPreviewPlant = plant;
+      this.previewVisible = true;
 
-      const overlayRef = this.overlay.create({
-        positionStrategy,
-        scrollStrategy: this.overlay.scrollStrategies.reposition()
-      });
-
-      overlayRef.attach(new ComponentPortal(ShowPlantDialogComponent, null, this.createInjector(plant)));
-      this.overlayRef = overlayRef;
-
-    }, 500);
+      // Position the preview near the mouse
+      const tableContainer = document.querySelector('.table-container');
+      if (tableContainer) {
+        const rect = tableContainer.getBoundingClientRect();
+        this.previewPosition = {
+          x: Math.min(event.clientX - rect.left + 15, rect.width - 270), // 270px is the popup width
+          y: Math.min(event.clientY - rect.top, window.innerHeight - 300) // 300px is popup height with margin
+        };
+      }
+    }, 300); // Reduced timeout for better UX
   }
 
-  clearPlantDialog() {
+  hidePlantPreview(): void {
     clearTimeout(this.hoverTimeout ?? 0);
-    this.hoverTimeout = null;
-    this.overlayRef?.detach();
+    clearTimeout(this.hideTimeout ?? 0);
+
+    // Add a small delay before hiding to allow moving mouse to preview
+    this.hideTimeout = setTimeout(() => {
+      this.previewVisible = false;
+      this.currentPreviewPlant = null;
+    }, 200);
   }
 
-  closePlantDetailDialog() {
-    this.clearPlantDialog();
+  keepPreviewVisible(): void {
+    // Keep preview visible when hovering over it
+    clearTimeout(this.hideTimeout ?? 0);
   }
 
   ngOnDestroy(): void {
-    this.clearPlantDialog();
+    this.hidePlantPreview();
   }
 }
