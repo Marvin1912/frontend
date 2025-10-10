@@ -28,19 +28,6 @@
 .plant-preview-container {
   position: absolute;
   z-index: 1000;
-  pointer-events: none; /* Allow mouse events to pass through to the table */
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-
-  &.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Enhanced preview animation when visible */
-.plant-preview-container {
   pointer-events: auto; /* Enable interaction with the preview */
   animation: fadeInScale 0.2s ease-out;
 }

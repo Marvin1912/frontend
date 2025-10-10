@@ -52,7 +52,9 @@
     class="plant-preview-container"
     *ngIf="previewVisible"
     [style.left.px]="previewPosition.x"
-    [style.top.px]="previewPosition.y">
+    [style.top.px]="previewPosition.y"
+    (mouseenter)="keepPreviewVisible()"
+    (mouseleave)="hidePlantPreview()">
     <app-show-plant-dialog [plant]="currentPreviewPlant"></app-show-plant-dialog>
   </div>
 </div>

@@ -57,6 +57,7 @@ export class PlantListComponent implements OnInit, OnDestroy {
   currentPreviewPlant: Plant | null = null;
   previewPosition = { x: 0, y: 0 };
   hoverTimeout: ReturnType<typeof setTimeout> | null = null;
+  hideTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private plantService: PlantService,
@@ -130,6 +131,7 @@ export class PlantListComponent implements OnInit, OnDestroy {
   // Simplified preview methods
   showPlantPreview(plant: Plant, event: MouseEvent): void {
     clearTimeout(this.hoverTimeout ?? 0);
+    clearTimeout(this.hideTimeout ?? 0);
 
     this.hoverTimeout = setTimeout(() => {
       this.currentPreviewPlant = plant;
@@ -149,9 +151,18 @@ export class PlantListComponent implements OnInit, OnDestroy {
 
   hidePlantPreview(): void {
     clearTimeout(this.hoverTimeout ?? 0);
-    this.hoverTimeout = null;
-    this.previewVisible = false;
-    this.currentPreviewPlant = null;
+    clearTimeout(this.hideTimeout ?? 0);
+
+    // Add a small delay before hiding to allow moving mouse to preview
+    this.hideTimeout = setTimeout(() => {
+      this.previewVisible = false;
+      this.currentPreviewPlant = null;
+    }, 200);
+  }
+
+  keepPreviewVisible(): void {
+    // Keep preview visible when hovering over it
+    clearTimeout(this.hideTimeout ?? 0);
   }
 
   ngOnDestroy(): void {
