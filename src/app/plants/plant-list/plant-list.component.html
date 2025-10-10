@@ -41,9 +41,18 @@
       mat-row *matRowDef="let plant; columns: columnsToDisplay;"
       class="clickable-row"
       (click)="navigateToPlant(plant.id)"
-      (mouseenter)="openPlantDetailDialog($event, plant)"
-      (mouseleave)="closePlantDetailDialog()">
+      (mouseenter)="showPlantPreview(plant, $event)"
+      (mouseleave)="hidePlantPreview()">
     </tr>
 
   </table>
+
+  <!-- Plant Preview Container -->
+  <div
+    class="plant-preview-container"
+    *ngIf="previewVisible"
+    [style.left.px]="previewPosition.x"
+    [style.top.px]="previewPosition.y">
+    <app-show-plant-dialog [plant]="currentPreviewPlant"></app-show-plant-dialog>
+  </div>
 </div>
