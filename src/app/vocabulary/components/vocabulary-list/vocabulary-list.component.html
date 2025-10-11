@@ -31,6 +31,11 @@
         (change)="filterMarkedAsUpdated('markedAsUpdated')"
       >Updated
       </mat-checkbox>
+      <mat-checkbox
+        [(ngModel)]="withoutDescription"
+        (change)="filterWithoutDescription('withoutDescription')"
+      >Without Description
+      </mat-checkbox>
     </div>
     <div class="col-8"></div>
   </div>
