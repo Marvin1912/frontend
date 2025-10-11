@@ -11,5 +11,13 @@
   justify-content: center;
   align-items: center;
   width: 20px;
-  height: 20px
+  height: 20px;
+}
+
+/* Ensure proper flex layout to prevent overflow */
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }

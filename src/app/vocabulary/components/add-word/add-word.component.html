@@ -1,7 +1,7 @@
-<div class="h-100 container-fluid p-2 d-flex flex-column align-items-center">
+<div class="h-100 container-fluid p-2 d-flex flex-column align-items-center overflow-hidden">
 
   @if (!isFromRouteCall) {
-    <div style="height: 10%">
+    <div class="flex-shrink-0 mb-2">
       <mat-form-field>
         <mat-label>Get the english word</mat-label>
         <input matInput type="text" [(ngModel)]="word" (keyup.enter)="getWord(word)">
@@ -14,7 +14,7 @@
     </div>
   }
 
-  <div class="row h-100 w-100" style="height: 90%">
+  <div class="row flex-grow-1 w-100 h-100">
 
     <div class="col h-100 d-flex flex-column gap-2">
       @if (wordToShow) {
