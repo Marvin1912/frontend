@@ -85,7 +85,7 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
   // Use signals to track count updates properly
   readonly filteredCount = signal(0);
   readonly totalCount = signal(0);
-  readonly hasActiveFilters = computed(() => this.filters.length > 0 && this.filters.some(f => f.trim() !== '' && f !== ' '));
+  readonly hasActiveFilters = signal(false);
 
   constructor(
     private vocabularyService: VocabularyService,
@@ -214,5 +214,6 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
   private updateCounts(): void {
     this.totalCount.set(this.flashcards.data.length);
     this.filteredCount.set(this.flashcards.filteredData.length);
+    this.hasActiveFilters.set(this.filters.length > 0 && this.filters.some(f => f.trim() !== '' && f !== ' '));
   }
 }
