@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, model, ModelSignal, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, model, ModelSignal, OnInit, ViewChild, computed} from '@angular/core';
 import {VocabularyService} from '../../services/vocabulary.service';
 import {Flashcard} from '../../model/Flashcard';
 import {
@@ -81,6 +81,10 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
   readonly withoutArticle: ModelSignal<boolean> = model(false);
   readonly markedAsupdated: ModelSignal<boolean> = model(false);
   readonly withoutDescription: ModelSignal<boolean> = model(false);
+
+  readonly filteredCount = computed(() => this.flashcards.filteredData.length);
+  readonly totalCount = computed(() => this.flashcards.data.length);
+  readonly hasActiveFilters = computed(() => this.filters.length > 0 && this.filters.some(f => f.trim() !== '' && f !== ' '));
 
   constructor(
     private vocabularyService: VocabularyService,
