@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, model, ModelSignal, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, model, ModelSignal, OnInit, ViewChild, computed, signal} from '@angular/core';
 import {VocabularyService} from '../../services/vocabulary.service';
 import {Flashcard} from '../../model/Flashcard';
 import {
@@ -82,6 +82,11 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
   readonly markedAsupdated: ModelSignal<boolean> = model(false);
   readonly withoutDescription: ModelSignal<boolean> = model(false);
 
+  // Use signals to track count updates properly
+  readonly filteredCount = signal(0);
+  readonly totalCount = signal(0);
+  readonly hasActiveFilters = signal(false);
+
   constructor(
     private vocabularyService: VocabularyService,
     private router: Router
@@ -92,6 +97,7 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
     this.vocabularyService.getFlashcards().subscribe({
       next: value => {
         this.flashcards.data = value;
+        this.updateCounts();
       },
       error: err => {
         console.log(err)
@@ -178,6 +184,7 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
     }
 
     this.flashcards.filter = this.filters.join(',') || ' ';
+    this.updateCounts();
   }
 
   filterWithoutArticle(value: string): void {
@@ -201,5 +208,12 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
       this.filters = this.filters.filter(v => v !== value);
     }
     this.flashcards.filter = this.filters.join(',') || ' ';
+    this.updateCounts();
+  }
+
+  private updateCounts(): void {
+    this.totalCount.set(this.flashcards.data.length);
+    this.filteredCount.set(this.flashcards.filteredData.length);
+    this.hasActiveFilters.set(this.filters.length > 0 && this.filters.some(f => f.trim() !== '' && f !== ' '));
   }
 }
