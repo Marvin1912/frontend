@@ -33,6 +33,10 @@ function applyFilter(flashcard: Flashcard, filter: string, value: string): boole
     return flashcard.updated;
   }
 
+  if ('withoutDescription' === filter) {
+    return !flashcard.description || flashcard.description.trim() === '';
+  }
+
   let wordFilter = /####([a-z]+)####/i.exec(filter);
   if (wordFilter) {
     return value.toLowerCase().includes(wordFilter[1]);
@@ -76,6 +80,7 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
 
   readonly withoutArticle: ModelSignal<boolean> = model(false);
   readonly markedAsupdated: ModelSignal<boolean> = model(false);
+  readonly withoutDescription: ModelSignal<boolean> = model(false);
 
   constructor(
     private vocabularyService: VocabularyService,
@@ -181,6 +186,10 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
 
   filterMarkedAsUpdated(value: string): void {
     this.filterFlashcards(value, this.markedAsupdated());
+  }
+
+  filterWithoutDescription(value: string): void {
+    this.filterFlashcards(value, this.withoutDescription());
   }
 
   private filterFlashcards(value: string, isSet: boolean): void {
