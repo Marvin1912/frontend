@@ -22,6 +22,7 @@ import {ActivatedRoute} from '@angular/router';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgClass} from '@angular/common';
+import {MatTooltip} from '@angular/material/tooltip';
 
 const DEFAULT_DECK = 'Standard';
 
@@ -64,7 +65,8 @@ function validateWordPrefix(
     MatFormField,
     MatButtonToggleGroup,
     MatButtonToggle,
-    NgClass
+    NgClass,
+    MatTooltip
   ],
   templateUrl: './add-word.component.html',
   styleUrl: './add-word.component.css',
