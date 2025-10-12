@@ -22,6 +22,15 @@ import {ActivatedRoute} from '@angular/router';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgClass} from '@angular/common';
+import {
+  DictionaryError,
+  WordNotFoundError,
+  RateLimitExceededError,
+  DictionaryServiceUnavailableError,
+  InvalidWordError,
+  DictionaryApiError,
+  UnexpectedDictionaryError
+} from '../../model/dictionary-error.model';
 
 const DEFAULT_DECK = 'Standard';
 
@@ -160,9 +169,7 @@ export class AddWordComponent implements OnInit {
                   this.partsOfSpeech = this.setPartsOfSpeech(res);
                 },
                 error: err => {
-                  this.snackBar.open(`Getting word failed: ${err.message}`, 'Dismiss', {
-                    duration: 10000
-                  });
+                  this.handleDictionaryError(err, this.wordToShow);
                 }
               }
             );
@@ -189,9 +196,7 @@ export class AddWordComponent implements OnInit {
           this.wordFormTranslation.patchValue({'word': word}, {emitEvent: false});
         },
         error: err => {
-          this.snackBar.open(`Getting word failed: ${err.message}`, 'Dismiss', {
-            duration: 10000
-          });
+          this.handleDictionaryError(err, word);
         }
       }
     )
@@ -338,5 +343,38 @@ export class AddWordComponent implements OnInit {
 
   isChosenForContext(index: string): boolean {
     return this.chosenForContext.filter(value => index === value.index).length > 0;
+  }
+
+  private handleDictionaryError(error: any, word: string = ''): void {
+    let errorMessage = '';
+    let duration = 10000;
+
+    if (error instanceof WordNotFoundError) {
+      errorMessage = `Word "${word}" not found in dictionary. Please check the spelling and try again.`;
+      duration = 8000;
+    } else if (error instanceof RateLimitExceededError) {
+      errorMessage = 'Rate limit exceeded. Please wait a moment before trying again.';
+      duration = 15000;
+    } else if (error instanceof DictionaryServiceUnavailableError) {
+      errorMessage = 'Dictionary service is temporarily unavailable. Please try again later.';
+      duration = 12000;
+    } else if (error instanceof InvalidWordError) {
+      errorMessage = `Invalid word: "${word}". Please enter a valid English word containing only letters, spaces, or hyphens.`;
+      duration = 8000;
+    } else if (error instanceof DictionaryApiError) {
+      errorMessage = `Dictionary API error: ${error.message}`;
+      duration = 10000;
+    } else if (error instanceof UnexpectedDictionaryError) {
+      errorMessage = `Unexpected error occurred while processing word "${word}". Please try again.`;
+      duration = 10000;
+    } else {
+      errorMessage = `Dictionary lookup failed: ${error.message || 'Unknown error'}`;
+      duration = 10000;
+    }
+
+    this.snackBar.open(errorMessage, 'Dismiss', {
+      duration: duration,
+      panelClass: ['dictionary-error-snackbar']
+    });
   }
 }
