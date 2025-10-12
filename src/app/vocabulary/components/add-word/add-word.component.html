@@ -69,11 +69,13 @@
         </div>
       </div>
       <div class="flex-shrink-0 border border-black border-1 rounded-2 p-2">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <h5 class="mb-0">Translation</h5>
-          @if (translation()) {
-            <span class="translation-result">{{ translation() }}</span>
-          }
+        <div class="translation-header mb-2">
+          <div class="d-flex justify-content-between align-items-start gap-3">
+            <h5 class="mb-0">Translation</h5>
+            @if (translation()) {
+              <span class="translation-result">{{ translation() }}</span>
+            }
+          </div>
         </div>
         <form [formGroup]="wordFormTranslation" (ngSubmit)="onSubmitTranslation()" class="d-flex gap-2">
           <mat-form-field appearance="outline" class="flex-grow-1">
