@@ -26,11 +26,27 @@
   border-color: #0066cc !important;
 }
 
+/* Translation header styling */
+.translation-header {
+  min-height: 40px;
+}
+
 /* Translation result styling */
 .translation-result {
   font-size: 0.9rem;
   color: #28a745;
   font-weight: 500;
+  text-align: center;
+  padding: 4px 8px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  word-wrap: break-word;
+  max-width: 250px;
+  overflow-wrap: break-word;
+  white-space: normal;
+  line-height: 1.3;
+  flex-shrink: 0;
 }
 
 /* Ensure proper flex layout for dynamic content */
