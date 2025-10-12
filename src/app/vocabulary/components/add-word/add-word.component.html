@@ -40,6 +40,8 @@
                       <div class="definition flex-grow-1">{{ definition.definition }}</div>
                       <button
                         class="mini-button border border-1 border-black rounded-2"
+                        matTooltip="Select as description"
+                        matTooltipPosition="above"
                         (click)="setChosenText(a + '-' + aa + '-' + aaa, definition.definition)">
                         @if (isChosen(a + '-' + aa + '-' + aaa)) {
                           x
@@ -47,6 +49,8 @@
                       </button>
                       <button
                         class="mini-button border border-1 border-black rounded-2"
+                        matTooltip="Add to translation context"
+                        matTooltipPosition="above"
                         (click)="setChosenForContext(a + '-' + aa + '-' + aaa, definition.definition)">
                         @if (isChosenForContext(a + '-' + aa + '-' + aaa)) {
                           x
