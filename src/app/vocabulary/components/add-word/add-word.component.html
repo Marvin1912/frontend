@@ -34,28 +34,32 @@
                 >{{ meaning.partOfSpeech }}</span>
                   @for (definition of meaning?.definitions; track aaa; let aaa = $index) {
                     <div
-                      class="d-flex align-items-center border border-1 rounded-2 gap-1 px-2"
+                      class="d-flex flex-column border border-1 rounded-2 gap-1 px-2 py-2"
                       [ngClass]="{chosen: isChosen(a + '-' + aa + '-' + aaa)}"
                     >
-                      <div class="definition flex-grow-1">{{ definition.definition }}</div>
-                      <button
-                        class="mini-button border border-1 border-black rounded-2"
-                        matTooltip="Select as description"
-                        matTooltipPosition="above"
-                        (click)="setChosenText(a + '-' + aa + '-' + aaa, definition.definition)">
-                        @if (isChosen(a + '-' + aa + '-' + aaa)) {
-                          x
-                        }
-                      </button>
-                      <button
-                        class="mini-button border border-1 border-black rounded-2"
-                        matTooltip="Add to translation context"
-                        matTooltipPosition="above"
-                        (click)="setChosenForContext(a + '-' + aa + '-' + aaa, definition.definition)">
-                        @if (isChosenForContext(a + '-' + aa + '-' + aaa)) {
-                          x
-                        }
-                      </button>
+                      <div class="definition">{{ definition.definition }}</div>
+                      <div class="d-flex gap-3">
+                        <span
+                          class="action-link"
+                          [ngClass]="{selected: isChosen(a + '-' + aa + '-' + aaa)}"
+                          (click)="setChosenText(a + '-' + aa + '-' + aaa, definition.definition)">
+                          @if (isChosen(a + '-' + aa + '-' + aaa)) {
+                            ✓ Use as description
+                          } @else {
+                            📝 Use as description
+                          }
+                        </span>
+                        <span
+                          class="action-link"
+                          [ngClass]="{selected: isChosenForContext(a + '-' + aa + '-' + aaa)}"
+                          (click)="setChosenForContext(a + '-' + aa + '-' + aaa, definition.definition)">
+                          @if (isChosenForContext(a + '-' + aa + '-' + aaa)) {
+                            ✓ Added to context
+                          } @else {
+                            ➕ Add to context
+                          }
+                        </span>
+                      </div>
                     </div>
                   }
                 </div>
@@ -65,34 +69,27 @@
         </div>
       </div>
       <div class="flex-shrink-0 border border-black border-1 rounded-2 p-2">
-        <h4>Translation</h4>
-        <form [formGroup]="wordFormTranslation" (ngSubmit)="onSubmitTranslation()">
-          <div class="d-flex flex-column gap-1">
-            <span>Word</span>
-            <mat-form-field>
-              <input matInput formControlName="word">
-            </mat-form-field>
-            <span>Context</span>
-            <mat-form-field>
-              <textarea matInput formControlName="context"></textarea>
-            </mat-form-field>
-
-            <div class="d-flex justify-content-between gap-5">
-              <button
-                mat-flat-button
-                color="primary"
-                [disabled]="!wordFormTranslation.valid"
-                style="width: 10%"
-              >Submit
-              </button>
-              <div class="flex-grow-1 d-flex justify-content-center align-items-center">
-                @if (translation()) {
-                  <h4>{{ translation() }}</h4>
-                }
-              </div>
-            </div>
-
-          </div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0">Translation</h5>
+          @if (translation()) {
+            <span class="translation-result">{{ translation() }}</span>
+          }
+        </div>
+        <form [formGroup]="wordFormTranslation" (ngSubmit)="onSubmitTranslation()" class="d-flex gap-2">
+          <mat-form-field appearance="outline" class="flex-grow-1">
+            <mat-label>Word</mat-label>
+            <input matInput formControlName="word">
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="flex-grow-1">
+            <mat-label>Context</mat-label>
+            <input matInput formControlName="context">
+          </mat-form-field>
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="!wordFormTranslation.valid"
+          >Translate
+          </button>
         </form>
       </div>
 

@@ -1,17 +1,36 @@
-.mini-button:hover {
-  background-color: cyan;
+/* Action links styling */
+.action-link {
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #0066cc;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  user-select: none;
 }
 
+.action-link:hover {
+  background-color: #f0f8ff;
+  color: #0052a3;
+}
+
+.action-link.selected {
+  background-color: #e6f3ff;
+  color: #004d99;
+  font-weight: 500;
+}
+
+/* Updated chosen state for definition container */
 .chosen {
-  background-color: deepskyblue;
+  background-color: #f8f9fa;
+  border-color: #0066cc !important;
 }
 
-.mini-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 20px;
-  height: 20px;
+/* Translation result styling */
+.translation-result {
+  font-size: 0.9rem;
+  color: #28a745;
+  font-weight: 500;
 }
 
 /* Ensure proper flex layout for dynamic content */
