@@ -219,7 +219,7 @@ export class AddWordComponent implements OnInit {
     if (match) {
       let word: string = match[2];
       let changedWord: string = word;
-      if (partOfSpeech === 'noun') {
+      if ('noun' === partOfSpeech?.toLowerCase()) {
 
         let dialogRef = this.dialog.open(ArticleDialogComponent, {
           width: '200px',
@@ -233,7 +233,7 @@ export class AddWordComponent implements OnInit {
           }
         });
 
-      } else if (partOfSpeech === 'verb') {
+      } else if ('verb' === partOfSpeech?.toLowerCase()) {
         changedWord = `to ${word}`;
       } else {
         changedWord = word;
