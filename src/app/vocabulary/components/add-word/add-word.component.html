@@ -4,7 +4,7 @@
     <div class="flex-shrink-0 mb-2">
       <mat-form-field>
         <mat-label>Get the english word</mat-label>
-        <input matInput type="text" [(ngModel)]="word" (keyup.enter)="getWord(word)">
+        <input matInput type="search" [(ngModel)]="word" (keyup.enter)="getWord(word)" (keydown.enter)="getWord(word)" (keyup)="handleInputKeyup($event)" (search)="getWord(word)" >
         @if (word) {
           <button matSuffix mat-icon-button aria-label="Send" (click)="getWord(word)">
             <mat-icon>send</mat-icon>

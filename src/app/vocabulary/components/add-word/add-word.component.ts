@@ -351,6 +351,13 @@ export class AddWordComponent implements OnInit {
     return this.chosenForContext.filter(value => index === value.index).length > 0;
   }
 
+  handleInputKeyup(event: KeyboardEvent): void {
+    // Handle mobile keyboard "Go" button submission
+    if (event.key === 'Enter' && this.word.trim()) {
+      this.getWord(this.word.trim());
+    }
+  }
+
   private handleDictionaryError(error: any, word: string = ''): void {
     let errorMessage = '';
     let duration = 10000;
