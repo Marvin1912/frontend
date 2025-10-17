@@ -186,6 +186,9 @@ export class AddWordComponent implements OnInit {
 
   getWord(word: string): void {
     this.partOfSpeech = '';
+    // Reset description and context selections when fetching a new word
+    this.chosenIndex = null;
+    this.chosenForContext = [];
     this.vocabularyService.getWord(word).subscribe({
         next: res => {
           this.update.set(false);
@@ -193,7 +196,7 @@ export class AddWordComponent implements OnInit {
           this.wordToShow = word;
           this.partsOfSpeech = this.setPartsOfSpeech(res);
           this.patchForm(this.deck, word, '', '');
-          this.wordFormTranslation.patchValue({'word': word}, {emitEvent: false});
+          this.wordFormTranslation.patchValue({'word': word, 'context': ''}, {emitEvent: false});
         },
         error: err => {
           this.handleDictionaryError(err, word);
