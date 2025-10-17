@@ -189,6 +189,9 @@ export class AddWordComponent implements OnInit {
     // Reset description and context selections when fetching a new word
     this.chosenIndex = null;
     this.chosenForContext = [];
+    this.description = null;
+    this.front = word;
+    this.back = null;
     this.vocabularyService.getWord(word).subscribe({
         next: res => {
           this.update.set(false);
