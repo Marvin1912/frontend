@@ -23,13 +23,12 @@ import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-to
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgClass} from '@angular/common';
 import {
-  DictionaryError,
-  WordNotFoundError,
-  RateLimitExceededError,
+  DictionaryApiError,
   DictionaryServiceUnavailableError,
   InvalidWordError,
-  DictionaryApiError,
-  UnexpectedDictionaryError
+  RateLimitExceededError,
+  UnexpectedDictionaryError,
+  WordNotFoundError
 } from '../../model/dictionary-error.model';
 
 const DEFAULT_DECK = 'Standard';
