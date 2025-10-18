@@ -2,27 +2,29 @@
 
   @if (!isFromRouteCall) {
     <section class="word-input-section flex-shrink-0 mb-3">
-      <mat-form-field appearance="outline">
-        <mat-label>Enter English word</mat-label>
-        <input
-          matInput
-          type="text"
-          [(ngModel)]="word"
-          (keyup.enter)="getWord(word)"
-          placeholder="Type a word and press Enter"
-        >
-      </mat-form-field>
-      @if (word) {
-        <button
-          mat-icon-button
-          color="primary"
-          aria-label="Search word"
-          (click)="getWord(word)"
-          type="button"
-        >
-          <mat-icon>search</mat-icon>
-        </button>
-      }
+      <div class="d-flex align-items-center gap-2">
+        <mat-form-field appearance="outline" class="flex-grow-1">
+          <mat-label>Enter English word</mat-label>
+          <input
+            matInput
+            type="text"
+            [(ngModel)]="word"
+            (keyup.enter)="getWord(word)"
+            placeholder="Type a word and press Enter"
+          >
+        </mat-form-field>
+        @if (word) {
+          <button
+            mat-icon-button
+            color="primary"
+            aria-label="Search word"
+            (click)="getWord(word)"
+            type="button"
+          >
+            <mat-icon>search</mat-icon>
+          </button>
+        }
+      </div>
     </section>
   }
 
