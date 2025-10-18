@@ -19,9 +19,10 @@ export const routes: Routes = [
     path: 'vocabulary',
     component: VocabularyHomeComponent,
     children: [
-      {path: 'add', component: AddWordComponent},
-      {path: 'add/:id', component: AddWordComponent},
-      {path: 'list', component: VocabularyListComponent}
+      {path: '', component: VocabularyHomeComponent, data: {home: '/'}},
+      {path: 'add', component: AddWordComponent, data: {home: '/vocabulary'}},
+      {path: 'add/:id', component: AddWordComponent, data: {home: '/vocabulary'}},
+      {path: 'list', component: VocabularyListComponent, data: {home: '/vocabulary'}}
     ]
   },
   {
