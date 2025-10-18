@@ -22,6 +22,8 @@ import {MatInput} from '@angular/material/input';
 import {MatLabel} from '@angular/material/select';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {FormsModule} from '@angular/forms';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
 
 function applyFilter(flashcard: Flashcard, filter: string, value: string): boolean {
 
@@ -64,7 +66,9 @@ function applyFilter(flashcard: Flashcard, filter: string, value: string): boole
     MatFormField,
     MatInput,
     MatCheckbox,
-    FormsModule
+    FormsModule,
+    MatIconModule,
+    MatButtonModule
   ],
   templateUrl: './vocabulary-list.component.html',
   styleUrl: './vocabulary-list.component.css'
