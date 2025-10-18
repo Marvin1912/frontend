@@ -134,9 +134,9 @@
     </section>
 
     <!-- Save Word Section -->
-    <section class="d-flex flex-column col h-100 w-100 pt-3 save-section" style="min-height: 0">
+    <section class="d-flex flex-column col h-100 w-100 save-section" style="min-height: 0">
       @if (wordToShow) {
-        <header class="flex-shrink-0">
+        <header class="flex-shrink-0 pb-3">
           <h1>Save Word</h1>
         </header>
 
@@ -144,7 +144,7 @@
              style="min-height: 0">
           <div class="flex-shrink-0 d-flex gap-3 p-3 part-of-speech-selector">
             <mat-button-toggle-group [(ngModel)]="partOfSpeech" name="partOfSpeech">
-              @for (pos of partsOfSpeech; track pos; let index = $index) {
+              @for (pos of partsOfSpeech; track pos) {
                 <mat-button-toggle
                   (click)="addArticleToWord(pos)"
                   [value]="pos"
@@ -156,7 +156,7 @@
           </div>
 
           <form
-            class="d-flex flex-column gap-3 p-3 save-form"
+            class="flex-grow-1 d-flex flex-column justify-content-between gap-3 p-3 save-form"
             [formGroup]="wordForm"
             (ngSubmit)="onSubmit()"
           >
