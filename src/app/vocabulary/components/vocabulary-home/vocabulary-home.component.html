@@ -1,11 +1,8 @@
 <div class="h-100 d-flex flex-column">
-  <div class="w-100 d-flex">
-    <div class="d-flex justify-content-center align-items-center p-2">
+    <div class="d-flex justify-content-center align-items-center gap-2 p-3">
       <button mat-fab routerLink="/" class="header-button">
         <mat-icon>home</mat-icon>
       </button>
-    </div>
-    <div class="flex-grow-1 d-flex justify-content-center gap-2 p-3">
       <div class="card" routerLink="/vocabulary/add">
         <h2>Add Word</h2>
       </div>
@@ -13,7 +10,6 @@
         <h2>List</h2>
       </div>
     </div>
-  </div>
   <div style="min-height: 80%; flex: 1 1 auto">
     <router-outlet></router-outlet>
   </div>
