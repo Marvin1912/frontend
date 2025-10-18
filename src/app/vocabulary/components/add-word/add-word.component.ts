@@ -141,6 +141,7 @@ export class AddWordComponent implements OnInit {
   }
 
   private setupFormSubscriptions(): void {
+    // Deck selection - prevent duplicate values since deck changes are less frequent
     this.wordForm.get('deck')?.valueChanges
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -150,26 +151,35 @@ export class AddWordComponent implements OnInit {
         this.deck = deck;
       });
 
+    // Back translation - debounce to prevent excessive updates during typing
     this.wordForm.get('back')?.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        debounceTime(300),
+        distinctUntilChanged()
+      )
       .subscribe(back => {
         this.back = back;
       });
 
+    // Description - debounce to prevent clearing selection during typing
     this.wordForm.get('description')?.valueChanges
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        debounceTime(300)
+        debounceTime(300),
+        distinctUntilChanged()
       )
       .subscribe(description => {
         this.description = description;
         this.chosenIndex = null;
       });
 
+    // Context translation - debounce to prevent excessive array operations during typing
     this.wordFormTranslation.get('context')?.valueChanges
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        debounceTime(300)
+        debounceTime(300),
+        distinctUntilChanged()
       )
       .subscribe(() => {
         this.chosenForContext = [];
