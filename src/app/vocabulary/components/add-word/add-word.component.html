@@ -2,7 +2,7 @@
 
   @if (!isFromRouteCall) {
     <section class="word-input-section flex-shrink-0 mb-3">
-      <div class="d-flex align-items-center gap-2">
+      <div class="search-input-container">
         <mat-form-field appearance="outline" class="flex-grow-1">
           <mat-label>Enter English word</mat-label>
           <input
@@ -20,6 +20,7 @@
             aria-label="Search word"
             (click)="getWord(word)"
             type="button"
+            class="search-button-aligned"
           >
             <mat-icon>search</mat-icon>
           </button>
