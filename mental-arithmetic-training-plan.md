@@ -58,7 +58,7 @@ Create a new mental arithmetic training module following the existing Angular 20
 ### Phase 4: Service Layer
 - [x] Create `services/arithmetic.service.ts` ✅
   - [x] Set up @Injectable({ providedIn: 'root' }) ✅
-  - [ ] Inject HttpClient for future API integration
+  - [x] Inject HttpClient for future API integration ✅
   - [x] Implement problem generation logic ✅
     - [x] generateAdditionProblems(difficulty, count) ✅
     - [x] generateSubtractionProblems(difficulty, count) ✅
@@ -66,17 +66,26 @@ Create a new mental arithmetic training module following the existing Angular 20
   - [x] Implement difficulty-based number generation ✅
     - [x] generateRandomDigits(count) for 2, 3, 4 digit numbers ✅
     - [x] ensurePositiveResult for subtraction ✅
-  - [ ] Create session management methods
-    - [ ] createSession(settings)
-    - [ ] updateSession(session)
-    - [ ] completeSession(session)
-  - [ ] Add local storage for session persistence
-    - [ ] saveSessionToStorage(session)
-    - [ ] loadSessionsFromStorage()
-  - [ ] Implement scoring and timing logic
-    - [ ] calculateScore(results)
-    - [ ] calculateAccuracy(results)
-    - [ ] formatTime(milliseconds)
+  - [x] Create session management methods ✅
+    - [x] createSession(settings) ✅
+    - [x] startSession(session) ✅
+    - [x] updateSession(session) ✅
+    - [x] completeSession(session) ✅
+    - [x] pauseSession(session) ✅
+    - [x] resumeSession(session) ✅
+  - [x] Add local storage for session persistence ✅
+    - [x] saveSessionToStorage(session) ✅
+    - [x] loadSessionsFromStorage() ✅
+    - [x] deleteSessionFromStorage(sessionId) ✅
+    - [x] clearAllSessionsFromStorage() ✅
+    - [x] saveSettingsToStorage(settings) ✅
+    - [x] loadSettingsFromStorage() ✅
+  - [x] Implement scoring and timing logic ✅
+    - [x] calculateScore(results) ✅
+    - [x] calculateAccuracy(results) ✅
+    - [x] calculateAverageTimePerProblem(results) ✅
+    - [x] formatTime(milliseconds) ✅
+    - [x] formatDetailedTime(milliseconds) ✅
 
 ### Phase 5: Settings Component
 - [ ] Create `components/arithmetic-settings/` directory
@@ -352,4 +361,4 @@ Create a new mental arithmetic training module following the existing Angular 20
 
 **Created**: 2025-10-18
 **Branch**: feature/mental-arithmetic-app
-**Status**: Phase 4 Problem Generation Complete - Ready for Session Management Implementation
+**Status**: Phase 4 Service Layer Complete - Ready for Settings Component Implementation
