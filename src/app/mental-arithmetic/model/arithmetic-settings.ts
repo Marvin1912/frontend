@@ -1,5 +1,7 @@
 import { Difficulty, OperationType } from './arithmetic-enums';
 
+export { Difficulty, OperationType };
+
 /**
  * Interface representing settings for an arithmetic training session
  */

@@ -13,6 +13,7 @@ import {VocabularyListComponent} from './vocabulary/components/vocabulary-list/v
 import {VocabularyHomeComponent} from './vocabulary/components/vocabulary-home/vocabulary-home.component';
 import {MentalArithmeticRootComponent} from './mental-arithmetic/mental-arithmetic-root/mental-arithmetic-root.component';
 import {MentalArithmeticMainComponent} from './mental-arithmetic/mental-arithmetic-main/mental-arithmetic-main.component';
+import {ArithmeticSettingsComponent} from './mental-arithmetic/components/arithmetic-settings/arithmetic-settings.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -44,7 +45,7 @@ export const routes: Routes = [
     children: [
       {path: '', component: MentalArithmeticMainComponent, data: {home: '/'}},
       {path: 'mental-arithmetic-main', component: MentalArithmeticMainComponent, data: {home: '/mental-arithmetic'}},
-      {path: 'arithmetic-settings', component: MentalArithmeticMainComponent, data: {home: '/mental-arithmetic'}},
+      {path: 'settings', component: ArithmeticSettingsComponent, data: {home: '/mental-arithmetic'}},
       {path: 'arithmetic-list', component: MentalArithmeticMainComponent, data: {home: '/mental-arithmetic'}}
     ]
   }
