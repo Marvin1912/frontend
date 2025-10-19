@@ -166,8 +166,8 @@ Create a new mental arithmetic training module following the existing Angular 20
   - [ ] Accuracy percentage
   - [ ] Problems remaining
   - [ ] Time elapsed/remaining
-- [ ] Update the plan and push changes.
 - [ ] Run npm build to check application
+- [ ] Update the plan and push changes.
 
 ### Phase 7: Session History & Basic Stats
 - [ ] Create `components/arithmetic-list/` directory
@@ -196,8 +196,8 @@ Create a new mental arithmetic training module following the existing Angular 20
   - [ ] Show improvement trend
   - [ ] Display total practice time
   - [ ] Show problems completed count
-- [ ] Update the plan and push changes.
 - [ ] Run npm build to check application
+- [ ] Update the plan and push changes.
 
 ### Phase 8: UI/UX Polish
 - [ ] Apply consistent Material Azure Blue theme
@@ -225,8 +225,8 @@ Create a new mental arithmetic training module following the existing Angular 20
   - [ ] Keyboard navigation support
   - [ ] High contrast mode support
   - [ ] Focus management
-- [ ] Update the plan and push changes.
 - [ ] Run npm build to check application
+- [ ] Update the plan and push changes.
 
 ### Phase 9: Integration & Testing
 - [ ] Test navigation between all components
@@ -264,8 +264,8 @@ Create a new mental arithmetic training module following the existing Angular 20
 - [ ] Cross-browser compatibility testing
   - [ ] Chrome, Firefox, Safari testing
   - [ ] Verify consistent behavior
-- [ ] Update the plan and push changes.
 - [ ] Run npm build to check application
+- [ ] Update the plan and push changes.
 
 ### Phase 10: Documentation & Cleanup
 - [ ] Add inline code documentation
@@ -283,8 +283,8 @@ Create a new mental arithmetic training module following the existing Angular 20
   - [ ] Follow existing naming conventions
   - [ ] Ensure consistent formatting
   - [ ] Match patterns from other modules
-- [ ] Update the plan and push changes.
 - [ ] Run npm build to check application
+- [ ] Update the plan and push changes.
 
 ## File Structure
 ```
