@@ -99,7 +99,7 @@ Create a new mental arithmetic training module following the existing Angular 20
   - [x] Run npm build to check application ✅
 
 ### Phase 4.2: Remove deprecation
-- [ ] Replace the deprecated method String substr(from: number, length?: number): string
+- [x] Replace the deprecated method String substr(from: number, length?: number): string ✅
 
 ### Phase 5: Settings Component
 - [ ] Create `components/arithmetic-settings/` directory
@@ -387,4 +387,4 @@ Create a new mental arithmetic training module following the existing Angular 20
 
 **Created**: 2025-10-18
 **Branch**: feature/mental-arithmetic-app
-**Status**: Phase 4 Service Layer Complete - All Phase 4 Tasks Finished ✅
+**Status**: Phase 4.2 Complete - All Phase 4 Tasks Finished ✅
