@@ -96,7 +96,13 @@ export class ProblemGeneratorService {
       answer,
       userAnswer: null,
       isCorrect: false,
-      timeSpent: 0
+      timeSpent: 0,
+      presentedAt: new Date(),
+      answeredAt: null,
+      operationType: OperationType.ADDITION,
+      difficulty,
+      operand1: num1,
+      operand2: num2
     };
   }
 
@@ -120,7 +126,13 @@ export class ProblemGeneratorService {
       answer,
       userAnswer: null,
       isCorrect: false,
-      timeSpent: 0
+      timeSpent: 0,
+      presentedAt: new Date(),
+      answeredAt: null,
+      operationType: OperationType.SUBTRACTION,
+      difficulty,
+      operand1: minuend,
+      operand2: subtrahend
     };
   }
 

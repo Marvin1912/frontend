@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ArithmeticProblem, ArithmeticSession, Difficulty, OperationType, ArithmeticSettings, SessionStatus } from '../model';
+import { ArithmeticProblem, ArithmeticSession, Difficulty, ArithmeticSettings } from '../model';
 import { ProblemGeneratorService } from './problem-generator.service';
 import { SessionManagerService } from './session-manager.service';
 import { StorageService } from './storage.service';
