@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ArithmeticProblem, ArithmeticSession, Difficulty, ArithmeticSettings } from '../model';
 import { ProblemGeneratorService } from './problem-generator.service';
 import { SessionManagerService } from './session-manager.service';
 import { StorageService } from './storage.service';
 import { ScoringService } from './scoring.service';
+import {Difficulty} from '../model/arithmetic-enums';
+import {ArithmeticProblem} from '../model/arithmetic-problem';
+import {ArithmeticSettings} from '../model/arithmetic-settings';
+import {ArithmeticSession} from '../model/arithmetic-session';
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +51,7 @@ export class ArithmeticService {
     return this.problemGenerator.generateMixedProblems(settings, count);
   }
 
-  
+
   // ==================== SESSION MANAGEMENT (DELEGATED) ====================
 
   /**
