@@ -90,7 +90,13 @@ Create a new mental arithmetic training module following the existing Angular 20
 - [x] Run npm build to check application ✅
 
 ### Phase 4.1: Split Service Layer
-- [ ] Split the Service Layer into dedicated services to keep logic encapsulated and readable.
+- [x] Split the Service Layer into dedicated services to keep logic encapsulated and readable. ✅
+  - [x] Create ProblemGeneratorService for problem generation logic ✅
+  - [x] Create SessionManagerService for session management ✅
+  - [x] Create StorageService for localStorage operations ✅
+  - [x] Create ScoringService for scoring and timing calculations ✅
+  - [x] Update main ArithmeticService to delegate to new services ✅
+  - [x] Run npm build to check application ✅
 
 ### Phase 5: Settings Component
 - [ ] Create `components/arithmetic-settings/` directory
