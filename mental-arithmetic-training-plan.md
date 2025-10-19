@@ -129,10 +129,10 @@ Create a new mental arithmetic training module following the existing Angular 20
 - [x] Run npm build to check application ✅
 
 ### Phase 5.1: Some Stylings
-- [ ] Remove the element where image (mental-arithmetic-root-image) is used; it's not needed
-- [ ] Make the main container element overflow so that the header sticks to its place and the main container gets a scrollbar
-- [ ] Run npm build to check application
-- [ ] Update the plan and push changes
+- [x] Remove the element where image (mental-arithmetic-root-image) is used; it's not needed ✅
+- [x] Make the main container element overflow so that the header sticks to its place and the main container gets a scrollbar ✅
+- [x] Run npm build to check application ✅
+- [x] Update the plan and push changes ✅
 
 ### Phase 6: Training Session Component
 - [ ] Create `components/arithmetic-session/` directory
@@ -393,4 +393,4 @@ Create a new mental arithmetic training module following the existing Angular 20
 
 **Created**: 2025-10-18
 **Branch**: feature/mental-arithmetic-app
-**Status**: Phase 5 Complete - Settings Component Fully Implemented ✅
+**Status**: Phase 5.1 Complete - UI Improvements Applied ✅

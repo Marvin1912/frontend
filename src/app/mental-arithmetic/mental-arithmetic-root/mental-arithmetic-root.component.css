@@ -1,3 +1,10 @@
+.container {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 .header-button {
   height: 35px;
   width: 35px;
@@ -9,23 +16,20 @@
   transform: translateX(-50%);
 }
 
-.mental-arithmetic-root-image {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  background-size: cover;
-  background-position: center;
-  color: white;
-}
-
 .header-row {
-  height: 10%;
-}
-
-.image-row {
-  height: 20%;
+  height: auto;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .data-row {
-  height: 70%;
+  flex: 1;
+  overflow-y: auto;
+  height: calc(100vh - 80px);
 }
 
 .mat-mdc-menu-content {
