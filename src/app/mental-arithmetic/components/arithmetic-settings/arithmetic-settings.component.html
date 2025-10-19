@@ -99,30 +99,14 @@
                   type="number"
                   formControlName="problemCount"
                   min="5"
-                  max="50">
+                  max="50"
+                  placeholder="Anzahl zwischen 5 und 50">
                 <mat-icon matSuffix>assignment</mat-icon>
+                <mat-hint>Wählen Sie zwischen 5 und 50 Aufgaben</mat-hint>
                 <mat-error *ngIf="settingsForm.get('problemCount')?.invalid && settingsForm.get('problemCount')?.touched">
                   Anzahl muss zwischen 5 und 50 liegen
                 </mat-error>
               </mat-form-field>
-
-              <!-- Alternative: Slider input -->
-              <div class="slider-container">
-                <mat-slider
-                  formControlName="problemCount"
-                  min="5"
-                  max="50"
-                  step="1"
-                  showTickMarks="true"
-                  discrete="true"
-                  thumbLabel="true">
-                </mat-slider>
-                <div class="slider-labels">
-                  <span>5</span>
-                  <span>{{ formatProblemCountLabel(settingsForm.get('problemCount')?.value) }}</span>
-                  <span>50</span>
-                </div>
-              </div>
             </div>
 
             <!-- Form Validation Error Summary -->

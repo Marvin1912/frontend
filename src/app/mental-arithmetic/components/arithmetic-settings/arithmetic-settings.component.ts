@@ -167,9 +167,4 @@ export class ArithmeticSettingsComponent implements OnInit {
   formatTimeLimitLabel(value: number | null): string {
     return value ? `${value} Minuten` : 'Keine Zeitbegrenzung';
   }
-
-  // Helper method for template
-  formatProblemCountLabel(value: number): string {
-    return `${value} Aufgaben`;
-  }
 }
