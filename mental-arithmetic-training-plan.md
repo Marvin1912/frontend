@@ -56,16 +56,16 @@ Create a new mental arithmetic training module following the existing Angular 20
   - [x] SessionStatus enum (ACTIVE, PAUSED, COMPLETED) ✅
 
 ### Phase 4: Service Layer
-- [ ] Create `services/arithmetic.service.ts`
-  - [ ] Set up @Injectable({ providedIn: 'root' })
+- [x] Create `services/arithmetic.service.ts` ✅
+  - [x] Set up @Injectable({ providedIn: 'root' }) ✅
   - [ ] Inject HttpClient for future API integration
-  - [ ] Implement problem generation logic
-    - [ ] generateAdditionProblems(difficulty, count)
-    - [ ] generateSubtractionProblems(difficulty, count)
-    - [ ] generateMixedProblems(settings, count)
-  - [ ] Implement difficulty-based number generation
-    - [ ] generateRandomDigits(count) for 2, 3, 4 digit numbers
-    - [ ] ensurePositiveResult for subtraction
+  - [x] Implement problem generation logic ✅
+    - [x] generateAdditionProblems(difficulty, count) ✅
+    - [x] generateSubtractionProblems(difficulty, count) ✅
+    - [x] generateMixedProblems(settings, count) ✅
+  - [x] Implement difficulty-based number generation ✅
+    - [x] generateRandomDigits(count) for 2, 3, 4 digit numbers ✅
+    - [x] ensurePositiveResult for subtraction ✅
   - [ ] Create session management methods
     - [ ] createSession(settings)
     - [ ] updateSession(session)
@@ -352,4 +352,4 @@ Create a new mental arithmetic training module following the existing Angular 20
 
 **Created**: 2025-10-18
 **Branch**: feature/mental-arithmetic-app
-**Status**: Phase 3 Complete - Ready for Phase 4 Implementation
+**Status**: Phase 4 Problem Generation Complete - Ready for Session Management Implementation
