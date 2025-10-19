@@ -1,3 +1,5 @@
+import { OperationType, Difficulty } from './arithmetic-enums';
+
 /**
  * Interface representing a single arithmetic problem in a training session
  */

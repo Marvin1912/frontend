@@ -1,6 +1,6 @@
 import { ArithmeticProblem } from './arithmetic-problem';
 import { ArithmeticSettings } from './arithmetic-settings';
-import { SessionStatus, Difficulty, OperationType } from './arithmetic-enums';
+import { SessionStatus } from './arithmetic-enums';
 
 /**
  * Interface representing a complete training session

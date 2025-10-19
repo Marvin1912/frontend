@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ArithmeticProblem, ArithmeticSession, Difficulty, OperationType, ArithmeticSettings, SessionStatus } from '../model';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -305,7 +306,7 @@ export class ArithmeticService {
   // ==================== LOCAL STORAGE ====================
 
   /**
-   * Save a session to localStorage
+   * Save a session to globalThis.localStorage
    * @param session The session to save
    */
   saveSessionToStorage(session: ArithmeticSession): void {
@@ -324,84 +325,84 @@ export class ArithmeticService {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       ).slice(0, 100);
 
-      localStorage.setItem('arithmetic_sessions', JSON.stringify(sortedSessions));
+      globalThis.localStorage.setItem('arithmetic_sessions', JSON.stringify(sortedSessions));
     } catch (error) {
-      console.error('Error saving session to localStorage:', error);
+      console.error('Error saving session to globalThis.localStorage:', error);
     }
   }
 
   /**
-   * Load all sessions from localStorage
+   * Load all sessions from globalThis.localStorage
    * @returns Array of stored sessions
    */
   loadSessionsFromStorage(): ArithmeticSession[] {
     try {
-      const stored = localStorage.getItem('arithmetic_sessions');
+      const stored = globalThis.localStorage.getItem('arithmetic_sessions');
       if (!stored) {
         return [];
       }
 
       const sessions = JSON.parse(stored);
       // Convert date strings back to Date objects
-      return sessions.map((session: any) => ({
+      return sessions.map((session: Partial<ArithmeticSession>) => ({
         ...session,
         createdAt: new Date(session.createdAt),
         startTime: session.startTime ? new Date(session.startTime) : null,
         endTime: session.endTime ? new Date(session.endTime) : null
       }));
     } catch (error) {
-      console.error('Error loading sessions from localStorage:', error);
+      console.error('Error loading sessions from globalThis.localStorage:', error);
       return [];
     }
   }
 
   /**
-   * Delete a specific session from localStorage
+   * Delete a specific session from globalThis.localStorage
    * @param sessionId The ID of the session to delete
    */
   deleteSessionFromStorage(sessionId: string): void {
     try {
       const sessions = this.loadSessionsFromStorage();
       const filteredSessions = sessions.filter(s => s.id !== sessionId);
-      localStorage.setItem('arithmetic_sessions', JSON.stringify(filteredSessions));
+      globalThis.localStorage.setItem('arithmetic_sessions', JSON.stringify(filteredSessions));
     } catch (error) {
-      console.error('Error deleting session from localStorage:', error);
+      console.error('Error deleting session from globalThis.localStorage:', error);
     }
   }
 
   /**
-   * Clear all sessions from localStorage
+   * Clear all sessions from globalThis.localStorage
    */
   clearAllSessionsFromStorage(): void {
     try {
-      localStorage.removeItem('arithmetic_sessions');
+      globalThis.localStorage.removeItem('arithmetic_sessions');
     } catch (error) {
-      console.error('Error clearing sessions from localStorage:', error);
+      console.error('Error clearing sessions from globalThis.localStorage:', error);
     }
   }
 
   /**
-   * Save settings to localStorage
+   * Save settings to globalThis.localStorage
    * @param settings The settings to save
    */
   saveSettingsToStorage(settings: ArithmeticSettings): void {
     try {
-      localStorage.setItem('arithmetic_settings', JSON.stringify(settings));
+      globalThis.localStorage.setItem('arithmetic_settings', JSON.stringify(settings));
     } catch (error) {
-      console.error('Error saving settings to localStorage:', error);
+      console.error('Error saving settings to globalThis.localStorage:', error);
     }
   }
 
   /**
-   * Load settings from localStorage
+   * Load settings from globalThis.localStorage
    * @returns The saved settings or default settings
    */
   loadSettingsFromStorage(): ArithmeticSettings | null {
     try {
-      const stored = localStorage.getItem('arithmetic_settings');
+      const stored = globalThis.localStorage.getItem('arithmetic_settings');
       return stored ? JSON.parse(stored) : null;
     } catch (error) {
-      console.error('Error loading settings from localStorage:', error);
+      console.error('Error loading settings from globalThis.localStorage:', error);
       return null;
     }
   }
