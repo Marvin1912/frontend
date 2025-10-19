@@ -53,12 +53,32 @@ export class StorageService {
       }
 
       const sessions = JSON.parse(stored);
-      // Convert date strings back to Date objects
-      return sessions.map((session: Partial<ArithmeticSession>) => ({
-        ...session,
+      // Convert date strings back to Date objects and ensure all required properties
+      return sessions.map((session: any): ArithmeticSession => ({
+        id: session.id || '',
         createdAt: new Date(session.createdAt),
         startTime: session.startTime ? new Date(session.startTime) : null,
-        endTime: session.endTime ? new Date(session.endTime) : null
+        endTime: session.endTime ? new Date(session.endTime) : null,
+        status: session.status || 'CREATED',
+        settings: session.settings || {
+          operations: [],
+          difficulty: 'EASY',
+          timeLimit: null,
+          problemCount: 10
+        },
+        problems: session.problems || [],
+        currentProblemIndex: session.currentProblemIndex || 0,
+        score: session.score || 0,
+        correctAnswers: session.correctAnswers || 0,
+        incorrectAnswers: session.incorrectAnswers || 0,
+        totalTimeSpent: session.totalTimeSpent || 0,
+        problemsCompleted: session.problemsCompleted || 0,
+        totalProblems: session.totalProblems || 10,
+        accuracy: session.accuracy || 0,
+        averageTimePerProblem: session.averageTimePerProblem || 0,
+        isCompleted: session.isCompleted || false,
+        isTimedOut: session.isTimedOut || false,
+        notes: session.notes || undefined
       }));
     } catch (error) {
       console.error('Error loading sessions from localStorage:', error);
