@@ -190,6 +190,6 @@ export class ProblemGeneratorService {
    * @returns A unique identifier for a problem
    */
   private generateProblemId(): string {
-    return `problem_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `problem_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
 }
