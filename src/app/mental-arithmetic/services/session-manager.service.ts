@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
-import { ArithmeticSession, ArithmeticSettings, SessionStatus } from '../model';
-import { ProblemGeneratorService } from './problem-generator.service';
+import {Injectable} from '@angular/core';
+import {ProblemGeneratorService} from './problem-generator.service';
+import {ArithmeticSession} from '../model/arithmetic-session';
+import {ArithmeticSettings} from '../model/arithmetic-settings';
+import {SessionStatus} from '../model/arithmetic-enums';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,8 @@ export class SessionManagerService {
 
   constructor(
     private problemGenerator: ProblemGeneratorService
-  ) {}
+  ) {
+  }
 
   /**
    * Create a new arithmetic session with the given settings

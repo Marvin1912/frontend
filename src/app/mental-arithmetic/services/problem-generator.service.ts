@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ArithmeticProblem, Difficulty, OperationType, ArithmeticSettings } from '../model';
+import {ArithmeticProblem} from '../model/arithmetic-problem';
+import {Difficulty, OperationType} from '../model/arithmetic-enums';
+import {ArithmeticSettings} from '../model/arithmetic-settings';
 
 @Injectable({
   providedIn: 'root'

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ArithmeticSession, ArithmeticSettings } from '../model';
+import {ArithmeticSession} from '../model/arithmetic-session';
+import {ArithmeticSettings} from '../model/arithmetic-settings';
 
 @Injectable({
   providedIn: 'root'
