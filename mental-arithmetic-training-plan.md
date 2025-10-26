@@ -180,6 +180,7 @@ Create a new mental arithmetic training module following the existing Angular 20
 
 ### Phase 6.2: Linting
 - [ ] Extend linting so that deprecated and not used imports are found
+- [ ] Update the plan and push changes
 
 ### Phase 7: Session History & Basic Stats
 - [ ] Create `components/arithmetic-list/` directory
