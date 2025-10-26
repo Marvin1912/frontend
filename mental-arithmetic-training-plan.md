@@ -199,9 +199,13 @@ Create a new mental arithmetic training module following the existing Angular 20
 - [x] Push the changes ✅
 
 ### Phase 6.4: Linting for Angular
-- [ ] Check if there is linting available for deprecated directives like ngFor
-- [ ] Update the plan
-- [ ] Push the changes
+- [x] Check if there is linting available for deprecated directives like ngFor ✅
+  - [x] Added Angular ESLint template plugin configuration ✅
+  - [x] Configured template linting rules to catch deprecated directives ✅
+  - [x] Successfully detected deprecated NgForOf and ngIf directives ✅
+  - [x] Template linting now catches deprecated patterns and suggests @for blocks ✅
+- [x] Update the plan ✅
+- [x] Push the changes ✅
 
 ### Phase 7: Session History & Basic Stats
 - [ ] Create `components/arithmetic-list/` directory
@@ -421,4 +425,4 @@ Create a new mental arithmetic training module following the existing Angular 20
 
 **Created**: 2025-10-18
 **Branch**: feature/mental-arithmetic-app
-**Status**: Phase 6.3 Complete - Remove Async ✅
+**Status**: Phase 6.4 Complete - Angular Linting Configuration ✅
