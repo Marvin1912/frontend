@@ -45,7 +45,7 @@ export const routes: Routes = [
     component: MentalArithmeticRootComponent,
     children: [
       {path: '', component: MentalArithmeticMainComponent, data: {home: '/'}},
-      {path: 'mental-arithmetic-main', component: MentalArithmeticMainComponent, data: {home: '/mental-arithmetic'}},
+      {path: 'main', component: MentalArithmeticMainComponent, data: {home: '/mental-arithmetic'}},
       {path: 'settings', component: ArithmeticSettingsComponent, data: {home: '/mental-arithmetic'}},
       {path: 'session', component: ArithmeticSessionComponent, data: {home: '/mental-arithmetic'}},
       {path: 'arithmetic-list', component: MentalArithmeticMainComponent, data: {home: '/mental-arithmetic'}}
