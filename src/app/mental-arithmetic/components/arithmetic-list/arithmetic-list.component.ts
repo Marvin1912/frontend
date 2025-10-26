@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
-import { MatSelectModule } from '@angular/material/select';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
-import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
+import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterModule} from '@angular/router';
+import {FormsModule} from '@angular/forms';
+import {MatCardModule} from '@angular/material/card';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTableModule} from '@angular/material/table';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
-import { ArithmeticSession } from '../../model/arithmetic-session';
-import { Difficulty, OperationType } from '../../model/arithmetic-enums';
-import { ArithmeticService } from '../../services/arithmetic.service';
+import {ArithmeticSession} from '../../model/arithmetic-session';
+import {OperationType} from '../../model/arithmetic-enums';
+import {ArithmeticService} from '../../services/arithmetic.service';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-arithmetic-list',
@@ -31,7 +32,8 @@ import { ArithmeticService } from '../../services/arithmetic.service';
     MatFormFieldModule,
     MatProgressBarModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatTooltip
   ],
   templateUrl: './arithmetic-list.component.html',
   styleUrls: ['./arithmetic-list.component.css']

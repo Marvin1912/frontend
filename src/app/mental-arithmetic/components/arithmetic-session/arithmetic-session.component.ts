@@ -420,7 +420,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   }
 
   viewResults(): void {
-    this.router.navigate(['/mental-arithmetic/mental-arithmetic-main']);
+    this.router.navigate(['/mental-arithmetic/main']);
   }
 
   goToMain(): void {
