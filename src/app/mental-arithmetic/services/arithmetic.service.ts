@@ -207,6 +207,28 @@ export class ArithmeticService {
   // ==================== ADDITIONAL CONVENIENCE METHODS ====================
 
   /**
+   * Get the current problem from a session
+   * @param session The session to get current problem from
+   * @returns The current problem or null if no active problem
+   */
+  getCurrentProblem(session: ArithmeticSession): ArithmeticProblem | null {
+    if (session.currentProblemIndex < 0 || session.currentProblemIndex >= session.problems.length) {
+      return null;
+    }
+    return session.problems[session.currentProblemIndex];
+  }
+
+  /**
+   * Check if an answer is correct for a given problem
+   * @param problem The problem to check
+   * @param userAnswer The user's answer
+   * @returns True if the answer is correct
+   */
+  checkAnswer(problem: ArithmeticProblem, userAnswer: number): boolean {
+    return problem.answer === userAnswer;
+  }
+
+  /**
    * Get detailed statistics for a set of problems
    * @param problems Array of problems to analyze
    * @returns Detailed statistics object

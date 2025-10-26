@@ -14,6 +14,7 @@ import {VocabularyHomeComponent} from './vocabulary/components/vocabulary-home/v
 import {MentalArithmeticRootComponent} from './mental-arithmetic/mental-arithmetic-root/mental-arithmetic-root.component';
 import {MentalArithmeticMainComponent} from './mental-arithmetic/mental-arithmetic-main/mental-arithmetic-main.component';
 import {ArithmeticSettingsComponent} from './mental-arithmetic/components/arithmetic-settings/arithmetic-settings.component';
+import {ArithmeticSessionComponent} from './mental-arithmetic/components/arithmetic-session/arithmetic-session.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -46,6 +47,7 @@ export const routes: Routes = [
       {path: '', component: MentalArithmeticMainComponent, data: {home: '/'}},
       {path: 'mental-arithmetic-main', component: MentalArithmeticMainComponent, data: {home: '/mental-arithmetic'}},
       {path: 'settings', component: ArithmeticSettingsComponent, data: {home: '/mental-arithmetic'}},
+      {path: 'session', component: ArithmeticSessionComponent, data: {home: '/mental-arithmetic'}},
       {path: 'arithmetic-list', component: MentalArithmeticMainComponent, data: {home: '/mental-arithmetic'}}
     ]
   }
