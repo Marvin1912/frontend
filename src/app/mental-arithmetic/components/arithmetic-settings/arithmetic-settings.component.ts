@@ -130,7 +130,6 @@ export class ArithmeticSettingsComponent implements OnInit {
   onStartTraining(): void {
     if (this.settingsForm.valid) {
       this.onSaveSettings();
-      // Navigate to session component (will be implemented in Phase 6)
       this.router.navigate(['/mental-arithmetic/session']);
     }
   }
