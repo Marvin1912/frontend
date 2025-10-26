@@ -19,7 +19,6 @@ import { ArithmeticSettings } from '../../model/arithmetic-settings';
 import { SessionStatus } from '../../model/arithmetic-enums';
 import { ArithmeticService } from '../../services/arithmetic.service';
 
-// Dialog components will be imported as needed
 @Component({
   selector: 'app-arithmetic-session',
   standalone: true,
