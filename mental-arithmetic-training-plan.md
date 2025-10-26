@@ -238,6 +238,9 @@ Create a new mental arithmetic training module following the existing Angular 20
 - [x] Update the plan ✅
 - [x] Push the changes ✅
 
+### Phase 7: Session History
+- [ ] Implement saveSessionToStorage(session: ArithmeticSession): void; it's unused
+
 ### Phase 8: UI/UX Polish
 - [ ] Apply consistent Material Azure Blue theme
   - [ ] Use Material color palette throughout
