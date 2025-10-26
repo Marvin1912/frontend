@@ -239,7 +239,13 @@ Create a new mental arithmetic training module following the existing Angular 20
 - [x] Push the changes ✅
 
 ### Phase 7: Session History
-- [ ] Implement saveSessionToStorage(session: ArithmeticSession): void; it's unused
+- [x] Implement saveSessionToStorage(session: ArithmeticSession): void; it's unused ✅
+  - [x] Add saveSessionToStorage calls in completeSession() method ✅
+  - [x] Add saveSessionToStorage calls in endSession() method ✅
+  - [x] Add saveSessionToStorage calls in ngOnDestroy() method ✅
+  - [x] Verify all session completion scenarios save data ✅
+  - [x] Application builds successfully ✅
+  - [x] Updated the plan ✅
 
 ### Phase 8: UI/UX Polish
 - [ ] Apply consistent Material Azure Blue theme
@@ -429,4 +435,4 @@ Create a new mental arithmetic training module following the existing Angular 20
 
 **Created**: 2025-10-18
 **Branch**: feature/mental-arithmetic-app
-**Status**: Phase 7 Complete - Session History & Basic Statistics ✅
+**Status**: Phase 7.1 Complete - Session Storage Implementation ✅

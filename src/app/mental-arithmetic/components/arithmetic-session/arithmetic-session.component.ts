@@ -80,6 +80,8 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     // Save session if it exists and is active
     if (this.currentSession && this.currentSession.status === SessionStatus.ACTIVE) {
       this.pauseSession();
+      // Save paused session to storage
+      this.arithmeticService.saveSessionToStorage(this.currentSession);
     }
   }
 
@@ -251,6 +253,8 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
 
     if (this.currentSession) {
       this.currentSession = this.arithmeticService.completeSession(this.currentSession);
+      // Save completed session to storage
+      this.arithmeticService.saveSessionToStorage(this.currentSession);
     }
 
     this.cdr.detectChanges();
@@ -298,7 +302,9 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
         this.clearTimer();
         if (this.currentSession) {
           this.currentSession.status = SessionStatus.CANCELLED;
-          this.arithmeticService.updateSession(this.currentSession);
+          this.currentSession = this.arithmeticService.updateSession(this.currentSession);
+          // Save cancelled session to storage
+          this.arithmeticService.saveSessionToStorage(this.currentSession);
         }
         this.router.navigate(['/mental-arithmetic/main']);
       }
