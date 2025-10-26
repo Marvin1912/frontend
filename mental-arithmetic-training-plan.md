@@ -175,6 +175,9 @@ Create a new mental arithmetic training module following the existing Angular 20
 - [x] Run npm build to check application ✅
 - [x] Update the plan and push changes ✅
 
+### Phase 6.1: Training Session Component
+- [ ] Remove 'TODO: Implement confirmation dialog' in arithmetic-session.component
+
 ### Phase 7: Session History & Basic Stats
 - [ ] Create `components/arithmetic-list/` directory
 - [ ] Create ArithmeticListComponent
