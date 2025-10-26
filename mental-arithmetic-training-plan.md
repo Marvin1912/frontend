@@ -176,7 +176,11 @@ Create a new mental arithmetic training module following the existing Angular 20
 - [x] Update the plan and push changes ✅
 
 ### Phase 6.1: Training Session Component
-- [ ] Remove 'TODO: Implement confirmation dialog' in arithmetic-session.component
+- [x] Remove 'TODO: Implement confirmation dialog' in arithmetic-session.component ✅
+  - [x] Implement Material Design confirmation dialog for ending session ✅
+  - [x] Add session statistics display (current score, progress) ✅
+  - [x] Use German localization for dialog text ✅
+  - [x] Add proper Material styling with color-coded buttons ✅
 
 ### Phase 6.2: Linting
 - [ ] Extend linting so that deprecated and not used imports are found
@@ -400,4 +404,4 @@ Create a new mental arithmetic training module following the existing Angular 20
 
 **Created**: 2025-10-18
 **Branch**: feature/mental-arithmetic-app
-**Status**: Phase 6 Complete - Training Session Component Implemented ✅
+**Status**: Phase 6.1 Complete - Training Session Component with Confirmation Dialog ✅
