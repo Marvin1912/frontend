@@ -193,6 +193,16 @@ Create a new mental arithmetic training module following the existing Angular 20
   - [x] Application builds successfully with enhanced linting ✅
 - [x] Update the plan and push changes ✅
 
+### Phase 6.3: Remove async
+- [ ] Remove async where not needed
+- [ ] Update the plan
+- [ ] Push the changes
+
+### Phase 6.4: Linting for Angular
+- [ ] Check if there is linting available for deprecated directives like ngFor
+- [ ] Update the plan
+- [ ] Push the changes
+
 ### Phase 7: Session History & Basic Stats
 - [ ] Create `components/arithmetic-list/` directory
 - [ ] Create ArithmeticListComponent
