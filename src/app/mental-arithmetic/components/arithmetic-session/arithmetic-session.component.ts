@@ -406,11 +406,11 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   }
 
   viewResults(): void {
-    this.router.navigate(['/mental-arithmetic/list']);
+    this.router.navigate(['/mental-arithmetic/mental-arithmetic-main']);
   }
 
   goToMain(): void {
-    this.router.navigate(['/mental-arithmetic/main']);
+    this.router.navigate(['/mental-arithmetic']);
   }
 
   @HostListener('window:beforeunload', ['$event'])
