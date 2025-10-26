@@ -89,7 +89,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     });
   }
 
-  private async loadSettingsAndStartSession(): Promise<void> {
+  private loadSettingsAndStartSession(): void {
     this.isLoading = true;
 
     try {
@@ -102,7 +102,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
         return;
       }
 
-      await this.initializeSession(settings);
+      this.initializeSession(settings);
       this.startSession();
     } catch (error) {
       console.error('Error loading settings:', error);
@@ -116,7 +116,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     }
   }
 
-  private async initializeSession(settings: ArithmeticSettings): Promise<void> {
+  private initializeSession(settings: ArithmeticSettings): void {
     this.currentSession = this.arithmeticService.createSession(settings);
     this.sessionTimeLimit = settings.timeLimit ? settings.timeLimit * 60 * 1000 : null; // Convert to milliseconds
     this.timeRemaining = this.sessionTimeLimit || 0;

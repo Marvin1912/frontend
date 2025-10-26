@@ -194,9 +194,9 @@ Create a new mental arithmetic training module following the existing Angular 20
 - [x] Update the plan and push changes ✅
 
 ### Phase 6.3: Remove async
-- [ ] Remove async where not needed
-- [ ] Update the plan
-- [ ] Push the changes
+- [x] Remove async where not needed ✅
+- [x] Update the plan ✅
+- [x] Push the changes ✅
 
 ### Phase 6.4: Linting for Angular
 - [ ] Check if there is linting available for deprecated directives like ngFor
@@ -421,4 +421,4 @@ Create a new mental arithmetic training module following the existing Angular 20
 
 **Created**: 2025-10-18
 **Branch**: feature/mental-arithmetic-app
-**Status**: Phase 6.2 Complete - Enhanced Linting Configuration ✅
+**Status**: Phase 6.3 Complete - Remove Async ✅
