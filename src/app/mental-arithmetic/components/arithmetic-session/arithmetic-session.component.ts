@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatDialogModule, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { ActivatedRoute, Router } from '@angular/router';
@@ -281,13 +281,28 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   }
 
   endSession(): void {
-    // TODO: Implement confirmation dialog
-    this.clearTimer();
-    if (this.currentSession) {
-      this.currentSession.status = SessionStatus.CANCELLED;
-      this.arithmeticService.updateSession(this.currentSession);
-    }
-    this.router.navigate(['/mental-arithmetic/main']);
+    const dialogRef = this.dialog.open(EndSessionDialogComponent, {
+      width: '350px',
+      panelClass: 'end-session-dialog',
+      backdropClass: 'dialog-backdrop',
+      disableClose: false,
+      data: {
+        currentScore: this.currentSession?.score || 0,
+        problemsCompleted: this.currentSession?.problemsCompleted || 0,
+        totalProblems: this.currentSession?.totalProblems || 0
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'confirm') {
+        this.clearTimer();
+        if (this.currentSession) {
+          this.currentSession.status = SessionStatus.CANCELLED;
+          this.arithmeticService.updateSession(this.currentSession);
+        }
+        this.router.navigate(['/mental-arithmetic/main']);
+      }
+    });
   }
 
   skipProblem(): void {
@@ -419,4 +434,127 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
       event.returnValue = 'Möchten Sie die Sitzung wirklich verlassen? Ihr Fortschritt wird gespeichert.';
     }
   }
+}
+
+@Component({
+  selector: 'app-end-session-dialog',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule
+  ],
+  template: `
+    <div class="dialog-container">
+      <h2 mat-dialog-title>Training beenden</h2>
+
+      <mat-dialog-content>
+        <p>Möchten Sie die Trainingseinheit wirklich beenden?</p>
+
+        <div class="session-stats" *ngIf="data">
+          <p><strong>Aktueller Punktestand:</strong> {{ data.currentScore }}</p>
+          <p><strong>Gelöste Aufgaben:</strong> {{ data.problemsCompleted }} / {{ data.totalProblems }}</p>
+        </div>
+
+        <p class="warning-text">Ihr bisheriger Fortschritt wird gespeichert.</p>
+      </mat-dialog-content>
+
+      <mat-dialog-actions align="center">
+        <button mat-button
+                (click)="dialogRef.close('confirm')"
+                class="confirm-button">
+          <mat-icon>check_circle</mat-icon>
+          Beenden
+        </button>
+        <button mat-button
+                (click)="dialogRef.close()"
+                class="cancel-button">
+          <mat-icon>close</mat-icon>
+          Weitermachen
+        </button>
+      </mat-dialog-actions>
+    </div>
+  `,
+  styles: [`
+    .dialog-container {
+      padding: 20px;
+      text-align: center;
+      min-width: 300px;
+    }
+
+    h2 {
+      color: #1976d2;
+      margin-bottom: 20px;
+    }
+
+    .session-stats {
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      text-align: left;
+    }
+
+    .session-stats p {
+      margin: 8px 0;
+      color: #333;
+    }
+
+    .warning-text {
+      color: #666;
+      font-style: italic;
+      margin: 15px 0;
+    }
+
+    mat-dialog-actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .confirm-button {
+      background-color: #f44336;
+      color: white;
+      border-radius: 20px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .confirm-button:hover {
+      background-color: #d32f2f;
+    }
+
+    .cancel-button {
+      background-color: #4caf50;
+      color: white;
+      border-radius: 20px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cancel-button:hover {
+      background-color: #388e3c;
+    }
+
+    mat-icon {
+      width: 20px;
+      height: 20px;
+    }
+  `]
+})
+export class EndSessionDialogComponent {
+  constructor(
+    public dialogRef: MatDialogRef<EndSessionDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: {
+      currentScore: number;
+      problemsCompleted: number;
+      totalProblems: number;
+    }
+  ) {}
 }
