@@ -431,6 +431,8 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   onBeforeUnload(event: BeforeUnloadEvent): void {
     if (this.currentSession && this.currentSession.status === SessionStatus.ACTIVE) {
       event.preventDefault();
+      // Modern browsers ignore custom messages, but this shows the browser's default confirmation dialog
+      // eslint-disable-next-line @typescript-eslint/no-deprecated
       event.returnValue = 'Möchten Sie die Sitzung wirklich verlassen? Ihr Fortschritt wird gespeichert.';
     }
   }

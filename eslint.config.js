@@ -19,6 +19,16 @@ export default [
         alert: 'readonly',
         setTimeout: 'readonly',
         clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        document: 'readonly',
+        window: 'readonly',
+        navigator: 'readonly',
+        localStorage: 'readonly',
+        sessionStorage: 'readonly',
+        location: 'readonly',
+        history: 'readonly',
+        fetch: 'readonly',
         describe: 'readonly',
         it: 'readonly',
         expect: 'readonly',
@@ -37,13 +47,21 @@ export default [
       ...angular.configs.recommended.rules,
 
       // Custom rules for this project
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-deprecated': 'error',
+      '@typescript-eslint/ban-ts-comment': 'error',
+      '@typescript-eslint/no-require-imports': 'error',
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-wrapper-object-types': 'warn',
+      '@typescript-eslint/no-non-null-assertion': 'warn',
       'prefer-const': 'error',
       'no-unused-vars': 'off', // Turn off base rule as TypeScript version is used
+      'no-console': 'warn',
+      'no-debugger': 'error',
+      'no-alert': 'warn',
+      'no-eval': 'error',
 
       // Angular specific rules
       '@angular-eslint/directive-selector': [
