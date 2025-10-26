@@ -202,7 +202,7 @@
   </mat-card>
 
   <!-- Session Details Expansion -->
-  <mat-card class="session-details-card" *ngIf="expandedSession">
+  <mat-card class="session-details-card" *ngIf="expandedSession && sessions.length > 0">
     <div class="card-content">
       <div class="details-header">
         <h3>Sitzungsdetails</h3>

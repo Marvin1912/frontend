@@ -257,6 +257,8 @@ table {
   font-size: 4rem;
   color: #ccc;
   margin-bottom: 20px;
+  display: block;
+  text-align: center;
 }
 
 .empty-state h3 {
@@ -285,6 +287,10 @@ table {
   align-items: center;
   padding: 20px;
   border-bottom: 1px solid #e0e0e0;
+}
+
+.details-header mat-icon {
+  opacity: 1 !important;
 }
 
 .details-header h3 {
