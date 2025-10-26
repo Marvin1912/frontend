@@ -15,6 +15,7 @@ import {MentalArithmeticRootComponent} from './mental-arithmetic/mental-arithmet
 import {MentalArithmeticMainComponent} from './mental-arithmetic/mental-arithmetic-main/mental-arithmetic-main.component';
 import {ArithmeticSettingsComponent} from './mental-arithmetic/components/arithmetic-settings/arithmetic-settings.component';
 import {ArithmeticSessionComponent} from './mental-arithmetic/components/arithmetic-session/arithmetic-session.component';
+import {ArithmeticListComponent} from './mental-arithmetic/components/arithmetic-list/arithmetic-list.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -48,7 +49,7 @@ export const routes: Routes = [
       {path: 'main', component: MentalArithmeticMainComponent, data: {home: '/mental-arithmetic'}},
       {path: 'settings', component: ArithmeticSettingsComponent, data: {home: '/mental-arithmetic'}},
       {path: 'session', component: ArithmeticSessionComponent, data: {home: '/mental-arithmetic'}},
-      {path: 'arithmetic-list', component: MentalArithmeticMainComponent, data: {home: '/mental-arithmetic'}}
+      {path: 'arithmetic-list', component: ArithmeticListComponent, data: {home: '/mental-arithmetic'}}
     ]
   }
 ];

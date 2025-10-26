@@ -1,0 +1,267 @@
+<div class="arithmetic-list-container">
+  <!-- Header -->
+  <div class="list-header">
+    <h2>Trainings-Statistik & Verlauf</h2>
+    <p class="subtitle">Übersicht Ihrer mentalen Rechen-Trainingssitzungen</p>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="stats-container" *ngIf="!loading">
+    <mat-card class="stat-card">
+      <div class="stat-content">
+        <div class="stat-number">{{ totalSessions }}</div>
+        <div class="stat-label">Sitzungen</div>
+      </div>
+      <mat-icon class="stat-icon">history</mat-icon>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-content">
+        <div class="stat-number">{{ totalProblemsCompleted }}</div>
+        <div class="stat-label">Aufgaben</div>
+      </div>
+      <mat-icon class="stat-icon">calculate</mat-icon>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-content">
+        <div class="stat-number">{{ averageScore }}%</div>
+        <div class="stat-label">Ø Punktzahl</div>
+      </div>
+      <mat-icon class="stat-icon">trending_up</mat-icon>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-content">
+        <div class="stat-number">{{ averageAccuracy }}%</div>
+        <div class="stat-label">Ø Genauigkeit</div>
+      </div>
+      <mat-icon class="stat-icon">target</mat-icon>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-content">
+        <div class="stat-number">{{ formatTime(totalPracticeTime) }}</div>
+        <div class="stat-label">Trainingszeit</div>
+      </div>
+      <mat-icon class="stat-icon">schedule</mat-icon>
+    </mat-card>
+  </div>
+
+  <!-- Filters and Controls -->
+  <mat-card class="filters-card" *ngIf="!loading">
+    <div class="filters-row">
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Schwierigkeit</mat-label>
+        <mat-select (selectionChange)="onFilterChange()" [(value)]="selectedDifficulty">
+          <mat-option value="all">Alle</mat-option>
+          <mat-option value="EASY">Einfach (2-stellig)</mat-option>
+          <mat-option value="MEDIUM">Mittel (3-stellig)</mat-option>
+          <mat-option value="HARD">Schwer (4-stellig)</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Operation</mat-label>
+        <mat-select (selectionChange)="onFilterChange()" [(value)]="selectedOperation">
+          <mat-option value="all">Alle</mat-option>
+          <mat-option value="ADDITION">Addition</mat-option>
+          <mat-option value="SUBTRACTION">Subtraktion</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="action-buttons">
+        <button mat-icon-button (click)="exportSessions('json')" matTooltip="Als JSON exportieren">
+          <mat-icon>download</mat-icon>
+        </button>
+        <button mat-icon-button (click)="exportSessions('csv')" matTooltip="Als CSV exportieren">
+          <mat-icon>description</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="clearAllSessions()"
+                matTooltip="Alle Sitzungen löschen"
+                [disabled]="sessions.length === 0">
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="loading">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <p>Lade Sitzungsdaten...</p>
+  </div>
+
+  <!-- Sessions Table -->
+  <mat-card class="sessions-card" *ngIf="!loading">
+    <div class="card-content">
+      <div class="table-header">
+        <h3>Trainingssitzungen</h3>
+        <span class="session-count">{{ filteredSessions.length }} von {{ sessions.length }} Sitzungen</span>
+      </div>
+
+      <div class="table-container" *ngIf="filteredSessions.length > 0">
+        <table mat-table>
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef (click)="onSortChange('date')" class="sortable-header">
+              Datum
+              <mat-icon *ngIf="sortBy === 'date'">{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+            </th>
+            <td mat-cell *matCellDef="let session">
+              {{ formatDate(session.startTime) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="difficulty">
+            <th mat-header-cell *matHeaderCellDef (click)="onSortChange('difficulty')" class="sortable-header">
+              Schwierigkeit
+              <mat-icon *ngIf="sortBy === 'difficulty'">{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+            </th>
+            <td mat-cell *matCellDef="let session">
+              <span class="difficulty-badge" [ngClass]="'difficulty-' + session.settings.difficulty.toLowerCase()">
+                {{ session.settings.difficulty === 'EASY' ? 'Einfach' : session.settings.difficulty === 'MEDIUM' ? 'Mittel' : 'Schwer' }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="operations">
+            <th mat-header-cell *matHeaderCellDef>Operationen</th>
+            <td mat-cell *matCellDef="let session">
+              <div class="operations-list">
+                <span *ngFor="let op of getSessionOperations(session)" class="operation-badge">
+                  {{ op === 'ADDITION' ? '+' : '-' }}
+                </span>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="score">
+            <th mat-header-cell *matHeaderCellDef (click)="onSortChange('score')" class="sortable-header">
+              Punktzahl
+              <mat-icon *ngIf="sortBy === 'score'">{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+            </th>
+            <td mat-cell *matCellDef="let session">
+              <span class="score" [ngClass]="{ 'score-high': session.score >= 80, 'score-medium': session.score >= 60 && session.score < 80, 'score-low': session.score < 60 }">
+                {{ session.score }}%
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="accuracy">
+            <th mat-header-cell *matHeaderCellDef (click)="onSortChange('accuracy')" class="sortable-header">
+              Genauigkeit
+              <mat-icon *ngIf="sortBy === 'accuracy'">{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+            </th>
+            <td mat-cell *matCellDef="let session">
+              {{ getSessionAccuracy(session) }}%
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="duration">
+            <th mat-header-cell *matHeaderCellDef (click)="onSortChange('duration')" class="sortable-header">
+              Dauer
+              <mat-icon *ngIf="sortBy === 'duration'">{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+            </th>
+            <td mat-cell *matCellDef="let session">
+              {{ formatTime(getSessionDuration(session)) }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Aktionen</th>
+            <td mat-cell *matCellDef="let session">
+              <button mat-icon-button (click)="toggleSessionExpansion(session.id)" matTooltip="Details anzeigen">
+                <mat-icon>{{ expandedSession === session.id ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteSession(session.id)" matTooltip="Sitzung löschen">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" *ngIf="filteredSessions.length === 0">
+        <mat-icon class="empty-icon">history</mat-icon>
+        <h3>Keine Sitzungen gefunden</h3>
+        <p *ngIf="sessions.length === 0">
+          Sie haben noch keine Trainingssitzungen absolviert. Starten Sie Ihre erste Sitzung, um hier Statistiken zu sehen!
+        </p>
+        <p *ngIf="sessions.length > 0">
+          Keine Sitzungen entsprechen den aktuellen Filterkriterien.
+        </p>
+        <button mat-raised-button color="primary" routerLink="/mental-arithmetic/main">
+          Training starten
+        </button>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Session Details Expansion -->
+  <mat-card class="session-details-card" *ngIf="expandedSession">
+    <div class="card-content">
+      <div class="details-header">
+        <h3>Sitzungsdetails</h3>
+        <button mat-icon-button (click)="expandedSession = null">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <div class="details-content" *ngFor="let session of sessions" [ngSwitch]="session.id === expandedSession">
+        <ng-container *ngSwitchCase="true">
+          <div class="session-info">
+            <div class="info-row">
+              <span class="label">Datum:</span>
+              <span>{{ formatDate(session.startTime) }} {{ session.startTime?.toLocaleTimeString('de-DE') }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Schwierigkeit:</span>
+              <span>{{ session.settings.difficulty === 'EASY' ? 'Einfach' : session.settings.difficulty === 'MEDIUM' ? 'Mittel' : 'Schwer' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Operationen:</span>
+              <span>{{ getSessionOperationsDisplay(session).join(', ') }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Probleme:</span>
+              <span>{{ session.problemsCompleted }} ({{ session.totalProblems }} geplant)</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Punktzahl:</span>
+              <span>{{ session.score }}%</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Genauigkeit:</span>
+              <span>{{ session.accuracy }}%</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Dauer:</span>
+              <span>{{ formatTime(session.totalTimeSpent) }}</span>
+            </div>
+          </div>
+
+          <div class="problems-list" *ngIf="session.problems.length > 0">
+            <h4>Problemübersicht</h4>
+            <div class="problem-grid">
+              <div class="problem-item"
+                   *ngFor="let problem of session.problems; let i = index"
+                   [ngClass]="{ 'correct': problem.isCorrect, 'incorrect': !problem.isCorrect }">
+                <span class="problem-number">{{ i + 1 }}.</span>
+                <span class="problem-expression">{{ problem.expression }}</span>
+                <span class="problem-answer">= {{ problem.answer }}</span>
+                <span class="user-answer" *ngIf="!problem.isCorrect">
+                  (Ihre Antwort: {{ problem.userAnswer }})
+                </span>
+                <span class="problem-time">{{ formatTime(problem.timeSpent) }}</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </mat-card>
+</div>
