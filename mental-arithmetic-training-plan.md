@@ -235,7 +235,8 @@ Create a new mental arithmetic training module following the existing Angular 20
   - [ ] Display total practice time
   - [ ] Show problems completed count
 - [ ] Run npm build to check application
-- [ ] Update the plan and push changes.
+- [ ] Update the plan
+- [ ] Push the changes
 
 ### Phase 8: UI/UX Polish
 - [ ] Apply consistent Material Azure Blue theme
