@@ -1,23 +1,23 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, HostListener, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatDialogModule, MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import {ChangeDetectorRef, Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
-import { ActivatedRoute, Router } from '@angular/router';
+import {Router} from '@angular/router';
 
-import { ArithmeticSession } from '../../model/arithmetic-session';
-import { ArithmeticProblem } from '../../model/arithmetic-problem';
-import { ArithmeticSettings } from '../../model/arithmetic-settings';
-import { SessionStatus } from '../../model/arithmetic-enums';
-import { ArithmeticService } from '../../services/arithmetic.service';
+import {ArithmeticSession} from '../../model/arithmetic-session';
+import {ArithmeticProblem} from '../../model/arithmetic-problem';
+import {ArithmeticSettings} from '../../model/arithmetic-settings';
+import {SessionStatus} from '../../model/arithmetic-enums';
+import {ArithmeticService} from '../../services/arithmetic.service';
 
 @Component({
   selector: 'app-arithmetic-session',
@@ -64,7 +64,6 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     private arithmeticService: ArithmeticService,
     private fb: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
     private snackBar: MatSnackBar,
     private dialog: MatDialog

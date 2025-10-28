@@ -9,7 +9,7 @@ import {MatTableModule} from '@angular/material/table';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
 import {ArithmeticSession} from '../../model/arithmetic-session';
@@ -62,9 +62,9 @@ export class ArithmeticListComponent implements OnInit {
 
   constructor(
     private arithmeticService: ArithmeticService,
-    private dialog: MatDialog,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadSessions();
@@ -80,7 +80,7 @@ export class ArithmeticListComponent implements OnInit {
       this.loading = false;
     } catch (error) {
       console.error('Error loading sessions:', error);
-      this.snackBar.open('Fehler beim Laden der Sitzungen', 'OK', { duration: 3000 });
+      this.snackBar.open('Fehler beim Laden der Sitzungen', 'OK', {duration: 3000});
       this.loading = false;
     }
   }
@@ -98,7 +98,7 @@ export class ArithmeticListComponent implements OnInit {
 
     this.totalProblemsCompleted = this.sessions.reduce((sum, session) => sum + session.problemsCompleted, 0);
 
-    const totalScore = this.sessions.reduce((sum, session) => sum + session.score, 0);
+    const totalScore = this.sessions.reduce((sum, session) => sum + (session.score / session.totalProblems * 100), 0);
     this.averageScore = Math.round(totalScore / this.sessions.length);
 
     const totalAccuracy = this.sessions.reduce((sum, session) => sum + session.accuracy, 0);
@@ -125,7 +125,7 @@ export class ArithmeticListComponent implements OnInit {
 
     // Apply sorting
     this.filteredSessions.sort((a, b) => {
-      let comparison = 0;
+      let comparison: number;
 
       switch (this.sortBy) {
         case 'date':
@@ -175,10 +175,10 @@ export class ArithmeticListComponent implements OnInit {
       try {
         this.arithmeticService.deleteSessionFromStorage(sessionId);
         this.loadSessions();
-        this.snackBar.open('Sitzung gelöscht', 'OK', { duration: 3000 });
+        this.snackBar.open('Sitzung gelöscht', 'OK', {duration: 3000});
       } catch (error) {
         console.error('Error deleting session:', error);
-        this.snackBar.open('Fehler beim Löschen der Sitzung', 'OK', { duration: 3000 });
+        this.snackBar.open('Fehler beim Löschen der Sitzung', 'OK', {duration: 3000});
       }
     }
   }
@@ -188,10 +188,10 @@ export class ArithmeticListComponent implements OnInit {
       try {
         this.arithmeticService.clearAllSessionsFromStorage();
         this.loadSessions();
-        this.snackBar.open('Alle Sitzungen gelöscht', 'OK', { duration: 3000 });
+        this.snackBar.open('Alle Sitzungen gelöscht', 'OK', {duration: 3000});
       } catch (error) {
         console.error('Error clearing sessions:', error);
-        this.snackBar.open('Fehler beim Löschen der Sitzungen', 'OK', { duration: 3000 });
+        this.snackBar.open('Fehler beim Löschen der Sitzungen', 'OK', {duration: 3000});
       }
     }
   }
@@ -225,7 +225,7 @@ export class ArithmeticListComponent implements OnInit {
         mimeType = 'text/csv;charset=utf-8;';
       }
 
-      const blob = new Blob([content], { type: mimeType });
+      const blob = new Blob([content], {type: mimeType});
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -235,10 +235,10 @@ export class ArithmeticListComponent implements OnInit {
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
 
-      this.snackBar.open(`Sitzungen als ${format.toUpperCase()} exportiert`, 'OK', { duration: 3000 });
+      this.snackBar.open(`Sitzungen als ${format.toUpperCase()} exportiert`, 'OK', {duration: 3000});
     } catch (error) {
       console.error('Error exporting sessions:', error);
-      this.snackBar.open('Fehler beim Exportieren der Sitzungen', 'OK', { duration: 3000 });
+      this.snackBar.open('Fehler beim Exportieren der Sitzungen', 'OK', {duration: 3000});
     }
   }
 
