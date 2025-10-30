@@ -11,6 +11,11 @@ import {PlantDetailsComponent} from './plants/plant-details/plant-details.compon
 import {AddWordComponent} from './vocabulary/components/add-word/add-word.component';
 import {VocabularyListComponent} from './vocabulary/components/vocabulary-list/vocabulary-list.component';
 import {VocabularyHomeComponent} from './vocabulary/components/vocabulary-home/vocabulary-home.component';
+import {MentalArithmeticRootComponent} from './mental-arithmetic/mental-arithmetic-root/mental-arithmetic-root.component';
+import {MentalArithmeticMainComponent} from './mental-arithmetic/mental-arithmetic-main/mental-arithmetic-main.component';
+import {ArithmeticSettingsComponent} from './mental-arithmetic/components/arithmetic-settings/arithmetic-settings.component';
+import {ArithmeticSessionComponent} from './mental-arithmetic/components/arithmetic-session/arithmetic-session.component';
+import {ArithmeticListComponent} from './mental-arithmetic/components/arithmetic-list/arithmetic-list.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -34,6 +39,17 @@ export const routes: Routes = [
       {path: 'plant-overview', component: PlantOverviewComponent, data: {home: '/plant-root'}},
       {path: 'plant-edit/:id', component: PlantEditComponent, data: {home: '/plant-root'}},
       {path: 'plant/:id', component: PlantDetailsComponent, data: {home: '/plant-root'}}
+    ]
+  },
+  {
+    path: 'mental-arithmetic',
+    component: MentalArithmeticRootComponent,
+    children: [
+      {path: '', component: MentalArithmeticMainComponent, data: {home: '/'}},
+      {path: 'main', component: MentalArithmeticMainComponent, data: {home: '/mental-arithmetic'}},
+      {path: 'settings', component: ArithmeticSettingsComponent, data: {home: '/mental-arithmetic'}},
+      {path: 'session', component: ArithmeticSessionComponent, data: {home: '/mental-arithmetic'}},
+      {path: 'arithmetic-list', component: ArithmeticListComponent, data: {home: '/mental-arithmetic'}}
     ]
   }
 ];

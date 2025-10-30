@@ -1,0 +1,144 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <mat-card class="settings-card">
+        <mat-card-header>
+          <mat-card-title class="text-center">
+            <h2>Einstellungen</h2>
+          </mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+          <form [formGroup]="settingsForm" class="settings-form">
+
+            <!-- Operations Selection -->
+            <div class="section">
+              <h3 class="section-title">Rechenarten</h3>
+              <div formGroupName="operations" class="operations-group">
+                <mat-checkbox
+                  formControlName="addition"
+                  class="operation-checkbox">
+                  <mat-icon>add</mat-icon>
+                  <span>Addition</span>
+                </mat-checkbox>
+
+                <mat-checkbox
+                  formControlName="subtraction"
+                  class="operation-checkbox">
+                  <mat-icon>remove</mat-icon>
+                  <span>Subtraktion</span>
+                </mat-checkbox>
+              </div>
+              <mat-error *ngIf="getErrorMessage()" class="error-message">
+                {{ getErrorMessage() }}
+              </mat-error>
+            </div>
+
+            <!-- Difficulty Selection -->
+            <div class="section">
+              <h3 class="section-title">Schwierigkeitsgrad</h3>
+              <mat-radio-group
+                formControlName="difficulty"
+                class="difficulty-group">
+                <mat-radio-button
+                  [value]="Difficulty.EASY"
+                  class="difficulty-option">
+                  <div class="difficulty-content">
+                    <span class="difficulty-label">Einfach</span>
+                    <span class="difficulty-desc">2-stellige Zahlen (10-99)</span>
+                  </div>
+                </mat-radio-button>
+
+                <mat-radio-button
+                  [value]="Difficulty.MEDIUM"
+                  class="difficulty-option">
+                  <div class="difficulty-content">
+                    <span class="difficulty-label">Mittel</span>
+                    <span class="difficulty-desc">3-stellige Zahlen (100-999)</span>
+                  </div>
+                </mat-radio-button>
+
+                <mat-radio-button
+                  [value]="Difficulty.HARD"
+                  class="difficulty-option">
+                  <div class="difficulty-content">
+                    <span class="difficulty-label">Schwer</span>
+                    <span class="difficulty-desc">4-stellige Zahlen (1000-9999)</span>
+                  </div>
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+
+            <!-- Time Limit -->
+            <div class="section">
+              <h3 class="section-title">Zeitbegrenzung (optional)</h3>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Zeit in Minuten</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="timeLimit"
+                  min="1"
+                  max="60"
+                  placeholder="z.B. 15">
+                <mat-icon matSuffix>timer</mat-icon>
+                <mat-hint>Leer lassen für keine Zeitbegrenzung</mat-hint>
+                <mat-error *ngIf="settingsForm.get('timeLimit')?.invalid && settingsForm.get('timeLimit')?.touched">
+                  Zeit muss zwischen 1 und 60 Minuten liegen
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Problem Count -->
+            <div class="section">
+              <h3 class="section-title">Anzahl der Aufgaben</h3>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Anzahl Aufgaben</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  formControlName="problemCount"
+                  min="5"
+                  max="50"
+                  placeholder="Anzahl zwischen 5 und 50">
+                <mat-icon matSuffix>assignment</mat-icon>
+                <mat-hint>Wählen Sie zwischen 5 und 50 Aufgaben</mat-hint>
+                <mat-error *ngIf="settingsForm.get('problemCount')?.invalid && settingsForm.get('problemCount')?.touched">
+                  Anzahl muss zwischen 5 und 50 liegen
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Form Validation Error Summary -->
+            <div *ngIf="settingsForm.invalid && settingsForm.touched" class="validation-summary">
+              <mat-icon class="error-icon">error</mat-icon>
+              <span class="error-text">{{ getErrorMessage() }}</span>
+            </div>
+
+          </form>
+        </mat-card-content>
+
+        <mat-card-actions class="action-buttons">
+          <button
+            mat-button
+            (click)="onSaveSettings()"
+            [disabled]="settingsForm.invalid"
+            class="save-button">
+            <mat-icon>save</mat-icon>
+            Einstellungen speichern
+          </button>
+
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="onStartTraining()"
+            [disabled]="settingsForm.invalid"
+            class="start-button">
+            <mat-icon>play_arrow</mat-icon>
+            Training starten
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+</div>

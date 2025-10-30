@@ -37,7 +37,7 @@ function applyFilter(flashcard: Flashcard, filter: string, value: string): boole
     return !flashcard.description || flashcard.description.trim() === '';
   }
 
-  let wordFilter = /####([a-z]+)####/i.exec(filter);
+  const wordFilter = /####([a-z]+)####/i.exec(filter);
   if (wordFilter) {
     return value.toLowerCase().includes(wordFilter[1]);
   }
@@ -106,11 +106,11 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
 
     this.flashcards.filterPredicate = (data: Flashcard, filter) => {
 
-      let front: string = data.front!
-      let filters: string[] = filter.split(',');
+      const front: string = data.front!
+      const filters: string[] = filter.split(',');
 
       let isFiltered: boolean = true;
-      for (let filter of filters) {
+      for (const filter of filters) {
         isFiltered = isFiltered && applyFilter(data, filter, front);
       }
 
@@ -157,7 +157,7 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
   downloadFile() {
     this.vocabularyService.getFlashcardFile().subscribe({
       next: value => {
-        let filename = value.headers.get('filename') ?? 'Standard.csv';
+        const filename = value.headers.get('filename') ?? 'Standard.csv';
 
         const a = document.createElement('a');
         const objectUrl = URL.createObjectURL(value.body!);
