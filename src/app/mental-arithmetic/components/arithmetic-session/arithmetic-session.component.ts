@@ -50,8 +50,6 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   timeElapsed: number = 0;
   sessionTimeLimit: number | null = null;
   currentProblemStartTime: number = 0;
-  private feedbackStartTime: number = 0;
-  private totalFeedbackTime: number = 0;
 
   // UI state
   isPaused: boolean = false;
@@ -156,18 +154,8 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     const startTime = Date.now();
 
     this.timerInterval = setInterval(() => {
-      if (!this.isPaused && this.currentSession) {
-        let currentElapsed = Date.now() - startTime;
-
-        // Subtract accumulated feedback time from total elapsed time
-        currentElapsed -= this.totalFeedbackTime;
-
-        // Subtract current feedback time if in feedback mode
-        if (this.showFeedback && this.feedbackStartTime > 0) {
-          currentElapsed -= (Date.now() - this.feedbackStartTime);
-        }
-
-        this.timeElapsed = currentElapsed;
+      if (!this.isPaused && this.currentSession && !this.showFeedback) {
+        this.timeElapsed = Date.now() - startTime;
 
         if (this.sessionTimeLimit) {
           this.timeRemaining = Math.max(0, this.sessionTimeLimit - this.timeElapsed);
@@ -217,7 +205,6 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     this.lastAnswerCorrect = this.arithmeticService.checkAnswer(this.currentProblem, userAnswer);
 
     this.showFeedback = true;
-    this.feedbackStartTime = Date.now(); // Track when feedback starts
 
     // Update problem with answer
     this.currentProblem.userAnswer = userAnswer;
@@ -255,16 +242,10 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   private moveToNextProblem(): void {
     if (!this.currentSession) return;
 
-    // Accumulate feedback time before resetting
-    if (this.feedbackStartTime > 0) {
-      this.totalFeedbackTime += (Date.now() - this.feedbackStartTime);
-    }
-
     this.currentSession.currentProblemIndex++;
     this.loadCurrentProblem();
     this.answerForm.enable();
     this.showFeedback = false;
-    this.feedbackStartTime = 0; // Reset feedback start time
   }
 
   private completeSession(): void {
