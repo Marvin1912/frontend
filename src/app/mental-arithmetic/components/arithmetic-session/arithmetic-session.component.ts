@@ -155,11 +155,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
 
     this.timerInterval = setInterval(() => {
       if (!this.isPaused && this.currentSession) {
-        const rawElapsed = Date.now() - startTime;
-        const feedbackDelay = 2000; // 2 seconds per completed problem
-        const totalFeedbackTime = this.currentSession.problemsCompleted * feedbackDelay;
-
-        this.timeElapsed = Math.max(0, rawElapsed - totalFeedbackTime);
+        this.timeElapsed = Date.now() - startTime;
 
         if (this.sessionTimeLimit) {
           this.timeRemaining = Math.max(0, this.sessionTimeLimit - this.timeElapsed);
