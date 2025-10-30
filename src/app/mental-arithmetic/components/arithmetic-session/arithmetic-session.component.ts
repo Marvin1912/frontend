@@ -49,6 +49,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   timeRemaining: number = 0;
   timeElapsed: number = 0;
   sessionTimeLimit: number | null = null;
+  currentProblemStartTime: number = 0;
 
   // UI state
   isPaused: boolean = false;
@@ -141,6 +142,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     if (!this.currentSession) return;
 
     this.currentProblem = this.arithmeticService.getCurrentProblem(this.currentSession);
+    this.currentProblemStartTime = Date.now(); // Track when this problem starts
     this.answerForm.reset();
     this.showFeedback = false;
     this.cdr.detectChanges();
@@ -166,7 +168,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
 
         // Update problem time if current problem exists
         if (this.currentProblem && this.currentProblem.answeredAt === null) {
-          this.currentProblem.timeSpent = this.timeElapsed - this.getSessionStartTime();
+          this.currentProblem.timeSpent = this.timeElapsed - this.currentProblemStartTime;
         }
 
         this.cdr.detectChanges();
