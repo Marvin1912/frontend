@@ -50,6 +50,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   timeElapsed: number = 0;
   sessionTimeLimit: number | null = null;
   currentProblemStartTime: number = 0;
+  private pausedTimeElapsed: number = 0;
 
   // UI state
   isPaused: boolean = false;
@@ -152,23 +153,39 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     this.clearTimer();
 
     const startTime = Date.now();
+    let accumulatedPausedTime = 0;
+    let feedbackStartTime = 0;
 
     this.timerInterval = setInterval(() => {
-      if (!this.isPaused && this.currentSession && !this.showFeedback) {
-        this.timeElapsed = Date.now() - startTime;
-
-        if (this.sessionTimeLimit) {
-          this.timeRemaining = Math.max(0, this.sessionTimeLimit - this.timeElapsed);
-
-          if (this.timeRemaining <= 0) {
-            this.handleTimeOut();
-            return;
-          }
+      if (!this.isPaused && this.currentSession) {
+        // Handle feedback pause/resume
+        if (this.showFeedback && feedbackStartTime === 0) {
+          // Feedback just started, pause the elapsed time
+          feedbackStartTime = Date.now();
+          this.pausedTimeElapsed = this.timeElapsed;
+        } else if (!this.showFeedback && feedbackStartTime > 0) {
+          // Feedback just ended, adjust start time to exclude feedback period
+          accumulatedPausedTime += (Date.now() - feedbackStartTime);
+          feedbackStartTime = 0;
         }
 
-        // Update problem time if current problem exists
-        if (this.currentProblem && this.currentProblem.answeredAt === null) {
-          this.currentProblem.timeSpent = Date.now() - this.currentProblemStartTime;
+        // Only update time if not in feedback
+        if (!this.showFeedback) {
+          this.timeElapsed = Date.now() - startTime - accumulatedPausedTime;
+
+          if (this.sessionTimeLimit) {
+            this.timeRemaining = Math.max(0, this.sessionTimeLimit - this.timeElapsed);
+
+            if (this.timeRemaining <= 0) {
+              this.handleTimeOut();
+              return;
+            }
+          }
+
+          // Update problem time if current problem exists
+          if (this.currentProblem && this.currentProblem.answeredAt === null) {
+            this.currentProblem.timeSpent = Date.now() - this.currentProblemStartTime;
+          }
         }
 
         this.cdr.detectChanges();
