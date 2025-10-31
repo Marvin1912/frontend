@@ -113,7 +113,9 @@
             <ng-container matColumnDef="date">
               <th mat-header-cell *matHeaderCellDef (click)="onSortChange('date')" class="sortable-header">
                 Datum
-                <mat-icon *ngIf="sortBy === 'date'">{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                @if (sortBy === 'date') {
+                <mat-icon>{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+              }
               </th>
               <td mat-cell *matCellDef="let session">
                 {{ formatDate(session.startTime) }}
@@ -123,7 +125,9 @@
             <ng-container matColumnDef="difficulty">
               <th mat-header-cell *matHeaderCellDef (click)="onSortChange('difficulty')" class="sortable-header">
                 Schwierigkeit
-                <mat-icon *ngIf="sortBy === 'difficulty'">{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                @if (sortBy === 'difficulty') {
+                <mat-icon>{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+              }
               </th>
               <td mat-cell *matCellDef="let session">
                 <span class="difficulty-badge" [ngClass]="'difficulty-' + session.settings.difficulty.toLowerCase()">
@@ -148,7 +152,9 @@
             <ng-container matColumnDef="score">
               <th mat-header-cell *matHeaderCellDef (click)="onSortChange('score')" class="sortable-header">
                 Punktzahl
-                <mat-icon *ngIf="sortBy === 'score'">{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                @if (sortBy === 'score') {
+                <mat-icon>{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+              }
               </th>
               <td mat-cell *matCellDef="let session">
                 <span class="score" [ngClass]="{ 'score-high': session.score >= 80, 'score-medium': session.score >= 60 && session.score < 80, 'score-low': session.score < 60 }">
@@ -160,7 +166,9 @@
             <ng-container matColumnDef="accuracy">
               <th mat-header-cell *matHeaderCellDef (click)="onSortChange('accuracy')" class="sortable-header">
                 Genauigkeit
-                <mat-icon *ngIf="sortBy === 'accuracy'">{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                @if (sortBy === 'accuracy') {
+                <mat-icon>{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+              }
               </th>
               <td mat-cell *matCellDef="let session">
                 {{ getSessionAccuracy(session) }}%
@@ -170,7 +178,9 @@
             <ng-container matColumnDef="duration">
               <th mat-header-cell *matHeaderCellDef (click)="onSortChange('duration')" class="sortable-header">
                 Dauer
-                <mat-icon *ngIf="sortBy === 'duration'">{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+                @if (sortBy === 'duration') {
+                <mat-icon>{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+              }
               </th>
               <td mat-cell *matCellDef="let session">
                 {{ formatTime(getSessionDuration(session)) }}
