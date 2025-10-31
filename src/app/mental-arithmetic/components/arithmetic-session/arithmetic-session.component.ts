@@ -18,6 +18,10 @@ import {ArithmeticProblem} from '../../model/arithmetic-problem';
 import {ArithmeticSettings} from '../../model/arithmetic-settings';
 import {SessionStatus} from '../../model/arithmetic-enums';
 import {ArithmeticService} from '../../services/arithmetic.service';
+import {NotificationService} from '../../services/notification.service';
+import {fadeInOut, slideInUp, scaleIn, pulse, shake, progressGrow} from '../../animations/animations';
+import {LoadingComponent} from '../loading/loading.component';
+import {ConfirmationDialogComponent, ConfirmationDialogData} from '../confirmation-dialog/confirmation-dialog.component';
 
 @Component({
   selector: 'app-arithmetic-session',
@@ -33,10 +37,19 @@ import {ArithmeticService} from '../../services/arithmetic.service';
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatDialogModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    LoadingComponent
   ],
   templateUrl: './arithmetic-session.component.html',
-  styleUrls: ['./arithmetic-session.component.css']
+  styleUrls: ['./arithmetic-session.component.css'],
+  animations: [
+    fadeInOut,
+    slideInUp,
+    scaleIn,
+    pulse,
+    shake,
+    progressGrow
+  ]
 })
 export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   // Session state
@@ -67,7 +80,8 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     private router: Router,
     private cdr: ChangeDetectorRef,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -248,6 +262,13 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     this.showFeedback = false;
   }
 
+  // Public method for moving to next problem (used by keyboard shortcuts)
+  nextProblem(): void {
+    if (this.showFeedback) {
+      this.moveToNextProblem();
+    }
+  }
+
   private completeSession(): void {
     this.clearTimer();
     this.isSessionCompleted = true;
@@ -377,18 +398,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     return this.timeRemaining <= 60000; // Less than 1 minute remaining
   }
 
-  // Keyboard shortcuts
-  onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      if (!this.answerForm.disabled) {
-        this.onSubmitAnswer();
-      }
-    } else if (event.key === 'Escape') {
-      this.pauseSession();
-    }
-  }
-
+  
   // Number pad methods for mobile
   appendNumber(digit: string): void {
     if (this.answerForm.disabled) return;
@@ -432,6 +442,98 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
 
   goToMain(): void {
     this.router.navigate(['/mental-arithmetic']);
+  }
+
+  // Accessibility methods for enhanced user experience
+  onAnswerInputFocus(): void {
+    // Announce current problem for screen readers when input is focused
+    if (this.currentProblem) {
+      const problemText = `Aktuelle Aufgabe: ${this.currentProblem.expression}`;
+      this.announceToScreenReader(problemText);
+    }
+  }
+
+  onAnswerInputBlur(): void {
+    // Optional: Add any cleanup logic when input loses focus
+  }
+
+  private announceToScreenReader(message: string): void {
+    // Create a temporary element for screen reader announcements
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'sr-only';
+    announcement.style.position = 'absolute';
+    announcement.style.left = '-10000px';
+    announcement.style.width = '1px';
+    announcement.style.height = '1px';
+    announcement.style.overflow = 'hidden';
+    announcement.textContent = message;
+
+    document.body.appendChild(announcement);
+
+    // Remove after announcement
+    setTimeout(() => {
+      document.body.removeChild(announcement);
+    }, 1000);
+  }
+
+  // Enhanced keyboard navigation
+  @HostListener('keydown', ['$event'])
+  onKeydown(event: KeyboardEvent): void {
+    switch (event.key) {
+      case 'Enter':
+        event.preventDefault();
+        if (!this.answerForm.disabled && this.answerForm.valid) {
+          this.onSubmitAnswer();
+        }
+        break;
+      case 'Escape':
+        event.preventDefault();
+        if (this.showFeedback) {
+          this.nextProblem();
+        } else {
+          this.pauseSession();
+        }
+        break;
+      case 'Tab':
+        // Let default tab behavior work
+        break;
+      case ' ':
+        if (this.showFeedback) {
+          event.preventDefault();
+          this.nextProblem();
+        }
+        break;
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
+      case '0':
+        // Allow number input when focused on number pad buttons
+        if (document.activeElement?.tagName === 'BUTTON') {
+          event.preventDefault();
+          this.appendNumber(event.key);
+        }
+        break;
+      case '-':
+        if (document.activeElement?.tagName === 'BUTTON') {
+          event.preventDefault();
+          this.toggleNegative();
+        }
+        break;
+      case 'Backspace':
+        if (document.activeElement?.tagName === 'BUTTON') {
+          event.preventDefault();
+          this.backspace();
+        }
+        break;
+    }
   }
 
   @HostListener('window:beforeunload', ['$event'])

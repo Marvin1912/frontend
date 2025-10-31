@@ -1,0 +1,38 @@
+<div class="loading-container"
+     [class.fullscreen]="fullscreen"
+     [class.transparent]="transparent"
+     @fadeInOut>
+
+  <!-- Spinner Type -->
+  <div *ngIf="type === 'spinner'" class="loading-content">
+    <mat-spinner
+      [diameter]="size"
+      class="loading-spinner"
+      @rotate>
+    </mat-spinner>
+    <p class="loading-message">{{ message }}</p>
+    <div *ngIf="showIcon" class="loading-icon">
+      <mat-icon [fontSet]="'material-icons'">{{ icon }}</mat-icon>
+    </div>
+  </div>
+
+  <!-- Dots Type -->
+  <div *ngIf="type === 'dots'" class="loading-content dots-type">
+    <div class="dots-container">
+      <div class="dot dot-1"></div>
+      <div class="dot dot-2"></div>
+      <div class="dot dot-3"></div>
+    </div>
+    <p class="loading-message">{{ message }}</p>
+  </div>
+
+  <!-- Pulse Type -->
+  <div *ngIf="type === 'pulse'" class="loading-content pulse-type">
+    <div class="pulse-container">
+      <div class="pulse-circle"></div>
+      <div class="pulse-circle pulse-2"></div>
+      <div class="pulse-circle pulse-3"></div>
+    </div>
+    <p class="loading-message">{{ message }}</p>
+  </div>
+</div>

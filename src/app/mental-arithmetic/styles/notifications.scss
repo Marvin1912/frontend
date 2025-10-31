@@ -1,0 +1,209 @@
+// Material Design Snackbar customizations
+.mat-mdc-snack-bar-container {
+  border-radius: 8px !important;
+  margin: 16px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
+  min-width: 300px;
+  max-width: 90vw;
+}
+
+// Success notification
+.notification-success {
+  --mat-mdc-snack-bar-container-color: #107c10 !important;
+  --mat-mdc-snack-bar-foreground-color: white !important;
+
+  .mdc-snackbar__label {
+    font-weight: 500 !important;
+  }
+
+  .mat-mdc-button {
+    color: white !important;
+    font-weight: 600 !important;
+  }
+}
+
+// Error notification
+.notification-error {
+  --mat-mdc-snack-bar-container-color: #d83b01 !important;
+  --mat-mdc-snack-bar-foreground-color: white !important;
+
+  .mdc-snackbar__label {
+    font-weight: 500 !important;
+  }
+
+  .mat-mdc-button {
+    color: white !important;
+    font-weight: 600 !important;
+  }
+}
+
+// Warning notification
+.notification-warning {
+  --mat-mdc-snack-bar-container-color: #ff8c00 !important;
+  --mat-mdc-snack-bar-foreground-color: white !important;
+
+  .mdc-snackbar__label {
+    font-weight: 500 !important;
+  }
+
+  .mat-mdc-button {
+    color: white !important;
+    font-weight: 600 !important;
+  }
+}
+
+// Info notification
+.notification-info {
+  --mat-mdc-snack-bar-container-color: #0078d4 !important;
+  --mat-mdc-snack-bar-foreground-color: white !important;
+
+  .mdc-snackbar__label {
+    font-weight: 500 !important;
+  }
+
+  .mat-mdc-button {
+    color: white !important;
+    font-weight: 600 !important;
+  }
+}
+
+// Loading notification
+.notification-loading {
+  --mat-mdc-snack-bar-container-color: #666666 !important;
+  --mat-mdc-snack-bar-foreground-color: white !important;
+
+  .mdc-snackbar__label {
+    font-weight: 500 !important;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Enhanced snackbar animations
+.mat-mdc-snack-bar-container {
+  animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Responsive design for notifications
+@media (max-width: 768px) {
+  .mat-mdc-snack-bar-container {
+    margin: 8px !important;
+    min-width: 250px;
+    max-width: calc(100vw - 16px);
+  }
+}
+
+@media (max-width: 480px) {
+  .mat-mdc-snack-bar-container {
+    margin: 4px !important;
+    min-width: 200px;
+    max-width: calc(100vw - 8px);
+  }
+
+  .mdc-snackbar__label {
+    font-size: 0.9rem !important;
+  }
+
+  .mat-mdc-button {
+    font-size: 0.9rem !important;
+    padding: 8px 12px !important;
+  }
+}
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  .notification-success {
+    --mat-mdc-snack-bar-container-color: #000000 !important;
+    border: 2px solid #107c10 !important;
+  }
+
+  .notification-error {
+    --mat-mdc-snack-bar-container-color: #000000 !important;
+    border: 2px solid #d83b01 !important;
+  }
+
+  .notification-warning {
+    --mat-mdc-snack-bar-container-color: #000000 !important;
+    border: 2px solid #ff8c00 !important;
+  }
+
+  .notification-info {
+    --mat-mdc-snack-bar-container-color: #000000 !important;
+    border: 2px solid #0078d4 !important;
+  }
+
+  .mdc-snackbar__label {
+    font-weight: 700 !important;
+  }
+}
+
+// Dark mode preparation
+@media (prefers-color-scheme: dark) {
+  /*
+  .notification-success {
+    --mat-mdc-snack-bar-container-color: #0e6a0e !important;
+  }
+
+  .notification-error {
+    --mat-mdc-snack-bar-container-color: #b83201 !important;
+  }
+
+  .notification-warning {
+    --mat-mdc-snack-bar-container-color: #e67300 !important;
+  }
+
+  .notification-info {
+    --mat-mdc-snack-bar-container-color: #106ebe !important;
+  }
+  */
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .mat-mdc-snack-bar-container {
+    animation: none;
+  }
+
+  .notification-loading::before {
+    animation: none;
+  }
+}
+
+// Focus indicators for accessibility
+.mat-mdc-snack-bar-container:focus-within {
+  outline: 2px solid var(--azure-blue-primary);
+  outline-offset: 2px;
+}
+
+.mat-mdc-button:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}

@@ -1,0 +1,243 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  min-height: 200px;
+  background-color: var(--azure-blue-background);
+}
+
+.loading-container.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  background-color: rgba(245, 247, 250, 0.95);
+  backdrop-filter: blur(4px);
+}
+
+.loading-container.transparent {
+  background-color: transparent;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.loading-spinner {
+  color: var(--azure-blue-primary);
+}
+
+.loading-message {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--azure-blue-text-secondary);
+  margin: 0;
+  text-align: center;
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+.loading-icon {
+  margin-top: 1rem;
+}
+
+.loading-icon mat-icon {
+  font-size: 2rem;
+  height: 2rem;
+  width: 2rem;
+  color: var(--azure-blue-primary);
+}
+
+/* Dots Animation */
+.dots-type .dots-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--azure-blue-primary);
+  animation: dotPulse 1.4s infinite ease-in-out both;
+}
+
+.dot-1 {
+  animation-delay: -0.32s;
+}
+
+.dot-2 {
+  animation-delay: -0.16s;
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Pulse Animation */
+.pulse-type .pulse-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pulse-circle {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--azure-blue-primary);
+  animation: pulseRing 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+.pulse-circle.pulse-2 {
+  animation-delay: 0.5s;
+}
+
+.pulse-circle.pulse-3 {
+  animation-delay: 1s;
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.33);
+    opacity: 1;
+  }
+  80%, 100% {
+    transform: scale(1.33);
+    opacity: 0;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .loading-container {
+    padding: 1.5rem;
+    min-height: 150px;
+  }
+
+  .loading-message {
+    font-size: 1rem;
+    max-width: 250px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .pulse-container {
+    width: 60px;
+    height: 60px;
+  }
+
+  .pulse-circle {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loading-container {
+    padding: 1rem;
+    min-height: 120px;
+  }
+
+  .loading-message {
+    font-size: 0.9rem;
+    max-width: 200px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .pulse-container {
+    width: 50px;
+    height: 50px;
+  }
+
+  .pulse-circle {
+    width: 25px;
+    height: 25px;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .loading-container.fullscreen {
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+
+  .loading-message {
+    color: #000000;
+    font-weight: 600;
+  }
+
+  .dot {
+    background-color: #000000;
+  }
+
+  .pulse-circle {
+    background-color: #000000;
+  }
+}
+
+/* Dark mode preparation */
+@media (prefers-color-scheme: dark) {
+  /*
+  .loading-container.fullscreen {
+    background-color: rgba(18, 18, 18, 0.95);
+  }
+
+  .loading-message {
+    color: #ffffff;
+  }
+
+  .dot {
+    background-color: var(--azure-blue-primary);
+  }
+
+  .pulse-circle {
+    background-color: var(--azure-blue-primary);
+  }
+  */
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner {
+    animation: none;
+  }
+
+  .dot {
+    animation: none;
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  .pulse-circle {
+    animation: none;
+    transform: scale(1);
+    opacity: 1;
+  }
+}

@@ -1,24 +1,38 @@
-<div class="session-container" (keydown)="onKeydown($event)">
+<div class="session-container"
+     (keydown)="onKeydown($event)"
+     role="main"
+     aria-label="Mathe-Training Sitzung">
+
   <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-container">
-    <mat-spinner diameter="50"></mat-spinner>
-    <p class="loading-text">Training wird vorbereitet...</p>
+  <div *ngIf="isLoading" class="loading-container" @fadeInOut>
+    <app-loading
+      message="Training wird vorbereitet..."
+      [size]="60"
+      type="pulse"
+      [fullscreen]="true">
+    </app-loading>
   </div>
 
   <!-- Main Session Content -->
-  <div *ngIf="!isLoading && currentSession" class="session-content">
+  <div *ngIf="!isLoading && currentSession" class="session-content" @slideInUp>
 
     <!-- Header with Timer and Progress -->
-    <div class="session-header">
+    <header class="session-header" role="banner">
       <div class="progress-section">
         <div class="progress-info">
-          <span class="problem-counter">Aufgabe {{ currentProblemNumber }} von {{ totalProblems }}</span>
-          <span class="remaining-problems">{{ remainingProblems }} verbleibend</span>
+          <span class="problem-counter" aria-live="polite">
+            Aufgabe {{ currentProblemNumber }} von {{ totalProblems }}
+          </span>
+          <span class="remaining-problems" aria-live="polite">
+            {{ remainingProblems }} verbleibend
+          </span>
         </div>
         <mat-progress-bar
           mode="determinate"
           [value]="getSessionProgress()"
-          [color]="getProgressColor()">
+          [color]="getProgressColor()"
+          aria-label="Fortschrittsanzeige: {{ getSessionProgress().toFixed(0) }}% abgeschlossen"
+          @progressGrow>
         </mat-progress-bar>
       </div>
 
@@ -37,70 +51,91 @@
           <span class="accuracy-text">{{ currentAccuracy.toFixed(1) }}%</span>
         </div>
       </div>
-    </div>
+    </header>
 
     <!-- Session Started Content -->
     <div *ngIf="isSessionStarted && !isSessionCompleted" class="training-area">
 
       <!-- Problem Display -->
-      <div class="problem-display">
-        <mat-card class="problem-card" [class.correct-feedback]="showFeedback && lastAnswerCorrect" [class.incorrect-feedback]="showFeedback && !lastAnswerCorrect">
+      <section class="problem-display" role="region" aria-label="Aufgabenanzeige">
+        <mat-card class="problem-card"
+                  [class.correct-feedback]="showFeedback && lastAnswerCorrect"
+                  [class.incorrect-feedback]="showFeedback && !lastAnswerCorrect"
+                  [@scaleIn]="showFeedback"
+                  [@shake]="showFeedback && !lastAnswerCorrect"
+                  [@pulse]="showFeedback && lastAnswerCorrect"
+                  role="article"
+                  aria-label="Matheaufgabe">
           <mat-card-content class="problem-content">
-            <div class="problem-expression">
+            <div class="problem-expression"
+                 aria-live="polite"
+                 aria-atomic="true">
               {{ currentProblemDisplay }}
             </div>
-            <div *ngIf="showFeedback" class="feedback-message">
+            <div *ngIf="showFeedback" class="feedback-message" role="alert" aria-live="assertive">
               <ng-container *ngIf="lastAnswerCorrect">
-                <mat-icon class="feedback-icon correct">check_circle</mat-icon>
+                <mat-icon class="feedback-icon correct" aria-hidden="true">check_circle</mat-icon>
                 <span class="feedback-text correct">Richtig!</span>
               </ng-container>
               <ng-container *ngIf="!lastAnswerCorrect">
-                <mat-icon class="feedback-icon incorrect">close</mat-icon>
-                <span class="feedback-text incorrect">Falsch! Die richtige Antwort ist {{ currentProblem?.answer }}</span>
+                <mat-icon class="feedback-icon incorrect" aria-hidden="true">close</mat-icon>
+                <span class="feedback-text incorrect">
+                  Falsch! Die richtige Antwort ist {{ currentProblem?.answer }}
+                </span>
               </ng-container>
             </div>
           </mat-card-content>
         </mat-card>
-      </div>
+      </section>
 
       <!-- Answer Input Area -->
-      <div class="answer-input-area" *ngIf="!showFeedback">
+      <section class="answer-input-area" *ngIf="!showFeedback" role="region" aria-label="Antworteingabe">
         <mat-card class="answer-card">
           <mat-card-content>
-            <form [formGroup]="answerForm" (ngSubmit)="onSubmitAnswer()">
+            <form [formGroup]="answerForm" (ngSubmit)="onSubmitAnswer()" role="form" aria-labelledby="answer-input-label">
               <mat-form-field appearance="outline" class="answer-input-field">
-                <mat-label>Ihre Antwort</mat-label>
-                <input matInput type="number" formControlName="userAnswer" placeholder="0" autocomplete="off">
-                <mat-icon matSuffix>calculator</mat-icon>
-                <mat-error *ngIf="answerForm.get('userAnswer')?.hasError('required')">
+                <mat-label id="answer-input-label">Ihre Antwort</mat-label>
+                <input matInput
+                       type="number"
+                       formControlName="userAnswer"
+                       placeholder="0"
+                       autocomplete="off"
+                       aria-describedby="answer-help"
+                       (focus)="onAnswerInputFocus()"
+                       (blur)="onAnswerInputBlur()">
+                <mat-icon matSuffix aria-hidden="true">calculator</mat-icon>
+                <mat-hint id="answer-help">Geben Sie Ihre numerische Antwort ein und drücken Sie Enter</mat-hint>
+                <mat-error *ngIf="answerForm.get('userAnswer')?.hasError('required')" role="alert">
                   Bitte geben Sie eine Antwort ein
                 </mat-error>
-                <mat-error *ngIf="answerForm.get('userAnswer')?.hasError('pattern')">
+                <mat-error *ngIf="answerForm.get('userAnswer')?.hasError('pattern')" role="alert">
                   Bitte geben Sie eine gültige Zahl ein
                 </mat-error>
               </mat-form-field>
 
-              <div class="answer-buttons">
+              <div class="answer-buttons" role="group" aria-label="Antwortaktionen">
                 <button mat-raised-button
                         type="submit"
                         color="primary"
                         [disabled]="!answerForm.valid"
-                        class="submit-btn">
-                  <mat-icon>check</mat-icon>
+                        class="submit-btn"
+                        aria-label="Antwort prüfen und bestätigen">
+                  <mat-icon aria-hidden="true">check</mat-icon>
                   Antwort prüfen
                 </button>
                 <button mat-button
                         type="button"
                         (click)="answerForm.reset()"
-                        class="clear-btn">
-                  <mat-icon>clear</mat-icon>
+                        class="clear-btn"
+                        aria-label="Antwortfeld löschen">
+                  <mat-icon aria-hidden="true">clear</mat-icon>
                   Löschen
                 </button>
               </div>
             </form>
           </mat-card-content>
         </mat-card>
-      </div>
+      </section>
 
       <!-- On-screen Number Pad for Mobile -->
       <div class="number-pad" *ngIf="!showFeedback">

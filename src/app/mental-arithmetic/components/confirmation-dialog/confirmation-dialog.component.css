@@ -1,0 +1,152 @@
+.confirmation-dialog {
+  padding: 1.5rem;
+  max-width: 450px;
+  min-width: 300px;
+}
+
+.dialog-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.dialog-icon {
+  font-size: 3rem !important;
+  height: 3rem !important;
+  width: 3rem !important;
+}
+
+.dialog-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--azure-blue-text);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.dialog-content {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.dialog-message {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--azure-blue-text-secondary);
+  margin: 0;
+}
+
+.dialog-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.cancel-btn,
+.confirm-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  min-width: 100px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn {
+  color: var(--azure-blue-text-secondary);
+}
+
+.cancel-btn:hover {
+  background-color: rgba(0, 120, 212, 0.04);
+  color: var(--azure-blue-primary);
+}
+
+.confirm-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 120, 212, 0.3);
+}
+
+.confirm-btn[color="warn"]:hover {
+  box-shadow: 0 4px 12px rgba(216, 59, 1, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .confirmation-dialog {
+    padding: 1rem;
+    min-width: 250px;
+  }
+
+  .dialog-header {
+    margin-bottom: 1rem;
+  }
+
+  .dialog-icon {
+    font-size: 2.5rem !important;
+    height: 2.5rem !important;
+    width: 2.5rem !important;
+  }
+
+  .dialog-title {
+    font-size: 1.25rem;
+  }
+
+  .dialog-message {
+    font-size: 0.9rem;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+  }
+
+  .cancel-btn,
+  .confirm-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .confirmation-dialog {
+    border: 2px solid var(--azure-blue-primary);
+  }
+
+  .dialog-title {
+    color: #000000;
+    font-weight: 700;
+  }
+
+  .dialog-message {
+    color: #000000;
+    font-weight: 500;
+  }
+
+  .cancel-btn {
+    border: 2px solid var(--azure-blue-primary);
+    color: #000000;
+  }
+
+  .confirm-btn {
+    border: 2px solid var(--azure-blue-primary);
+  }
+}
+
+/* Dark mode preparation */
+@media (prefers-color-scheme: dark) {
+  /*
+  .dialog-title {
+    color: #ffffff;
+  }
+
+  .dialog-message {
+    color: #cccccc;
+  }
+  */
+}

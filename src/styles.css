@@ -1,5 +1,20 @@
+/* Import the Azure Blue theme and notification styles for mental arithmetic module */
+@import './app/mental-arithmetic/theme/azure-blue-theme.scss';
+@import './app/mental-arithmetic/styles/notifications.scss';
+
 @use '@angular/material' as mat;
 
-html, body { height: 100vh; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100vh;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--azure-blue-background);
+  color: var(--azure-blue-text);
+}
+
+/* Apply Azure Blue theme globally */
+@include azure-blue-theme();
 
