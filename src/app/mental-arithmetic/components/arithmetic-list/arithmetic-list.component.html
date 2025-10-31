@@ -128,9 +128,11 @@
             <th mat-header-cell *matHeaderCellDef>Operationen</th>
             <td mat-cell *matCellDef="let session">
               <div class="operations-list">
-                <span *ngFor="let op of getSessionOperations(session)" class="operation-badge">
-                  {{ op === 'ADDITION' ? '+' : '-' }}
-                </span>
+                @for (op of getSessionOperations(session); track op) {
+                  <span class="operation-badge">
+                    {{ op === 'ADDITION' ? '+' : '-' }}
+                  </span>
+                }
               </div>
             </td>
           </ng-container>
@@ -211,8 +213,9 @@
         </button>
       </div>
 
-      <div class="details-content" *ngFor="let session of sessions" [ngSwitch]="session.id === expandedSession">
-        <ng-container *ngSwitchCase="true">
+      @for (session of sessions; track session.id) {
+          <div class="details-content" [ngSwitch]="session.id === expandedSession">
+            <ng-container *ngSwitchCase="true">
           <div class="session-info">
             <div class="info-row">
               <span class="label">Datum:</span>
@@ -247,21 +250,23 @@
           <div class="problems-list" *ngIf="session.problems.length > 0">
             <h4>Problemübersicht</h4>
             <div class="problem-grid">
-              <div class="problem-item"
-                   *ngFor="let problem of session.problems; let i = index"
-                   [ngClass]="{ 'correct': problem.isCorrect, 'incorrect': !problem.isCorrect }">
-                <span class="problem-number">{{ i + 1 }}.</span>
-                <span class="problem-expression">{{ problem.expression }}</span>
-                <span class="problem-answer">= {{ problem.answer }}</span>
-                <span class="user-answer" *ngIf="!problem.isCorrect">
-                  (Ihre Antwort: {{ problem.userAnswer }})
-                </span>
-                <span class="problem-time">{{ formatTime(problem.timeSpent) }}</span>
-              </div>
+              @for (problem of session.problems; track problem; let i = $index) {
+                <div class="problem-item"
+                     [ngClass]="{ 'correct': problem.isCorrect, 'incorrect': !problem.isCorrect }">
+                  <span class="problem-number">{{ i + 1 }}.</span>
+                  <span class="problem-expression">{{ problem.expression }}</span>
+                  <span class="problem-answer">= {{ problem.answer }}</span>
+                  <span class="user-answer" *ngIf="!problem.isCorrect">
+                    (Ihre Antwort: {{ problem.userAnswer }})
+                  </span>
+                  <span class="problem-time">{{ formatTime(problem.timeSpent) }}</span>
+                </div>
+              }
             </div>
           </div>
         </ng-container>
       </div>
+      }
     </div>
   </mat-card>
 </div>
