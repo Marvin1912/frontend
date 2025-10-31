@@ -109,7 +109,7 @@
 
       @if (filteredSessions.length > 0) {
         <div class="table-container">
-          <table mat-table>
+          <table mat-table [dataSource]="filteredSessions">
             <ng-container matColumnDef="date">
               <th mat-header-cell *matHeaderCellDef (click)="onSortChange('date')" class="sortable-header">
                 Datum
