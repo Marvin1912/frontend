@@ -26,8 +26,8 @@
 
     <mat-card class="stat-card">
       <div class="stat-content">
-        <div class="stat-number">{{ averageScore }}%</div>
-        <div class="stat-label">Ø Punktzahl</div>
+        <div class="stat-number">{{ averageScore }}/{{ totalProblems }}</div>
+        <div class="stat-label">Punktzahl</div>
       </div>
       <mat-icon class="stat-icon">trending_up</mat-icon>
     </mat-card>
@@ -109,7 +109,7 @@
 
       @if (filteredSessions.length > 0) {
         <div class="table-container">
-          <table mat-table>
+          <table mat-table [dataSource]="filteredSessions">
             <ng-container matColumnDef="date">
               <th mat-header-cell *matHeaderCellDef (click)="onSortChange('date')" class="sortable-header">
                 Datum
@@ -158,7 +158,7 @@
               </th>
               <td mat-cell *matCellDef="let session">
                 <span class="score" [ngClass]="{ 'score-high': session.score >= 80, 'score-medium': session.score >= 60 && session.score < 80, 'score-low': session.score < 60 }">
-                  {{ session.score }}%
+                  {{ session.score }}/{{ session.totalProblems }}
                 </span>
               </td>
             </ng-container>
@@ -261,7 +261,7 @@
             </div>
             <div class="info-row">
               <span class="label">Punktzahl:</span>
-              <span>{{ session.score }}%</span>
+              <span>{{ session.score }}/{{ session.totalProblems }}</span>
             </div>
             <div class="info-row">
               <span class="label">Genauigkeit:</span>

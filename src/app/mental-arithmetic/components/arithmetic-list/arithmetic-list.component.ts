@@ -45,6 +45,7 @@ export class ArithmeticListComponent implements OnInit {
 
   // Statistics
   totalSessions: number = 0;
+  totalProblems: number = 0;
   totalProblemsCompleted: number = 0;
   averageScore: number = 0;
   averageAccuracy: number = 0;
@@ -96,10 +97,11 @@ export class ArithmeticListComponent implements OnInit {
       return;
     }
 
+    this.totalProblems = this.sessions.reduce((sum, session) => sum + session.totalProblems, 0);
+
     this.totalProblemsCompleted = this.sessions.reduce((sum, session) => sum + session.problemsCompleted, 0);
 
-    const totalScore = this.sessions.reduce((sum, session) => sum + (session.score / session.totalProblems * 100), 0);
-    this.averageScore = Math.round(totalScore / this.sessions.length);
+    this.averageScore = this.sessions.reduce((sum, session) => sum + session.score, 0);
 
     const totalAccuracy = this.sessions.reduce((sum, session) => sum + session.accuracy, 0);
     this.averageAccuracy = Math.round(totalAccuracy / this.sessions.length);
