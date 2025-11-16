@@ -30,6 +30,7 @@
                   <th>Name</th>
                   <th>Bucket</th>
                   <th>Description</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -37,6 +38,11 @@
                   <td>{{ bucket.name }}</td>
                   <td><code>{{ bucket.bucketName }}</code></td>
                   <td>{{ bucket.description }}</td>
+                  <td>
+                    <button class="btn btn-primary btn-sm" (click)="openExportModal(bucket)" [disabled]="isExporting">
+                      <i class="bi bi-download"></i> Export
+                    </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -52,3 +58,42 @@
     </button>
   </div>
 </div>
+
+<!-- Export Modal -->
+<div class="modal fade" [class.show]="showExportModal" [style.display]="showExportModal ? 'block' : 'none'" tabindex="-1" role="dialog" aria-labelledby="exportModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exportModalLabel">Export Bucket</h5>
+        <button type="button" class="btn-close" (click)="closeExportModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #exportForm="ngForm">
+          <div class="mb-3">
+            <label for="bucketName" class="form-label">Bucket</label>
+            <input type="text" id="bucketName" class="form-control" [value]="selectedBucket?.bucketName" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="startTime" class="form-label">Start Time</label>
+            <input type="datetime-local" id="startTime" class="form-control" [(ngModel)]="exportRequest.startTime" name="startTime">
+          </div>
+          <div class="mb-3">
+            <label for="endTime" class="form-label">End Time</label>
+            <input type="datetime-local" id="endTime" class="form-control" [(ngModel)]="exportRequest.endTime" name="endTime">
+          </div>
+        </form>
+        <div *ngIf="exportError" class="alert alert-danger">
+          {{ exportError }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeExportModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="exportBucket()" [disabled]="isExporting || !exportForm.form.valid">
+          <span *ngIf="isExporting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          Export
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="showExportModal" class="modal-backdrop fade show" (click)="closeExportModal()"></div>
