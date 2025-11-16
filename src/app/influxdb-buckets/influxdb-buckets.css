@@ -1,0 +1,28 @@
+.container {
+  max-width: 1200px;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.card {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.btn {
+  min-width: 120px;
+}
+
+code {
+  background-color: #f8f9fa;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
