@@ -95,12 +95,26 @@ export class InfluxdbBuckets implements OnInit {
           // You could add a success message here
           console.log('Export successful:', response.message);
         } else {
+          // Handle backend error responses (like invalid bucket name)
           this.exportError = response.error || response.message || 'Export failed';
         }
       },
       error: (error) => {
         this.isExporting = false;
-        this.exportError = 'Export failed: ' + error.message;
+        // Handle HTTP errors and backend error responses
+        if (error.error && error.error.error) {
+          // Backend returned an error response with specific error message
+          this.exportError = error.error.error;
+        } else if (error.error && error.error.message) {
+          // Backend returned an error response with message
+          this.exportError = error.error.message;
+        } else if (error.message) {
+          // HTTP error or network error
+          this.exportError = 'Export failed: ' + error.message;
+        } else {
+          // Generic error
+          this.exportError = 'Export failed: Unknown error occurred';
+        }
         console.error('Error exporting bucket:', error);
       }
     });
