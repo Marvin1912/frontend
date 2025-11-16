@@ -11,7 +11,7 @@ export interface InfluxBucket {
 }
 
 export interface InfluxExportRequest {
-  buckets?: string[];
+  bucket?: string;
   startTime?: string;
   endTime?: string;
 }

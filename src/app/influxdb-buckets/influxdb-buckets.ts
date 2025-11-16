@@ -21,7 +21,7 @@ export class InfluxdbBuckets implements OnInit {
   isExporting = false;
   exportError: string | null = null;
   exportRequest: InfluxExportRequest = {
-    buckets: [],
+    bucket: '',
     startTime: '',
     endTime: ''
   };
@@ -57,7 +57,7 @@ export class InfluxdbBuckets implements OnInit {
   openExportModal(bucket: InfluxBucket): void {
     this.selectedBucket = bucket;
     this.exportRequest = {
-      buckets: [bucket.name],
+      bucket: bucket.name,
       startTime: '',
       endTime: ''
     };
@@ -82,12 +82,12 @@ export class InfluxdbBuckets implements OnInit {
 
     // Convert datetime-local format to ISO format
     const request: InfluxExportRequest = {
-      buckets: this.exportRequest.buckets,
+      bucket: this.exportRequest.bucket,
       startTime: new Date(this.exportRequest.startTime).toISOString(),
       endTime: new Date(this.exportRequest.endTime).toISOString()
     };
 
-    this.influxBucketsService.exportInfluxBuckets(request).subscribe({
+    this.influxBucketsService.exportInfluxBucket(request).subscribe({
       next: (response: InfluxExportResponse) => {
         this.isExporting = false;
         if (response.success) {

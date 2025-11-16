@@ -16,7 +16,7 @@ export class InfluxBucketsService {
     return this.http.get<InfluxBucketResponse>(`${this.host}/export/influxdb/buckets`);
   }
 
-  exportInfluxBuckets(request: InfluxExportRequest): Observable<InfluxExportResponse> {
+  exportInfluxBucket(request: InfluxExportRequest): Observable<InfluxExportResponse> {
     return this.http.post<InfluxExportResponse>(`${this.host}/export/influxdb`, request);
   }
 
