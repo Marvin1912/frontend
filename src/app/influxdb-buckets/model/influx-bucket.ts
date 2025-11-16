@@ -9,3 +9,17 @@ export interface InfluxBucket {
   bucketName: string;
   description: string;
 }
+
+export interface InfluxExportRequest {
+  buckets?: string[];
+  startTime?: string;
+  endTime?: string;
+}
+
+export interface InfluxExportResponse {
+  success: boolean;
+  message: string;
+  exportedFiles: string[];
+  timestamp: string;
+  error?: string;
+}
