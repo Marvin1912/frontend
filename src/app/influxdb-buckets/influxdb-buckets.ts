@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { InfluxBucketsService } from './services/influx-buckets.service';
-import {InfluxBucket, InfluxBucketResponse} from './model/influx-bucket';
+import {InfluxBucket, InfluxBucketResponse, InfluxExportRequest, InfluxExportResponse} from './model/influx-bucket';
 
 @Component({
   selector: 'app-influxdb-buckets',
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './influxdb-buckets.html',
   styleUrl: './influxdb-buckets.css'
 })
@@ -13,6 +14,17 @@ export class InfluxdbBuckets implements OnInit {
   buckets: InfluxBucket[] = [];
   isLoading = false;
   error: string | null = null;
+
+  // Export modal properties
+  showExportModal = false;
+  selectedBucket: InfluxBucket | null = null;
+  isExporting = false;
+  exportError: string | null = null;
+  exportRequest: InfluxExportRequest = {
+    buckets: [],
+    startTime: '',
+    endTime: ''
+  };
 
   constructor(private influxBucketsService: InfluxBucketsService) {}
 
@@ -37,6 +49,59 @@ export class InfluxdbBuckets implements OnInit {
         this.isLoading = false;
         this.error = 'Failed to load buckets: ' + error.message;
         console.error('Error loading buckets:', error);
+      }
+    });
+  }
+
+  // Export modal methods
+  openExportModal(bucket: InfluxBucket): void {
+    this.selectedBucket = bucket;
+    this.exportRequest = {
+      buckets: [bucket.bucketName],
+      startTime: '',
+      endTime: ''
+    };
+    this.exportError = null;
+    this.showExportModal = true;
+  }
+
+  closeExportModal(): void {
+    this.showExportModal = false;
+    this.selectedBucket = null;
+    this.exportError = null;
+  }
+
+  exportBucket(): void {
+    if (!this.selectedBucket || !this.exportRequest.startTime || !this.exportRequest.endTime) {
+      this.exportError = 'Please fill in all required fields';
+      return;
+    }
+
+    this.isExporting = true;
+    this.exportError = null;
+
+    // Convert datetime-local format to ISO format
+    const request: InfluxExportRequest = {
+      buckets: this.exportRequest.buckets,
+      startTime: new Date(this.exportRequest.startTime).toISOString(),
+      endTime: new Date(this.exportRequest.endTime).toISOString()
+    };
+
+    this.influxBucketsService.exportInfluxBuckets(request).subscribe({
+      next: (response: InfluxExportResponse) => {
+        this.isExporting = false;
+        if (response.success) {
+          this.closeExportModal();
+          // You could add a success message here
+          console.log('Export successful:', response.message);
+        } else {
+          this.exportError = response.error || response.message || 'Export failed';
+        }
+      },
+      error: (error) => {
+        this.isExporting = false;
+        this.exportError = 'Export failed: ' + error.message;
+        console.error('Error exporting bucket:', error);
       }
     });
   }
