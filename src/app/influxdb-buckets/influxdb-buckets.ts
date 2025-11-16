@@ -57,7 +57,7 @@ export class InfluxdbBuckets implements OnInit {
   openExportModal(bucket: InfluxBucket): void {
     this.selectedBucket = bucket;
     this.exportRequest = {
-      buckets: [bucket.bucketName],
+      buckets: [bucket.name],
       startTime: '',
       endTime: ''
     };
