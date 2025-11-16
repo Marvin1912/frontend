@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InfluxBucketsService } from './services/influx-buckets.service';
-import { InfluxBucket } from './model/influx-bucket';
+import {InfluxBucket, InfluxBucketResponse} from './model/influx-bucket';
 
 @Component({
   selector: 'app-influxdb-buckets',
@@ -25,10 +25,10 @@ export class InfluxdbBuckets implements OnInit {
     this.error = null;
 
     this.influxBucketsService.getAvailableBuckets().subscribe({
-      next: (response: any) => {
+      next: (response: InfluxBucketResponse) => {
         this.isLoading = false;
-        if (response.success && response.data) {
-          this.buckets = response.data;
+        if (response.success && response.buckets) {
+          this.buckets = response.buckets;
         } else {
           this.error = 'Failed to load buckets: Invalid response format';
         }
