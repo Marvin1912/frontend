@@ -9,7 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { InfluxBucketsService } from './services/influx-buckets.service';
 import { FileService } from './services/file/file.service';
 import {InfluxBucket, InfluxBucketResponse, InfluxExportRequest, InfluxExportResponse} from './model/influx-bucket';
-import { FileItem, FileListResponse } from './services/file/file.model';
+import {FileItem, FileItemTime, FileListResponse} from './services/file/file.model';
 
 @Component({
   selector: 'app-influxdb-buckets',
@@ -163,9 +163,10 @@ export class InfluxdbBuckets implements OnInit {
     return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
   }
 
-  formatDate(dateString?: string): string {
-    if (!dateString) return '-';
-    return new Date(dateString).toLocaleString('de-DE');
+  formatDate(dateObject?: FileItemTime): string {
+    if (!dateObject) return '-';
+    console.log(dateObject)
+    return new Date(dateObject.value).toLocaleString('de-DE');
   }
 
   openFile(webViewLink?: string): void {

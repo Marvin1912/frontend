@@ -1,8 +1,12 @@
+export interface FileItemTime {
+  value: number;
+}
+
 export interface FileItem {
   id: string;
   name: string;
   size?: number;
-  modifiedTime?: string;
+  modifiedTime?: FileItemTime;
   webViewLink?: string;
 }
 
