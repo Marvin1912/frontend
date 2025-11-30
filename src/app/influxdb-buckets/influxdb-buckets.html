@@ -57,6 +57,78 @@
       Refresh
     </button>
   </div>
+
+  <!-- Files Section -->
+  <div class="mt-5">
+    <h3>Files</h3>
+
+    <div *ngIf="isLoadingFiles" class="text-center mt-4">
+      <mat-spinner></mat-spinner>
+      <p class="mt-2">Loading files...</p>
+    </div>
+
+    <div *ngIf="filesError" class="alert alert-danger mt-4">
+      <strong>Error:</strong> {{ filesError }}
+    </div>
+
+    <div *ngIf="!isLoadingFiles && !filesError && files.length === 0" class="alert alert-info mt-4">
+      No files found.
+    </div>
+
+    <div *ngIf="!isLoadingFiles && !filesError && files.length > 0" class="mt-4">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Available Files ({{ files.length }})</h5>
+          <button mat-icon-button (click)="loadFiles()" [disabled]="isLoadingFiles">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+        <div class="card-body">
+          <table mat-table [dataSource]="files" class="w-100">
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let file">{{ file.name }}</td>
+            </ng-container>
+
+            <!-- Size Column -->
+            <ng-container matColumnDef="size">
+              <th mat-header-cell *matHeaderCellDef>Size</th>
+              <td mat-cell *matCellDef="let file">
+                <span *ngIf="file.size; else noSize">{{ formatFileSize(file.size) }}</span>
+                <ng-template #noSize>-</ng-template>
+              </td>
+            </ng-container>
+
+            <!-- Modified Time Column -->
+            <ng-container matColumnDef="modifiedTime">
+              <th mat-header-cell *matHeaderCellDef>Modified</th>
+              <td mat-cell *matCellDef="let file">
+                <span *ngIf="file.modifiedTime; else noTime">{{ formatDate(file.modifiedTime) }}</span>
+                <ng-template #noTime>-</ng-template>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let file">
+                <button mat-icon-button
+                        [disabled]="!file.webViewLink"
+                        (click)="openFile(file.webViewLink)"
+                        matTooltip="Open file">
+                  <mat-icon>open_in_new</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Export Modal -->
