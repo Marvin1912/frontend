@@ -93,7 +93,7 @@ export class InfluxdbBuckets implements OnInit {
     this.selectedBucket = bucket;
     this.exportRequest = {
       bucket: bucket.name,
-      startTime: '',
+      startTime: '2020-01-01T00:00:00',
       endTime: ''
     };
     this.exportError = null;
@@ -165,7 +165,6 @@ export class InfluxdbBuckets implements OnInit {
 
   formatDate(dateObject?: FileItemTime): string {
     if (!dateObject) return '-';
-    console.log(dateObject)
     return new Date(dateObject.value).toLocaleString('de-DE');
   }
 
