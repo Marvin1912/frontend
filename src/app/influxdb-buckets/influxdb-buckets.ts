@@ -9,7 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { InfluxBucketsService } from './services/influx-buckets.service';
 import { FileService } from './services/file/file.service';
 import {InfluxBucket, InfluxBucketResponse, InfluxExportRequest, InfluxExportResponse} from './model/influx-bucket';
-import {FileItem, FileItemTime, FileListResponse} from './services/file/file.model';
+import {FileItem, FileItemTime, FileListResponse, FileDeleteResponse} from './services/file/file.model';
 
 @Component({
   selector: 'app-influxdb-buckets',
@@ -171,6 +171,27 @@ export class InfluxdbBuckets implements OnInit {
   openFile(webViewLink?: string): void {
     if (webViewLink) {
       window.open(webViewLink, '_blank');
+    }
+  }
+
+  deleteFile(fileId: string, fileName: string): void {
+    const confirmed = window.confirm(`Are you sure you want to delete the file "${fileName}"? This action cannot be undone.`);
+
+    if (confirmed) {
+      this.fileService.deleteFile(fileId).subscribe({
+        next: (response: FileDeleteResponse) => {
+          if (response.success) {
+            // Reload the files list after successful deletion
+            this.loadFiles();
+          } else {
+            this.filesError = response.error || 'Failed to delete file';
+          }
+        },
+        error: (error) => {
+          this.filesError = 'Failed to delete file: ' + error.message;
+          console.error('Error deleting file:', error);
+        }
+      });
     }
   }
 }

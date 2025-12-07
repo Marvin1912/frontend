@@ -119,6 +119,12 @@
                         matTooltip="Open file">
                   <mat-icon>open_in_new</mat-icon>
                 </button>
+                <button mat-icon-button
+                        (click)="deleteFile(file.id, file.name)"
+                        matTooltip="Delete file"
+                        class="text-danger">
+                  <mat-icon>delete</mat-icon>
+                </button>
               </td>
             </ng-container>
 
