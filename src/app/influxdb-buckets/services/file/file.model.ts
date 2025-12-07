@@ -15,3 +15,10 @@ export interface FileListResponse {
   success: boolean;
   error?: string;
 }
+
+export interface FileDeleteResponse {
+  success: boolean;
+  message: string;
+  error?: string;
+  timestamp: string;
+}
