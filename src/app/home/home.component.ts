@@ -1,6 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {CommonModule, DatePipe} from '@angular/common';
+import {environment} from "../../environments/environment";
+
+
 
 @Component({
   selector: 'app-home',
@@ -21,6 +24,6 @@ export class HomeComponent {
     angularVersion: '20.2.8',
     projectVersion: '0.0.0',
     buildTime: new Date().toISOString(),
-    environment: 'development'
+    environment: environment.production ? 'prod' : 'dev'
   };
 }
