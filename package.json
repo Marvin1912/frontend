@@ -5,7 +5,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "prebuild": "sed -i \"s/BUILD_TIME_PLACEHOLDER/$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ)/\" src/environments/environment.ts src/environments/environment.prod.ts",
     "build": "ng build",
+    "prewatch": "npm run prebuild",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "eslint .",

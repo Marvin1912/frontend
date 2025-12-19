@@ -23,7 +23,7 @@ export class HomeComponent {
     npmVersion: '11.6.1',
     angularVersion: '20.2.8',
     projectVersion: '0.0.0',
-    buildTime: new Date().toISOString(),
+    buildTime: environment.buildTime,
     environment: environment.production ? 'prod' : 'dev'
   };
 }
