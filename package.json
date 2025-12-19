@@ -11,7 +11,12 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "lint:ts": "eslint \"**/*.ts\"",
-    "lint:html": "eslint \"**/*.html\""
+    "lint:html": "eslint \"**/*.html\"",
+    "generate-env": "node scripts/generate-env.js",
+    "env:dev": "node scripts/generate-env.js --env=development",
+    "env:prod": "node scripts/generate-env.js --env=production",
+    "env:build": "node scripts/generate-env.js --build-time",
+    "env:preview": "node scripts/generate-env.js --dry-run"
   },
   "private": true,
   "dependencies": {

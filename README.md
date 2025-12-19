@@ -28,26 +28,19 @@ A complete CRUD application for managing your plant collection with images and w
 - Monitor plant health and care history
 - Search and filter plant collection
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (see package.json for required version)
-- Angular CLI
-- Backend API running on `http://localhost:9001`
+- Node.js
+- Backend API on `http://localhost:9001`
 
-### Installation & Development
+### Commands
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm start
-
-# Build for production
-npm run build
-
-# Run tests
-npm test
+npm install          # Install dependencies
+npm start           # Dev server (http://localhost:4200)
+npm run build       # Production build
+npm run generate-env # Generate environment files from template
+npm test            # Run tests
 ```
 
 ## 🏗️ Architecture
