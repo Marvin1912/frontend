@@ -17,7 +17,7 @@ import {environment} from "../../environments/environment";
 })
 export class HomeComponent {
   readonly metadata = {
-    nodeVersion: '24.10.0',
+    nodeVersion: environment.nodeVersion,
     npmVersion: '11.6.1',
     angularVersion: '20.2.8',
     projectVersion: '0.0.0',
