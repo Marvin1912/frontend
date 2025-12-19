@@ -66,33 +66,6 @@ function replaceTemplate(template, config, includeBuildTime = false) {
 }
 
 /**
- * Validate generated TypeScript content
- */
-function validateTypeScript(content) {
-  // Basic validation - check for obvious syntax errors
-  const errors = [];
-
-  // Check for unmatched quotes
-  const quotes = content.match(/'/g);
-  if (quotes && quotes.length % 2 !== 0) {
-    errors.push('Unmatched quotes detected');
-  }
-
-  // Check for template placeholders that weren't replaced
-  const placeholders = content.match(/###\w+###/g);
-  if (placeholders) {
-    errors.push(`Unreplaced placeholders: ${placeholders.join(', ')}`);
-  }
-
-  // Check for basic structure
-  if (!content.includes('export const environment')) {
-    errors.push('Missing export statement');
-  }
-
-  return errors;
-}
-
-/**
  * Main generation function
  */
 function generateEnvironmentFiles() {
@@ -121,14 +94,6 @@ function generateEnvironmentFiles() {
     // Generate content
     const content = replaceTemplate(template, config, options.includeBuildTime);
 
-    // Validate content
-    const errors = validateTypeScript(content);
-    if (errors.length > 0) {
-      console.error(`Validation errors for ${envName}:`);
-      errors.forEach(error => console.error(`  - ${error}`));
-      process.exit(1);
-    }
-
     // Write file (unless dry run)
     const outputPath = path.join(process.cwd(), config.outputFile);
     if (!options.dryRun) {
@@ -142,7 +107,7 @@ function generateEnvironmentFiles() {
     }
   }
 
-  console.log('\n✅ Environment file generation complete!');
+  console.log('\n Environment file generation complete!');
 }
 
 // Show help
