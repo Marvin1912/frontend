@@ -1,5 +1,6 @@
 export const environment = {
   production: ###production###,
   apiUrl: ###apiUrl###,
-  buildTime: ###buildTime###
+  buildTime: ###buildTime###,
+  nodeVersion: ###nodeVersion###
 };

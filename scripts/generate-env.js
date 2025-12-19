@@ -25,6 +25,7 @@ const environments = {
 const args = process.argv.slice(2);
 const options = {
   includeBuildTime: args.includes('--build-time'),
+  includeNodeVersion: args.includes('--node-version'),
   dryRun: args.includes('--dry-run'),
   environment: null
 };
@@ -44,7 +45,7 @@ if (envIndex !== -1) {
 /**
  * Replace template placeholders with actual values
  */
-function replaceTemplate(template, config, includeBuildTime = false) {
+function replaceTemplate(template, config, includeBuildTime = false, includeNodeVersion = false) {
   let result = template;
 
   // Replace production flag
@@ -60,6 +61,14 @@ function replaceTemplate(template, config, includeBuildTime = false) {
     result = result.replace(/###buildTime###/g, `'${buildTime}'`);
   } else {
     result = result.replace(/###buildTime###/g, 'undefined');
+  }
+
+  // Replace Node.js version if requested
+  if (includeNodeVersion) {
+    const nodeVersion = process.version;
+    result = result.replace(/###nodeVersion###/g, `'${nodeVersion}'`);
+  } else {
+    result = result.replace(/###nodeVersion###/g, 'undefined');
   }
 
   return result;
@@ -92,7 +101,7 @@ function generateEnvironmentFiles() {
     console.log(`\nProcessing ${envName} environment...`);
 
     // Generate content
-    const content = replaceTemplate(template, config, options.includeBuildTime);
+    const content = replaceTemplate(template, config, options.includeBuildTime, options.includeNodeVersion);
 
     // Write file (unless dry run)
     const outputPath = path.join(process.cwd(), config.outputFile);
@@ -121,6 +130,7 @@ Usage:
 Options:
   --env=<name>     Generate only specific environment (development|production)
   --build-time     Include build timestamp in ###buildTime### placeholder
+  --node-version   Include Node.js version in ###nodeVersion### placeholder
   --dry-run        Show what would be generated without writing files
   --help, -h       Show this help message
 
@@ -128,6 +138,7 @@ Examples:
   node scripts/generate-env.js                 # Generate all environments
   node scripts/generate-env.js --env=dev       # Generate only development
   node scripts/generate-env.js --build-time    # Include build timestamp
+  node scripts/generate-env.js --node-version  # Include Node.js version
   node scripts/generate-env.js --dry-run       # Preview generation
   `);
   process.exit(0);
