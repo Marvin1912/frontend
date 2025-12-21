@@ -40,6 +40,7 @@ const options = {
   includeBuildTime: args.includes('--build-time'),
   includeNodeVersion: args.includes('--node-version'),
   includeAngularVersion: args.includes('--angular-version'),
+  includeNpmVersion: args.includes('--npm-version'),
   environment: null
 };
 
@@ -56,7 +57,7 @@ if (envIndex !== -1) {
 }
 
 // Replace template placeholders
-function replaceTemplate(template, config) {
+async function replaceTemplate(template, config) {
   let result = template;
 
   result = result.replace(/###production###/g, config.production);
@@ -84,11 +85,19 @@ function replaceTemplate(template, config) {
     result = result.replace(/###angularVersion###/g, 'undefined');
   }
 
+  if (options.includeNpmVersion) {
+    const { execSync } = await import('child_process');
+    const npmVersion = execSync('npm --version').toString().trim();
+    result = result.replace(/###npmVersion###/g, `'${npmVersion}'`);
+  } else {
+    result = result.replace(/###npmVersion###/g, 'undefined');
+  }
+
   return result;
 }
 
 // Main generation function
-function generateEnvironmentFiles() {
+async function generateEnvironmentFiles() {
   const templatePath = path.join(process.cwd(), 'src/environments/environment.ts.template');
 
   if (!fs.existsSync(templatePath)) {
@@ -102,11 +111,11 @@ function generateEnvironmentFiles() {
     environments;
 
   for (const [envName, config] of Object.entries(envsToProcess)) {
-    const content = replaceTemplate(template, config);
+    const content = await replaceTemplate(template, config);
     const outputPath = path.join(process.cwd(), config.outputFile);
     fs.writeFileSync(outputPath, content, 'utf8');
   }
 }
 
 // Run the generator
-generateEnvironmentFiles();
+await generateEnvironmentFiles();
