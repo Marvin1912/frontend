@@ -7,6 +7,22 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Read Angular version from package.json once at startup
+let angularVersion = null;
+try {
+  const packageJsonPath = path.join(process.cwd(), 'package.json');
+  if (fs.existsSync(packageJsonPath)) {
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+    angularVersion = packageJson.dependencies?.['@angular/core'];
+    if (angularVersion && angularVersion.startsWith('^')) {
+      // Strip the caret for cleaner output (optional)
+      angularVersion = angularVersion.substring(1);
+    }
+  }
+} catch (error) {
+  console.warn('Warning: Could not read Angular version from package.json:', error.message);
+}
+
 // Configuration for different environments
 const environments = {
   development: {
@@ -26,6 +42,7 @@ const args = process.argv.slice(2);
 const options = {
   includeBuildTime: args.includes('--build-time'),
   includeNodeVersion: args.includes('--node-version'),
+  includeAngularVersion: args.includes('--angular-version'),
   dryRun: args.includes('--dry-run'),
   environment: null
 };
@@ -45,7 +62,7 @@ if (envIndex !== -1) {
 /**
  * Replace template placeholders with actual values
  */
-function replaceTemplate(template, config, includeBuildTime = false, includeNodeVersion = false) {
+function replaceTemplate(template, config, includeBuildTime = false, includeNodeVersion = false, includeAngularVersion = false) {
   let result = template;
 
   // Replace production flag
@@ -69,6 +86,14 @@ function replaceTemplate(template, config, includeBuildTime = false, includeNode
     result = result.replace(/###nodeVersion###/g, `'${nodeVersion}'`);
   } else {
     result = result.replace(/###nodeVersion###/g, 'undefined');
+  }
+
+  // Replace Angular version if requested
+  if (includeAngularVersion) {
+    result = result.replace(/###angularVersion###/g,
+      angularVersion ? `'${angularVersion}'` : 'undefined');
+  } else {
+    result = result.replace(/###angularVersion###/g, 'undefined');
   }
 
   return result;
@@ -101,7 +126,7 @@ function generateEnvironmentFiles() {
     console.log(`\nProcessing ${envName} environment...`);
 
     // Generate content
-    const content = replaceTemplate(template, config, options.includeBuildTime, options.includeNodeVersion);
+    const content = replaceTemplate(template, config, options.includeBuildTime, options.includeNodeVersion, options.includeAngularVersion);
 
     // Write file (unless dry run)
     const outputPath = path.join(process.cwd(), config.outputFile);
@@ -128,18 +153,20 @@ Usage:
   node scripts/generate-env.js [options]
 
 Options:
-  --env=<name>     Generate only specific environment (development|production)
-  --build-time     Include build timestamp in ###buildTime### placeholder
-  --node-version   Include Node.js version in ###nodeVersion### placeholder
-  --dry-run        Show what would be generated without writing files
-  --help, -h       Show this help message
+  --env=<name>       Generate only specific environment (development|production)
+  --build-time       Include build timestamp in ###buildTime### placeholder
+  --node-version     Include Node.js version in ###nodeVersion### placeholder
+  --angular-version  Include Angular version in ###angularVersion### placeholder
+  --dry-run          Show what would be generated without writing files
+  --help, -h         Show this help message
 
 Examples:
-  node scripts/generate-env.js                 # Generate all environments
-  node scripts/generate-env.js --env=dev       # Generate only development
-  node scripts/generate-env.js --build-time    # Include build timestamp
-  node scripts/generate-env.js --node-version  # Include Node.js version
-  node scripts/generate-env.js --dry-run       # Preview generation
+  node scripts/generate-env.js                     # Generate all environments
+  node scripts/generate-env.js --env=dev           # Generate only development
+  node scripts/generate-env.js --build-time        # Include build timestamp
+  node scripts/generate-env.js --node-version      # Include Node.js version
+  node scripts/generate-env.js --angular-version   # Include Angular version
+  node scripts/generate-env.js --dry-run           # Preview generation
   `);
   process.exit(0);
 }

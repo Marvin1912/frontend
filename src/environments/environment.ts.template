@@ -2,5 +2,6 @@ export const environment = {
   production: ###production###,
   apiUrl: ###apiUrl###,
   buildTime: ###buildTime###,
-  nodeVersion: ###nodeVersion###
+  nodeVersion: ###nodeVersion###,
+  angularVersion: ###angularVersion###
 };
