@@ -2,10 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Read Angular version from package.json
 let angularVersion = null;
@@ -40,21 +37,8 @@ const options = {
   includeBuildTime: args.includes('--build-time'),
   includeNodeVersion: args.includes('--node-version'),
   includeAngularVersion: args.includes('--angular-version'),
-  includeNpmVersion: args.includes('--npm-version'),
-  environment: null
+  includeNpmVersion: args.includes('--npm-version')
 };
-
-// Check for environment flag
-const envIndex = args.findIndex(arg => arg.startsWith('--env='));
-if (envIndex !== -1) {
-  const envName = args[envIndex].split('=')[1];
-  if (environments[envName]) {
-    options.environment = envName;
-  } else {
-    console.error(`Error: Unknown environment '${envName}'. Available: ${Object.keys(environments).join(', ')}`);
-    process.exit(1);
-  }
-}
 
 // Replace template placeholders
 async function replaceTemplate(template, config) {
@@ -106,11 +90,7 @@ async function generateEnvironmentFiles() {
   }
 
   const template = fs.readFileSync(templatePath, 'utf8');
-  const envsToProcess = options.environment ?
-    { [options.environment]: environments[options.environment] } :
-    environments;
-
-  for (const [envName, config] of Object.entries(envsToProcess)) {
+  for (const [_, config] of Object.entries(environments)) {
     const content = await replaceTemplate(template, config);
     const outputPath = path.join(process.cwd(), config.outputFile);
     fs.writeFileSync(outputPath, content, 'utf8');
