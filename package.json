@@ -12,7 +12,7 @@
     "lint:fix": "eslint . --fix",
     "lint:ts": "eslint \"**/*.ts\"",
     "lint:html": "eslint \"**/*.html\"",
-    "env:production": "node scripts/generate-env.js --build-time --node-version --angular-version"
+    "env:production": "node scripts/generate-env.js --build-time --node-version --angular-version --npm-version"
   },
   "private": true,
   "dependencies": {

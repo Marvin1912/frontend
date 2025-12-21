@@ -3,5 +3,6 @@ export const environment = {
   apiUrl: ###apiUrl###,
   buildTime: ###buildTime###,
   nodeVersion: ###nodeVersion###,
-  angularVersion: ###angularVersion###
+  angularVersion: ###angularVersion###,
+  npmVersion: ###npmVersion###
 };
