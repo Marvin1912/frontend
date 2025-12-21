@@ -19,7 +19,7 @@ export class HomeComponent {
   readonly metadata = {
     nodeVersion: environment.nodeVersion,
     npmVersion: '11.6.1',
-    angularVersion: '20.2.8',
+    angularVersion: environment.angularVersion,
     projectVersion: '0.0.0',
     buildTime: environment.buildTime,
     environment: environment.production ? 'prod' : 'dev'
