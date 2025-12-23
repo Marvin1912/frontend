@@ -1,0 +1,25 @@
+<div class="container h-100">
+  <header class="row header-row p-2">
+    <div class="col-4 col-sm-2 d-flex justify-content-between align-items-center">
+      <button mat-fab [routerLink]="homeLink" class="header-button">
+        <mat-icon>home</mat-icon>
+      </button>
+    </div>
+    <div class="col-8 col-sm-10 d-flex flex-column justify-content-center align-items-center">
+      <h1 class="exports-root-header-title">Exports</h1>
+    </div>
+  </header>
+
+  <main class="row data-row">
+    <div class="col h-100">
+      <mat-tab-group [selectedIndex]="activeTab" (selectedIndexChange)="onTabChange($event)" class="exports-tabs">
+        <mat-tab label="Available"></mat-tab>
+        <mat-tab label="History"></mat-tab>
+        <mat-tab label="Drive Files"></mat-tab>
+      </mat-tab-group>
+      <div class="tab-content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </main>
+</div>

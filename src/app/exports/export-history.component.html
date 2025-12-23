@@ -1,0 +1,69 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Export History</h2>
+    <button class="btn btn-secondary" (click)="loadExportHistory()" [disabled]="isLoading">
+      Refresh
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center mt-4">
+    <mat-spinner></mat-spinner>
+    <p class="mt-2">Loading history...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger mt-4">
+    <strong>Error:</strong> {{ error }}
+  </div>
+
+  <div *ngIf="!isLoading && !error && exports.length === 0" class="alert alert-info mt-4">
+    No export history found.
+  </div>
+
+  <div *ngIf="!isLoading && !error && exports.length > 0">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Export History ({{ exports.length }})</h5>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Timestamp</th>
+                <th>Files</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let export of exports">
+                <td><strong>{{ export.name }}</strong></td>
+                <td>{{ export.type }}</td>
+                <td>{{ formatDate(export.timestamp) }}</td>
+                <td>{{ export.fileCount }}</td>
+                <td>
+                  <mat-chip-row [color]="getStatusColor(export.status)">
+                    {{ export.status }}
+                  </mat-chip-row>
+                </td>
+                <td>
+                  <button class="btn btn-sm btn-outline-primary me-1"
+                          (click)="retryExport(export.id)"
+                          [disabled]="export.status !== 'failed'">
+                    Retry
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger"
+                          (click)="deleteExport(export.id, export.name)">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

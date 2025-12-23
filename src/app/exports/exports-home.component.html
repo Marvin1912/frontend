@@ -1,0 +1,109 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Export Dashboard</h2>
+
+  <!-- Stats Cards -->
+  <div class="row mb-4">
+    <div class="col-12 col-sm-6 col-md-3 mb-3">
+      <mat-card class="stat-card stat-card-primary" (click)="navigateTo('./history')">
+        <div class="stat-content">
+          <mat-icon class="stat-icon">upload</mat-icon>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.totalExports }}</div>
+            <div class="stat-label">Total Exports</div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-12 col-sm-6 col-md-3 mb-3">
+      <mat-card class="stat-card stat-card-accent" (click)="navigateTo('./history')">
+        <div class="stat-content">
+          <mat-icon class="stat-icon">check_circle</mat-icon>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.completedExports }}</div>
+            <div class="stat-label">Completed</div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-12 col-sm-6 col-md-3 mb-3">
+      <mat-card class="stat-card stat-card-warn" (click)="navigateTo('./history')">
+        <div class="stat-content">
+          <mat-icon class="stat-icon">schedule</mat-icon>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.pendingExports }}</div>
+            <div class="stat-label">Pending</div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-12 col-sm-6 col-md-3 mb-3">
+      <mat-card class="stat-card stat-card-error" (click)="navigateTo('./history')">
+        <div class="stat-content">
+          <mat-icon class="stat-icon">error</mat-icon>
+          <div class="stat-info">
+            <div class="stat-value">{{ stats.failedExports }}</div>
+            <div class="stat-label">Failed</div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <mat-card class="mb-4">
+    <mat-card-header>
+      <mat-card-title>Quick Actions</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-12 col-sm-4 mb-2">
+          <button mat-raised-button color="primary" class="w-100 action-btn" (click)="navigateTo('./available')">
+            <mat-icon>add_circle</mat-icon>
+            <span>New Export</span>
+          </button>
+        </div>
+        <div class="col-12 col-sm-4 mb-2">
+          <button mat-raised-button color="accent" class="w-100 action-btn" (click)="navigateTo('./history')">
+            <mat-icon>history</mat-icon>
+            <span>View History</span>
+          </button>
+        </div>
+        <div class="col-12 col-sm-4 mb-2">
+          <button mat-raised-button class="w-100 action-btn" (click)="navigateTo('./files')">
+            <mat-icon>folder</mat-icon>
+            <span>Drive Files</span>
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Recent Exports -->
+  <mat-card>
+    <mat-card-header class="d-flex justify-content-between align-items-center">
+      <mat-card-title>Recent Exports</mat-card-title>
+      <button mat-button (click)="navigateTo('./history')">View All</button>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngIf="recentExports.length === 0" class="text-center text-muted py-4">
+        <mat-icon>inbox</mat-icon>
+        <p class="mt-2">No recent exports</p>
+      </div>
+      <div *ngFor="let export of recentExports" class="export-item">
+        <div class="export-info">
+          <div class="export-name">{{ export.name }}</div>
+          <div class="export-meta">
+            <mat-chip-row [color]="getStatusColor(export.status)" class="export-status-chip">
+              {{ export.status }}
+            </mat-chip-row>
+            <span class="export-type">{{ export.type }}</span>
+            <span class="export-time">{{ formatTimestamp(export.timestamp) }}</span>
+          </div>
+        </div>
+        <mat-icon [class]="'status-icon status-' + export.status">
+          {{ export.status === 'completed' ? 'check_circle' : export.status === 'pending' ? 'schedule' : 'cancel' }}
+        </mat-icon>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
