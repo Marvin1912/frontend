@@ -76,7 +76,7 @@ mkdir -p src/app/plants/tokens
 - `model/plant.ts` → `models/plant.model.ts` (update export if needed)
 - `model/plantLocation.ts` → `models/plant-location.enum.ts` (update export if needed)
 
-### Step 3: Move and rename token files
+### Step 3: Move and rename token files ✅ COMPLETED
 - `tokens/plant-overlay-token.ts` → `tokens/plant-overlay.token.ts`
 
 ### Step 4: Move services
