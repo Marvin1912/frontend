@@ -108,7 +108,7 @@ mkdir -p src/app/plants/tokens
 - Update: selector, className, templateUrl, styleUrls
 - Update imports in: routing file
 
-### Step 9: Move and rename create component (plant-form)
+### Step 9: Move and rename create component (plant-form) ✅ COMPLETED
 - Move to `components/create/plant-create/`
 - Rename files: `plant-form.component.*` → `plant-create.component.*`
 - Update: selector, className, templateUrl, styleUrls
