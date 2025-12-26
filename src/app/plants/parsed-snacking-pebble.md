@@ -84,7 +84,7 @@ mkdir -p src/app/plants/tokens
 - `image-service/image.service.ts` → `services/image.service.ts`
 - Delete empty `plant-service/` and `image-service/` directories
 
-### Step 5: Move and rename layout component (plant-root)
+### Step 5: Move and rename layout component (plant-root) ✅ COMPLETED
 - Move to `components/layout/plant-layout/`
 - Rename files: `plant-root.component.*` → `plant-layout.component.*`
 - Update: selector, className, templateUrl, styleUrls
