@@ -79,7 +79,7 @@ mkdir -p src/app/plants/tokens
 ### Step 3: Move and rename token files ✅ COMPLETED
 - `tokens/plant-overlay-token.ts` → `tokens/plant-overlay.token.ts`
 
-### Step 4: Move services
+### Step 4: Move services ✅ COMPLETED
 - `plant-service/plant.service.ts` → `services/plant.service.ts`
 - `image-service/image.service.ts` → `services/image.service.ts`
 - Delete empty `plant-service/` and `image-service/` directories
