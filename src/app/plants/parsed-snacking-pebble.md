@@ -137,7 +137,7 @@ mkdir -p src/app/plants/tokens
 - `dialogs/show-plant-dialog/` → `dialogs/plant-preview/`
   - Rename files, update selector, className
 
-### Step 13: Update routing configuration in src/app/app.routes.ts
+### Step 13: Update routing configuration in src/app/app.routes.ts ✅ COMPLETED
 
 Update the imports to point to new component paths:
 ```typescript
