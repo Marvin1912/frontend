@@ -3,7 +3,7 @@
     <div *ngFor="let plant of plants()" class="col-sm-12 col-md-6 col-xl-4 h-100 p-2">
       <mat-card appearance="outlined" class="h-100">
         <mat-card-header>
-          <mat-card-title routerLink="/plant-root/plant/{{plant.id}}" class="plant-link">{{ plant.name }}
+          <mat-card-title routerLink="/plant-root/view/{{plant.id}}" class="plant-link">{{ plant.name }}
           </mat-card-title>
           <mat-card-subtitle>{{ plant.species }}</mat-card-subtitle>
         </mat-card-header>
