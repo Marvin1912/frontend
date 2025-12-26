@@ -10,5 +10,8 @@ export interface Plant {
   wateringFrequency: number,
   lastWateredDate: string | null,
   nextWateredDate: string | null,
-  image: string | null
+  image: string | null,
+  fertilizingFrequency: number | null,
+  lastFertilizedDate: string | null,
+  nextFertilizedDate: string | null
 }
