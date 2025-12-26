@@ -102,7 +102,7 @@ mkdir -p src/app/plants/tokens
 - Update: selector, className, templateUrl, styleUrls
 - Update imports in: routing file
 
-### Step 8: Move and rename gallery component (plant-overview)
+### Step 8: Move and rename gallery component (plant-overview) ✅ COMPLETED
 - Move to `components/gallery/plant-gallery/`
 - Rename files: `plant-overview.component.*` → `plant-gallery.component.*`
 - Update: selector, className, templateUrl, styleUrls
