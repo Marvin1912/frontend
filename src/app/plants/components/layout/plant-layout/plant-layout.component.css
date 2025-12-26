@@ -3,14 +3,14 @@
   width: 35px;
 }
 
-.plant-root-header-title {
+.plant-layout-header-title {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
 }
 
 .plant-root-image {
-  background-image: url('../../../../public/roomplants.jpg');
+  background-image: url('../../../../../public/roomplants.jpg');
   background-size: cover;
   background-position: center;
   color: white;

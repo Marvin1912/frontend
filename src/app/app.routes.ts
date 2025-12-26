@@ -4,7 +4,7 @@ import {BackendComponent} from './backend/backend.component';
 import {HomeComponent} from './home/home.component';
 import {PlantListComponent} from './plants/plant-list/plant-list.component';
 import {PlantMainComponent} from './plants/plant-main/plant-main.component';
-import {PlantRootComponent} from './plants/plant-root/plant-root.component';
+import {PlantLayoutComponent} from './plants/components/layout/plant-layout/plant-layout.component';
 import {PlantEditComponent} from './plants/plant-edit/plant-edit.component';
 import {PlantOverviewComponent} from './plants/plant-overview/plant-overview.component';
 import {PlantDetailsComponent} from './plants/plant-details/plant-details.component';
@@ -33,7 +33,7 @@ export const routes: Routes = [
   },
   {
     path: 'plant-root',
-    component: PlantRootComponent,
+    component: PlantLayoutComponent,
     children: [
       {path: '', component: PlantMainComponent, data: {home: '/'}},
       {path: 'plant-form', component: PlantFormComponent, data: {home: '/plant-root'}},

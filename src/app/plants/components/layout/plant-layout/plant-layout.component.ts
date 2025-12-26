@@ -6,7 +6,7 @@ import {filter} from 'rxjs';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
-  selector: 'app-plant-root',
+  selector: 'app-plant-layout',
   imports: [
     MatFabButton,
     MatIcon,
@@ -16,10 +16,10 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
     MatMenu,
     MatMenuItem
   ],
-  templateUrl: './plant-root.component.html',
-  styleUrl: './plant-root.component.css'
+  templateUrl: './plant-layout.component.html',
+  styleUrl: './plant-layout.component.css'
 })
-export class PlantRootComponent {
+export class PlantLayoutComponent {
 
   homeLink: string = '/';
 
