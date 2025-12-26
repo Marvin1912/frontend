@@ -73,7 +73,8 @@ export class PlantCreateComponent {
     this.careForm = this.fb.group({
       wateringFrequency: [0, [Validators.required, Validators.min(1)]],
       lastWateredDate: [new Date()],
-      careInstructions: ['', Validators.required]
+      careInstructions: ['', Validators.required],
+      fertilizingFrequency: [null]
     });
 
     this.imageForm = this.fb.group({
@@ -104,7 +105,10 @@ export class PlantCreateComponent {
       lastWateredDate: this.careForm.value.lastWateredDate,
       careInstructions: this.careForm.value.careInstructions,
       nextWateredDate: null,
-      image: null
+      image: null,
+      fertilizingFrequency: this.careForm.value.fertilizingFrequency,
+      lastFertilizedDate: null,
+      nextFertilizedDate: null
     };
 
     this.plantService.createPlant(plant, this.selectedFile)

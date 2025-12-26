@@ -142,6 +142,38 @@
         </div>
       </div>
 
+      <div class="d-flex flex-column flex-md-row gap-1">
+
+        <div class="col w-100 d-flex flex-column">
+          <mat-label>Last fertilized</mat-label>
+          <ng-container *ngIf="!isEditMode; else editLastFertilized">
+            <span class="meta last-fertilized">{{ plant.lastFertilizedDate ?? '-' }}</span>
+          </ng-container>
+          <ng-template #editLastFertilized>
+            <ng-container *ngIf="tempPlant">
+              <div class="w-100 d-flex align-items-center">
+                <input matInput [matDatepicker]="fertilizedPicker" [(ngModel)]="tmpLastFertilized"
+                       class="last-fertilized-edit"/>
+                <mat-datepicker-toggle matIconSuffix [for]="fertilizedPicker"></mat-datepicker-toggle>
+                <mat-datepicker #fertilizedPicker></mat-datepicker>
+              </div>
+            </ng-container>
+          </ng-template>
+        </div>
+
+        <div class="col w-100 d-flex flex-column">
+          <mat-label>Fertilizing frequency</mat-label>
+          <ng-container *ngIf="!isEditMode; else editFertilizingFrequency">
+            <span class="meta fertilizing-frequency">{{ plant.fertilizingFrequency ?? '-' }}</span>
+          </ng-container>
+          <ng-template #editFertilizingFrequency>
+            <ng-container *ngIf="tempPlant">
+              <input [(ngModel)]="tempPlant.fertilizingFrequency" class="meta fertilizing-frequency"/>
+            </ng-container>
+          </ng-template>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

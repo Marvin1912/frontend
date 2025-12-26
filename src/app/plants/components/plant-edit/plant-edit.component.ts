@@ -47,6 +47,7 @@ export class PlantEditComponent implements OnInit {
   selectedFile?: File;
   isEditMode: boolean = false;
   tmpLastWatered: Date | null = null;
+  tmpLastFertilized: Date | null = null;
 
   plantLocationOptions = Object
     .values(PlantLocation)
@@ -83,6 +84,7 @@ export class PlantEditComponent implements OnInit {
       this.tempPlant = {...this.plant} as Plant;
       if (this.plant) {
         this.tmpLastWatered = new Date(Date.parse(this.plant.lastWateredDate ?? '1970-01-01'));
+        this.tmpLastFertilized = this.plant.lastFertilizedDate ? new Date(this.plant.lastFertilizedDate) : null;
       }
     } else {
       this.tempPlant = null;
@@ -112,7 +114,13 @@ export class PlantEditComponent implements OnInit {
 
             const lastWateredDate =
               this.datePipe.transform(this.tmpLastWatered, 'yyyy-MM-dd') ?? this.plant?.lastWateredDate;
-            this.tempPlant = {...this.tempPlant, lastWateredDate: lastWateredDate} as Plant;
+            const lastFertilizedDate =
+              this.datePipe.transform(this.tmpLastFertilized, 'yyyy-MM-dd') ?? this.plant?.lastFertilizedDate;
+            this.tempPlant = {
+              ...this.tempPlant,
+              lastWateredDate: lastWateredDate,
+              lastFertilizedDate: lastFertilizedDate
+            } as Plant;
 
             this.platService.updatePlant(this.tempPlant).subscribe({
               next: _ => {
@@ -135,7 +143,13 @@ export class PlantEditComponent implements OnInit {
 
         const lastWateredDate =
           this.datePipe.transform(this.tmpLastWatered, 'yyyy-MM-dd') ?? this.plant?.lastWateredDate;
-        this.tempPlant = {...this.tempPlant, lastWateredDate: lastWateredDate} as Plant;
+        const lastFertilizedDate =
+          this.datePipe.transform(this.tmpLastFertilized, 'yyyy-MM-dd') ?? this.plant?.lastFertilizedDate;
+        this.tempPlant = {
+          ...this.tempPlant,
+          lastWateredDate: lastWateredDate,
+          lastFertilizedDate: lastFertilizedDate
+        } as Plant;
 
         this.platService.updatePlant(this.tempPlant).subscribe({
           next: _ => {

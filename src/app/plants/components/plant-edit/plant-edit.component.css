@@ -63,7 +63,8 @@ textarea {
   white-space: pre-wrap;
 }
 
-.last-watered-edit {
+.last-watered-edit,
+.last-fertilized-edit {
   border: 1px solid #ccc;
   border-radius: 10px;
   text-align: center;
