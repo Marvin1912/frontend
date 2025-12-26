@@ -1,0 +1,62 @@
+<div class="table-container">
+  <table mat-table [dataSource]="plants">
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let plant">{{ plant.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="species">
+      <th mat-header-cell *matHeaderCellDef>Species</th>
+      <td mat-cell *matCellDef="let plant">{{ plant.species }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="image">
+      <th mat-header-cell *matHeaderCellDef>Image</th>
+      <td mat-cell *matCellDef="let plant">
+        @if (plant.image) {
+          <div>
+            <button mat-icon-button (click)="openImageDialog(plant); $event.stopPropagation()">
+              <mat-icon>image</mat-icon>
+            </button>
+          </div>
+        } @else {
+          <button mat-icon-button (click)="openCreateImageDialog(plant); $event.stopPropagation()">
+            <mat-icon fontIcon="broken_image"></mat-icon>
+          </button>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <th mat-header-cell *matHeaderCellDef>Delete</th>
+      <td mat-cell *matCellDef="let plant">
+        <button mat-icon-button (click)="openDeletePlantDialog(plant); $event.stopPropagation()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+    <tr
+      mat-row *matRowDef="let plant; columns: columnsToDisplay;"
+      class="clickable-row"
+      (click)="navigateToPlant(plant.id)"
+      (mouseenter)="showPlantPreview(plant, $event)"
+      (mouseleave)="hidePlantPreview()">
+    </tr>
+
+  </table>
+
+  <!-- Plant Preview Container -->
+  @if (previewVisible) {
+    <div
+      class="plant-preview-container"
+      [style.left.px]="previewPosition.x"
+      [style.top.px]="previewPosition.y"
+      (mouseenter)="keepPreviewVisible()"
+      (mouseleave)="hidePlantPreview()">
+      <app-plant-preview [plant]="currentPreviewPlant"></app-plant-preview>
+    </div>
+  }
+</div>

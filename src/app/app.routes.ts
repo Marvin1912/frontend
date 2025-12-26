@@ -1,13 +1,13 @@
 import {Routes} from '@angular/router';
-import {PlantFormComponent} from './plants/plant-form/plant-form.component';
+import {PlantCreateComponent} from './plants/components/create/plant-create/plant-create.component';
 import {BackendComponent} from './backend/backend.component';
 import {HomeComponent} from './home/home.component';
-import {PlantListComponent} from './plants/plant-list/plant-list.component';
-import {PlantMainComponent} from './plants/plant-main/plant-main.component';
-import {PlantRootComponent} from './plants/plant-root/plant-root.component';
-import {PlantEditComponent} from './plants/plant-edit/plant-edit.component';
-import {PlantOverviewComponent} from './plants/plant-overview/plant-overview.component';
-import {PlantDetailsComponent} from './plants/plant-details/plant-details.component';
+import {PlantTableComponent} from './plants/components/management/plant-table/plant-table.component';
+import {PlantHomeComponent} from './plants/components/home/plant-home/plant-home.component';
+import {PlantLayoutComponent} from './plants/components/layout/plant-layout/plant-layout.component';
+import {PlantEditComponent} from './plants/components/edit/plant-edit/plant-edit.component';
+import {PlantGalleryComponent} from './plants/components/gallery/plant-gallery/plant-gallery.component';
+import {PlantViewComponent} from './plants/components/view/plant-view/plant-view.component';
 import {AddWordComponent} from './vocabulary/components/add-word/add-word.component';
 import {VocabularyListComponent} from './vocabulary/components/vocabulary-list/vocabulary-list.component';
 import {VocabularyHomeComponent} from './vocabulary/components/vocabulary-home/vocabulary-home.component';
@@ -33,14 +33,14 @@ export const routes: Routes = [
   },
   {
     path: 'plant-root',
-    component: PlantRootComponent,
+    component: PlantLayoutComponent,
     children: [
-      {path: '', component: PlantMainComponent, data: {home: '/'}},
-      {path: 'plant-form', component: PlantFormComponent, data: {home: '/plant-root'}},
-      {path: 'plant-list', component: PlantListComponent, data: {home: '/plant-root'}},
-      {path: 'plant-overview', component: PlantOverviewComponent, data: {home: '/plant-root'}},
-      {path: 'plant-edit/:id', component: PlantEditComponent, data: {home: '/plant-root'}},
-      {path: 'plant/:id', component: PlantDetailsComponent, data: {home: '/plant-root'}}
+      {path: '', component: PlantHomeComponent, data: {home: '/'}},
+      {path: 'create', component: PlantCreateComponent, data: {home: '/plant-root'}},
+      {path: 'management', component: PlantTableComponent, data: {home: '/plant-root'}},
+      {path: 'gallery', component: PlantGalleryComponent, data: {home: '/plant-root'}},
+      {path: 'edit/:id', component: PlantEditComponent, data: {home: '/plant-root'}},
+      {path: 'view/:id', component: PlantViewComponent, data: {home: '/plant-root'}}
     ]
   },
   {
