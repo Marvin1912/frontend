@@ -191,7 +191,7 @@ The `PlantHomeComponent` (was `plant-main`) contains navigation cards with route
 - 'plant-form' → 'create'
 ```
 
-### Step 15b: Update navigation in plant-table component
+### Step 15b: Update navigation in plant-table component ✅ COMPLETED
 The `PlantTableComponent` (was `plant-list`) navigates to the edit page:
 ```typescript
 // Update router navigation:
