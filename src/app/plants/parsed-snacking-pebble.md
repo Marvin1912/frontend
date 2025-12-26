@@ -114,7 +114,7 @@ mkdir -p src/app/plants/tokens
 - Update: selector, className, templateUrl, styleUrls
 - Update imports in: routing file
 
-### Step 10: Move and rename view component (plant-details)
+### Step 10: Move and rename view component (plant-details) ✅ COMPLETED
 - Move to `components/view/plant-view/`
 - Rename files: `plant-details.component.*` → `plant-view.component.*`
 - Update: selector, className, templateUrl, styleUrls
