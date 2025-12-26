@@ -173,7 +173,7 @@ Update the route configuration:
 - `plant/:id` → `view/:id`
 - `plant-edit/:id` → `edit/:id`
 
-### Step 14: Update menu links in plant-layout component
+### Step 14: Update menu links in plant-layout component ✅ COMPLETED
 The `PlantLayoutComponent` (was `plant-root`) contains menu links that need updating:
 ```typescript
 // Update routerLink values:
