@@ -90,7 +90,7 @@ mkdir -p src/app/plants/tokens
 - Update: selector, className, templateUrl, styleUrls
 - Update imports in: routing file, any components using it
 
-### Step 6: Move and rename home component (plant-main)
+### Step 6: Move and rename home component (plant-main) ✅ COMPLETED
 - Move to `components/home/plant-home/`
 - Rename files: `plant-main.component.*` → `plant-home.component.*`
 - Update: selector, className, templateUrl, styleUrls
