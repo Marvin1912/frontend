@@ -72,7 +72,7 @@ mkdir -p src/app/plants/models
 mkdir -p src/app/plants/tokens
 ```
 
-### Step 2: Move and rename model files
+### Step 2: Move and rename model files ✅ COMPLETED
 - `model/plant.ts` → `models/plant.model.ts` (update export if needed)
 - `model/plantLocation.ts` → `models/plant-location.enum.ts` (update export if needed)
 
