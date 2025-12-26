@@ -1,5 +1,5 @@
 import {Routes} from '@angular/router';
-import {PlantFormComponent} from './plants/plant-form/plant-form.component';
+import {PlantCreateComponent} from './plants/components/create/plant-create/plant-create.component';
 import {BackendComponent} from './backend/backend.component';
 import {HomeComponent} from './home/home.component';
 import {PlantTableComponent} from './plants/components/management/plant-table/plant-table.component';
@@ -36,7 +36,7 @@ export const routes: Routes = [
     component: PlantLayoutComponent,
     children: [
       {path: '', component: PlantHomeComponent, data: {home: '/'}},
-      {path: 'plant-form', component: PlantFormComponent, data: {home: '/plant-root'}},
+      {path: 'plant-form', component: PlantCreateComponent, data: {home: '/plant-root'}},
       {path: 'plant-list', component: PlantTableComponent, data: {home: '/plant-root'}},
       {path: 'plant-overview', component: PlantGalleryComponent, data: {home: '/plant-root'}},
       {path: 'plant-edit/:id', component: PlantEditComponent, data: {home: '/plant-root'}},

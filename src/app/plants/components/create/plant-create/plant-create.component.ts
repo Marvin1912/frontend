@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
-import {PlantService} from '../services/plant.service';
+import {PlantService} from '../../../services/plant.service';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {MatOption, MatSelect} from '@angular/material/select';
-import {PlantLocation} from '../model/plantLocation';
-import {Plant} from '../model/plant';
+import {PlantLocation} from '../../../models/plant-location.enum';
+import {Plant} from '../../../models/plant.model';
 import {MatStep, MatStepLabel, MatStepper, MatStepperNext, MatStepperPrevious} from '@angular/material/stepper';
 import {MatInput} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
@@ -15,7 +15,7 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/m
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 
 @Component({
-  selector: 'app-plant-form',
+  selector: 'app-plant-create',
   imports: [
     FormsModule,
     MatSnackBarModule,
@@ -38,10 +38,10 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
     NgIf
   ],
   standalone: true,
-  styleUrl: './plant-form.component.css',
-  templateUrl: './plant-form.component.html'
+  styleUrl: './plant-create.component.css',
+  templateUrl: './plant-create.component.html'
 })
-export class PlantFormComponent {
+export class PlantCreateComponent {
 
   basicInfoForm: FormGroup;
   locationForm: FormGroup;
