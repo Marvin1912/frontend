@@ -210,7 +210,7 @@ Also update `PlantGalleryComponent` navigation:
 - Update dialog imports based on new relative paths
 - Update token import: `./tokens/plant-overlay-token` → `../../tokens/plant-overlay.token`
 
-### Step 17: Clean up empty directories
+### Step 17: Clean up empty directories ✅ COMPLETED
 - Remove old empty directories after all moves:
   - `plant-root/`, `plant-main/`, `plant-list/`, `plant-overview/`
   - `plant-form/`, `plant-details/`, `plant-edit/`
