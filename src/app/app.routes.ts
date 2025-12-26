@@ -3,7 +3,7 @@ import {PlantFormComponent} from './plants/plant-form/plant-form.component';
 import {BackendComponent} from './backend/backend.component';
 import {HomeComponent} from './home/home.component';
 import {PlantListComponent} from './plants/plant-list/plant-list.component';
-import {PlantMainComponent} from './plants/plant-main/plant-main.component';
+import {PlantHomeComponent} from './plants/components/home/plant-home/plant-home.component';
 import {PlantLayoutComponent} from './plants/components/layout/plant-layout/plant-layout.component';
 import {PlantEditComponent} from './plants/plant-edit/plant-edit.component';
 import {PlantOverviewComponent} from './plants/plant-overview/plant-overview.component';
@@ -35,7 +35,7 @@ export const routes: Routes = [
     path: 'plant-root',
     component: PlantLayoutComponent,
     children: [
-      {path: '', component: PlantMainComponent, data: {home: '/'}},
+      {path: '', component: PlantHomeComponent, data: {home: '/'}},
       {path: 'plant-form', component: PlantFormComponent, data: {home: '/plant-root'}},
       {path: 'plant-list', component: PlantListComponent, data: {home: '/plant-root'}},
       {path: 'plant-overview', component: PlantOverviewComponent, data: {home: '/plant-root'}},
