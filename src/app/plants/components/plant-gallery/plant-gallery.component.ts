@@ -68,4 +68,28 @@ export class PlantGalleryComponent implements OnInit {
       }
     });
   }
+
+  setFertilizedNow(plant: Plant) {
+    const now: Date = new Date();
+    const lastFertilizedDate = this.datePipe.transform(now, 'yyyy-MM-dd') ?? '1970-01-01';
+
+    this.plantService.fertilizedPlant(plant.id, lastFertilizedDate).subscribe({
+      next: ({nextFertilizedDate}) => {
+        this.plants.update(plants => {
+          return plants.map(p =>
+            p.id === plant.id ? {
+              ...p, lastFertilizedDate: lastFertilizedDate, nextFertilizedDate: nextFertilizedDate ?? null
+            } : p
+          ).sort((a, b) => a.id - b.id);
+        });
+        const formattedDate: string | null = this.datePipe.transform(now, 'dd.MM.yyyy');
+        this.snackBar.open(`Set last fertilized to: ${formattedDate}`, 'Dismiss', {duration: 5000});
+      },
+      error: err => {
+        this.snackBar.open(`Plant update failed: ${err}`, 'Dismiss', {
+          duration: 5000
+        })
+      }
+    });
+  }
 }

@@ -51,4 +51,8 @@ export class PlantService {
     return this.http.patch<any>(`${this.host}/plants/${id}/watered?last-watered=${lastWatered}`, {observe: 'response'})
   }
 
+  fertilizedPlant(id: number, lastFertilized: string): Observable<Plant> {
+    return this.http.patch<any>(`${this.host}/plants/${id}/fertilized?last-fertilized=${lastFertilized}`, {observe: 'response'})
+  }
+
 }
