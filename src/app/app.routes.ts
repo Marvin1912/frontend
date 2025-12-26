@@ -7,7 +7,7 @@ import {PlantHomeComponent} from './plants/components/home/plant-home/plant-home
 import {PlantLayoutComponent} from './plants/components/layout/plant-layout/plant-layout.component';
 import {PlantEditComponent} from './plants/plant-edit/plant-edit.component';
 import {PlantGalleryComponent} from './plants/components/gallery/plant-gallery/plant-gallery.component';
-import {PlantDetailsComponent} from './plants/plant-details/plant-details.component';
+import {PlantViewComponent} from './plants/components/view/plant-view/plant-view.component';
 import {AddWordComponent} from './vocabulary/components/add-word/add-word.component';
 import {VocabularyListComponent} from './vocabulary/components/vocabulary-list/vocabulary-list.component';
 import {VocabularyHomeComponent} from './vocabulary/components/vocabulary-home/vocabulary-home.component';
@@ -40,7 +40,7 @@ export const routes: Routes = [
       {path: 'plant-list', component: PlantTableComponent, data: {home: '/plant-root'}},
       {path: 'plant-overview', component: PlantGalleryComponent, data: {home: '/plant-root'}},
       {path: 'plant-edit/:id', component: PlantEditComponent, data: {home: '/plant-root'}},
-      {path: 'plant/:id', component: PlantDetailsComponent, data: {home: '/plant-root'}}
+      {path: 'plant/:id', component: PlantViewComponent, data: {home: '/plant-root'}}
     ]
   },
   {

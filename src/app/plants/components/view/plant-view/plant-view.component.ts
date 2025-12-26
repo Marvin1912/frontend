@@ -1,15 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {Plant} from '../model/plant';
+import {Plant} from '../../../models/plant.model';
 import {ActivatedRoute} from '@angular/router';
-import {environment} from '../../../environments/environment';
-import {PlantService} from '../services/plant.service';
+import {environment} from '../../../../../../../environments/environment';
+import {PlantService} from '../../../services/plant.service';
 import {MatCard, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from '@angular/material/card';
 import {DatePipe, NgIf} from '@angular/common';
 import {MatTab, MatTabGroup} from '@angular/material/tabs';
 import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
-  selector: 'app-plant-details',
+  selector: 'app-plant-view',
   imports: [
     MatCard,
     MatCardHeader,
@@ -22,10 +22,10 @@ import {MatTooltip} from '@angular/material/tooltip';
     DatePipe,
     MatTooltip
   ],
-  templateUrl: './plant-details.component.html',
-  styleUrl: './plant-details.component.css'
+  templateUrl: './plant-view.component.html',
+  styleUrl: './plant-view.component.css'
 })
-export class PlantDetailsComponent implements OnInit {
+export class PlantViewComponent implements OnInit {
 
   plant: Plant | null = null;
   imageUrl: string | null = null;
