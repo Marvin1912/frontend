@@ -120,7 +120,7 @@ mkdir -p src/app/plants/tokens
 - Update: selector, className, templateUrl, styleUrls
 - Update imports in: routing file
 
-### Step 11: Move and rename edit component (plant-edit)
+### Step 11: Move and rename edit component (plant-edit) ✅ COMPLETED
 - Move to `components/edit/plant-edit/`
 - Keep selector as `app-plant-detail` (to maintain consistency with existing usage)
 - Update: className to `PlantEditComponent` (for consistency with new name)

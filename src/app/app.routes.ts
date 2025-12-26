@@ -5,7 +5,7 @@ import {HomeComponent} from './home/home.component';
 import {PlantTableComponent} from './plants/components/management/plant-table/plant-table.component';
 import {PlantHomeComponent} from './plants/components/home/plant-home/plant-home.component';
 import {PlantLayoutComponent} from './plants/components/layout/plant-layout/plant-layout.component';
-import {PlantEditComponent} from './plants/plant-edit/plant-edit.component';
+import {PlantEditComponent} from './plants/components/edit/plant-edit/plant-edit.component';
 import {PlantGalleryComponent} from './plants/components/gallery/plant-gallery/plant-gallery.component';
 import {PlantViewComponent} from './plants/components/view/plant-view/plant-view.component';
 import {AddWordComponent} from './vocabulary/components/add-word/add-word.component';

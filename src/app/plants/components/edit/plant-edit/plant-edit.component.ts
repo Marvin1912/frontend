@@ -1,19 +1,19 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {PlantService} from '../services/plant.service';
-import {Plant} from '../model/plant';
+import {PlantService} from '../../../services/plant.service';
+import {Plant} from '../../../models/plant.model';
 import {DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {MatMiniFabButton} from '@angular/material/button';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatOption} from '@angular/material/core';
 import {MatLabel, MatSelect, MatSuffix} from '@angular/material/select';
-import {PlantLocation} from '../model/plantLocation';
+import {PlantLocation} from '../../../models/plant-location.enum';
 import {MatInput} from '@angular/material/input';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {environment} from '../../../environments/environment';
-import {ImageService} from '../services/image.service';
+import {environment} from '../../../../environments/environment';
+import {ImageService} from '../../../services/image.service';
 
 @Component({
   selector: 'app-plant-detail',
