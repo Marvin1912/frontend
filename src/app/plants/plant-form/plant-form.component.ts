@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
-import {PlantService} from '../plant-service/plant.service';
+import {PlantService} from '../services/plant.service';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {PlantLocation} from '../model/plantLocation';

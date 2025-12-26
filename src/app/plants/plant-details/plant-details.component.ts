@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Plant} from '../model/plant';
 import {ActivatedRoute} from '@angular/router';
 import {environment} from '../../../environments/environment';
-import {PlantService} from '../plant-service/plant.service';
+import {PlantService} from '../services/plant.service';
 import {MatCard, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from '@angular/material/card';
 import {DatePipe, NgIf} from '@angular/common';
 import {MatTab, MatTabGroup} from '@angular/material/tabs';

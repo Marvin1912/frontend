@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Plant} from '../model/plant';
-import {PlantService} from '../plant-service/plant.service';
+import {PlantService} from '../services/plant.service';
 import {
   MatCell,
   MatCellDef,

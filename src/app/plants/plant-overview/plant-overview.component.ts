@@ -2,7 +2,7 @@ import {Component, OnInit, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {DatePipe, NgForOf} from '@angular/common';
-import {PlantService} from '../plant-service/plant.service';
+import {PlantService} from '../services/plant.service';
 import {Plant} from '../model/plant';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {tap} from 'rxjs';

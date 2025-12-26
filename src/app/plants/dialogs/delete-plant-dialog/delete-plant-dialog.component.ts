@@ -9,7 +9,7 @@ import {
 } from '@angular/material/dialog';
 import {Plant} from '../../model/plant';
 import {MatIcon} from '@angular/material/icon';
-import {PlantService} from '../../plant-service/plant.service';
+import {PlantService} from '../../services/plant.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatMiniFabButton} from '@angular/material/button';
 

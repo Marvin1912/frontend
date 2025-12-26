@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {PlantService} from '../plant-service/plant.service';
+import {PlantService} from '../services/plant.service';
 import {Plant} from '../model/plant';
 import {DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
@@ -13,7 +13,7 @@ import {MatInput} from '@angular/material/input';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {environment} from '../../../environments/environment';
-import {ImageService} from '../image-service/image.service';
+import {ImageService} from '../services/image.service';
 
 @Component({
   selector: 'app-plant-detail',

@@ -9,7 +9,7 @@ import {
 import {FormsModule} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
 import {Plant} from '../../model/plant';
-import {ImageService} from '../../image-service/image.service';
+import {ImageService} from '../../services/image.service';
 
 @Component({
   selector: 'app-create-image-dialog',
