@@ -1,4 +1,4 @@
-import {PlantLocation} from './plantLocation';
+import {PlantLocation} from './plant-location.enum';
 
 export interface Plant {
   id: number,

@@ -1,0 +1,18 @@
+This PR adds NPM version template resolution support to the generate-env.js script.
+
+## Changes:
+- Added `--npm-version` command line option
+- Added NPM version reading logic using child_process
+- Added template replacement for `###npmVersion###` placeholder
+- Made necessary async function updates to support ES module imports
+- Added `npmVersion` placeholder to environment.ts.template
+
+## Usage:
+```bash
+node scripts/generate-env.js --npm-version
+```
+
+This allows the environment files to include the current NPM version in the generated configuration.
+
+## Generated Output:
+The npmVersion field will be included in both development and production environment files.
