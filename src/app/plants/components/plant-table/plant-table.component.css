@@ -4,7 +4,7 @@
   align-items: center;
   padding: 2% 10% 0 10%;
   position: relative; /* Required for positioning the preview */
-  max-height: calc(100vh - 200px);
+  max-height: 80vh;
   overflow-y: auto;
 }
 
