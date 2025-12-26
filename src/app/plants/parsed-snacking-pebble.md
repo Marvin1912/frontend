@@ -182,7 +182,7 @@ The `PlantLayoutComponent` (was `plant-root`) contains menu links that need upda
 - 'plant-overview' → 'gallery'
 ```
 
-### Step 15: Update navigation card links in plant-home component
+### Step 15: Update navigation card links in plant-home component ✅ COMPLETED
 The `PlantHomeComponent` (was `plant-main`) contains navigation cards with routerLink:
 ```typescript
 // Update routerLink values:
