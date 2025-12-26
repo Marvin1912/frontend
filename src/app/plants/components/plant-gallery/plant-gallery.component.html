@@ -8,54 +8,58 @@
           <mat-card-subtitle>{{ plant.species }}</mat-card-subtitle>
         </mat-card-header>
         <img mat-card-image [src]="getImageUrl(plant)" alt="{{ plant.name }}">
-        <mat-card-content class="h-100 d-flex flex-column justify-content-center">
-          <div class="d-flex flex-row flex-md-column overflow-auto">
-            <div class="info-card p-2">
+        <mat-card-content class="d-flex flex-column justify-content-center">
+          <div class="row g-2 mb-2">
+            <div class="col-6">
               <mat-card appearance="outlined" class="d-flex flex-column align-items-center">
                 <mat-card-header class="sub-header">
-                  <mat-card-title class="fs-5">Last watered</mat-card-title>
+                  <mat-card-title class="fs-6">Last watered</mat-card-title>
                 </mat-card-header>
-                <mat-card-content class="pb-sm-0 pb-md-2">
+                <mat-card-content class="pb-2">
                   {{ plant.lastWateredDate }}
                 </mat-card-content>
               </mat-card>
             </div>
-            <div class="info-card p-2">
+            <div class="col-6">
               <mat-card appearance="outlined" class="d-flex flex-column align-items-center">
                 <mat-card-header class="sub-header">
-                  <mat-card-title class="fs-5">Next watered</mat-card-title>
+                  <mat-card-title class="fs-6">Next watered</mat-card-title>
                 </mat-card-header>
-                <mat-card-content class="pb-sm-0 pb-md-2">
+                <mat-card-content class="pb-2">
                   {{ (plant?.nextWateredDate) ?? 'n/a' }}
                 </mat-card-content>
               </mat-card>
             </div>
-            <div class="info-card p-2">
+          </div>
+          <div class="row g-2 mb-2">
+            <div class="col-6">
               <mat-card appearance="outlined" class="d-flex flex-column align-items-center">
                 <mat-card-header class="sub-header">
-                  <mat-card-title class="fs-5">Last fertilized</mat-card-title>
+                  <mat-card-title class="fs-6">Last fertilized</mat-card-title>
                 </mat-card-header>
-                <mat-card-content class="pb-sm-0 pb-md-2">
+                <mat-card-content class="pb-2">
                   {{ plant.lastFertilizedDate ?? 'n/a' }}
                 </mat-card-content>
               </mat-card>
             </div>
-            <div class="info-card p-2">
+            <div class="col-6">
               <mat-card appearance="outlined" class="d-flex flex-column align-items-center">
                 <mat-card-header class="sub-header">
-                  <mat-card-title class="fs-5">Next fertilized</mat-card-title>
+                  <mat-card-title class="fs-6">Next fertilized</mat-card-title>
                 </mat-card-header>
-                <mat-card-content class="pb-sm-0 pb-md-2">
+                <mat-card-content class="pb-2">
                   {{ (plant?.nextFertilizedDate) ?? 'n/a' }}
                 </mat-card-content>
               </mat-card>
             </div>
-            <div class="info-card p-2">
+          </div>
+          <div class="row g-2">
+            <div class="col-12">
               <mat-card appearance="outlined" class="d-flex flex-column align-items-center">
                 <mat-card-header class="sub-header">
-                  <mat-card-title class="fs-5">Location</mat-card-title>
+                  <mat-card-title class="fs-6">Location</mat-card-title>
                 </mat-card-header>
-                <mat-card-content class="pb-sm-0 pb-md-2">
+                <mat-card-content class="pb-2">
                   {{ plant.location }}
                 </mat-card-content>
               </mat-card>
