@@ -17,11 +17,26 @@ import {ArithmeticSettingsComponent} from './mental-arithmetic/components/arithm
 import {ArithmeticSessionComponent} from './mental-arithmetic/components/arithmetic-session/arithmetic-session.component';
 import {ArithmeticListComponent} from './mental-arithmetic/components/arithmetic-list/arithmetic-list.component';
 import {InfluxdbBuckets} from './influxdb-buckets/influxdb-buckets';
+import {ExportsRootComponent} from './exports/exports-root.component';
+import {ExportsHomeComponent} from './exports/exports-home.component';
+import {AvailableExportsComponent} from './exports/available-exports.component';
+import {ExportHistoryComponent} from './exports/export-history.component';
+import {DriveFilesComponent} from './exports/drive-files.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'account', component: BackendComponent},
   {path: 'influxdb-buckets', component: InfluxdbBuckets},
+  {
+    path: 'exports',
+    component: ExportsRootComponent,
+    children: [
+      {path: '', component: ExportsHomeComponent, data: {home: '/'}},
+      {path: 'available', component: AvailableExportsComponent, data: {home: '/exports'}},
+      {path: 'history', component: ExportHistoryComponent, data: {home: '/exports'}},
+      {path: 'files', component: DriveFilesComponent, data: {home: '/exports'}}
+    ]
+  },
   {
     path: 'vocabulary',
     component: VocabularyHomeComponent,

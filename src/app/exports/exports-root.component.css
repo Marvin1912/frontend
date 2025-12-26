@@ -1,0 +1,50 @@
+.container {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-button {
+  height: 35px;
+  width: 35px;
+}
+
+.exports-root-header-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.header-row {
+  height: auto;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.data-row {
+  flex: 1;
+  overflow-y: auto;
+  height: calc(100vh - 80px);
+}
+
+.exports-tabs {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.tab-content {
+  padding: 1rem;
+  overflow-y: auto;
+  height: calc(100vh - 150px);
+}
+
+@media (min-width: 480px) {
+  .header-button {
+    height: 50px;
+    width: 50px;
+  }
+}
