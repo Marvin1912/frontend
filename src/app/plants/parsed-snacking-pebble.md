@@ -127,7 +127,7 @@ mkdir -p src/app/plants/tokens
 - Update: templateUrl, styleUrls
 - Update imports in: routing file
 
-### Step 12: Move and rename dialogs
+### Step 12: Move and rename dialogs ✅ COMPLETED
 - `dialogs/create-image-dialog/` → `dialogs/image-upload-dialog/`
   - Rename files, update selector, className
 - `dialogs/show-image-dialog/` → `dialogs/image-view-dialog/`
