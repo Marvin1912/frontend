@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Plant} from '../model/plant';
-import {PlantService} from '../services/plant.service';
+import {Plant} from '../../../models/plant.model';
+import {PlantService} from '../../../services/plant.service';
 import {
   MatCell,
   MatCellDef,
@@ -17,16 +17,16 @@ import {
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
-import {CreateImageDialogComponent} from '../dialogs/create-image-dialog/create-image-dialog.component';
-import {ShowImageDialogComponent} from '../dialogs/show-image-dialog/show-image-dialog.component';
+import {CreateImageDialogComponent} from '../../../dialogs/create-image-dialog/create-image-dialog.component';
+import {ShowImageDialogComponent} from '../../../dialogs/show-image-dialog/show-image-dialog.component';
 import {Router} from '@angular/router';
-import {DeletePlantDialogComponent} from '../dialogs/delete-plant-dialog/delete-plant-dialog.component';
-import {ShowPlantDialogComponent} from '../dialogs/show-plant-dialog/show-plant-dialog.component';
+import {DeletePlantDialogComponent} from '../../../dialogs/delete-plant-dialog/delete-plant-dialog.component';
+import {ShowPlantDialogComponent} from '../../../dialogs/show-plant-dialog/show-plant-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {environment} from '../../../environments/environment';
+import {environment} from '../../../../environments/environment';
 
 @Component({
-  selector: 'app-plant-list',
+  selector: 'app-plant-table',
   imports: [
     MatTable,
     MatColumnDef,
@@ -42,10 +42,10 @@ import {environment} from '../../../environments/environment';
     MatIconButton,
     ShowPlantDialogComponent
   ],
-  templateUrl: './plant-list.component.html',
-  styleUrl: './plant-list.component.css'
+  templateUrl: './plant-table.component.html',
+  styleUrl: './plant-table.component.css'
 })
-export class PlantListComponent implements OnInit, OnDestroy {
+export class PlantTableComponent implements OnInit, OnDestroy {
 
   plants = new MatTableDataSource<Plant>();
   columnsToDisplay = ['name', 'species', 'image', 'delete'];

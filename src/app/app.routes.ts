@@ -2,7 +2,7 @@ import {Routes} from '@angular/router';
 import {PlantFormComponent} from './plants/plant-form/plant-form.component';
 import {BackendComponent} from './backend/backend.component';
 import {HomeComponent} from './home/home.component';
-import {PlantListComponent} from './plants/plant-list/plant-list.component';
+import {PlantTableComponent} from './plants/components/management/plant-table/plant-table.component';
 import {PlantHomeComponent} from './plants/components/home/plant-home/plant-home.component';
 import {PlantLayoutComponent} from './plants/components/layout/plant-layout/plant-layout.component';
 import {PlantEditComponent} from './plants/plant-edit/plant-edit.component';
@@ -37,7 +37,7 @@ export const routes: Routes = [
     children: [
       {path: '', component: PlantHomeComponent, data: {home: '/'}},
       {path: 'plant-form', component: PlantFormComponent, data: {home: '/plant-root'}},
-      {path: 'plant-list', component: PlantListComponent, data: {home: '/plant-root'}},
+      {path: 'plant-list', component: PlantTableComponent, data: {home: '/plant-root'}},
       {path: 'plant-overview', component: PlantOverviewComponent, data: {home: '/plant-root'}},
       {path: 'plant-edit/:id', component: PlantEditComponent, data: {home: '/plant-root'}},
       {path: 'plant/:id', component: PlantDetailsComponent, data: {home: '/plant-root'}}
