@@ -96,7 +96,7 @@ mkdir -p src/app/plants/tokens
 - Update: selector, className, templateUrl, styleUrls
 - Update imports in: routing file
 
-### Step 7: Move and rename table component (plant-list)
+### Step 7: Move and rename table component (plant-list) ✅ COMPLETED
 - Move to `components/management/plant-table/`
 - Rename files: `plant-list.component.*` → `plant-table.component.*`
 - Update: selector, className, templateUrl, styleUrls
