@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ShowImageDialogComponent } from './show-image-dialog.component';
+import { PlantPreviewComponent } from './plant-preview.component';
 
-describe('ShowImageDialogComponent', () => {
-  let component: ShowImageDialogComponent;
-  let fixture: ComponentFixture<ShowImageDialogComponent>;
+describe('PlantPreviewComponent', () => {
+  let component: PlantPreviewComponent;
+  let fixture: ComponentFixture<PlantPreviewComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ShowImageDialogComponent]
+      imports: [PlantPreviewComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ShowImageDialogComponent);
+    fixture = TestBed.createComponent(PlantPreviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

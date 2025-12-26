@@ -9,7 +9,7 @@ import {
 import {MatButton} from '@angular/material/button';
 
 @Component({
-  selector: 'app-show-image-dialog',
+  selector: 'app-image-view-dialog',
   imports: [
     MatDialogContent,
     MatDialogTitle,
@@ -17,10 +17,10 @@ import {MatButton} from '@angular/material/button';
     MatDialogClose,
     MatDialogActions
   ],
-  templateUrl: './show-image-dialog.component.html',
-  styleUrl: './show-image-dialog.component.css'
+  templateUrl: './image-view-dialog.component.html',
+  styleUrl: './image-view-dialog.component.css'
 })
-export class ShowImageDialogComponent {
+export class ImageViewDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: { imageUrl: string; name: string }) {
   }
 }

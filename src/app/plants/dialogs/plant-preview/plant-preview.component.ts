@@ -1,20 +1,20 @@
 import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Plant} from '../../model/plant';
+import {Plant} from '../../models/plant.model';
 import {MatIcon} from '@angular/material/icon';
-import {PlantLocation} from '../../model/plantLocation';
+import {PlantLocation} from '../../models/plant-location.enum';
 import {environment} from '../../../../environments/environment';
 import {NgIf} from '@angular/common';
 
 @Component({
-  selector: 'app-show-plant-dialog',
+  selector: 'app-plant-preview',
   imports: [
     MatIcon,
     NgIf
   ],
-  templateUrl: './show-plant-dialog.component.html',
-  styleUrl: './show-plant-dialog.component.css'
+  templateUrl: './plant-preview.component.html',
+  styleUrl: './plant-preview.component.css'
 })
-export class ShowPlantDialogComponent implements OnChanges {
+export class PlantPreviewComponent implements OnChanges {
 
   @Input() plant: Plant | null = null;
   imageUrl: string | null = null;

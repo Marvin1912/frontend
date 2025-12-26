@@ -8,11 +8,11 @@ import {
 } from '@angular/material/dialog';
 import {FormsModule} from '@angular/forms';
 import {MatButton} from '@angular/material/button';
-import {Plant} from '../../model/plant';
+import {Plant} from '../../models/plant.model';
 import {ImageService} from '../../services/image.service';
 
 @Component({
-  selector: 'app-create-image-dialog',
+  selector: 'app-image-upload-dialog',
   imports: [
     MatDialogTitle,
     MatDialogContent,
@@ -20,15 +20,15 @@ import {ImageService} from '../../services/image.service';
     FormsModule,
     MatButton
   ],
-  templateUrl: './create-image-dialog.component.html',
-  styleUrl: './create-image-dialog.component.css'
+  templateUrl: './image-upload-dialog.component.html',
+  styleUrl: './image-upload-dialog.component.css'
 })
-export class CreateImageDialogComponent {
+export class ImageUploadDialogComponent {
 
   selectedFile?: File;
 
   constructor(
-    public dialogRef: MatDialogRef<CreateImageDialogComponent>,
+    public dialogRef: MatDialogRef<ImageUploadDialogComponent>,
     private imageService: ImageService,
     @Inject(MAT_DIALOG_DATA) public plant: Plant
   ) {

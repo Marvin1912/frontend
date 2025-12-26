@@ -17,11 +17,11 @@ import {
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
-import {CreateImageDialogComponent} from '../../../dialogs/create-image-dialog/create-image-dialog.component';
-import {ShowImageDialogComponent} from '../../../dialogs/show-image-dialog/show-image-dialog.component';
+import {ImageUploadDialogComponent} from '../../../dialogs/image-upload-dialog/image-upload-dialog.component';
+import {ImageViewDialogComponent} from '../../../dialogs/image-view-dialog/image-view-dialog.component';
 import {Router} from '@angular/router';
-import {DeletePlantDialogComponent} from '../../../dialogs/delete-plant-dialog/delete-plant-dialog.component';
-import {ShowPlantDialogComponent} from '../../../dialogs/show-plant-dialog/show-plant-dialog.component';
+import {DeleteConfirmationDialogComponent} from '../../../dialogs/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import {PlantPreviewComponent} from '../../../dialogs/plant-preview/plant-preview.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {environment} from '../../../../environments/environment';
 
@@ -40,7 +40,7 @@ import {environment} from '../../../../environments/environment';
     MatRowDef,
     MatIcon,
     MatIconButton,
-    ShowPlantDialogComponent
+    PlantPreviewComponent
   ],
   templateUrl: './plant-table.component.html',
   styleUrl: './plant-table.component.css'
@@ -76,7 +76,7 @@ export class PlantTableComponent implements OnInit, OnDestroy {
   }
 
   openCreateImageDialog(plant: Plant): void {
-    const matDialogRef = this.dialog.open(CreateImageDialogComponent, {
+    const matDialogRef = this.dialog.open(ImageUploadDialogComponent, {
       width: '400px',
       data: plant
     });
@@ -105,7 +105,7 @@ export class PlantTableComponent implements OnInit, OnDestroy {
   openImageDialog(plant: Plant) {
     const imageUrl = `${environment.apiUrl}/images/${plant.image}`
 
-    this.dialog.open(ShowImageDialogComponent, {
+    this.dialog.open(ImageViewDialogComponent, {
       data: {imageUrl, name: plant.name}
     });
   }
@@ -115,7 +115,7 @@ export class PlantTableComponent implements OnInit, OnDestroy {
   }
 
   openDeletePlantDialog(plant: Plant) {
-    const matDialogRef = this.dialog.open(DeletePlantDialogComponent, {
+    const matDialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
       data: {plant}
     });
 

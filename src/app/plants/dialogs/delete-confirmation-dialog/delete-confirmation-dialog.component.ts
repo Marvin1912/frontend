@@ -7,14 +7,14 @@ import {
   MatDialogRef,
   MatDialogTitle
 } from '@angular/material/dialog';
-import {Plant} from '../../model/plant';
+import {Plant} from '../../models/plant.model';
 import {MatIcon} from '@angular/material/icon';
 import {PlantService} from '../../services/plant.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatMiniFabButton} from '@angular/material/button';
 
 @Component({
-  selector: 'app-delete-plant-dialog',
+  selector: 'app-delete-confirmation-dialog',
   imports: [
     MatDialogActions,
     MatDialogClose,
@@ -23,13 +23,13 @@ import {MatMiniFabButton} from '@angular/material/button';
     MatIcon,
     MatMiniFabButton
   ],
-  templateUrl: './delete-plant-dialog.component.html',
-  styleUrl: './delete-plant-dialog.component.css'
+  templateUrl: './delete-confirmation-dialog.component.html',
+  styleUrl: './delete-confirmation-dialog.component.css'
 })
-export class DeletePlantDialogComponent {
+export class DeleteConfirmationDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { plant: Plant },
-    private dialogRef: MatDialogRef<DeletePlantDialogComponent>,
+    private dialogRef: MatDialogRef<DeleteConfirmationDialogComponent>,
     private plantService: PlantService,
     private snackBar: MatSnackBar,
   ) {
