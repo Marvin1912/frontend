@@ -2,21 +2,21 @@ import {Component, OnInit, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {DatePipe, NgForOf} from '@angular/common';
-import {PlantService} from '../services/plant.service';
-import {Plant} from '../model/plant';
+import {PlantService} from '../../../services/plant.service';
+import {Plant} from '../../../models/plant.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {tap} from 'rxjs';
-import {environment} from '../../../environments/environment';
+import {environment} from '../../../../../environments/environment';
 import {RouterLink} from '@angular/router';
 
 @Component({
-  selector: 'app-plant-overview',
+  selector: 'app-plant-gallery',
   imports: [MatCardModule, MatButtonModule, NgForOf, RouterLink],
-  templateUrl: './plant-overview.component.html',
-  styleUrl: './plant-overview.component.css',
+  templateUrl: './plant-gallery.component.html',
+  styleUrl: './plant-gallery.component.css',
   providers: [DatePipe]
 })
-export class PlantOverviewComponent implements OnInit {
+export class PlantGalleryComponent implements OnInit {
 
   plants = signal<Plant[]>([]);
 

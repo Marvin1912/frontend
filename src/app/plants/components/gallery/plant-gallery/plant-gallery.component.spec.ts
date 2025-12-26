@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PlantOverviewComponent } from './plant-overview.component';
+import { PlantGalleryComponent } from './plant-gallery.component';
 
-describe('PlantOverviewComponent', () => {
-  let component: PlantOverviewComponent;
-  let fixture: ComponentFixture<PlantOverviewComponent>;
+describe('PlantGalleryComponent', () => {
+  let component: PlantGalleryComponent;
+  let fixture: ComponentFixture<PlantGalleryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PlantOverviewComponent]
+      imports: [PlantGalleryComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PlantOverviewComponent);
+    fixture = TestBed.createComponent(PlantGalleryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
