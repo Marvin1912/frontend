@@ -2,11 +2,11 @@ import {Component, OnInit, signal} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {DatePipe, NgForOf} from '@angular/common';
-import {PlantService} from '../../../services/plant.service';
-import {Plant} from '../../../models/plant.model';
+import {PlantService} from '../../services/plant.service';
+import {Plant} from '../../models/plant.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {tap} from 'rxjs';
-import {environment} from '../../../../../environments/environment';
+import {environment} from '../../../../environments/environment';
 import {RouterLink} from '@angular/router';
 
 @Component({

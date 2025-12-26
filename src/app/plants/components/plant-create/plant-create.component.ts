@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
-import {PlantService} from '../../../services/plant.service';
+import {PlantService} from '../../services/plant.service';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {MatOption, MatSelect} from '@angular/material/select';
-import {PlantLocation} from '../../../models/plant-location.enum';
-import {Plant} from '../../../models/plant.model';
+import {PlantLocation} from '../../models/plant-location.enum';
+import {Plant} from '../../models/plant.model';
 import {MatStep, MatStepLabel, MatStepper, MatStepperNext, MatStepperPrevious} from '@angular/material/stepper';
 import {MatInput} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';

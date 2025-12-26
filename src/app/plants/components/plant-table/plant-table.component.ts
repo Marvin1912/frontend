@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Plant} from '../../../models/plant.model';
-import {PlantService} from '../../../services/plant.service';
+import {Plant} from '../../models/plant.model';
+import {PlantService} from '../../services/plant.service';
 import {
   MatCell,
   MatCellDef,
@@ -17,13 +17,13 @@ import {
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
-import {ImageUploadDialogComponent} from '../../../dialogs/image-upload-dialog/image-upload-dialog.component';
-import {ImageViewDialogComponent} from '../../../dialogs/image-view-dialog/image-view-dialog.component';
+import {ImageUploadDialogComponent} from '../../dialogs/image-upload-dialog/image-upload-dialog.component';
+import {ImageViewDialogComponent} from '../../dialogs/image-view-dialog/image-view-dialog.component';
 import {Router} from '@angular/router';
-import {DeleteConfirmationDialogComponent} from '../../../dialogs/delete-confirmation-dialog/delete-confirmation-dialog.component';
-import {PlantPreviewComponent} from '../../../dialogs/plant-preview/plant-preview.component';
+import {DeleteConfirmationDialogComponent} from '../../dialogs/delete-confirmation-dialog/delete-confirmation-dialog.component';
+import {PlantPreviewComponent} from '../../dialogs/plant-preview/plant-preview.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {environment} from '../../../../../environments/environment';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'app-plant-table',
