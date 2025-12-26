@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Plant} from '../../../models/plant.model';
 import {ActivatedRoute} from '@angular/router';
-import {environment} from '../../../../../../../environments/environment';
+import {environment} from '../../../../../environments/environment';
 import {PlantService} from '../../../services/plant.service';
 import {MatCard, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from '@angular/material/card';
 import {DatePipe, NgIf} from '@angular/common';

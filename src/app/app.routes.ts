@@ -36,11 +36,11 @@ export const routes: Routes = [
     component: PlantLayoutComponent,
     children: [
       {path: '', component: PlantHomeComponent, data: {home: '/'}},
-      {path: 'plant-form', component: PlantCreateComponent, data: {home: '/plant-root'}},
-      {path: 'plant-list', component: PlantTableComponent, data: {home: '/plant-root'}},
-      {path: 'plant-overview', component: PlantGalleryComponent, data: {home: '/plant-root'}},
-      {path: 'plant-edit/:id', component: PlantEditComponent, data: {home: '/plant-root'}},
-      {path: 'plant/:id', component: PlantViewComponent, data: {home: '/plant-root'}}
+      {path: 'create', component: PlantCreateComponent, data: {home: '/plant-root'}},
+      {path: 'management', component: PlantTableComponent, data: {home: '/plant-root'}},
+      {path: 'gallery', component: PlantGalleryComponent, data: {home: '/plant-root'}},
+      {path: 'edit/:id', component: PlantEditComponent, data: {home: '/plant-root'}},
+      {path: 'view/:id', component: PlantViewComponent, data: {home: '/plant-root'}}
     ]
   },
   {

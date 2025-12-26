@@ -10,7 +10,7 @@
 }
 
 .plant-root-image {
-  background-image: url('../../../../../public/roomplants.jpg');
+  background-image: url('../../../../../../public/roomplants.jpg');
   background-size: cover;
   background-position: center;
   color: white;

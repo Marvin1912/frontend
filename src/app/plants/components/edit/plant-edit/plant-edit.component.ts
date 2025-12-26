@@ -12,7 +12,7 @@ import {PlantLocation} from '../../../models/plant-location.enum';
 import {MatInput} from '@angular/material/input';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {environment} from '../../../../environments/environment';
+import {environment} from '../../../../../environments/environment';
 import {ImageService} from '../../../services/image.service';
 
 @Component({

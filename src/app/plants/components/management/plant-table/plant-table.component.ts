@@ -23,7 +23,7 @@ import {Router} from '@angular/router';
 import {DeleteConfirmationDialogComponent} from '../../../dialogs/delete-confirmation-dialog/delete-confirmation-dialog.component';
 import {PlantPreviewComponent} from '../../../dialogs/plant-preview/plant-preview.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {environment} from '../../../../environments/environment';
+import {environment} from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-plant-table',
