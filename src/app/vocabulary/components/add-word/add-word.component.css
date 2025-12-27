@@ -368,3 +368,34 @@
   }
 }
 
+/* Mobile layout - one section visible at a time */
+@media (max-width: 820px), (max-height: 1200px) {
+  .add-word-container {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .main-content {
+    flex-direction: column;
+    height: auto;
+    gap: 1rem;
+  }
+
+  .dictionary-section,
+  .save-section {
+    width: 100%;
+    max-width: 100%;
+    min-height: auto;
+    height: auto;
+  }
+
+  .dictionary-results {
+    max-height: none;
+    min-height: 300px;
+  }
+
+  .save-form-container {
+    min-height: auto;
+  }
+}
+
