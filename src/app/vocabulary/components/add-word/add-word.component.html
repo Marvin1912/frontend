@@ -1,9 +1,9 @@
-<div class="add-word-container h-100 container-fluid p-2 d-flex flex-column align-items-center">
+<div >
 
   @if (!isFromRouteCall) {
-    <section class="word-input-section flex-shrink-0 mb-3">
-      <div class="search-input-container">
-        <mat-form-field appearance="outline" class="flex-grow-1">
+    <section >
+      <div >
+        <mat-form-field appearance="outline" >
           <mat-label>Enter English word</mat-label>
           <input
             matInput
@@ -20,7 +20,7 @@
             aria-label="Search word"
             (click)="getWord(word)"
             type="button"
-            class="search-button-aligned"
+            
           >
             <mat-icon>search</mat-icon>
           </button>
@@ -29,60 +29,60 @@
     </section>
   }
 
-  <main class="row flex-grow-1 w-100 main-content" style="min-height: 0">
+  <main >
 
     <!-- Dictionary Results Section -->
-    <section class="col h-100 d-flex flex-column gap-3 dictionary-section" style="min-height: 0">
+    <section >
       @if (wordToShow) {
-        <header class="flex-shrink-0">
-          <h1 class="word-title">{{ wordToShow }}</h1>
+        <header >
+          <h1 >{{ wordToShow }}</h1>
         </header>
       }
 
-      <div class="flex-grow-1 overflow-auto dictionary-results border border-1 rounded-3" style="min-height: 0">
-        <div class="d-flex flex-column gap-3 p-3">
+      <div >
+        <div >
           @for (wordEntry of wordEntries(); track wordEntry; let entryIndex = $index) {
-            <div class="word-entry d-flex flex-column gap-3">
+            <div >
               @for (meaning of wordEntry.meanings; track meaning; let meaningIndex = $index) {
-                <div class="meaning-card d-flex flex-column p-3 gap-3 border border-2 rounded-3">
-                  <div class="part-of-speech-badge">
-                    <span class="badge">{{ meaning.partOfSpeech }}</span>
+                <div >
+                  <div >
+                    <span >{{ meaning.partOfSpeech }}</span>
                   </div>
 
                   @for (definition of meaning.definitions; track definition; let definitionIndex = $index) {
                     <div
-                      class="definition-item d-flex flex-column border border-1 rounded-3 gap-2 p-3"
+                      
                       [ngClass]="{chosen: isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
                     >
-                      <p class="definition-text mb-0">{{ definition.definition }}</p>
+                      <p >{{ definition.definition }}</p>
 
-                      <div class="definition-actions d-flex gap-3 flex-wrap">
+                      <div >
                         <button
-                          class="action-button"
+                          
                           [ngClass]="{selected: isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
                           (click)="setChosenText(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex), definition.definition)"
                           type="button"
                         >
                           @if (isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))) {
-                            <mat-icon class="action-icon">check_circle</mat-icon>
+                            <mat-icon >check_circle</mat-icon>
                             <span>Using as description</span>
                           } @else {
-                            <mat-icon class="action-icon">description</mat-icon>
+                            <mat-icon >description</mat-icon>
                             <span>Use as description</span>
                           }
                         </button>
 
                         <button
-                          class="action-button"
+                          
                           [ngClass]="{selected: isChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
                           (click)="setChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex), definition.definition)"
                           type="button"
                         >
                           @if (isChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))) {
-                            <mat-icon class="action-icon">check_circle</mat-icon>
+                            <mat-icon >check_circle</mat-icon>
                             <span>Added to context</span>
                           } @else {
-                            <mat-icon class="action-icon">add_circle</mat-icon>
+                            <mat-icon >add_circle</mat-icon>
                             <span>Add to context</span>
                           }
                         </button>
@@ -97,22 +97,22 @@
       </div>
 
       <!-- Translation Section -->
-      <footer class="flex-shrink-0 translation-section border border-1 rounded-3 p-3">
-        <header class="translation-header mb-3">
-          <h5 class="mb-0">Translation</h5>
+      <footer >
+        <header >
+          <h5 >Translation</h5>
         </header>
 
         <form
           [formGroup]="wordFormTranslation"
           (ngSubmit)="onSubmitTranslation()"
-          class="translation-form d-flex gap-3"
+          
         >
-          <mat-form-field appearance="outline" class="flex-grow-1">
+          <mat-form-field appearance="outline" >
             <mat-label>Word</mat-label>
             <input matInput formControlName="word">
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="flex-grow-1">
+          <mat-form-field appearance="outline" >
             <mat-label>Context</mat-label>
             <input matInput formControlName="context">
           </mat-form-field>
@@ -128,21 +128,20 @@
         </form>
 
         @if (translation()) {
-          <div class="translation-result mt-3">{{ translation() }}</div>
+          <div >{{ translation() }}</div>
         }
       </footer>
     </section>
 
     <!-- Save Word Section -->
-    <section class="d-flex flex-column col h-100 w-100 save-section" style="min-height: 0">
+    <section >
       @if (wordToShow) {
-        <header class="flex-shrink-0 pb-3">
+        <header >
           <h1>Save Word</h1>
         </header>
 
-        <div class="flex-grow-1 d-flex flex-column border border-1 rounded-3 overflow-auto save-form-container"
-             style="min-height: 0">
-          <div class="flex-shrink-0 d-flex gap-3 p-3 part-of-speech-selector">
+        <div>
+          <div >
             <mat-button-toggle-group [(ngModel)]="partOfSpeech" name="partOfSpeech">
               @for (pos of partsOfSpeech; track pos) {
                 <mat-button-toggle
@@ -156,7 +155,7 @@
           </div>
 
           <form
-            class="flex-grow-1 d-flex flex-column justify-content-between gap-3 p-3 save-form"
+            
             [formGroup]="wordForm"
             (ngSubmit)="onSubmit()"
           >
@@ -184,7 +183,7 @@
               mat-flat-button
               color="primary"
               [disabled]="!wordForm.valid"
-              class="submit-button"
+              
               type="submit"
             >
               {{ update() ? 'Update' : 'Save' }}
