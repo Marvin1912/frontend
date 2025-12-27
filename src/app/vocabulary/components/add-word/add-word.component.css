@@ -1,0 +1,90 @@
+.add-word-container,
+.add-word-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.search-input-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.save-word-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 10px 0 10px;
+}
+
+.save-word-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.part-of-speech-toggle-group {
+  display: flex;
+  justify-content: center;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.dictionary-results-section {
+  display: flex;
+  width: 90%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.translation-section {
+  width: 100%;
+
+  button {
+    width: 25%;
+  }
+}
+
+.word-entries-container {
+  max-height: 80vh;
+  overflow-y: auto;
+  background-color: azure;
+  border-radius: 10px;
+}
+
+.definition-item {
+  border: black solid 1px;
+  border-radius: 10px;
+  margin: 5px;
+  padding: 5px;
+}
+
+.definition-actions {
+  display: flex;
+  justify-content: space-around;
+}
+
+.part-of-speech {
+  font-weight: bold;
+}
+
+.part-of-speech-toggle-group {
+  padding: 10px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+button {
+  display: flex;
+  justify-content: center;
+  border-radius: 10px;
+}
