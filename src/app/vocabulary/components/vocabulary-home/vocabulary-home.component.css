@@ -1,0 +1,37 @@
+.vocabulary-home-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.vocabulary-header {
+  height: 15%;
+  display: flex;
+  align-items: center;
+  padding: 5px 0 10px 0;
+}
+
+.home-button-section {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.add-word-section,
+.list-section {
+  flex: 1 0 30%;
+  display: flex;
+  justify-content: center;
+  margin: 0 5px 0 5px;
+  border: black solid 2px;
+  border-radius: 10px;
+}
+
+.router-outlet-container {
+  height: 75%;
+}
+
+span {
+  font-size: 20px;
+  font-weight: bold;
+}

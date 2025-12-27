@@ -1,15 +1,17 @@
 <div class="vocabulary-home-container">
-    <div class="vocabulary-header">
+  <div class="vocabulary-header">
+    <div class="home-button-section">
       <button mat-fab routerLink="/">
         <mat-icon>home</mat-icon>
       </button>
-      <div class="add-word-section">
-        <h2>Add Word</h2>
-      </div>
-      <div class="list-section">
-        <h2>List</h2>
-      </div>
     </div>
+    <div class="add-word-section" routerLink="/vocabulary/add">
+      <span>Add Word</span>
+    </div>
+    <div class="list-section" routerLink="/vocabulary/list">
+      <span>List</span>
+    </div>
+  </div>
   <div class="router-outlet-container">
     <router-outlet></router-outlet>
   </div>

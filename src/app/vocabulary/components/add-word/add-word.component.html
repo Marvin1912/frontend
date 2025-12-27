@@ -1,87 +1,85 @@
-<div >
+<div>
 
   @if (!isFromRouteCall) {
-    <section >
-      <div >
-        <mat-form-field appearance="outline" >
+    <div>
+      <div>
+        <mat-form-field appearance="outline">
           <mat-label>Enter English word</mat-label>
           <input
-            matInput
-            type="text"
-            [(ngModel)]="word"
-            (keyup.enter)="getWord(word)"
-            placeholder="Type a word and press Enter"
+              matInput
+              type="text"
+              [(ngModel)]="word"
+              (keyup.enter)="getWord(word)"
+              placeholder="Type a word and press Enter"
           >
         </mat-form-field>
         @if (word) {
           <button
-            mat-icon-button
-            color="primary"
-            aria-label="Search word"
-            (click)="getWord(word)"
-            type="button"
+              mat-icon-button
+              color="primary"
+              aria-label="Search word"
+              (click)="getWord(word)"
+              type="button"
           >
             <mat-icon>search</mat-icon>
           </button>
         }
       </div>
-    </section>
+    </div>
   }
 
-  <main >
+  <div>
 
-    <!-- Dictionary Results Section -->
-    <section >
+    <!-- Dictionary Results div -->
+    <div>
       @if (wordToShow) {
-        <header >
-          <h1 >{{ wordToShow }}</h1>
-        </header>
+        <div>
+          <h1>{{ wordToShow }}</h1>
+        </div>
       }
 
-      <div >
-        <div >
+      <div>
+        <div>
           @for (wordEntry of wordEntries(); track wordEntry; let entryIndex = $index) {
-            <div >
+            <div>
               @for (meaning of wordEntry.meanings; track meaning; let meaningIndex = $index) {
-                <div >
-                  <div >
-                    <span >{{ meaning.partOfSpeech }}</span>
+                <div>
+                  <div>
+                    <span>{{ meaning.partOfSpeech }}</span>
                   </div>
 
                   @for (definition of meaning.definitions; track definition; let definitionIndex = $index) {
                     <div
-                      
-                      [ngClass]="{chosen: isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
-                    >
-                      <p >{{ definition.definition }}</p>
 
-                      <div >
+                        [ngClass]="{chosen: isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
+                    >
+                      <p>{{ definition.definition }}</p>
+
+                      <div>
                         <button
-                          
-                          [ngClass]="{selected: isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
-                          (click)="setChosenText(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex), definition.definition)"
-                          type="button"
+                            [ngClass]="{selected: isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
+                            (click)="setChosenText(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex), definition.definition)"
+                            type="button"
                         >
                           @if (isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))) {
-                            <mat-icon >check_circle</mat-icon>
+                            <mat-icon>check_circle</mat-icon>
                             <span>Using as description</span>
                           } @else {
-                            <mat-icon >description</mat-icon>
+                            <mat-icon>description</mat-icon>
                             <span>Use as description</span>
                           }
                         </button>
 
                         <button
-                          
-                          [ngClass]="{selected: isChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
-                          (click)="setChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex), definition.definition)"
-                          type="button"
+                            [ngClass]="{selected: isChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
+                            (click)="setChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex), definition.definition)"
+                            type="button"
                         >
                           @if (isChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))) {
-                            <mat-icon >check_circle</mat-icon>
+                            <mat-icon>check_circle</mat-icon>
                             <span>Added to context</span>
                           } @else {
-                            <mat-icon >add_circle</mat-icon>
+                            <mat-icon>add_circle</mat-icon>
                             <span>Add to context</span>
                           }
                         </button>
@@ -95,57 +93,56 @@
         </div>
       </div>
 
-      <!-- Translation Section -->
-      <footer >
-        <header >
-          <h5 >Translation</h5>
-        </header>
+      <!-- Translation div -->
+      <div>
+        <div>
+          <h5>Translation</h5>
+        </div>
 
         <form
-          [formGroup]="wordFormTranslation"
-          (ngSubmit)="onSubmitTranslation()"
-          
+            [formGroup]="wordFormTranslation"
+            (ngSubmit)="onSubmitTranslation()"
         >
-          <mat-form-field appearance="outline" >
+          <mat-form-field appearance="outline">
             <mat-label>Word</mat-label>
             <input matInput formControlName="word">
           </mat-form-field>
 
-          <mat-form-field appearance="outline" >
+          <mat-form-field appearance="outline">
             <mat-label>Context</mat-label>
             <input matInput formControlName="context">
           </mat-form-field>
 
           <button
-            mat-flat-button
-            color="primary"
-            [disabled]="!wordFormTranslation.valid"
-            type="submit"
+              mat-flat-button
+              color="primary"
+              [disabled]="!wordFormTranslation.valid"
+              type="submit"
           >
             Translate
           </button>
         </form>
 
         @if (translation()) {
-          <div >{{ translation() }}</div>
+          <div>{{ translation() }}</div>
         }
-      </footer>
-    </section>
+      </div>
+    </div>
 
-    <!-- Save Word Section -->
-    <section >
+    <!-- Save Word div -->
+    <div>
       @if (wordToShow) {
-        <header >
+        <div>
           <h1>Save Word</h1>
-        </header>
+        </div>
 
         <div>
-          <div >
+          <div>
             <mat-button-toggle-group [(ngModel)]="partOfSpeech" name="partOfSpeech">
               @for (pos of partsOfSpeech; track pos) {
                 <mat-button-toggle
-                  (click)="addArticleToWord(pos)"
-                  [value]="pos"
+                    (click)="addArticleToWord(pos)"
+                    [value]="pos"
                 >
                   {{ pos }}
                 </mat-button-toggle>
@@ -154,9 +151,8 @@
           </div>
 
           <form
-            
-            [formGroup]="wordForm"
-            (ngSubmit)="onSubmit()"
+              [formGroup]="wordForm"
+              (ngSubmit)="onSubmit()"
           >
             <mat-form-field appearance="outline">
               <mat-label>Deck</mat-label>
@@ -179,19 +175,18 @@
             </mat-form-field>
 
             <button
-              mat-flat-button
-              color="primary"
-              [disabled]="!wordForm.valid"
-              
-              type="submit"
+                mat-flat-button
+                color="primary"
+                [disabled]="!wordForm.valid"
+                type="submit"
             >
               {{ update() ? 'Update' : 'Save' }}
             </button>
           </form>
         </div>
       }
-    </section>
+    </div>
 
-  </main>
+  </div>
 
 </div>
