@@ -50,7 +50,7 @@
 
                   @for (definition of meaning.definitions; track definition; let definitionIndex = $index) {
                     <div class="definition-item"
-                        [ngClass]="{chosen: isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
+                         [ngClass]="{chosen: isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
                     >
                       <p class="definition-text">{{ definition.definition }}</p>
 
@@ -93,39 +93,41 @@
       </div>
 
       <!-- Translation Section -->
-      <div class="translation-section">
-        <div class="translation-header">
-          <h5 class="translation-title">Translation</h5>
-        </div>
+      @if (wordToShow) {
+        <div class="translation-section">
+          <div class="translation-header">
+            <h5 class="translation-title">Translation</h5>
+          </div>
 
-        <form
-            [formGroup]="wordFormTranslation"
-            (ngSubmit)="onSubmitTranslation()"
-        >
-          <mat-form-field appearance="outline">
-            <mat-label>Word</mat-label>
-            <input matInput formControlName="word">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Context</mat-label>
-            <input matInput formControlName="context">
-          </mat-form-field>
-
-          <button
-              mat-flat-button
-              color="primary"
-              [disabled]="!wordFormTranslation.valid"
-              type="submit"
+          <form
+              [formGroup]="wordFormTranslation"
+              (ngSubmit)="onSubmitTranslation()"
           >
-            Translate
-          </button>
-        </form>
+            <mat-form-field appearance="outline">
+              <mat-label>Word</mat-label>
+              <input matInput formControlName="word">
+            </mat-form-field>
 
-        @if (translation()) {
-          <div class="translation-result">{{ translation() }}</div>
-        }
-      </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Context</mat-label>
+              <input matInput formControlName="context">
+            </mat-form-field>
+
+            <button
+                mat-flat-button
+                color="primary"
+                [disabled]="!wordFormTranslation.valid"
+                type="submit"
+            >
+              Translate
+            </button>
+          </form>
+
+          @if (translation()) {
+            <div class="translation-result">{{ translation() }}</div>
+          }
+        </div>
+      }
     </div>
 
     <!-- Save Word Section -->

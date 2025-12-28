@@ -1,5 +1,6 @@
 .add-word-container,
 .add-word-main {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,13 +44,24 @@
 
 .translation-section {
   width: 100%;
+  padding-top: 10px;
 
   button {
     width: 25%;
   }
 }
 
+.translation-result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  background-color: lightgreen;
+  border-radius: 15px;
+}
+
 .word-entries-container {
+  width: 100%;
   max-height: 80vh;
   overflow-y: auto;
   background-color: azure;
@@ -86,5 +98,30 @@ form {
 button {
   display: flex;
   justify-content: center;
+  align-items: center;
   border-radius: 10px;
+  margin: 0 2px 0 2px;
+  font-size: small;
+}
+
+@media (min-width: 821px) {
+
+  .add-word-main {
+    flex-direction: row;
+    align-items: start;
+  }
+
+  .word-entries-container {
+    max-height: 40vh;
+  }
+
+  .dictionary-results-section,
+  .save-word-section {
+    margin: 0 10px 0 10px;
+  }
+
+  .save-word-section {
+    padding: 0;
+  }
+
 }
