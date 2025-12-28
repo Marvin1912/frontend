@@ -45,9 +45,20 @@ span {
 
 @media (min-width: 821px) {
 
+  .vocabulary-header {
+    height: 15%;
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  .home-button-section {
+    flex: 0 0 5%;
+  }
+
   .add-word-section,
   .list-section {
     height: 50%;
+    flex: 0 0 20%;
     align-items: center;
   }
 
