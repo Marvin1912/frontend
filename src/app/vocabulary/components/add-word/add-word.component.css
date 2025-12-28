@@ -79,13 +79,43 @@
   padding: 5px;
 }
 
+.definition-item.chosen {
+  background-color: #e3f2fd;
+  border-color: #1976d2 !important;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2);
+}
+
 .definition-actions {
   display: flex;
   justify-content: space-around;
+
+  button:hover {
+    background-color: #f8f9fa;
+    border-color: #1976d2;
+    color: #1976d2;
+  }
+
+  button.selected {
+    background-color: #e3f2fd;
+    border-color: #1976d2;
+    color: #1976d2;
+    font-weight: 500;
+  }
+}
+
+.part-of-speech-header {
+  display: flex;
+  justify-content: center;
+  font-size: larger;
+  margin-top: 15px;
 }
 
 .part-of-speech {
   font-weight: bold;
+  margin-left: 15px;
+  padding: 0 15px 0 15px;
+  background-color: lightblue;
+  border-radius: 15px;
 }
 
 .part-of-speech-toggle-group {
@@ -133,9 +163,6 @@ button {
 
   .save-word-section {
     margin: 0 10px 0 10px;
-  }
-
-  .save-word-section {
     padding: 0;
   }
 

@@ -40,15 +40,15 @@
 
       <div class="word-entries-container">
         <div class="word-entries-list">
-          @for (wordEntry of wordEntries(); track wordEntry; let entryIndex = $index) {
+          @for (wordEntry of wordEntries(); track entryIndex; let entryIndex = $index) {
             <div class="word-entry">
-              @for (meaning of wordEntry.meanings; track meaning; let meaningIndex = $index) {
+              @for (meaning of wordEntry.meanings; track meaningIndex; let meaningIndex = $index) {
                 <div class="meaning-group">
                   <div class="part-of-speech-header">
                     <span class="part-of-speech">{{ meaning.partOfSpeech }}</span>
                   </div>
 
-                  @for (definition of meaning.definitions; track definition; let definitionIndex = $index) {
+                  @for (definition of meaning.definitions; track definitionIndex; let definitionIndex = $index) {
                     <div class="definition-item"
                          [ngClass]="{chosen: isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
                     >
