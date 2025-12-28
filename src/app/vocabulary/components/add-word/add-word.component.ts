@@ -378,7 +378,7 @@ export class AddWordComponent implements OnInit {
       return;
     }
 
-    this.translation.set('');
+    this.translation.set('ggogogo');
     this.vocabularyService.getTranslation(word, context)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

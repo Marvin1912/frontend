@@ -1,16 +1,20 @@
-<div class="h-100 d-flex flex-column">
-    <div class="d-flex justify-content-center align-items-center gap-2 p-3">
-      <button mat-fab routerLink="/" class="position-absolute start-0 ms-2 z-3">
+<div class="vocabulary-home-container">
+  <div class="vocabulary-header">
+    <div class="home-button-section">
+      <button mat-fab routerLink="/">
         <mat-icon>home</mat-icon>
       </button>
-      <div class="card" routerLink="/vocabulary/add">
-        <h2>Add Word</h2>
+    </div>
+    <div class="selection-section">
+      <div class="add-word-section" routerLink="/vocabulary/add">
+        <span>Add Word</span>
       </div>
-      <div class="card" routerLink="/vocabulary/list">
-        <h2>List</h2>
+      <div class="list-section" routerLink="/vocabulary/list">
+        <span>List</span>
       </div>
     </div>
-  <div style="min-height: 80%; flex: 1 1 auto">
+  </div>
+  <div class="router-outlet-container">
     <router-outlet></router-outlet>
   </div>
 </div>

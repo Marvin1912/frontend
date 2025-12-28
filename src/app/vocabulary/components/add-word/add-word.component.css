@@ -1,109 +1,82 @@
-/* Component container */
-:host {
+.add-word-container,
+.add-word-main {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  font-family: 'Roboto', sans-serif;
+  align-items: center;
 }
 
-.add-word-container {
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* Word input section */
-.word-input-section {
-  width: 100%;
-  max-width: 500px;
-}
-
-.word-input-section mat-form-field {
-  width: 100%;
-}
-
-/* Search input container with proper alignment */
-.search-input-container {
+.search-input-wrapper {
   display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  position: relative;
+  justify-content: center;
 }
 
-.search-button-aligned {
-  position: relative;
-  top: 0.75rem; /* Align with input field, accounting for label */
-  z-index: 1;
+.save-word-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 10px 0 10px;
 }
 
-/* Main content layout */
-.main-content {
-  gap: 1.5rem;
+.save-word-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Dictionary section */
-.dictionary-section {
-  max-width: 800px;
+.part-of-speech-toggle-group {
+  display: flex;
+  justify-content: center;
 }
 
-.word-title {
-  font-size: 2.5rem;
-  font-weight: 300;
-  color: #1976d2;
-  margin: 0;
-  text-align: center;
+.mat-mdc-form-field {
+  width: 100%;
 }
 
-.dictionary-results {
-  background-color: #fafafa;
-  border-color: #e0e0e0 !important;
-  max-height: 60vh;
+.dictionary-results-section {
+  display: flex;
+  width: 90%;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Word entry and meaning cards */
-.word-entry {
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 1rem;
+.translation-section {
+  width: 100%;
+  padding-top: 10px;
+
+  button {
+    width: 25%;
+  }
 }
 
-.word-entry:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+.translation-result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  background-color: lightgreen;
+  border-radius: 15px;
 }
 
-.meaning-card {
-  background-color: white;
-  border-color: #e0e0e0 !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.2s ease;
+.word-entries-container {
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 10px;
 }
 
-.meaning-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.word-entries-list {
+  background-color: azure;
 }
 
-/* Part of speech badge */
-.part-of-speech-badge {
-  text-align: center;
-}
-
-.badge {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #1976d2, #1565c0);
-  color: white;
-  font-weight: 500;
-  font-size: 0.875rem;
-  border-radius: 16px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  min-width: 80px;
-}
-
-/* Definition items */
 .definition-item {
-  background-color: #f8f9fa;
-  border-color: #dee2e6 !important;
-  transition: all 0.2s ease;
+  border: black solid 1px;
+  border-radius: 10px;
+  margin: 5px;
+  padding: 5px;
 }
 
 .definition-item.chosen {
@@ -112,259 +85,85 @@
   box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2);
 }
 
-.definition-text {
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #333;
-}
-
-/* Action buttons */
 .definition-actions {
-  margin-top: 0.5rem;
-}
-
-.action-button {
   display: flex;
+  justify-content: space-around;
+
+  button:hover {
+    background-color: #f8f9fa;
+    border-color: #1976d2;
+    color: #1976d2;
+  }
+
+  button.selected {
+    background-color: #e3f2fd;
+    border-color: #1976d2;
+    color: #1976d2;
+    font-weight: 500;
+  }
+}
+
+.part-of-speech-header {
+  display: flex;
+  justify-content: center;
+  font-size: larger;
+  margin-top: 15px;
+}
+
+.part-of-speech {
+  font-weight: bold;
+  margin-left: 15px;
+  padding: 0 15px 0 15px;
+  background-color: lightblue;
+  border-radius: 15px;
+}
+
+.part-of-speech-toggle-group {
+  padding: 10px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: transparent;
-  border: 1px solid #dee2e6;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.875rem;
-  color: #6c757d;
-  transition: all 0.2s ease;
-  min-height: 36px;
-}
-
-.action-button:hover {
-  background-color: #f8f9fa;
-  border-color: #1976d2;
-  color: #1976d2;
-}
-
-.action-button.selected {
-  background-color: #e3f2fd;
-  border-color: #1976d2;
-  color: #1976d2;
-  font-weight: 500;
-}
-
-.action-icon {
-  font-size: 1rem;
-  width: 1rem;
-  height: 1rem;
-}
-
-/* Translation section */
-.translation-section {
-  background-color: white;
-  border-color: #e0e0e0 !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.translation-header h5 {
-  color: #1976d2;
-  font-weight: 500;
-}
-
-.translation-form {
-  align-items: flex-end;
-}
-
-.translation-form mat-form-field {
-  flex: 1;
-}
-
-.translation-result {
-  font-size: 1rem;
-  color: #2e7d32;
-  font-weight: 500;
-  text-align: center;
-  padding: 1rem;
-  background-color: #f1f8e9;
-  border: 1px solid #c8e6c9;
-  border-radius: 8px;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
-  line-height: 1.4;
-  box-shadow: 0 1px 3px rgba(46, 125, 50, 0.1);
-}
-
-/* Save section */
-.save-section {
-  max-width: 500px;
-}
-
-.save-section h1 {
-  font-size: 2.5rem;
-  font-weight: 300;
-  color: #1976d2;
-  margin: 0;
-  text-align: center;
-}
-
-.save-form-container {
-  background-color: white;
-  border-color: #e0e0e0 !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.part-of-speech-selector {
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.save-form {
-  gap: 1.25rem;
-}
-
-.save-form mat-form-field {
   width: 100%;
 }
 
-.submit-button {
-  align-self: flex-start;
-  min-width: 120px;
-  padding: 0.75rem 1.5rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin: 0 2px 0 2px;
+  font-size: small;
 }
 
-/* Smooth scrolling for overflow areas */
-.overflow-auto {
-  scrollbar-width: thin;
-  scrollbar-color: #ccc transparent;
-}
+@media (min-width: 821px) {
 
-.overflow-auto::-webkit-scrollbar {
-  width: 8px;
-}
+  .add-word-main {
+    flex-direction: row;
+    align-items: start;
+    height: 100%;
+  }
 
-.overflow-auto::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.overflow-auto::-webkit-scrollbar-thumb {
-  background-color: #ccc;
-  border-radius: 4px;
-}
-
-.overflow-auto::-webkit-scrollbar-thumb:hover {
-  background-color: #999;
-}
-
-/* Responsive design */
-@media (max-width: 1200px) {
-  .main-content {
+  .dictionary-results-section {
+    margin: 0 10px 0 10px;
+    display: flex;
     flex-direction: column;
+    height: 100%;
   }
 
-  .dictionary-section,
-  .save-section {
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
-  .add-word-container {
-    padding: 0.75rem;
-  }
-
-  .main-content {
-    gap: 2rem;
-  }
-
-  .word-title {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .dictionary-section {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 2px solid #e0e0e0;
-  }
-
-  .dictionary-results {
-    max-height: 50vh;
-    margin-bottom: 1rem;
-  }
-
-  .word-entry {
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 2px solid #f5f5f5;
-  }
-
-  .word-entry:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-
-  .meaning-card {
-    margin-bottom: 1rem;
+  .word-entries-container {
+    height: 60%;
   }
 
   .translation-section {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
+    flex-grow: 1;
   }
 
-  .translation-form {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1rem;
+  .save-word-section {
+    margin: 0 10px 0 10px;
+    padding: 0;
   }
 
-  .translation-result {
-    margin-top: 1rem;
-    padding: 0.75rem;
-  }
-
-  .save-section {
-    padding-top: 1.5rem;
-    border-top: 2px solid #e0e0e0;
-  }
-
-  .save-form-container {
-    padding: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .save-form {
-    gap: 1rem;
-  }
-
-  .part-of-speech-selector {
-    padding: 0.75rem;
-    margin-bottom: 1rem;
-  }
-
-  .definition-actions {
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 1rem;
-  }
-
-  .action-button {
-    justify-content: center;
-    padding: 0.75rem 1rem;
-    min-height: 44px;
-  }
-
-  .definition-item {
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-  }
-
-  .badge {
-    margin-bottom: 0.75rem;
-  }
 }
-
