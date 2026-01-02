@@ -1,56 +1,66 @@
 <div class="container mt-4">
   <h2>InfluxDB Buckets</h2>
 
-  <div *ngIf="isLoading" class="text-center mt-4">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Loading...</span>
+  @if (isLoading) {
+    <div class="text-center mt-4">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2">Loading buckets...</p>
     </div>
-    <p class="mt-2">Loading buckets...</p>
-  </div>
+  }
 
-  <div *ngIf="error" class="alert alert-danger mt-4">
-    <strong>Error:</strong> {{ error }}
-  </div>
+  @if (error) {
+    <div class="alert alert-danger mt-4">
+      <strong>Error:</strong> {{ error }}
+    </div>
+  }
 
-  <div *ngIf="!isLoading && !error && buckets.length === 0" class="alert alert-info mt-4">
-    No buckets found.
-  </div>
+  @if (!isLoading && !error && buckets.length === 0) {
+    <div class="alert alert-info mt-4">
+      No buckets found.
+    </div>
+  }
 
-  <div *ngIf="!isLoading && !error && buckets.length > 0" class="row mt-4">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">Available Buckets ({{ buckets.length }})</h5>
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Bucket</th>
-                  <th>Description</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let bucket of buckets">
-                  <td>{{ bucket.name }}</td>
-                  <td><code>{{ bucket.bucketName }}</code></td>
-                  <td>{{ bucket.description }}</td>
-                  <td>
-                    <button class="btn btn-primary btn-sm" (click)="openExportModal(bucket)" [disabled]="isExporting">
-                      <i class="bi bi-download"></i> Export
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+  @if (!isLoading && !error && buckets.length > 0) {
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Available Buckets ({{ buckets.length }})</h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Bucket</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (bucket of buckets; track bucket) {
+                    <tr>
+                      <td>{{ bucket.name }}</td>
+                      <td><code>{{ bucket.bucketName }}</code></td>
+                      <td>{{ bucket.description }}</td>
+                      <td>
+                        <button class="btn btn-primary btn-sm" (click)="openExportModal(bucket)" [disabled]="isExporting">
+                          <i class="bi bi-download"></i> Export
+                        </button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 
   <div class="mt-4">
     <button class="btn btn-secondary" (click)="loadBuckets()" [disabled]="isLoading">
@@ -62,78 +72,92 @@
   <div class="mt-5">
     <h3>Files</h3>
 
-    <div *ngIf="isLoadingFiles" class="text-center mt-4">
-      <mat-spinner></mat-spinner>
-      <p class="mt-2">Loading files...</p>
-    </div>
+    @if (isLoadingFiles) {
+      <div class="text-center mt-4">
+        <mat-spinner></mat-spinner>
+        <p class="mt-2">Loading files...</p>
+      </div>
+    }
 
-    <div *ngIf="filesError" class="alert alert-danger mt-4">
-      <strong>Error:</strong> {{ filesError }}
-    </div>
+    @if (filesError) {
+      <div class="alert alert-danger mt-4">
+        <strong>Error:</strong> {{ filesError }}
+      </div>
+    }
 
-    <div *ngIf="!isLoadingFiles && !filesError && files.length === 0" class="alert alert-info mt-4">
-      No files found.
-    </div>
+    @if (!isLoadingFiles && !filesError && files.length === 0) {
+      <div class="alert alert-info mt-4">
+        No files found.
+      </div>
+    }
 
-    <div *ngIf="!isLoadingFiles && !filesError && files.length > 0" class="mt-4">
-      <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h5 class="mb-0">Available Files ({{ files.length }})</h5>
-          <button mat-icon-button (click)="loadFiles()" [disabled]="isLoadingFiles">
-            <mat-icon>refresh</mat-icon>
-          </button>
-        </div>
-        <div class="card-body">
-          <table mat-table [dataSource]="files" class="w-100">
-            <!-- Name Column -->
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef>Name</th>
-              <td mat-cell *matCellDef="let file">{{ file.name }}</td>
-            </ng-container>
+    @if (!isLoadingFiles && !filesError && files.length > 0) {
+      <div class="mt-4">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Available Files ({{ files.length }})</h5>
+            <button mat-icon-button (click)="loadFiles()" [disabled]="isLoadingFiles">
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </div>
+          <div class="card-body">
+            <table mat-table [dataSource]="files" class="w-100">
+              <!-- Name Column -->
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let file">{{ file.name }}</td>
+              </ng-container>
 
-            <!-- Size Column -->
-            <ng-container matColumnDef="size">
-              <th mat-header-cell *matHeaderCellDef>Size</th>
-              <td mat-cell *matCellDef="let file">
-                <span *ngIf="file.size; else noSize">{{ formatFileSize(file.size) }}</span>
-                <ng-template #noSize>-</ng-template>
-              </td>
-            </ng-container>
+              <!-- Size Column -->
+              <ng-container matColumnDef="size">
+                <th mat-header-cell *matHeaderCellDef>Size</th>
+                <td mat-cell *matCellDef="let file">
+                  @if (file.size) {
+                    <span>{{ formatFileSize(file.size) }}</span>
+                  } @else {
+                    <span>-</span>
+                  }
+                </td>
+              </ng-container>
 
-            <!-- Modified Time Column -->
-            <ng-container matColumnDef="modifiedTime">
-              <th mat-header-cell *matHeaderCellDef>Modified</th>
-              <td mat-cell *matCellDef="let file">
-                <span *ngIf="file.modifiedTime; else noTime">{{ formatDate(file.modifiedTime) }}</span>
-                <ng-template #noTime>-</ng-template>
-              </td>
-            </ng-container>
+              <!-- Modified Time Column -->
+              <ng-container matColumnDef="modifiedTime">
+                <th mat-header-cell *matHeaderCellDef>Modified</th>
+                <td mat-cell *matCellDef="let file">
+                  @if (file.modifiedTime) {
+                    <span>{{ formatDate(file.modifiedTime) }}</span>
+                  } @else {
+                    <span>-</span>
+                  }
+                </td>
+              </ng-container>
 
-            <!-- Actions Column -->
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef>Actions</th>
-              <td mat-cell *matCellDef="let file">
-                <button mat-icon-button
-                        [disabled]="!file.webViewLink"
-                        (click)="openFile(file.webViewLink)"
-                        matTooltip="Open file">
-                  <mat-icon>open_in_new</mat-icon>
-                </button>
-                <button mat-icon-button
-                        (click)="deleteFile(file.id, file.name)"
-                        matTooltip="Delete file"
-                        class="text-danger">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </td>
-            </ng-container>
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Actions</th>
+                <td mat-cell *matCellDef="let file">
+                  <button mat-icon-button
+                          [disabled]="!file.webViewLink"
+                          (click)="openFile(file.webViewLink)"
+                          matTooltip="Open file">
+                    <mat-icon>open_in_new</mat-icon>
+                  </button>
+                  <button mat-icon-button
+                          (click)="deleteFile(file.id, file.name)"
+                          matTooltip="Delete file"
+                          class="text-danger">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
+    }
   </div>
 </div>
 
@@ -160,18 +184,24 @@
             <input type="datetime-local" id="endTime" class="form-control" [(ngModel)]="exportRequest.endTime" name="endTime">
           </div>
         </form>
-        <div *ngIf="exportError" class="alert alert-danger">
-          {{ exportError }}
-        </div>
+        @if (exportError) {
+          <div class="alert alert-danger">
+            {{ exportError }}
+          </div>
+        }
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeExportModal()">Cancel</button>
         <button type="button" class="btn btn-primary" (click)="exportBucket()" [disabled]="isExporting || !exportForm.form.valid">
-          <span *ngIf="isExporting" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          @if (isExporting) {
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          }
           Export
         </button>
       </div>
     </div>
   </div>
 </div>
-<div *ngIf="showExportModal" class="modal-backdrop fade show" (click)="closeExportModal()"></div>
+@if (showExportModal) {
+  <div class="modal-backdrop fade show" (click)="closeExportModal()"></div>
+}
