@@ -12,7 +12,8 @@
     "lint:fix": "eslint . --fix",
     "lint:ts": "eslint \"**/*.ts\"",
     "lint:html": "eslint \"**/*.html\"",
-    "env:production": "node scripts/generate-env.js --build-time --node-version --angular-version --npm-version"
+    "env:production": "node scripts/generate-env.js --build-time --node-version --angular-version --npm-version",
+    "owasp": "owasp-dependency-check --project \"frontend\" --scan \"package-lock.json\" --out reports --format HTML"
   },
   "private": true,
   "dependencies": {
@@ -52,6 +53,7 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "owasp-dependency-check": "^1.0.0",
     "sass": "^1.83.0",
     "typescript": "^5.9.3"
   }
