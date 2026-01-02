@@ -143,22 +143,36 @@ Deletes session.
 
 ## Problem Generation (Server-Side)
 
-Based on `difficulty` and `operations`:
-- EASY: 2-digit (10-99)
-- MEDIUM: 3-digit (100-999)
-- HARD: 4-digit (1000-9999)
+### Algorithm
+For each of `problemCount` problems:
+1. Randomly select operation from `settings.operations`
+2. Generate problem based on selected operation and `difficulty`
+3. Set `presentedAt = now`, `userAnswer = null`, `isCorrect = null`, `timeSpent = 0`
 
-### Addition
-`operand1 + operand2` - both operands in difficulty range
+### Number Ranges by Difficulty
+| Difficulty | Range |
+|------------|-------|
+| EASY | 10-99 (2-digit) |
+| MEDIUM | 100-999 (3-digit) |
+| HARD | 1000-9999 (4-digit) |
 
-### Subtraction
-`minuend - subtrahend` - ensures positive result
+Formula: `Math.floor(Math.random() * (max - min + 1)) + min`
 
-### Multiplication
-`operand1 × operand2` - smaller operands for reasonable difficulty
+### Operations
 
-### Division
-`dividend ÷ divisor = quotient` - ensures integer result
+**ADDITION**: `a + b = c`
+- `a`, `b`: random in difficulty range
+- `c`: calculated
+
+**SUBTRACTION**: `a - b = c`
+- `a`, `b`: random in difficulty range
+- Swap if `a < b` to ensure positive result
+- `minuend = max(a, b)`, `subtrahend = min(a, b)`
+
+**MULTIPLICATION** / **DIVISION**: Not implemented (default to ADDITION)
+
+### ID Generation
+Problem ID: `problem_${timestamp}_${random}` (random = 9 char base36)
 
 ## Date Format
 All dates as ISO 8601 strings (e.g., `"2025-01-15T10:30:00.000Z"`)
