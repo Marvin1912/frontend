@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, signal, WritableSignal} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {FormsModule} from '@angular/forms';
@@ -58,7 +58,7 @@ export class ArithmeticListComponent implements OnInit {
   sortOrder: 'asc' | 'desc' = 'desc';
 
   // UI state
-  loading: boolean = true;
+  loading: WritableSignal<boolean> = signal(true);
   expandedSession: string | null = null;
 
   constructor(
@@ -72,18 +72,26 @@ export class ArithmeticListComponent implements OnInit {
   }
 
   loadSessions(): void {
-    this.loading = true;
-    try {
-      this.sessions = this.arithmeticService.loadSessionsFromStorage();
-      this.filteredSessions = [...this.sessions];
-      this.calculateStatistics();
-      this.applyFiltersAndSorting();
-      this.loading = false;
-    } catch (error) {
-      console.error('Error loading sessions:', error);
-      this.snackBar.open('Fehler beim Laden der Sitzungen', 'OK', {duration: 3000});
-      this.loading = false;
-    }
+    this.loading.set(true);
+    this.arithmeticService.loadSessionsFromStorage().subscribe({
+      next: (sessions) => {
+        this.sessions = sessions.map(s => ({
+          ...s,
+          createdAt: s.createdAt ? new Date(s.createdAt as any) : new Date(),
+          startTime: s.startTime ? new Date(s.startTime as any) : null,
+          endTime: s.endTime ? new Date(s.endTime as any) : null
+        }));
+        this.filteredSessions = [...this.sessions];
+        this.calculateStatistics();
+        this.applyFiltersAndSorting();
+        this.loading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading sessions:', error);
+        this.snackBar.open('Fehler beim Laden der Sitzungen', 'OK', {duration: 3000});
+        this.loading.set(false);
+      }
+    });
   }
 
   calculateStatistics(): void {
@@ -128,7 +136,6 @@ export class ArithmeticListComponent implements OnInit {
     // Apply sorting
     this.filteredSessions.sort((a, b) => {
       let comparison: number;
-
       switch (this.sortBy) {
         case 'date':
           const timeA = a.startTime ? a.startTime.getTime() : 0;
@@ -174,27 +181,31 @@ export class ArithmeticListComponent implements OnInit {
 
   deleteSession(sessionId: string): void {
     if (confirm('Möchten Sie diese Sitzung wirklich löschen?')) {
-      try {
-        this.arithmeticService.deleteSessionFromStorage(sessionId);
-        this.loadSessions();
-        this.snackBar.open('Sitzung gelöscht', 'OK', {duration: 3000});
-      } catch (error) {
-        console.error('Error deleting session:', error);
-        this.snackBar.open('Fehler beim Löschen der Sitzung', 'OK', {duration: 3000});
-      }
+      this.arithmeticService.deleteSessionFromStorage(sessionId).subscribe({
+        next: () => {
+          this.loadSessions();
+          this.snackBar.open('Sitzung gelöscht', 'OK', {duration: 3000});
+        },
+        error: (error) => {
+          console.error('Error deleting session:', error);
+          this.snackBar.open('Fehler beim Löschen der Sitzung', 'OK', {duration: 3000});
+        }
+      });
     }
   }
 
   clearAllSessions(): void {
     if (confirm('Möchten Sie wirklich alle Sitzungen löschen? Dieser Vorgang kann nicht rückgängig gemacht werden.')) {
-      try {
-        this.arithmeticService.clearAllSessionsFromStorage();
-        this.loadSessions();
-        this.snackBar.open('Alle Sitzungen gelöscht', 'OK', {duration: 3000});
-      } catch (error) {
-        console.error('Error clearing sessions:', error);
-        this.snackBar.open('Fehler beim Löschen der Sitzungen', 'OK', {duration: 3000});
-      }
+      this.arithmeticService.clearAllSessionsFromStorage().subscribe({
+        next: () => {
+          this.loadSessions();
+          this.snackBar.open('Alle Sitzungen gelöscht', 'OK', {duration: 3000});
+        },
+        error: (error) => {
+          console.error('Error clearing sessions:', error);
+          this.snackBar.open('Fehler beim Löschen der Sitzungen', 'OK', {duration: 3000});
+        }
+      });
     }
   }
 

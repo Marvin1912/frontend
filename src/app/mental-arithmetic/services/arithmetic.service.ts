@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 import {SessionManagerService} from './session-manager.service';
 import {StorageService} from './storage.service';
 import {ScoringService} from './scoring.service';
@@ -17,51 +18,55 @@ export class ArithmeticService {
   ) {
   }
 
-  createSession(settings: ArithmeticSettings): ArithmeticSession {
+  createSession(settings: ArithmeticSettings): Observable<ArithmeticSession> {
     return this.sessionManager.createSession(settings);
   }
 
-  startSession(session: ArithmeticSession): ArithmeticSession {
-    return this.sessionManager.startSession(session);
+  startSession(sessionId: string): Observable<ArithmeticSession> {
+    return this.sessionManager.startSession(sessionId);
   }
 
-  updateSession(session: ArithmeticSession): ArithmeticSession {
+  updateSession(session: ArithmeticSession): Observable<ArithmeticSession> {
     return this.sessionManager.updateSession(session);
   }
 
-  completeSession(session: ArithmeticSession): ArithmeticSession {
-    return this.sessionManager.completeSession(session);
+  completeSession(sessionId: string): Observable<ArithmeticSession> {
+    return this.sessionManager.completeSession(sessionId);
   }
 
-  pauseSession(session: ArithmeticSession): ArithmeticSession {
-    return this.sessionManager.pauseSession(session);
+  pauseSession(sessionId: string): Observable<ArithmeticSession> {
+    return this.sessionManager.pauseSession(sessionId);
   }
 
-  resumeSession(session: ArithmeticSession): ArithmeticSession {
-    return this.sessionManager.resumeSession(session);
+  resumeSession(sessionId: string): Observable<ArithmeticSession> {
+    return this.sessionManager.resumeSession(sessionId);
   }
 
-  saveSessionToStorage(session: ArithmeticSession): void {
-    this.storageService.saveSession(session);
+  getSession(sessionId: string): Observable<ArithmeticSession> {
+    return this.sessionManager.getSession(sessionId);
   }
 
-  loadSessionsFromStorage(): ArithmeticSession[] {
+  saveSessionToStorage(session: ArithmeticSession): Observable<ArithmeticSession> {
+    return this.storageService.saveSession(session);
+  }
+
+  loadSessionsFromStorage(): Observable<ArithmeticSession[]> {
     return this.storageService.loadSessions();
   }
 
-  deleteSessionFromStorage(sessionId: string): void {
-    this.storageService.deleteSession(sessionId);
+  deleteSessionFromStorage(sessionId: string): Observable<void> {
+    return this.storageService.deleteSession(sessionId);
   }
 
-  clearAllSessionsFromStorage(): void {
-    this.storageService.clearAllSessions();
+  clearAllSessionsFromStorage(): Observable<void[]> {
+    return this.storageService.clearAllSessions();
   }
 
-  saveSettingsToStorage(settings: ArithmeticSettings): void {
-    this.storageService.saveSettings(settings);
+  saveSettingsToStorage(settings: ArithmeticSettings): Observable<ArithmeticSettings> {
+    return this.storageService.saveSettings(settings);
   }
 
-  loadSettingsFromStorage(): ArithmeticSettings | null {
+  loadSettingsFromStorage(): Observable<ArithmeticSettings> {
     return this.storageService.loadSettings();
   }
 

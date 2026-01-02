@@ -64,18 +64,24 @@ export class ArithmeticSettingsComponent implements OnInit {
   }
 
   private loadSavedSettings(): void {
-    const savedSettings = this.arithmeticService.loadSettingsFromStorage();
-    if (savedSettings) {
-      this.settingsForm.patchValue({
-        operations: {
-          addition: savedSettings.operations.includes(OperationType.ADDITION),
-          subtraction: savedSettings.operations.includes(OperationType.SUBTRACTION)
-        },
-        difficulty: savedSettings.difficulty,
-        timeLimit: savedSettings.timeLimit,
-        problemCount: savedSettings.problemCount
-      });
-    }
+    this.arithmeticService.loadSettingsFromStorage().subscribe({
+      next: (savedSettings) => {
+        if (savedSettings) {
+          this.settingsForm.patchValue({
+            operations: {
+              addition: savedSettings.operations.includes(OperationType.ADDITION),
+              subtraction: savedSettings.operations.includes(OperationType.SUBTRACTION)
+            },
+            difficulty: savedSettings.difficulty,
+            timeLimit: savedSettings.timeLimit,
+            problemCount: savedSettings.problemCount
+          });
+        }
+      },
+      error: (error) => {
+        console.error('Error loading settings:', error);
+      }
+    });
   }
 
   private atLeastOneOperationSelected(group: FormGroup): { [key: string]: boolean } | null {
@@ -122,7 +128,9 @@ export class ArithmeticSettingsComponent implements OnInit {
         }
       };
 
-      this.arithmeticService.saveSettingsToStorage(settings);
+      this.arithmeticService.saveSettingsToStorage(settings).subscribe({
+        error: (error) => console.error('Error saving settings:', error)
+      });
     }
   }
 

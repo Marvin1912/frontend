@@ -6,7 +6,7 @@
   </div>
 
   <!-- Statistics Cards -->
-  @if (!loading) {
+  @if (!loading()) {
   <div class="stats-container">
     <mat-card class="stat-card">
       <div class="stat-content">
@@ -51,7 +51,7 @@
   }
 
   <!-- Filters and Controls -->
-  @if (!loading) {
+  @if (!loading()) {
   <mat-card class="filters-card">
     <div class="filters-row">
       <mat-form-field appearance="outline" class="filter-field">
@@ -91,7 +91,7 @@
   }
 
   <!-- Loading State -->
-  @if (loading) {
+  @if (loading()) {
   <div class="loading-container">
     <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     <p>Lade Sitzungsdaten...</p>
@@ -99,7 +99,7 @@
   }
 
   <!-- Sessions Table -->
-  @if (!loading) {
+  @if (!loading()) {
   <mat-card class="sessions-card">
     <div class="card-content">
       <div class="table-header">
@@ -219,7 +219,7 @@
               Keine Sitzungen entsprechen den aktuellen Filterkriterien.
             </p>
           }
-          <button mat-raised-button color="primary" routerLink="/mental-arithmetic/main">
+          <button mat-raised-button color="primary" routerLink="/mental-arithmetic">
             Training starten
           </button>
         </div>
