@@ -139,17 +139,6 @@ export class StorageService {
     }
   }
 
-  /**
-   * Clear all settings from localStorage
-   */
-  clearSettings(): void {
-    try {
-      globalThis.localStorage.removeItem(this.SETTINGS_KEY);
-    } catch (error) {
-      console.error('Error clearing settings from localStorage:', error);
-    }
-  }
-
   // ==================== UTILITY METHODS ====================
 
   /**
