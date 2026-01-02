@@ -186,7 +186,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
         }
 
         // Update problem time if current problem exists
-        if (this.currentProblem && this.currentProblem.answeredAt === null) {
+        if (this.currentProblem && !this.currentProblem.answeredAt) {
           this.currentProblem.timeSpent = Date.now() - this.currentProblemStartTime;
         }
 
