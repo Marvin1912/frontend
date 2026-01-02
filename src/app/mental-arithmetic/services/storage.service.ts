@@ -11,10 +11,6 @@ export class StorageService {
   private readonly SETTINGS_KEY = 'arithmetic_settings';
   private readonly MAX_SESSIONS = 100;
 
-  constructor() {}
-
-  // ==================== SESSION STORAGE ====================
-
   saveSession(session: ArithmeticSession): void {
     try {
       const sessions = this.loadSessions();
@@ -96,8 +92,6 @@ export class StorageService {
     }
   }
 
-  // ==================== SETTINGS STORAGE ====================
-
   saveSettings(settings: ArithmeticSettings): void {
     try {
       globalThis.localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(settings));
@@ -116,24 +110,4 @@ export class StorageService {
     }
   }
 
-  // ==================== UTILITY METHODS ====================
-
-  isStorageAvailable(): boolean {
-    try {
-      const testKey = '__test__';
-      globalThis.localStorage.setItem(testKey, 'test');
-      globalThis.localStorage.removeItem(testKey);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  getSessionCount(): number {
-    return this.loadSessions().length;
-  }
-
-  hasStoredSettings(): boolean {
-    return this.loadSettings() !== null;
-  }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ArithmeticProblem} from '../model/arithmetic-problem';
 import {Difficulty, OperationType} from '../model/arithmetic-enums';
 import {ArithmeticSettings} from '../model/arithmetic-settings';
@@ -9,28 +9,6 @@ import {ArithmeticSettings} from '../model/arithmetic-settings';
 export class ProblemGeneratorService {
 
   constructor() {}
-
-  generateAdditionProblems(difficulty: Difficulty, count: number): ArithmeticProblem[] {
-    const problems: ArithmeticProblem[] = [];
-
-    for (let i = 0; i < count; i++) {
-      const problem = this.createAdditionProblem(difficulty);
-      problems.push(problem);
-    }
-
-    return problems;
-  }
-
-  generateSubtractionProblems(difficulty: Difficulty, count: number): ArithmeticProblem[] {
-    const problems: ArithmeticProblem[] = [];
-
-    for (let i = 0; i < count; i++) {
-      const problem = this.createSubtractionProblem(difficulty);
-      problems.push(problem);
-    }
-
-    return problems;
-  }
 
   generateMixedProblems(settings: ArithmeticSettings, count: number): ArithmeticProblem[] {
     const problems: ArithmeticProblem[] = [];

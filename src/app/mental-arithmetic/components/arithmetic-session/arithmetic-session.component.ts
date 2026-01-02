@@ -183,10 +183,6 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getSessionStartTime(): number {
-    return this.currentSession?.startTime?.getTime() || 0;
-  }
-
   private handleTimeOut(): void {
     this.clearTimer();
     if (this.currentSession) {
