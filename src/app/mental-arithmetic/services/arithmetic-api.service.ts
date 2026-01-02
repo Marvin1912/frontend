@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ArithmeticSession } from '../model/arithmetic-session';
 import { ArithmeticSettings } from '../model/arithmetic-settings';
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ArithmeticApiService {
-  private readonly apiUrl = 'http://localhost:9001/api';
+  private readonly apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
