@@ -15,10 +15,6 @@ export class StorageService {
 
   // ==================== SESSION STORAGE ====================
 
-  /**
-   * Save a session to localStorage
-   * @param session The session to save
-   */
   saveSession(session: ArithmeticSession): void {
     try {
       const sessions = this.loadSessions();
@@ -41,10 +37,6 @@ export class StorageService {
     }
   }
 
-  /**
-   * Load all sessions from localStorage
-   * @returns Array of stored sessions
-   */
   loadSessions(): ArithmeticSession[] {
     try {
       const stored = globalThis.localStorage.getItem(this.SESSIONS_KEY);
@@ -86,10 +78,6 @@ export class StorageService {
     }
   }
 
-  /**
-   * Delete a specific session from localStorage
-   * @param sessionId The ID of the session to delete
-   */
   deleteSession(sessionId: string): void {
     try {
       const sessions = this.loadSessions();
@@ -100,9 +88,6 @@ export class StorageService {
     }
   }
 
-  /**
-   * Clear all sessions from localStorage
-   */
   clearAllSessions(): void {
     try {
       globalThis.localStorage.removeItem(this.SESSIONS_KEY);
@@ -113,10 +98,6 @@ export class StorageService {
 
   // ==================== SETTINGS STORAGE ====================
 
-  /**
-   * Save settings to localStorage
-   * @param settings The settings to save
-   */
   saveSettings(settings: ArithmeticSettings): void {
     try {
       globalThis.localStorage.setItem(this.SETTINGS_KEY, JSON.stringify(settings));
@@ -125,10 +106,6 @@ export class StorageService {
     }
   }
 
-  /**
-   * Load settings from localStorage
-   * @returns The saved settings or null if not found
-   */
   loadSettings(): ArithmeticSettings | null {
     try {
       const stored = globalThis.localStorage.getItem(this.SETTINGS_KEY);
@@ -141,10 +118,6 @@ export class StorageService {
 
   // ==================== UTILITY METHODS ====================
 
-  /**
-   * Check if localStorage is available
-   * @returns True if localStorage is available
-   */
   isStorageAvailable(): boolean {
     try {
       const testKey = '__test__';
@@ -156,18 +129,10 @@ export class StorageService {
     }
   }
 
-  /**
-   * Get the total number of stored sessions
-   * @returns Number of stored sessions
-   */
   getSessionCount(): number {
     return this.loadSessions().length;
   }
 
-  /**
-   * Check if settings are stored
-   * @returns True if settings exist in storage
-   */
   hasStoredSettings(): boolean {
     return this.loadSettings() !== null;
   }
