@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ArithmeticProblem} from '../model/arithmetic-problem';
 import {Difficulty, OperationType} from '../model/arithmetic-enums';
 import {ArithmeticSettings} from '../model/arithmetic-settings';
@@ -10,46 +10,6 @@ export class ProblemGeneratorService {
 
   constructor() {}
 
-  /**
-   * Generate addition problems based on difficulty level
-   * @param difficulty The difficulty level determining number of digits
-   * @param count Number of problems to generate
-   * @returns Array of addition problems
-   */
-  generateAdditionProblems(difficulty: Difficulty, count: number): ArithmeticProblem[] {
-    const problems: ArithmeticProblem[] = [];
-
-    for (let i = 0; i < count; i++) {
-      const problem = this.createAdditionProblem(difficulty);
-      problems.push(problem);
-    }
-
-    return problems;
-  }
-
-  /**
-   * Generate subtraction problems based on difficulty level
-   * @param difficulty The difficulty level determining number of digits
-   * @param count Number of problems to generate
-   * @returns Array of subtraction problems
-   */
-  generateSubtractionProblems(difficulty: Difficulty, count: number): ArithmeticProblem[] {
-    const problems: ArithmeticProblem[] = [];
-
-    for (let i = 0; i < count; i++) {
-      const problem = this.createSubtractionProblem(difficulty);
-      problems.push(problem);
-    }
-
-    return problems;
-  }
-
-  /**
-   * Generate mixed problems based on settings
-   * @param settings The arithmetic settings containing operations and difficulty
-   * @param count Number of problems to generate
-   * @returns Array of mixed operation problems
-   */
   generateMixedProblems(settings: ArithmeticSettings, count: number): ArithmeticProblem[] {
     const problems: ArithmeticProblem[] = [];
     const operations = settings.operations;
@@ -79,11 +39,6 @@ export class ProblemGeneratorService {
     return problems;
   }
 
-  /**
-   * Create a single addition problem
-   * @param difficulty The difficulty level for number generation
-   * @returns A single addition problem
-   */
   private createAdditionProblem(difficulty: Difficulty): ArithmeticProblem {
     const num1 = this.generateRandomDigits(difficulty);
     const num2 = this.generateRandomDigits(difficulty);
@@ -106,11 +61,6 @@ export class ProblemGeneratorService {
     };
   }
 
-  /**
-   * Create a single subtraction problem
-   * @param difficulty The difficulty level for number generation
-   * @returns A single subtraction problem
-   */
   private createSubtractionProblem(difficulty: Difficulty): ArithmeticProblem {
     const num1 = this.generateRandomDigits(difficulty);
     const num2 = this.generateRandomDigits(difficulty);
@@ -136,11 +86,6 @@ export class ProblemGeneratorService {
     };
   }
 
-  /**
-   * Generate random numbers based on difficulty level
-   * @param difficulty The difficulty level
-   * @returns A random number with appropriate number of digits
-   */
   private generateRandomDigits(difficulty: Difficulty): number {
     let min: number;
     let max: number;
@@ -171,12 +116,6 @@ export class ProblemGeneratorService {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  /**
-   * Ensure subtraction results in positive numbers
-   * @param num1 First number
-   * @param num2 Second number
-   * @returns Object with minuend (larger) and subtrahend (smaller)
-   */
   private ensurePositiveResult(num1: number, num2: number): { minuend: number; subtrahend: number } {
     if (num1 >= num2) {
       return { minuend: num1, subtrahend: num2 };
@@ -185,10 +124,6 @@ export class ProblemGeneratorService {
     }
   }
 
-  /**
-   * Generate a unique problem ID
-   * @returns A unique identifier for a problem
-   */
   private generateProblemId(): string {
     return `problem_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }

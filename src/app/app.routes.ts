@@ -11,8 +11,8 @@ import {PlantViewComponent} from './plants/components/plant-view/plant-view.comp
 import {AddWordComponent} from './vocabulary/components/add-word/add-word.component';
 import {VocabularyListComponent} from './vocabulary/components/vocabulary-list/vocabulary-list.component';
 import {VocabularyHomeComponent} from './vocabulary/components/vocabulary-home/vocabulary-home.component';
-import {MentalArithmeticRootComponent} from './mental-arithmetic/mental-arithmetic-root/mental-arithmetic-root.component';
-import {MentalArithmeticMainComponent} from './mental-arithmetic/mental-arithmetic-main/mental-arithmetic-main.component';
+import {MentalArithmeticRootComponent} from './mental-arithmetic/components/arithmetic-root/mental-arithmetic-root.component';
+import {MentalArithmeticMainComponent} from './mental-arithmetic/components/arithmetic-main/mental-arithmetic-main.component';
 import {ArithmeticSettingsComponent} from './mental-arithmetic/components/arithmetic-settings/arithmetic-settings.component';
 import {ArithmeticSessionComponent} from './mental-arithmetic/components/arithmetic-session/arithmetic-session.component';
 import {ArithmeticListComponent} from './mental-arithmetic/components/arithmetic-list/arithmetic-list.component';

@@ -39,7 +39,6 @@ export class ArithmeticSettingsComponent implements OnInit {
 
   // Enums for template
   readonly Difficulty = Difficulty;
-  readonly OperationType = OperationType;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -162,8 +161,4 @@ export class ArithmeticSettingsComponent implements OnInit {
     return '';
   }
 
-  // Helper method for template
-  formatTimeLimitLabel(value: number | null): string {
-    return value ? `${value} Minuten` : 'Keine Zeitbegrenzung';
-  }
 }

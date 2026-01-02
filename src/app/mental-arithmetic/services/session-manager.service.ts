@@ -14,11 +14,6 @@ export class SessionManagerService {
   ) {
   }
 
-  /**
-   * Create a new arithmetic session with the given settings
-   * @param settings The settings for the session
-   * @returns A new arithmetic session
-   */
   createSession(settings: ArithmeticSettings): ArithmeticSession {
     const problems = this.problemGenerator.generateMixedProblems(settings, settings.problemCount);
     const sessionId = this.generateSessionId();
@@ -45,11 +40,6 @@ export class SessionManagerService {
     };
   }
 
-  /**
-   * Start a session by setting the start time
-   * @param session The session to start
-   * @returns The updated session
-   */
   startSession(session: ArithmeticSession): ArithmeticSession {
     return {
       ...session,
@@ -58,11 +48,6 @@ export class SessionManagerService {
     };
   }
 
-  /**
-   * Update a session with new problem results and recalculate statistics
-   * @param session The session to update
-   * @returns The updated session
-   */
   updateSession(session: ArithmeticSession): ArithmeticSession {
     const completedProblems = session.problems.filter(p => p.userAnswer !== null);
     const correctAnswers = completedProblems.filter(p => p.isCorrect);
@@ -93,11 +78,6 @@ export class SessionManagerService {
     };
   }
 
-  /**
-   * Complete a session and set the end time
-   * @param session The session to complete
-   * @returns The completed session
-   */
   completeSession(session: ArithmeticSession): ArithmeticSession {
     return {
       ...session,
@@ -107,11 +87,6 @@ export class SessionManagerService {
     };
   }
 
-  /**
-   * Pause a session
-   * @param session The session to pause
-   * @returns The paused session
-   */
   pauseSession(session: ArithmeticSession): ArithmeticSession {
     return {
       ...session,
@@ -119,11 +94,6 @@ export class SessionManagerService {
     };
   }
 
-  /**
-   * Resume a paused session
-   * @param session The session to resume
-   * @returns The resumed session
-   */
   resumeSession(session: ArithmeticSession): ArithmeticSession {
     return {
       ...session,
@@ -131,10 +101,6 @@ export class SessionManagerService {
     };
   }
 
-  /**
-   * Generate a unique session ID
-   * @returns A unique identifier for a session
-   */
   private generateSessionId(): string {
     return `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
   }
