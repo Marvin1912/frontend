@@ -80,8 +80,6 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     // Save session if it exists and is active
     if (this.currentSession && this.currentSession.status === SessionStatus.ACTIVE) {
       this.pauseSession();
-      // Save paused session to storage
-      this.arithmeticService.saveSessionToStorage(this.currentSession);
     }
   }
 
@@ -94,48 +92,69 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   private loadSettingsAndStartSession(): void {
     this.isLoading = true;
 
-    try {
-      const settings = this.arithmeticService.loadSettingsFromStorage();
-      if (!settings) {
-        this.snackBar.open('Keine Einstellungen gefunden. Bitte konfigurieren Sie zuerst Ihre Trainingseinstellungen.', 'OK', {
-          duration: 5000
+    this.arithmeticService.loadSettingsFromStorage().subscribe({
+      next: (settings) => {
+        if (!settings) {
+          this.snackBar.open('Keine Einstellungen gefunden. Bitte konfigurieren Sie zuerst Ihre Trainingseinstellungen.', 'OK', {
+            duration: 5000
+          });
+          this.router.navigate(['/mental-arithmetic/main']);
+          return;
+        }
+
+        this.initializeSession(settings);
+        this.startSession();
+      },
+      error: (error) => {
+        console.error('Error loading settings:', error);
+        this.snackBar.open('Fehler beim Laden der Einstellungen', 'OK', {
+          duration: 3000
         });
         this.router.navigate(['/mental-arithmetic/main']);
-        return;
+      },
+      complete: () => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
       }
-
-      this.initializeSession(settings);
-      this.startSession();
-    } catch (error) {
-      console.error('Error loading settings:', error);
-      this.snackBar.open('Fehler beim Laden der Einstellungen', 'OK', {
-        duration: 3000
-      });
-      this.router.navigate(['/mental-arithmetic/main']);
-    } finally {
-      this.isLoading = false;
-      this.cdr.detectChanges();
-    }
+    });
   }
 
   private initializeSession(settings: ArithmeticSettings): void {
-    this.currentSession = this.arithmeticService.createSession(settings);
-    this.sessionTimeLimit = settings.timeLimit ? settings.timeLimit * 60 * 1000 : null; // Convert to milliseconds
+    this.sessionTimeLimit = settings.timeLimit ? settings.timeLimit * 60 * 1000 : null;
     this.timeRemaining = this.sessionTimeLimit || 0;
     this.timeElapsed = 0;
+
+    this.arithmeticService.createSession(settings).subscribe({
+      next: (session) => {
+        this.currentSession = session;
+        this.startSession();
+      },
+      error: (error) => {
+        console.error('Error creating session:', error);
+        this.snackBar.open('Fehler beim Erstellen der Sitzung', 'OK', { duration: 3000 });
+        this.router.navigate(['/mental-arithmetic/main']);
+      }
+    });
   }
 
   private startSession(): void {
     if (!this.currentSession) return;
 
-    this.currentSession = this.arithmeticService.startSession(this.currentSession);
-    this.isSessionStarted = true;
-    this.isSessionCompleted = false;
-    this.isPaused = false;
+    this.arithmeticService.startSession(this.currentSession.id).subscribe({
+      next: (session) => {
+        this.currentSession = session;
+        this.isSessionStarted = true;
+        this.isSessionCompleted = false;
+        this.isPaused = false;
 
-    this.loadCurrentProblem();
-    this.startTimer();
-    this.cdr.detectChanges();
+        this.loadCurrentProblem();
+        this.startTimer();
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error starting session:', error);
+      }
+    });
   }
 
   private loadCurrentProblem(): void {
@@ -207,17 +226,24 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     this.currentProblem.isCorrect = this.lastAnswerCorrect;
     this.currentProblem.answeredAt = new Date();
 
-    // Update session
-    this.currentSession = this.arithmeticService.updateSession(this.currentSession);
-
     // Disable form after submission
     this.answerForm.disable();
-    this.cdr.detectChanges();
 
-    // Auto-proceed after delay
-    setTimeout(() => {
-      this.proceedToNext();
-    }, 2000);
+    // Update session via API
+    this.arithmeticService.updateSession(this.currentSession).subscribe({
+      next: (updatedSession) => {
+        this.currentSession = updatedSession;
+        this.cdr.detectChanges();
+
+        // Auto-proceed after delay
+        setTimeout(() => {
+          this.proceedToNext();
+        }, 2000);
+      },
+      error: (error) => {
+        console.error('Error updating session:', error);
+      }
+    });
   }
 
   private proceedToNext(): void {
@@ -249,36 +275,54 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     this.isSessionCompleted = true;
 
     if (this.currentSession) {
-      this.currentSession = this.arithmeticService.completeSession(this.currentSession);
-      // Save completed session to storage
-      this.arithmeticService.saveSessionToStorage(this.currentSession);
+      this.arithmeticService.completeSession(this.currentSession.id).subscribe({
+        next: (session) => {
+          this.currentSession = session;
+          this.cdr.detectChanges();
+
+          // Show completion message
+          const accuracy = this.currentSession?.accuracy || 0;
+          const score = this.currentSession?.score || 0;
+
+          this.snackBar.open(`Training abgeschlossen! Punkte: ${score}, Genauigkeit: ${accuracy.toFixed(1)}%`, 'OK', {
+            duration: 5000
+          });
+        },
+        error: (error) => {
+          console.error('Error completing session:', error);
+        }
+      });
     }
-
-    this.cdr.detectChanges();
-
-    // Show completion message
-    const accuracy = this.currentSession?.accuracy || 0;
-    const score = this.currentSession?.score || 0;
-
-    this.snackBar.open(`Training abgeschlossen! Punkte: ${score}, Genauigkeit: ${accuracy.toFixed(1)}%`, 'OK', {
-      duration: 5000
-    });
   }
 
   pauseSession(): void {
     if (!this.currentSession || this.isPaused) return;
 
     this.isPaused = true;
-    this.currentSession = this.arithmeticService.pauseSession(this.currentSession);
-    this.cdr.detectChanges();
+    this.arithmeticService.pauseSession(this.currentSession.id).subscribe({
+      next: (session) => {
+        this.currentSession = session;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error pausing session:', error);
+      }
+    });
   }
 
   resumeSession(): void {
     if (!this.currentSession || !this.isPaused) return;
 
     this.isPaused = false;
-    this.currentSession = this.arithmeticService.resumeSession(this.currentSession);
-    this.cdr.detectChanges();
+    this.arithmeticService.resumeSession(this.currentSession.id).subscribe({
+      next: (session) => {
+        this.currentSession = session;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error resuming session:', error);
+      }
+    });
   }
 
   endSession(): void {
@@ -299,11 +343,18 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
         this.clearTimer();
         if (this.currentSession) {
           this.currentSession.status = SessionStatus.CANCELLED;
-          this.currentSession = this.arithmeticService.updateSession(this.currentSession);
-          // Save cancelled session to storage
-          this.arithmeticService.saveSessionToStorage(this.currentSession);
+          this.arithmeticService.updateSession(this.currentSession).subscribe({
+            next: () => {
+              this.router.navigate(['/mental-arithmetic/main']);
+            },
+            error: (error) => {
+              console.error('Error ending session:', error);
+              this.router.navigate(['/mental-arithmetic/main']);
+            }
+          });
+        } else {
+          this.router.navigate(['/mental-arithmetic/main']);
         }
-        this.router.navigate(['/mental-arithmetic/main']);
       }
     });
   }

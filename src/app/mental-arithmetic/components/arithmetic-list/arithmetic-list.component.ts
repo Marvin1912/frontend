@@ -73,17 +73,20 @@ export class ArithmeticListComponent implements OnInit {
 
   loadSessions(): void {
     this.loading = true;
-    try {
-      this.sessions = this.arithmeticService.loadSessionsFromStorage();
-      this.filteredSessions = [...this.sessions];
-      this.calculateStatistics();
-      this.applyFiltersAndSorting();
-      this.loading = false;
-    } catch (error) {
-      console.error('Error loading sessions:', error);
-      this.snackBar.open('Fehler beim Laden der Sitzungen', 'OK', {duration: 3000});
-      this.loading = false;
-    }
+    this.arithmeticService.loadSessionsFromStorage().subscribe({
+      next: (sessions) => {
+        this.sessions = sessions;
+        this.filteredSessions = [...this.sessions];
+        this.calculateStatistics();
+        this.applyFiltersAndSorting();
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error loading sessions:', error);
+        this.snackBar.open('Fehler beim Laden der Sitzungen', 'OK', {duration: 3000});
+        this.loading = false;
+      }
+    });
   }
 
   calculateStatistics(): void {
@@ -174,27 +177,31 @@ export class ArithmeticListComponent implements OnInit {
 
   deleteSession(sessionId: string): void {
     if (confirm('Möchten Sie diese Sitzung wirklich löschen?')) {
-      try {
-        this.arithmeticService.deleteSessionFromStorage(sessionId);
-        this.loadSessions();
-        this.snackBar.open('Sitzung gelöscht', 'OK', {duration: 3000});
-      } catch (error) {
-        console.error('Error deleting session:', error);
-        this.snackBar.open('Fehler beim Löschen der Sitzung', 'OK', {duration: 3000});
-      }
+      this.arithmeticService.deleteSessionFromStorage(sessionId).subscribe({
+        next: () => {
+          this.loadSessions();
+          this.snackBar.open('Sitzung gelöscht', 'OK', {duration: 3000});
+        },
+        error: (error) => {
+          console.error('Error deleting session:', error);
+          this.snackBar.open('Fehler beim Löschen der Sitzung', 'OK', {duration: 3000});
+        }
+      });
     }
   }
 
   clearAllSessions(): void {
     if (confirm('Möchten Sie wirklich alle Sitzungen löschen? Dieser Vorgang kann nicht rückgängig gemacht werden.')) {
-      try {
-        this.arithmeticService.clearAllSessionsFromStorage();
-        this.loadSessions();
-        this.snackBar.open('Alle Sitzungen gelöscht', 'OK', {duration: 3000});
-      } catch (error) {
-        console.error('Error clearing sessions:', error);
-        this.snackBar.open('Fehler beim Löschen der Sitzungen', 'OK', {duration: 3000});
-      }
+      this.arithmeticService.clearAllSessionsFromStorage().subscribe({
+        next: () => {
+          this.loadSessions();
+          this.snackBar.open('Alle Sitzungen gelöscht', 'OK', {duration: 3000});
+        },
+        error: (error) => {
+          console.error('Error clearing sessions:', error);
+          this.snackBar.open('Fehler beim Löschen der Sitzungen', 'OK', {duration: 3000});
+        }
+      });
     }
   }
 
