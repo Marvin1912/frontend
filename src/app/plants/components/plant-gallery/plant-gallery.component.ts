@@ -1,7 +1,7 @@
 import {Component, OnInit, signal} from '@angular/core';
+import {DatePipe, NgClass, NgForOf} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
-import {DatePipe, NgForOf} from '@angular/common';
 import {PlantService} from '../../services/plant.service';
 import {Plant} from '../../models/plant.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -11,7 +11,7 @@ import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-plant-gallery',
-  imports: [MatCardModule, MatButtonModule, NgForOf, RouterLink],
+  imports: [MatCardModule, MatButtonModule, NgForOf, RouterLink, NgClass],
   templateUrl: './plant-gallery.component.html',
   styleUrl: './plant-gallery.component.css',
   providers: [DatePipe]
@@ -30,7 +30,11 @@ export class PlantGalleryComponent implements OnInit {
   ngOnInit(): void {
     this.plantService.getPlants()
       .pipe(tap({
-        next: plants => this.plants.set(plants.sort((a, b) => a.id - b.id))
+        next: plants => this.plants.set(plants.sort((a, b) => {
+          let dateA = a.nextWateredDate ?? '';
+          let dateB = b.nextWateredDate ?? '';
+          return dateA.localeCompare(dateB);
+        }))
       }))
       .subscribe({
         error: err => {
@@ -91,5 +95,9 @@ export class PlantGalleryComponent implements OnInit {
         })
       }
     });
+  }
+
+  isTodayWateringDate(plant: Plant) : boolean {
+    return new Date().toISOString().split('T')[0].localeCompare(plant.nextWateredDate ?? '') == 0;
   }
 }
