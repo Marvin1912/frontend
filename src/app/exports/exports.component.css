@@ -49,3 +49,24 @@
 .text-danger {
   color: #f44336;
 }
+
+.quick-actions-container {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.ms-3 {
+  margin-left: 1rem;
+}
+
+.d-inline-block {
+  display: inline-block;
+}
+
+.align-middle {
+  vertical-align: middle;
+}

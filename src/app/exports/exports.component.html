@@ -37,6 +37,24 @@
     </mat-card>
   </div>
 
+  <!-- Quick Actions Section -->
+  <div class="mt-5">
+    <h3>Quick Exports</h3>
+    <div class="quick-actions-container mt-3">
+      <button mat-raised-button color="primary" (click)="exportVocabulary()" [disabled]="isExporting">
+        <mat-icon>translate</mat-icon>
+        Export Vocabulary
+      </button>
+      <button mat-raised-button color="accent" (click)="exportCosts()" [disabled]="isExporting" class="ms-3">
+        <mat-icon>payments</mat-icon>
+        Export Costs
+      </button>
+      @if (isExporting) {
+        <mat-spinner diameter="24" class="ms-3 d-inline-block align-middle"></mat-spinner>
+      }
+    </div>
+  </div>
+
   <!-- Files Section -->
   <div class="mt-5">
     <h3>Exported Files</h3>

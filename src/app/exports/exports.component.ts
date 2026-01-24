@@ -7,7 +7,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FileService } from './services/file/file.service';
+import { ExportService } from './services/export.service';
 import { FileItem, FileItemTime, FileListResponse, FileDeleteResponse } from './services/file/file.model';
 
 @Component({
@@ -21,7 +23,8 @@ import { FileItem, FileItemTime, FileListResponse, FileDeleteResponse } from './
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSnackBarModule
   ],
   templateUrl: './exports.component.html',
   styleUrl: './exports.component.css'
@@ -30,10 +33,15 @@ export class ExportsComponent implements OnInit {
   // Files table properties
   files: FileItem[] = [];
   isLoadingFiles = false;
+  isExporting = false;
   filesError: string | null = null;
   displayedColumns: string[] = ['name', 'size', 'modifiedTime', 'actions'];
 
-  constructor(private fileService: FileService) {}
+  constructor(
+    private fileService: FileService,
+    private exportService: ExportService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit() {
     this.loadFiles();
@@ -56,6 +64,30 @@ export class ExportsComponent implements OnInit {
         this.isLoadingFiles = false;
         this.filesError = 'Failed to load files: ' + error.message;
         console.error('Error loading files:', error);
+      }
+    });
+  }
+
+  exportVocabulary(): void {
+    this.triggerExport(this.exportService.exportVocabulary(), 'Vocabulary');
+  }
+
+  exportCosts(): void {
+    this.triggerExport(this.exportService.exportCosts(), 'Costs');
+  }
+
+  private triggerExport(obs: any, type: string): void {
+    this.isExporting = true;
+    obs.subscribe({
+      next: () => {
+        this.isExporting = false;
+        this.snackBar.open(`${type} export triggered successfully`, 'Close', { duration: 3000 });
+        this.loadFiles();
+      },
+      error: (error: any) => {
+        this.isExporting = false;
+        this.snackBar.open(`Failed to trigger ${type} export: ${error.message}`, 'Close', { duration: 5000 });
+        console.error(`Error exporting ${type}:`, error);
       }
     });
   }
