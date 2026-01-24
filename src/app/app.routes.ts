@@ -16,12 +16,19 @@ import {MentalArithmeticMainComponent} from './mental-arithmetic/components/arit
 import {ArithmeticSettingsComponent} from './mental-arithmetic/components/arithmetic-settings/arithmetic-settings.component';
 import {ArithmeticSessionComponent} from './mental-arithmetic/components/arithmetic-session/arithmetic-session.component';
 import {ArithmeticListComponent} from './mental-arithmetic/components/arithmetic-list/arithmetic-list.component';
-import {InfluxdbBuckets} from './influxdb-buckets/influxdb-buckets';
+import {ExportsComponent} from './exports/exports.component';
+import {InfluxdbBucketsComponent} from './exports/influxdb-buckets.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'account', component: BackendComponent},
-  {path: 'influxdb-buckets', component: InfluxdbBuckets},
+  {
+    path: 'exports',
+    children: [
+      {path: '', component: ExportsComponent},
+      {path: 'influxdb', component: InfluxdbBucketsComponent}
+    ]
+  },
   {
     path: 'vocabulary',
     component: VocabularyHomeComponent,

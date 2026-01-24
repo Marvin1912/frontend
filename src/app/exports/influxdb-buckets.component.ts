@@ -1,23 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { InfluxBucketsService } from './services/influx-buckets.service';
-import { FileService } from './services/file/file.service';
-import {InfluxBucket, InfluxBucketResponse, InfluxExportRequest, InfluxExportResponse} from './model/influx-bucket';
-import {FileItem, FileItemTime, FileListResponse, FileDeleteResponse} from './services/file/file.model';
+import { InfluxBucket, InfluxBucketResponse, InfluxExportRequest, InfluxExportResponse } from './model/influx-bucket';
 
 @Component({
   selector: 'app-influxdb-buckets',
-  imports: [CommonModule, FormsModule, MatTableModule, MatIconModule, MatButtonModule, MatProgressSpinnerModule, MatTooltipModule],
-  templateUrl: './influxdb-buckets.html',
-  styleUrl: './influxdb-buckets.css'
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule, MatTableModule, MatIconModule, MatButtonModule, MatProgressSpinnerModule, MatTooltipModule],
+  templateUrl: './influxdb-buckets.component.html',
+  styleUrl: './influxdb-buckets.component.css'
 })
-export class InfluxdbBuckets implements OnInit {
+export class InfluxdbBucketsComponent implements OnInit {
   buckets: InfluxBucket[] = [];
   isLoading = false;
   error: string | null = null;
@@ -33,17 +33,10 @@ export class InfluxdbBuckets implements OnInit {
     endTime: ''
   };
 
-  // Files table properties
-  files: FileItem[] = [];
-  isLoadingFiles = false;
-  filesError: string | null = null;
-  displayedColumns: string[] = ['name', 'size', 'modifiedTime', 'actions'];
-
-  constructor(private influxBucketsService: InfluxBucketsService, private fileService: FileService) {}
+  constructor(private influxBucketsService: InfluxBucketsService) {}
 
   ngOnInit() {
     this.loadBuckets();
-    this.loadFiles();
   }
 
   loadBuckets(): void {
@@ -63,27 +56,6 @@ export class InfluxdbBuckets implements OnInit {
         this.isLoading = false;
         this.error = 'Failed to load buckets: ' + error.message;
         console.error('Error loading buckets:', error);
-      }
-    });
-  }
-
-  loadFiles(): void {
-    this.isLoadingFiles = true;
-    this.filesError = null;
-
-    this.fileService.listFiles().subscribe({
-      next: (response: FileListResponse) => {
-        this.isLoadingFiles = false;
-        if (response.success && response.files) {
-          this.files = response.files;
-        } else {
-          this.filesError = 'Failed to load files: Invalid response format';
-        }
-      },
-      error: (error) => {
-        this.isLoadingFiles = false;
-        this.filesError = 'Failed to load files: ' + error.message;
-        console.error('Error loading files:', error);
       }
     });
   }
@@ -153,45 +125,5 @@ export class InfluxdbBuckets implements OnInit {
         console.error('Error exporting bucket:', error);
       }
     });
-  }
-
-  // File utility methods
-  formatFileSize(bytes?: number): string {
-    if (!bytes) return '-';
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
-  }
-
-  formatDate(dateObject?: FileItemTime): string {
-    if (!dateObject) return '-';
-    return new Date(dateObject.value).toLocaleString('de-DE');
-  }
-
-  openFile(webViewLink?: string): void {
-    if (webViewLink) {
-      window.open(webViewLink, '_blank');
-    }
-  }
-
-  deleteFile(fileId: string, fileName: string): void {
-    const confirmed = window.confirm(`Are you sure you want to delete the file "${fileName}"? This action cannot be undone.`);
-
-    if (confirmed) {
-      this.fileService.deleteFile(fileId).subscribe({
-        next: (response: FileDeleteResponse) => {
-          if (response.success) {
-            // Reload the files list after successful deletion
-            this.loadFiles();
-          } else {
-            this.filesError = response.error || 'Failed to delete file';
-          }
-        },
-        error: (error) => {
-          this.filesError = 'Failed to delete file: ' + error.message;
-          console.error('Error deleting file:', error);
-        }
-      });
-    }
   }
 }
