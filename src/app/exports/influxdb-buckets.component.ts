@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,7 +13,7 @@ import { InfluxBucket, InfluxBucketResponse, InfluxExportRequest, InfluxExportRe
 @Component({
   selector: 'app-influxdb-buckets',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatTableModule, MatIconModule, MatButtonModule, MatProgressSpinnerModule, MatTooltipModule],
+  imports: [CommonModule, FormsModule, RouterModule, MatTableModule, MatIconModule, MatButtonModule, MatProgressSpinnerModule, MatTooltipModule],
   templateUrl: './influxdb-buckets.component.html',
   styleUrl: './influxdb-buckets.component.css'
 })
