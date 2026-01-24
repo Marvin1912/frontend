@@ -60,7 +60,11 @@ export class PlantGalleryComponent implements OnInit {
             p.id === plant.id ? {
               ...p, lastWateredDate: lastWateredDate , nextWateredDate: nextWateredDate ?? null
             } : p
-          ).sort((a, b) => a.id - b.id);
+          ).sort((a, b) => {
+            let dateA = a.nextWateredDate ?? '';
+            let dateB = b.nextWateredDate ?? '';
+            return dateA.localeCompare(dateB);
+          });
         });
         const formattedDate: string | null = this.datePipe.transform(now, 'dd.MM.yyyy');
         this.snackBar.open(`Set last watered to: ${formattedDate}`, 'Dismiss', {duration: 5000});
@@ -84,7 +88,11 @@ export class PlantGalleryComponent implements OnInit {
             p.id === plant.id ? {
               ...p, lastFertilizedDate: lastFertilizedDate, nextFertilizedDate: nextFertilizedDate ?? null
             } : p
-          ).sort((a, b) => a.id - b.id);
+          ).sort((a, b) => {
+            let dateA = a.nextWateredDate ?? '';
+            let dateB = b.nextWateredDate ?? '';
+            return dateA.localeCompare(dateB);
+          });
         });
         const formattedDate: string | null = this.datePipe.transform(now, 'dd.MM.yyyy');
         this.snackBar.open(`Set last fertilized to: ${formattedDate}`, 'Dismiss', {duration: 5000});
