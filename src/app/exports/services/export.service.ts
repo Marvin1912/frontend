@@ -12,10 +12,10 @@ export class ExportService {
   constructor(private http: HttpClient) { }
 
   exportVocabulary(): Observable<any> {
-    return this.http.get(`${this.host}/export/vocabulary`);
+    return this.http.post(`${this.host}/export/vocabulary`, {});
   }
 
   exportCosts(): Observable<any> {
-    return this.http.get(`${this.host}/export/costs`);
+    return this.http.post(`${this.host}/export/costs`, {});
   }
 }
