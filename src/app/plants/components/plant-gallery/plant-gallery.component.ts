@@ -27,14 +27,44 @@ export class PlantGalleryComponent implements OnInit {
   ) {
   }
 
+  private today(): string {
+    return new Date().toISOString().split('T')[0];
+  }
+
+  private needsWatering(plant: Plant): boolean {
+    return plant.nextWateredDate ? plant.nextWateredDate <= this.today() : false;
+  }
+
+  private needsFertilizing(plant: Plant): boolean {
+    return plant.nextFertilizedDate ? plant.nextFertilizedDate <= this.today() : false;
+  }
+
+  private sortPlants(plants: Plant[]): Plant[] {
+    return plants.sort((a, b) => {
+      const aNeedsWater = this.needsWatering(a);
+      const bNeedsWater = this.needsWatering(b);
+      if (aNeedsWater && !bNeedsWater) return -1;
+      if (!aNeedsWater && bNeedsWater) return 1;
+      if (aNeedsWater && bNeedsWater) {
+        return (a.nextWateredDate || '').localeCompare(b.nextWateredDate || '');
+      }
+      // Neither needs water
+      const aNeedsFert = this.needsFertilizing(a);
+      const bNeedsFert = this.needsFertilizing(b);
+      if (aNeedsFert && !bNeedsFert) return -1;
+      if (!aNeedsFert && bNeedsFert) return 1;
+      if (aNeedsFert && bNeedsFert) {
+        return (a.nextFertilizedDate || '').localeCompare(b.nextFertilizedDate || '');
+      }
+      // Neither needs fert, sort by nextWateredDate as before
+      return (a.nextWateredDate || '').localeCompare(b.nextWateredDate || '');
+    });
+  }
+
   ngOnInit(): void {
     this.plantService.getPlants()
       .pipe(tap({
-        next: plants => this.plants.set(plants.sort((a, b) => {
-          let dateA = a.nextWateredDate ?? '';
-          let dateB = b.nextWateredDate ?? '';
-          return dateA.localeCompare(dateB);
-        }))
+        next: plants => this.plants.set(this.sortPlants(plants))
       }))
       .subscribe({
         error: err => {
@@ -56,15 +86,11 @@ export class PlantGalleryComponent implements OnInit {
     this.plantService.wateredPlant(plant.id, lastWateredDate).subscribe({
       next: ({nextWateredDate}) => {
         this.plants.update(plants => {
-          return plants.map(p =>
+          return this.sortPlants(plants.map(p =>
             p.id === plant.id ? {
               ...p, lastWateredDate: lastWateredDate , nextWateredDate: nextWateredDate ?? null
             } : p
-          ).sort((a, b) => {
-            let dateA = a.nextWateredDate ?? '';
-            let dateB = b.nextWateredDate ?? '';
-            return dateA.localeCompare(dateB);
-          });
+          ));
         });
         const formattedDate: string | null = this.datePipe.transform(now, 'dd.MM.yyyy');
         this.snackBar.open(`Set last watered to: ${formattedDate}`, 'Dismiss', {duration: 5000});
@@ -84,15 +110,11 @@ export class PlantGalleryComponent implements OnInit {
     this.plantService.fertilizedPlant(plant.id, lastFertilizedDate).subscribe({
       next: ({nextFertilizedDate}) => {
         this.plants.update(plants => {
-          return plants.map(p =>
+          return this.sortPlants(plants.map(p =>
             p.id === plant.id ? {
               ...p, lastFertilizedDate: lastFertilizedDate, nextFertilizedDate: nextFertilizedDate ?? null
             } : p
-          ).sort((a, b) => {
-            let dateA = a.nextWateredDate ?? '';
-            let dateB = b.nextWateredDate ?? '';
-            return dateA.localeCompare(dateB);
-          });
+          ));
         });
         const formattedDate: string | null = this.datePipe.transform(now, 'dd.MM.yyyy');
         this.snackBar.open(`Set last fertilized to: ${formattedDate}`, 'Dismiss', {duration: 5000});
