@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<div class="container mt-4 exports-shell">
   <div class="d-flex justify-content-between align-items-center">
     <h2>Exports</h2>
     <button mat-icon-button routerLink="/" matTooltip="Back to Home">
@@ -38,7 +38,7 @@
   </div>
 
   <!-- Quick Actions Section -->
-  <div class="mt-5">
+  <div class="mt-5 exports-quick">
     <h3>Quick Exports</h3>
     <div class="quick-actions-container mt-3">
       <button mat-raised-button color="primary" (click)="exportVocabulary()" [disabled]="isExporting">
@@ -56,7 +56,7 @@
   </div>
 
   <!-- Files Section -->
-  <div class="mt-5">
+  <div class="mt-5 exports-files">
     <h3>Exported Files</h3>
 
     @if (isLoadingFiles) {

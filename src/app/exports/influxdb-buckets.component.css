@@ -1,28 +1,222 @@
-.container {
+:host {
+  /* Exports: dark fluid theme tokens (component-scoped) */
+  --ex-bg: #0b0f17;
+  --ex-bg-2: #0a1221;
+  --ex-surface: rgba(255, 255, 255, 0.06);
+  --ex-surface-2: rgba(255, 255, 255, 0.08);
+  --ex-surface-3: rgba(255, 255, 255, 0.10);
+
+  --ex-border: rgba(255, 255, 255, 0.10);
+  --ex-border-strong: rgba(255, 255, 255, 0.16);
+  --ex-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+  --ex-shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  --ex-text: rgba(255, 255, 255, 0.92);
+  --ex-text-muted: rgba(255, 255, 255, 0.68);
+  --ex-text-faint: rgba(255, 255, 255, 0.52);
+
+  --ex-accent: #7c5cff; /* violet */
+  --ex-accent-2: #22d3ee; /* cyan */
+  --ex-focus: rgba(124, 92, 255, 0.55);
+
+  --ex-danger: #ff4d4d;
+  --ex-radius-lg: 16px;
+  --ex-radius-md: 12px;
+}
+
+/* Shell */
+.exports-shell {
+  color: var(--ex-text);
+}
+
+.exports-shell.container {
   max-width: 1200px;
+  padding: clamp(16px, 2.4vw, 28px);
+  border-radius: var(--ex-radius-lg);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(124, 92, 255, 0.22), transparent 55%),
+    radial-gradient(900px 500px at 90% 10%, rgba(34, 211, 238, 0.12), transparent 55%),
+    linear-gradient(180deg, var(--ex-bg-2), var(--ex-bg));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: var(--ex-shadow);
 }
 
-.table th {
-  background-color: #f8f9fa;
-  font-weight: 600;
+.exports-shell h2 {
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+  margin: 0;
 }
 
+/* Bootstrap card */
 .card {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: var(--ex-radius-lg);
+  border: 1px solid var(--ex-border);
+  background: linear-gradient(180deg, var(--ex-surface-2), var(--ex-surface));
+  box-shadow: var(--ex-shadow-soft);
+  overflow: hidden;
 }
 
+.card-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.90);
+}
+
+.card-body {
+  color: var(--ex-text);
+}
+
+/* Bootstrap table (dark data-grid feel) */
+.table {
+  color: rgba(255, 255, 255, 0.86);
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: transparent;
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+}
+
+.table thead th {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 600;
+  border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+
+.table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Code chip */
+code {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.88);
+  padding: 0.18rem 0.45rem;
+  border-radius: 10px;
+  font-size: 0.875em;
+}
+
+/* Spinners */
 .spinner-border {
   width: 3rem;
   height: 3rem;
+  color: rgba(255, 255, 255, 0.72);
 }
 
+/* Alerts (dark equivalents) */
+.alert {
+  border-radius: var(--ex-radius-lg);
+  border: 1px solid var(--ex-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.alert-info {
+  border-color: rgba(34, 211, 238, 0.25);
+}
+
+.alert-danger {
+  border-color: rgba(255, 77, 77, 0.28);
+}
+
+/* Buttons */
 .btn {
   min-width: 120px;
+  border-radius: 12px;
 }
 
-code {
-  background-color: #f8f9fa;
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
-  font-size: 0.875em;
+.btn-primary {
+  background-color: var(--ex-accent);
+  border-color: rgba(124, 92, 255, 0.55);
+}
+
+.btn-primary:hover {
+  background-color: #6f52ff;
+  border-color: rgba(124, 92, 255, 0.75);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.btn-outline-secondary {
+  color: rgba(255, 255, 255, 0.78);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.btn-outline-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.26);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ex-focus);
+}
+
+/* Modal */
+.exports-modal.modal.show {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.exports-modal .modal-dialog {
+  max-width: 560px;
+}
+
+.exports-modal .modal-content {
+  border-radius: var(--ex-radius-lg);
+  border: 1px solid var(--ex-border-strong);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.06));
+  box-shadow: var(--ex-shadow);
+  color: var(--ex-text);
+  overflow: hidden;
+}
+
+.exports-modal .modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.exports-modal .modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.exports-modal .form-label {
+  color: rgba(255, 255, 255, 0.80);
+}
+
+.exports-modal .form-control {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.20);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.exports-modal .form-control:focus {
+  border-color: rgba(124, 92, 255, 0.65);
+  box-shadow: 0 0 0 3px var(--ex-focus);
+}
+
+.exports-modal .btn-close {
+  filter: invert(1);
+  opacity: 0.72;
+}
+
+.exports-modal .btn-close:hover {
+  opacity: 1;
+}
+
+.modal-backdrop.show {
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
 }

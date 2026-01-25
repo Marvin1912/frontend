@@ -1,66 +1,168 @@
+:host {
+  /* Exports: dark fluid theme tokens (component-scoped) */
+  --ex-bg: #0b0f17;
+  --ex-bg-2: #0a1221;
+  --ex-surface: rgba(255, 255, 255, 0.06);
+  --ex-surface-2: rgba(255, 255, 255, 0.08);
+  --ex-surface-3: rgba(255, 255, 255, 0.10);
+
+  --ex-border: rgba(255, 255, 255, 0.10);
+  --ex-border-strong: rgba(255, 255, 255, 0.16);
+  --ex-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+  --ex-shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  --ex-text: rgba(255, 255, 255, 0.92);
+  --ex-text-muted: rgba(255, 255, 255, 0.68);
+  --ex-text-faint: rgba(255, 255, 255, 0.52);
+
+  --ex-accent: #7c5cff; /* violet */
+  --ex-accent-2: #22d3ee; /* cyan */
+  --ex-focus: rgba(124, 92, 255, 0.55);
+
+  --ex-danger: #ff4d4d;
+
+  --ex-radius-lg: 16px;
+  --ex-radius-md: 12px;
+  --ex-radius-sm: 10px;
+  --ex-gap: 16px;
+}
+
+/* Shell */
+.exports-shell {
+  color: var(--ex-text);
+}
+
+.exports-shell.container {
+  max-width: 1200px;
+  padding: clamp(16px, 2.4vw, 28px);
+  border-radius: var(--ex-radius-lg);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(124, 92, 255, 0.26), transparent 55%),
+    radial-gradient(900px 500px at 90% 10%, rgba(34, 211, 238, 0.14), transparent 55%),
+    linear-gradient(180deg, var(--ex-bg-2), var(--ex-bg));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: var(--ex-shadow);
+}
+
+.exports-shell h2 {
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.exports-shell h3 {
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.90);
+}
+
+/* Top-right icon button */
+.exports-shell button[mat-icon-button] {
+  border-radius: 12px;
+}
+
+.exports-shell button[mat-icon-button]:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.exports-shell button[mat-icon-button]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ex-focus);
+}
+
+/* Export option cards */
 .export-cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--ex-gap);
 }
 
 .export-card {
-  width: 300px;
+  width: auto;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: var(--ex-radius-lg);
+  border: 1px solid var(--ex-border);
+  background: linear-gradient(180deg, var(--ex-surface-2), var(--ex-surface));
+  box-shadow: var(--ex-shadow-soft);
+  overflow: hidden;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease;
 }
 
 .export-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+  box-shadow: var(--ex-shadow);
+  border-color: var(--ex-border-strong);
+  background: linear-gradient(180deg, var(--ex-surface-3), var(--ex-surface));
+}
+
+.export-card:focus-within {
+  box-shadow: var(--ex-shadow), 0 0 0 3px var(--ex-focus);
 }
 
 .export-card.placeholder {
   cursor: default;
-  opacity: 0.7;
+  opacity: 0.72;
 }
 
 .export-card.placeholder:hover {
   transform: none;
+  box-shadow: var(--ex-shadow-soft);
+  border-color: var(--ex-border);
+}
+
+/* Material card header typography */
+.export-card mat-card-title {
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: -0.01em;
+}
+
+.export-card mat-card-subtitle {
+  color: var(--ex-text-muted);
 }
 
 .card-icon {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 0;
+  padding: 26px 0;
 }
 
 .card-icon mat-icon {
-  font-size: 48px;
-  width: 48px;
-  height: 48px;
-  color: #3f51b5;
+  font-size: 52px;
+  width: 52px;
+  height: 52px;
+  color: var(--ex-accent);
+  filter: drop-shadow(0 10px 18px rgba(124, 92, 255, 0.18));
 }
 
 .placeholder .card-icon mat-icon {
-  color: #999;
+  color: rgba(255, 255, 255, 0.42);
+  filter: none;
 }
 
-.w-100 {
-  width: 100%;
+.export-card mat-card-actions {
+  padding: 12px 16px 16px;
 }
 
-.text-danger {
-  color: #f44336;
-}
-
+/* Quick actions */
 .quick-actions-container {
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   align-items: center;
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  padding: 16px;
+  border-radius: var(--ex-radius-lg);
+  border: 1px solid var(--ex-border);
+  background: linear-gradient(180deg, var(--ex-surface-2), var(--ex-surface));
 }
 
+/* Keep bootstrap spacing helpers working but harmonize */
 .ms-3 {
-  margin-left: 1rem;
+  margin-left: 0.75rem;
 }
 
 .d-inline-block {
@@ -69,4 +171,103 @@
 
 .align-middle {
   vertical-align: middle;
+}
+
+/* Files panel (Bootstrap card) */
+.exports-files .card {
+  border-radius: var(--ex-radius-lg);
+  border: 1px solid var(--ex-border);
+  background: linear-gradient(180deg, var(--ex-surface-2), var(--ex-surface));
+  box-shadow: var(--ex-shadow-soft);
+  overflow: hidden;
+}
+
+.exports-files .card-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.exports-files .card-header h5 {
+  color: rgba(255, 255, 255, 0.90);
+}
+
+.exports-files .card-body {
+  color: var(--ex-text);
+}
+
+.w-100 {
+  width: 100%;
+}
+
+/* Angular Material table (MDC) */
+table[mat-table] {
+  background: transparent;
+}
+
+table[mat-table] .mat-mdc-header-row {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+table[mat-table] .mat-mdc-header-cell {
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 600;
+  border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+
+table[mat-table] .mat-mdc-row {
+  transition: background 160ms ease;
+}
+
+table[mat-table] .mat-mdc-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+table[mat-table] .mat-mdc-cell {
+  color: rgba(255, 255, 255, 0.86);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Action buttons inside table */
+table[mat-table] button[mat-icon-button] {
+  border-radius: 10px;
+}
+
+table[mat-table] button[mat-icon-button]:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+table[mat-table] button[mat-icon-button]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ex-focus);
+}
+
+.text-danger {
+  color: var(--ex-danger) !important;
+}
+
+/* Bootstrap alerts (dark equivalents) */
+.alert {
+  border-radius: var(--ex-radius-lg);
+  border: 1px solid var(--ex-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.alert-info {
+  border-color: rgba(34, 211, 238, 0.25);
+}
+
+.alert-danger {
+  border-color: rgba(255, 77, 77, 0.28);
+}
+
+/* Spinner label */
+.exports-shell p {
+  color: var(--ex-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
 }
