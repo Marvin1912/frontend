@@ -1,4 +1,4 @@
-<div class="container mt-4">
+<div class="container mt-4 exports-shell">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>InfluxDB Buckets</h2>
     <button class="btn btn-outline-secondary" routerLink="/exports">
@@ -75,7 +75,7 @@
 </div>
 
 <!-- Export Modal -->
-<div class="modal fade" [class.show]="showExportModal" [style.display]="showExportModal ? 'block' : 'none'" tabindex="-1" role="dialog" aria-labelledby="exportModalLabel" aria-hidden="true">
+<div class="modal fade exports-modal" [class.show]="showExportModal" [style.display]="showExportModal ? 'block' : 'none'" tabindex="-1" role="dialog" aria-labelledby="exportModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
