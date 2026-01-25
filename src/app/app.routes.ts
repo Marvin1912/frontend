@@ -18,6 +18,7 @@ import {ArithmeticSessionComponent} from './mental-arithmetic/components/arithme
 import {ArithmeticListComponent} from './mental-arithmetic/components/arithmetic-list/arithmetic-list.component';
 import {ExportsComponent} from './exports/exports.component';
 import {InfluxdbBucketsComponent} from './exports/influxdb-buckets.component';
+import {ExportsFilesComponent} from './exports/exports-files.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -26,7 +27,8 @@ export const routes: Routes = [
     path: 'exports',
     children: [
       {path: '', component: ExportsComponent},
-      {path: 'influxdb', component: InfluxdbBucketsComponent}
+      {path: 'influxdb', component: InfluxdbBucketsComponent},
+      {path: 'files', component: ExportsFilesComponent}
     ]
   },
   {
