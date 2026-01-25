@@ -1,0 +1,196 @@
+:host {
+  /* Exports: dark fluid theme tokens (component-scoped) */
+  --ex-bg: #0b0f17;
+  --ex-bg-2: #0a1221;
+  --ex-surface: rgba(255, 255, 255, 0.06);
+  --ex-surface-2: rgba(255, 255, 255, 0.08);
+  --ex-surface-3: rgba(255, 255, 255, 0.10);
+
+  --ex-border: rgba(255, 255, 255, 0.10);
+  --ex-border-strong: rgba(255, 255, 255, 0.16);
+  --ex-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+  --ex-shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  --ex-text: rgba(255, 255, 255, 0.92);
+  --ex-text-muted: rgba(255, 255, 255, 0.68);
+  --ex-text-faint: rgba(255, 255, 255, 0.52);
+
+  --ex-accent: #7c5cff; /* violet */
+  --ex-accent-2: #22d3ee; /* cyan */
+  --ex-focus: rgba(124, 92, 255, 0.55);
+
+  --ex-danger: #ff4d4d;
+
+  --ex-radius-lg: 16px;
+  --ex-radius-md: 12px;
+  --ex-radius-sm: 10px;
+  --ex-gap: 16px;
+}
+
+/* Shell */
+.exports-shell {
+  color: var(--ex-text);
+}
+
+.exports-shell.container {
+  max-width: 1200px;
+  padding: clamp(16px, 2.4vw, 28px);
+  border-radius: var(--ex-radius-lg);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(124, 92, 255, 0.26), transparent 55%),
+    radial-gradient(900px 500px at 90% 10%, rgba(34, 211, 238, 0.14), transparent 55%),
+    linear-gradient(180deg, var(--ex-bg-2), var(--ex-bg));
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: var(--ex-shadow);
+}
+
+.exports-shell h2 {
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.exports-shell h3 {
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.90);
+}
+
+/* Top-right icon button */
+.exports-shell button[mat-icon-button] {
+  border-radius: 12px;
+}
+
+.exports-shell button[mat-icon-button]:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.exports-shell button[mat-icon-button]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ex-focus);
+}
+
+/* Quick actions */
+.quick-actions-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding: 16px;
+  border-radius: var(--ex-radius-lg);
+  border: 1px solid var(--ex-border);
+  background: linear-gradient(180deg, var(--ex-surface-2), var(--ex-surface));
+}
+
+/* Keep bootstrap spacing helpers working but harmonize */
+.ms-3 {
+  margin-left: 0.75rem;
+}
+
+.d-inline-block {
+  display: inline-block;
+}
+
+.align-middle {
+  vertical-align: middle;
+}
+
+/* Files panel (Bootstrap card) */
+.exports-files .card {
+  border-radius: var(--ex-radius-lg);
+  border: 1px solid var(--ex-border);
+  background: linear-gradient(180deg, var(--ex-surface-2), var(--ex-surface));
+  box-shadow: var(--ex-shadow-soft);
+  overflow: hidden;
+}
+
+.exports-files .card-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.exports-files .card-header h5 {
+  color: rgba(255, 255, 255, 0.90);
+}
+
+.exports-files .card-body {
+  color: var(--ex-text);
+}
+
+.w-100 {
+  width: 100%;
+}
+
+/* Angular Material table (MDC) */
+table[mat-table] {
+  background: transparent;
+}
+
+table[mat-table] .mat-mdc-header-row {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+table[mat-table] .mat-mdc-header-cell {
+  color: rgba(255, 255, 255, 0.78);
+  font-weight: 600;
+  border-bottom-color: rgba(255, 255, 255, 0.10);
+}
+
+table[mat-table] .mat-mdc-row {
+  transition: background 160ms ease;
+}
+
+table[mat-table] .mat-mdc-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+table[mat-table] .mat-mdc-cell {
+  color: rgba(255, 255, 255, 0.86);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Action buttons inside table */
+table[mat-table] button[mat-icon-button] {
+  border-radius: 10px;
+}
+
+table[mat-table] button[mat-icon-button]:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+table[mat-table] button[mat-icon-button]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ex-focus);
+}
+
+.text-danger {
+  color: var(--ex-danger) !important;
+}
+
+/* Bootstrap alerts (dark equivalents) */
+.alert {
+  border-radius: var(--ex-radius-lg);
+  border: 1px solid var(--ex-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.alert-info {
+  border-color: rgba(34, 211, 238, 0.25);
+}
+
+.alert-danger {
+  border-color: rgba(255, 77, 77, 0.28);
+}
+
+/* Spinner label */
+.exports-shell p {
+  color: var(--ex-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+
