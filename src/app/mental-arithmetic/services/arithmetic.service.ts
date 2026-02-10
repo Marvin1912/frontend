@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
+import {first, tap} from 'rxjs/operators';
 import {SessionManagerService} from './session-manager.service';
 import {StorageService} from './storage.service';
 import {ScoringService} from './scoring.service';
@@ -11,11 +12,30 @@ import {ArithmeticSession} from '../model/arithmetic-session';
   providedIn: 'root'
 })
 export class ArithmeticService {
+  private cachedSettings: ArithmeticSettings | null = null;
+
   constructor(
       private sessionManager: SessionManagerService,
       private storageService: StorageService,
       private scoringService: ScoringService
   ) {
+    // Load settings once and cache them
+    this.loadSettingsIntoCache();
+  }
+
+  private loadSettingsIntoCache(): void {
+    this.storageService.loadSettings().subscribe({
+      next: (settings) => {
+        this.cachedSettings = settings;
+      },
+      error: (error) => {
+        console.error('Error loading settings into cache:', error);
+      }
+    });
+  }
+
+  getCurrentSettings(): ArithmeticSettings | null {
+    return this.cachedSettings;
   }
 
   createSession(settings: ArithmeticSettings): Observable<ArithmeticSession> {
@@ -63,7 +83,11 @@ export class ArithmeticService {
   }
 
   saveSettingsToStorage(settings: ArithmeticSettings): Observable<ArithmeticSettings> {
-    return this.storageService.saveSettings(settings);
+    return this.storageService.saveSettings(settings).pipe(
+      tap(savedSettings => {
+        this.cachedSettings = savedSettings;
+      })
+    );
   }
 
   loadSettingsFromStorage(): Observable<ArithmeticSettings> {
