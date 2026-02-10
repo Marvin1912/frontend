@@ -94,6 +94,8 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
 
     this.arithmeticService.loadSettingsFromStorage().subscribe({
       next: (settings) => {
+        console.log('[DEBUG] Session - loaded settings from storage:', JSON.stringify(settings));
+        console.log('[DEBUG] Session - operations in loaded settings:', settings?.operations);
         if (!settings) {
           this.snackBar.open('Keine Einstellungen gefunden. Bitte konfigurieren Sie zuerst Ihre Trainingseinstellungen.', 'OK', {
             duration: 5000
@@ -120,6 +122,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   }
 
   private initializeSession(settings: ArithmeticSettings): void {
+    console.log('[DEBUG] Session - initializeSession called with operations:', settings.operations);
     this.sessionTimeLimit = settings.timeLimit ? settings.timeLimit * 60 * 1000 : null;
     this.timeRemaining = this.sessionTimeLimit || 0;
     this.timeElapsed = 0;
