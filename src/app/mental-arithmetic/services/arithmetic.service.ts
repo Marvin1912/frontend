@@ -83,7 +83,11 @@ export class ArithmeticService {
   }
 
   saveSettingsToStorage(settings: ArithmeticSettings): Observable<ArithmeticSettings> {
-    return this.storageService.saveSettings(settings);
+    return this.storageService.saveSettings(settings).pipe(
+      tap(savedSettings => {
+        this.cachedSettings = savedSettings;
+      })
+    );
   }
 
   loadSettingsFromStorage(): Observable<ArithmeticSettings> {
