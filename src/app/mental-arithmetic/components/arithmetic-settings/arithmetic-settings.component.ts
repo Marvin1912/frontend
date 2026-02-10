@@ -94,40 +94,47 @@ export class ArithmeticSettingsComponent implements OnInit {
     return null;
   }
 
+  private buildSettings(): ArithmeticSettings | null {
+    if (!this.settingsForm.valid) {
+      return null;
+    }
+
+    const formValue = this.settingsForm.value;
+
+    // Build operations array
+    const operations: OperationType[] = [];
+    if (formValue.operations.addition) {
+      operations.push(OperationType.ADDITION);
+    }
+    if (formValue.operations.subtraction) {
+      operations.push(OperationType.SUBTRACTION);
+    }
+
+    return {
+      operations: operations,
+      difficulty: formValue.difficulty,
+      timeLimit: formValue.timeLimit,
+      problemCount: formValue.problemCount,
+      showImmediateFeedback: true,
+      allowPause: true,
+      showProgress: true,
+      showTimer: true,
+      enableSound: false,
+      useKeypad: false,
+      shuffleProblems: true,
+      repeatIncorrectProblems: false,
+      maxRetries: 1,
+      showCorrectAnswer: true,
+      displaySettings: {
+        fontSize: 'medium',
+        highContrast: false
+      }
+    };
+  }
+
   onSaveSettings(): void {
-    if (this.settingsForm.valid) {
-      const formValue = this.settingsForm.value;
-
-      // Build operations array
-      const operations: OperationType[] = [];
-      if (formValue.operations.addition) {
-        operations.push(OperationType.ADDITION);
-      }
-      if (formValue.operations.subtraction) {
-        operations.push(OperationType.SUBTRACTION);
-      }
-
-      const settings: ArithmeticSettings = {
-        operations: operations,
-        difficulty: formValue.difficulty,
-        timeLimit: formValue.timeLimit,
-        problemCount: formValue.problemCount,
-        showImmediateFeedback: true,
-        allowPause: true,
-        showProgress: true,
-        showTimer: true,
-        enableSound: false,
-        useKeypad: false,
-        shuffleProblems: true,
-        repeatIncorrectProblems: false,
-        maxRetries: 1,
-        showCorrectAnswer: true,
-        displaySettings: {
-          fontSize: 'medium',
-          highContrast: false
-        }
-      };
-
+    const settings = this.buildSettings();
+    if (settings) {
       this.arithmeticService.saveSettingsToStorage(settings).subscribe({
         error: (error) => console.error('Error saving settings:', error)
       });
@@ -135,9 +142,14 @@ export class ArithmeticSettingsComponent implements OnInit {
   }
 
   onStartTraining(): void {
-    if (this.settingsForm.valid) {
-      this.onSaveSettings();
-      this.router.navigate(['/mental-arithmetic/session']);
+    const settings = this.buildSettings();
+    if (settings) {
+      this.arithmeticService.saveSettingsToStorage(settings).subscribe({
+        next: () => {
+          this.router.navigate(['/mental-arithmetic/session']);
+        },
+        error: (error) => console.error('Error saving settings:', error)
+      });
     }
   }
 
