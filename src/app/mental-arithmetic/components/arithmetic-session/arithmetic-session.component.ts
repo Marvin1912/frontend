@@ -72,7 +72,18 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeForm();
-    this.loadSettingsAndStartSession();
+    this.initializeSessionFromCache();
+  }
+
+  private initializeSessionFromCache(): void {
+    const settings = this.arithmeticService.getCurrentSettings();
+    if (!settings) {
+      // Fallback: load settings synchronously if not cached yet
+      this.loadSettingsAndStartSession();
+    } else {
+      this.initializeSession(settings);
+      this.startSession();
+    }
   }
 
   ngOnDestroy(): void {
