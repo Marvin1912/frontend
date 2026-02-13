@@ -45,18 +45,12 @@ export class PlantGalleryComponent implements OnInit {
       const bNeedsWater = this.needsWatering(b);
       if (aNeedsWater && !bNeedsWater) return -1;
       if (!aNeedsWater && bNeedsWater) return 1;
-      if (aNeedsWater && bNeedsWater) {
-        return (a.nextWateredDate || '').localeCompare(b.nextWateredDate || '');
-      }
-      // Neither needs water
+
       const aNeedsFert = this.needsFertilizing(a);
       const bNeedsFert = this.needsFertilizing(b);
       if (aNeedsFert && !bNeedsFert) return -1;
       if (!aNeedsFert && bNeedsFert) return 1;
-      if (aNeedsFert && bNeedsFert) {
-        return (a.nextFertilizedDate || '').localeCompare(b.nextFertilizedDate || '');
-      }
-      // Neither needs fert, sort by nextWateredDate as before
+
       return (a.nextWateredDate || '').localeCompare(b.nextWateredDate || '');
     });
   }
@@ -127,7 +121,11 @@ export class PlantGalleryComponent implements OnInit {
     });
   }
 
-  isTodayWateringDate(plant: Plant) : boolean {
-    return new Date().toISOString().split('T')[0].localeCompare(plant.nextWateredDate ?? '') == 0;
+  isWateringDue(plant: Plant): boolean {
+    return plant.nextWateredDate ? plant.nextWateredDate <= this.today() : false;
+  }
+
+  isFertilizingDue(plant: Plant): boolean {
+    return plant.nextFertilizedDate ? plant.nextFertilizedDate <= this.today() : false;
   }
 }
