@@ -4,5 +4,6 @@ export const environment = {
   buildTime: ###buildTime###,
   nodeVersion: ###nodeVersion###,
   angularVersion: ###angularVersion###,
-  npmVersion: ###npmVersion###
+  npmVersion: ###npmVersion###,
+  ankiUrl: 'http://anki.home-lab.com'
 };
