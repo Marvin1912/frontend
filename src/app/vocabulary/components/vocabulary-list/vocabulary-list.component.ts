@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, model, ModelSignal, OnInit, ViewChild, computed, signal} from '@angular/core';
+import {AfterViewInit, Component, model, ModelSignal, OnInit, ViewChild, signal, Signal, inject} from '@angular/core';
 import {VocabularyService} from '../../services/vocabulary.service';
 import {Flashcard} from '../../model/Flashcard';
 import {
@@ -22,6 +22,9 @@ import {MatInput} from '@angular/material/input';
 import {MatLabel} from '@angular/material/select';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {FormsModule} from '@angular/forms';
+
+import {toSignal} from "@angular/core/rxjs-interop";
+import {Deck} from "../../model/Deck";
 
 function applyFilter(flashcard: Flashcard, filter: string, value: string): boolean {
 
@@ -87,11 +90,10 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
   readonly totalCount = signal(0);
   readonly hasActiveFilters = signal(false);
 
-  constructor(
-    private vocabularyService: VocabularyService,
-    private router: Router
-  ) {
-  }
+  private vocabularyService: VocabularyService = inject(VocabularyService);
+  private router: Router = inject(Router);
+
+  readonly decks: Signal<Deck[]> = toSignal(this.vocabularyService.getDecks(), {initialValue: []})
 
   ngOnInit(): void {
     this.vocabularyService.getFlashcards().subscribe({
@@ -197,6 +199,10 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
 
   filterWithoutDescription(value: string): void {
     this.filterFlashcards(value, this.withoutDescription());
+  }
+
+  getDeck(flashcard: Flashcard): string {
+    return this.decks().find((value: Deck) => value.id === flashcard.deckId)?.name ?? 'n/a';
   }
 
   private filterFlashcards(value: string, isSet: boolean): void {

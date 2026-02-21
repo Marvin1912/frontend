@@ -1,6 +1,6 @@
 export interface Flashcard {
   id: number | null;
-  deck: string;
+  deckId: number;
   ankiId: string | null;
   front: string;
   back: string;

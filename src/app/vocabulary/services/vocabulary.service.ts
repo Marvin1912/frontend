@@ -15,6 +15,7 @@ import {
   UnexpectedDictionaryError,
   DictionaryError
 } from '../model/dictionary-error.model';
+import {Deck} from "../model/Deck";
 
 @Injectable({
   providedIn: 'root'
@@ -86,6 +87,10 @@ export class VocabularyService {
 
   getTranslation(word: string, context: string): Observable<Translation[]> {
     return this.http.get<Translation[]>(`${this.host}/vocabulary/flashcards/translations?word=${word}&context=${context}`);
+  }
+
+  getDecks(): Observable<Deck[]> {
+    return this.http.get<Deck[]>(`${this.host}/vocabulary/decks`);
   }
 
 }
