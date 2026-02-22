@@ -20,22 +20,30 @@
         <input matInput (keyup)="applyFilter($event)">
       </mat-form-field>
     </div>
-    <div class="col-5">
+    <div class="col-5 d-flex justify-content-between flex-wrap">
       <mat-checkbox
-        [(ngModel)]="withoutArticle"
-        (change)="filterWithoutArticle('withoutArticle')"
-      >Without Article
+          [(ngModel)]="withoutArticle"
+          (change)="filterWithoutArticle('withoutArticle')">
+        Without Article
       </mat-checkbox>
       <mat-checkbox
-        [(ngModel)]="markedAsupdated"
-        (change)="filterMarkedAsUpdated('markedAsUpdated')"
-      >Updated
+          [(ngModel)]="markedAsupdated"
+          (change)="filterMarkedAsUpdated('markedAsUpdated')">
+        Updated
       </mat-checkbox>
       <mat-checkbox
-        [(ngModel)]="withoutDescription"
-        (change)="filterWithoutDescription('withoutDescription')"
-      >Without Description
+          [(ngModel)]="withoutDescription"
+          (change)="filterWithoutDescription('withoutDescription')">
+        Without Description
       </mat-checkbox>
+      <mat-form-field>
+        <mat-label>Deck</mat-label>
+        <mat-select (selectionChange)="filterDeck($event)">
+          @for (deck of decks(); track deck.id) {
+            <mat-option value="{{deck.id}}">{{deck.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
     </div>
     <div class="col-4">
       @if (hasActiveFilters()) {

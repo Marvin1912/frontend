@@ -42,6 +42,7 @@
 }
 
 .router-outlet-container {
+  flex-grow: 1;
   height: 75%;
 }
 

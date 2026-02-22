@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, model, ModelSignal, OnInit, ViewChild, signal, Signal, inject} from '@angular/core';
+import {AfterViewInit, Component, inject, model, ModelSignal, OnInit, Signal, signal, ViewChild} from '@angular/core';
 import {VocabularyService} from '../../services/vocabulary.service';
 import {Flashcard} from '../../model/Flashcard';
 import {
@@ -19,7 +19,7 @@ import {Router} from '@angular/router';
 import {MatSort, MatSortHeader} from '@angular/material/sort';
 import {MatFormField} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
-import {MatLabel} from '@angular/material/select';
+import {MatLabel, MatOption, MatSelect, MatSelectChange} from '@angular/material/select';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {FormsModule} from '@angular/forms';
 
@@ -27,6 +27,11 @@ import {toSignal} from "@angular/core/rxjs-interop";
 import {Deck} from "../../model/Deck";
 
 function applyFilter(flashcard: Flashcard, filter: string, value: string): boolean {
+
+  const deckFilter: RegExpExecArray | null = /deck#([0-9])+/i.exec(filter);
+  if (deckFilter) {
+    return flashcard.deckId === Number(deckFilter[1]);
+  }
 
   if ('withoutArticle' === filter) {
     return !(/^(a|an|to)\s(.+)$/i.test(value));
@@ -67,7 +72,9 @@ function applyFilter(flashcard: Flashcard, filter: string, value: string): boole
     MatFormField,
     MatInput,
     MatCheckbox,
-    FormsModule
+    FormsModule,
+    MatSelect,
+    MatOption
   ],
   templateUrl: './vocabulary-list.component.html',
   styleUrl: './vocabulary-list.component.css'
@@ -189,6 +196,20 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
     this.updateCounts();
   }
 
+  filterDeck(event: MatSelectChange) {
+
+    let deckId: number = event.value;
+
+    this.filters = this.filters.filter(t => !/^deck#[0-9]+$/.test(t));
+
+    if (deckId) {
+      this.filters.push(`deck#${deckId}`);
+    }
+
+    this.flashcards.filter = this.filters.join(',') || ' ';
+    this.updateCounts();
+  }
+
   filterWithoutArticle(value: string): void {
     this.filterFlashcards(value, this.withoutArticle());
   }
@@ -222,4 +243,5 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
     this.filteredCount.set(this.flashcards.filteredData.length);
     this.hasActiveFilters.set(this.filters.length > 0 && this.filters.some(f => f.trim() !== '' && f !== ' '));
   }
+
 }
