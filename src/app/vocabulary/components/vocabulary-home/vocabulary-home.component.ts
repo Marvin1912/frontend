@@ -6,6 +6,8 @@ import {DeckManagementDialog} from "../deck-management-dialog/deck-management-di
 import {MatDialog} from "@angular/material/dialog";
 import {Deck} from "../../model/Deck";
 import {VocabularyService} from "../../services/vocabulary.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {HttpResponse} from "@angular/common/http";
 
 @Component({
   selector: 'vocabulary-home',
@@ -20,8 +22,9 @@ import {VocabularyService} from "../../services/vocabulary.service";
 })
 export class VocabularyHomeComponent {
 
-  readonly dialog: MatDialog = inject(MatDialog);
-  readonly vocabularyService: VocabularyService = inject(VocabularyService);
+  private dialog: MatDialog = inject(MatDialog);
+  private snackBar: MatSnackBar = inject(MatSnackBar);
+  private vocabularyService: VocabularyService = inject(VocabularyService);
 
   openDialog(): void {
     let matDialogRef = this.dialog.open(DeckManagementDialog, {
@@ -34,11 +37,11 @@ export class VocabularyHomeComponent {
         return;
       }
       this.vocabularyService.updateDeck(updatedDeck).subscribe({
-        next: res => {
-          console.log(res);
+        next: (res: HttpResponse<Deck>) => {
+          this.snackBar.open(`Name of deck ${updatedDeck.id} changed to ${res.body?.name}`, 'OK', {duration: 10000});
         },
         error: err => {
-          console.log(err);
+          this.snackBar.open(`Changing name of deck ${updatedDeck.id} failed. ${err}`, 'OK', {duration: 10000});
         }
       });
     });

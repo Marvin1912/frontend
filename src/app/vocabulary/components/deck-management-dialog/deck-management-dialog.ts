@@ -41,7 +41,7 @@ export class DeckManagementDialog {
     });
 
     matDialogRef.afterClosed().subscribe((newName: string | undefined) => {
-      if (!newName) {
+      if (!newName || deck.name == newName) {
         return;
       }
 
