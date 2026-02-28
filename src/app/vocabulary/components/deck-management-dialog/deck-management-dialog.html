@@ -1,0 +1,15 @@
+<mat-dialog-content class="flex-grow-1 d-flex flex-column justify-content-center align-items-center gap-2">
+  @for (deck of decks(); track deck.id) {
+    <div class="w-75 border border-1 border-black rounded p-3 d-flex align-items-center">
+      <span class="w-25">{{ deck.id }}</span>
+      <span class="flex-grow-1">{{ deck.name }}</span>
+      <button mat-icon-button (click)="openDialog(deck)">
+        <mat-icon>build</mat-icon>
+      </button>
+    </div>
+  }
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton cdkFocusInitial [mat-dialog-close]="deck()">Ok</button>
+</mat-dialog-actions>
+

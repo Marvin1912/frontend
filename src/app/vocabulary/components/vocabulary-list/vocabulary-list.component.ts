@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, model, ModelSignal, OnInit, ViewChild, computed, signal} from '@angular/core';
+import {AfterViewInit, Component, inject, model, ModelSignal, OnInit, Signal, signal, ViewChild} from '@angular/core';
 import {VocabularyService} from '../../services/vocabulary.service';
 import {Flashcard} from '../../model/Flashcard';
 import {
@@ -14,16 +14,23 @@ import {
   MatTable,
   MatTableDataSource
 } from '@angular/material/table';
-import {HttpResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {MatSort, MatSortHeader} from '@angular/material/sort';
 import {MatFormField} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
-import {MatLabel} from '@angular/material/select';
+import {MatLabel, MatOption, MatSelect, MatSelectChange} from '@angular/material/select';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {FormsModule} from '@angular/forms';
 
+import {toSignal} from "@angular/core/rxjs-interop";
+import {Deck} from "../../model/Deck";
+
 function applyFilter(flashcard: Flashcard, filter: string, value: string): boolean {
+
+  const deckFilter: RegExpExecArray | null = /deck#([0-9])+/i.exec(filter);
+  if (deckFilter) {
+    return flashcard.deckId === Number(deckFilter[1]);
+  }
 
   if ('withoutArticle' === filter) {
     return !(/^(a|an|to)\s(.+)$/i.test(value));
@@ -64,7 +71,9 @@ function applyFilter(flashcard: Flashcard, filter: string, value: string): boole
     MatFormField,
     MatInput,
     MatCheckbox,
-    FormsModule
+    FormsModule,
+    MatSelect,
+    MatOption
   ],
   templateUrl: './vocabulary-list.component.html',
   styleUrl: './vocabulary-list.component.css'
@@ -73,7 +82,6 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort) sort: MatSort | null = null;
 
-  uploadedFile?: File;
   flashcards: MatTableDataSource<Flashcard> = new MatTableDataSource();
   displayedColumns: string[] = ['deck', 'front', 'back', 'description', 'ankiId'];
   filters: string[] = [];
@@ -87,11 +95,10 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
   readonly totalCount = signal(0);
   readonly hasActiveFilters = signal(false);
 
-  constructor(
-    private vocabularyService: VocabularyService,
-    private router: Router
-  ) {
-  }
+  private vocabularyService: VocabularyService = inject(VocabularyService);
+  private router: Router = inject(Router);
+
+  readonly decks: Signal<Deck[]> = toSignal(this.vocabularyService.getDecks(), {initialValue: []})
 
   ngOnInit(): void {
     this.vocabularyService.getFlashcards().subscribe({
@@ -129,49 +136,8 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onFileSelected(event: any): void {
-    this.uploadedFile = event.target.files[0];
-  }
-
-  uploadFile(): void {
-    if (!this.uploadedFile) {
-      alert('Please select a file first!');
-      return;
-    }
-
-    this.vocabularyService.uploadFlashcardFile(this.uploadedFile).subscribe({
-      next: (response: HttpResponse<number>) => {
-        console.log(`Uploaded ${response} flashcards`);
-      },
-      error: (error) => {
-        console.error('Upload error:', error);
-        alert('Error uploading file.');
-      }
-    });
-  }
-
   navigateToWord(id: number) {
     void this.router.navigate(['/vocabulary/add', id]);
-  }
-
-  downloadFile() {
-    this.vocabularyService.getFlashcardFile().subscribe({
-      next: value => {
-        const filename = value.headers.get('filename') ?? 'Standard.csv';
-
-        const a = document.createElement('a');
-        const objectUrl = URL.createObjectURL(value.body!);
-        a.href = objectUrl;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(objectUrl);
-      },
-      error: err => {
-        console.log(err)
-      }
-    });
   }
 
   applyFilter(event: Event): void {
@@ -181,6 +147,20 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
 
     if (word) {
       this.filters.push(`####${word}####`);
+    }
+
+    this.flashcards.filter = this.filters.join(',') || ' ';
+    this.updateCounts();
+  }
+
+  filterDeck(event: MatSelectChange) {
+
+    let deckId: number = event.value;
+
+    this.filters = this.filters.filter(t => !/^deck#[0-9]+$/.test(t));
+
+    if (deckId) {
+      this.filters.push(`deck#${deckId}`);
     }
 
     this.flashcards.filter = this.filters.join(',') || ' ';
@@ -197,6 +177,10 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
 
   filterWithoutDescription(value: string): void {
     this.filterFlashcards(value, this.withoutDescription());
+  }
+
+  getDeck(flashcard: Flashcard): string {
+    return this.decks().find((value: Deck) => value.id === flashcard.deckId)?.name ?? 'n/a';
   }
 
   private filterFlashcards(value: string, isSet: boolean): void {
@@ -216,4 +200,5 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
     this.filteredCount.set(this.flashcards.filteredData.length);
     this.hasActiveFilters.set(this.filters.length > 0 && this.filters.some(f => f.trim() !== '' && f !== ' '));
   }
+
 }

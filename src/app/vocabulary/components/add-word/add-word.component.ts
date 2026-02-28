@@ -33,7 +33,7 @@ import {
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
 
-const DEFAULT_DECK = 'Standard';
+const DEFAULT_DECK = 1;
 const ARTICLE_PATTERN = /^(?:a|an) [a-z]+/i;
 const VERB_PATTERN = /^to [a-z]+/i;
 const WORD_PATTERN = /^(?:(to|a|an)\s)?([A-Za-z! ]+)(?:\s(sth\.|sb\.|sb\.\/sth\.))?$/i;
@@ -109,7 +109,7 @@ export class AddWordComponent implements OnInit {
 
   private id: number | null = null;
   private ankiId: string | null = null;
-  public deck: string | null = null;
+  public deck: number | null = null;
   public front: string | null = null;
   public back: string | null = null;
   public description: string | null = null;
@@ -212,12 +212,12 @@ export class AddWordComponent implements OnInit {
 
     this.id = flashcard.id;
     this.ankiId = flashcard.ankiId;
-    this.deck = flashcard.deck;
+    this.deck = flashcard.deckId;
     this.front = flashcard.front;
     this.back = flashcard.back;
     this.description = flashcard.description;
 
-    this.patchForm(flashcard.deck, flashcard.front, flashcard.back, flashcard.description);
+    this.patchForm(flashcard.deckId, flashcard.front, flashcard.back, flashcard.description);
     this.wordFormTranslation.patchValue({'word': flashcard.front}, {emitEvent: false});
 
     const match = WORD_PATTERN.exec(flashcard.front!);
@@ -327,8 +327,8 @@ export class AddWordComponent implements OnInit {
     this.patchForm(this.deck, changedWord, this.back, this.description);
   }
 
-  public patchForm(deck: string | null, front: string | null, back: string | null, description: string | null): void {
-    const patch: Record<string, string> = {};
+  public patchForm(deck: number | null, front: string | null, back: string | null, description: string | null): void {
+    const patch: Record<string, any> = {};
     if (deck != null) patch['deck'] = deck;
     if (front != null) patch['front'] = front;
     if (back != null) patch['back'] = back;
@@ -362,7 +362,7 @@ export class AddWordComponent implements OnInit {
     return {
       id: this.id ?? null,
       ankiId: this.ankiId ?? null,
-      deck: this.wordForm.value.deck,
+      deckId: this.wordForm.value.deck,
       front: this.wordForm.value.front,
       back: this.wordForm.value.back,
       description: this.wordForm.value.description,
