@@ -1,0 +1,11 @@
+<div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+  <mat-dialog-content>
+    <mat-form-field>
+      <mat-label>New Name of Deck</mat-label>
+      <input matInput [(ngModel)]="deckname">
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button matButton cdkFocusInitial [mat-dialog-close]="deckname()">Ok</button>
+  </mat-dialog-actions>
+</div>

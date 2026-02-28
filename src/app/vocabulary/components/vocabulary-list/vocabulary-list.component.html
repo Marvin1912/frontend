@@ -1,18 +1,5 @@
 <div class="h-100 d-flex flex-column p-2">
 
-  <div class="pb-2">
-    <div class="d-flex justify-content-between">
-      <div>
-        <input type="file" (change)="onFileSelected($event)"/>
-        <button (click)="uploadFile()">Upload File</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="pb-2">
-    <button (click)="downloadFile()">Download File</button>
-  </div>
-
   <div class="row m-0">
     <div class="col-3 p-0 d-flex flex-column flex-shrink-1">
       <mat-form-field>
@@ -40,7 +27,7 @@
         <mat-label>Deck</mat-label>
         <mat-select (selectionChange)="filterDeck($event)">
           @for (deck of decks(); track deck.id) {
-            <mat-option value="{{deck.id}}">{{deck.name}}</mat-option>
+            <mat-option value="{{deck.id}}">{{ deck.name }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
@@ -50,6 +37,12 @@
         <div class="alert alert-info mb-0 py-2 px-3">
           <small>
             <strong>{{ filteredCount() }}</strong> of <strong>{{ totalCount() }}</strong> entries match current filters
+          </small>
+        </div>
+      } @else {
+        <div class="alert alert-info mb-0 py-2 px-3 text-center">
+          <small>
+            <strong>{{ totalCount() }}</strong> entries
           </small>
         </div>
       }
@@ -87,9 +80,9 @@
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr
-          mat-row
-          *matRowDef="let word; columns: displayedColumns;"
-          (click)="navigateToWord(word.id)"
+            mat-row
+            *matRowDef="let word; columns: displayedColumns;"
+            (click)="navigateToWord(word.id)"
         ></tr>
       </table>
     </div>

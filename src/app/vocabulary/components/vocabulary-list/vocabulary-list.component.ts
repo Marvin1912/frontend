@@ -14,7 +14,6 @@ import {
   MatTable,
   MatTableDataSource
 } from '@angular/material/table';
-import {HttpResponse} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {MatSort, MatSortHeader} from '@angular/material/sort';
 import {MatFormField} from '@angular/material/form-field';
@@ -83,7 +82,6 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort) sort: MatSort | null = null;
 
-  uploadedFile?: File;
   flashcards: MatTableDataSource<Flashcard> = new MatTableDataSource();
   displayedColumns: string[] = ['deck', 'front', 'back', 'description', 'ankiId'];
   filters: string[] = [];
@@ -138,49 +136,8 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onFileSelected(event: any): void {
-    this.uploadedFile = event.target.files[0];
-  }
-
-  uploadFile(): void {
-    if (!this.uploadedFile) {
-      alert('Please select a file first!');
-      return;
-    }
-
-    this.vocabularyService.uploadFlashcardFile(this.uploadedFile).subscribe({
-      next: (response: HttpResponse<number>) => {
-        console.log(`Uploaded ${response} flashcards`);
-      },
-      error: (error) => {
-        console.error('Upload error:', error);
-        alert('Error uploading file.');
-      }
-    });
-  }
-
   navigateToWord(id: number) {
     void this.router.navigate(['/vocabulary/add', id]);
-  }
-
-  downloadFile() {
-    this.vocabularyService.getFlashcardFile().subscribe({
-      next: value => {
-        const filename = value.headers.get('filename') ?? 'Standard.csv';
-
-        const a = document.createElement('a');
-        const objectUrl = URL.createObjectURL(value.body!);
-        a.href = objectUrl;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        URL.revokeObjectURL(objectUrl);
-      },
-      error: err => {
-        console.log(err)
-      }
-    });
   }
 
   applyFilter(event: Event): void {

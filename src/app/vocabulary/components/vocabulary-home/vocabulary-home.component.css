@@ -14,6 +14,7 @@
   flex: 0 0 5%;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .selection-section {
@@ -22,9 +23,10 @@
   gap: 5px
 }
 
+.manage-deck-section,
 .add-word-section,
 .list-section {
-  flex: 1 0 30%;
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -36,6 +38,7 @@
   transition: background-color 0.2s ease;
 }
 
+.manage-deck-section:hover,
 .add-word-section:hover,
 .list-section:hover {
   background-color: #cccccc;
@@ -59,11 +62,12 @@ span {
   }
 
   .selection-section {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     gap: 10px
   }
 
+  .manage-deck-section,
   .add-word-section,
   .list-section {
     width: 20%;

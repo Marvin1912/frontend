@@ -1,19 +1,18 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../../environments/environment';
-import {HttpClient, HttpResponse, HttpErrorResponse} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {DictionaryEntry} from '../model/DictionaryEntry';
 import {Flashcard} from '../model/Flashcard';
 import {Translation} from '../model/Translation';
 import {
-  WordNotFoundError,
-  RateLimitExceededError,
+  DictionaryApiError,
   DictionaryServiceUnavailableError,
   InvalidWordError,
-  DictionaryApiError,
+  RateLimitExceededError,
   UnexpectedDictionaryError,
-  DictionaryError
+  WordNotFoundError
 } from '../model/dictionary-error.model';
 import {Deck} from "../model/Deck";
 
@@ -38,15 +37,15 @@ export class VocabularyService {
       return throwError(() => new InvalidWordError(word));
     } else if (error.status >= 400 && error.status < 500) {
       return throwError(() => new DictionaryApiError(
-        `Client error occurred while fetching dictionary entry for word: ${word}`,
-        error.status,
-        'CLIENT_ERROR'
+          `Client error occurred while fetching dictionary entry for word: ${word}`,
+          error.status,
+          'CLIENT_ERROR'
       ));
     } else if (error.status >= 500) {
       return throwError(() => new DictionaryApiError(
-        `Server error occurred while fetching dictionary entry for word: ${word}`,
-        error.status,
-        'SERVER_ERROR'
+          `Server error occurred while fetching dictionary entry for word: ${word}`,
+          error.status,
+          'SERVER_ERROR'
       ));
     } else {
       return throwError(() => new UnexpectedDictionaryError(word));
@@ -55,7 +54,7 @@ export class VocabularyService {
 
   getWord(word: string): Observable<DictionaryEntry[]> {
     return this.http.get<DictionaryEntry[]>(`${this.host}/vocabulary/words/${word}`).pipe(
-      catchError((error: HttpErrorResponse) => this.handleDictionaryError(error, word))
+        catchError((error: HttpErrorResponse) => this.handleDictionaryError(error, word))
     );
   }
 
@@ -67,10 +66,6 @@ export class VocabularyService {
     return this.http.put<void>(`${this.host}/vocabulary/flashcards`, flashcard, {observe: 'response'});
   }
 
-  getFlashcardFile(): Observable<HttpResponse<Blob>> {
-    return this.http.get(`${this.host}/vocabulary/flashcards/file`, {observe: 'response', responseType: "blob"});
-  }
-
   getFlashcards(): Observable<Flashcard[]> {
     return this.http.get<Flashcard[]>(`${this.host}/vocabulary/flashcards`);
   }
@@ -79,18 +74,16 @@ export class VocabularyService {
     return this.http.post<void>(`${this.host}/vocabulary/flashcards`, flashcard, {observe: 'response'});
   }
 
-  uploadFlashcardFile(file: File): Observable<HttpResponse<number>> {
-    const formData = new FormData();
-    formData.append('file', file);
-    return this.http.put<number>(`${this.host}/vocabulary/flashcards/file`, formData, {observe: 'response'});
-  }
-
   getTranslation(word: string, context: string): Observable<Translation[]> {
     return this.http.get<Translation[]>(`${this.host}/vocabulary/flashcards/translations?word=${word}&context=${context}`);
   }
 
   getDecks(): Observable<Deck[]> {
     return this.http.get<Deck[]>(`${this.host}/vocabulary/decks`);
+  }
+
+  updateDeck(deck: Deck): Observable<HttpResponse<Deck>> {
+    return this.http.put<Deck>(`${this.host}/vocabulary/decks`, deck, {observe: 'response'});
   }
 
 }
