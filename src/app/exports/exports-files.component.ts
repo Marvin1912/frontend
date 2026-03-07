@@ -3,12 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { ExportService } from './services/export.service';
 import { FileService } from './services/file/file.service';
 import { FileDeleteResponse, FileItem, FileItemTime, FileListResponse } from './services/file/file.model';
 
@@ -21,9 +18,7 @@ import { FileDeleteResponse, FileItem, FileItemTime, FileListResponse } from './
     MatTableModule,
     MatIconModule,
     MatButtonModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule,
-    MatSnackBarModule
+    MatTooltipModule
   ],
   templateUrl: './exports-files.component.html',
   styleUrl: './exports-files.component.css'
@@ -32,14 +27,11 @@ export class ExportsFilesComponent implements OnInit {
   // Files table properties
   files: FileItem[] = [];
   isLoadingFiles = false;
-  isExporting = false;
   filesError: string | null = null;
   displayedColumns: string[] = ['name', 'size', 'modifiedTime', 'actions'];
 
   constructor(
-    private fileService: FileService,
-    private exportService: ExportService,
-    private snackBar: MatSnackBar
+    private fileService: FileService
   ) {}
 
   ngOnInit() {
@@ -63,30 +55,6 @@ export class ExportsFilesComponent implements OnInit {
         this.isLoadingFiles = false;
         this.filesError = 'Failed to load files: ' + error.message;
         console.error('Error loading files:', error);
-      }
-    });
-  }
-
-  exportVocabulary(): void {
-    this.triggerExport(this.exportService.exportVocabulary(), 'Vocabulary');
-  }
-
-  exportCosts(): void {
-    this.triggerExport(this.exportService.exportCosts(), 'Costs');
-  }
-
-  private triggerExport(obs: any, type: string): void {
-    this.isExporting = true;
-    obs.subscribe({
-      next: () => {
-        this.isExporting = false;
-        this.snackBar.open(`${type} export triggered successfully`, 'Close', { duration: 3000 });
-        this.loadFiles();
-      },
-      error: (error: any) => {
-        this.isExporting = false;
-        this.snackBar.open(`Failed to trigger ${type} export: ${error.message}`, 'Close', { duration: 5000 });
-        console.error(`Error exporting ${type}:`, error);
       }
     });
   }
