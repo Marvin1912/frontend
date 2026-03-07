@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
@@ -18,6 +19,7 @@ import { FileDeleteResponse, FileItem, FileItemTime, FileListResponse } from './
     MatTableModule,
     MatIconModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     MatTooltipModule
   ],
   templateUrl: './exports-files.component.html',
