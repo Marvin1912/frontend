@@ -67,5 +67,6 @@ export class BackendComponent {
   onFileSelected(event: Event): void {
     const target = event.target as HTMLInputElement;
     this.uploadedFile = target.files?.[0];
+    this.cdr.markForCheck();
   }
 }

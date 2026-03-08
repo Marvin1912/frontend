@@ -1,28 +1,34 @@
-<div class="container-fluid h-100 d-flex flex-column bg-dark text-light">
+<div class="backend">
 
-  <div class="header-section" style="flex: 0 0 auto; padding: 1rem; border-bottom: 1px solid var(--bs-secondary);">
-    <div class="d-flex justify-content-center mb-3">
-      <button mat-fab routerLink="/" class="position-absolute start-0 ms-2 z-3">
+  <!-- ── Topbar ──────────────────────────────────────── -->
+  <header class="topbar">
+    <div class="topbar__brand">
+      <button mat-icon-button routerLink="/" matTooltip="Home" class="topbar__home-btn">
         <mat-icon>home</mat-icon>
       </button>
-      <h1 class="text-light m-0">Auswertung der Kontoauszüge</h1>
+      <span class="topbar__hex">⬡</span>
+      <span class="topbar__name">KONTOAUSZÜGE</span>
     </div>
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="d-flex gap-2 align-items-center">
-        <input type="file" class="form-control bg-secondary text-light border-secondary" (change)="onFileSelected($event)" style="width: auto;"/>
-        <button mat-mini-fab (click)="uploadFile()" matTooltip="Upload File">
-          <mat-icon>upload</mat-icon>
-        </button>
-      </div>
-      <div>
-        <button mat-mini-fab (click)="backupCostData()" matTooltip="Backup Cost Data">
-          <mat-icon>backup</mat-icon>
-        </button>
-      </div>
+    <div class="topbar__actions">
+      <label class="file-input">
+        <input type="file" class="file-input__native" (change)="onFileSelected($event)" />
+        <span class="file-input__label">
+          <mat-icon class="file-input__icon">attach_file</mat-icon>
+          {{ uploadedFile ? uploadedFile.name : 'Datei wählen' }}
+        </span>
+      </label>
+      <button mat-mini-fab (click)="uploadFile()" matTooltip="Upload" class="action-btn action-btn--upload">
+        <mat-icon>upload</mat-icon>
+      </button>
+      <button mat-mini-fab (click)="backupCostData()" matTooltip="Backup" class="action-btn action-btn--backup">
+        <mat-icon>backup</mat-icon>
+      </button>
     </div>
-  </div>
+  </header>
 
-  <div class="content-section" style="flex: 1 1 auto; overflow: hidden;">
+  <!-- ── Content ─────────────────────────────────────── -->
+  <div class="backend__content">
     <app-bookings [bookings]="responseData"></app-bookings>
   </div>
+
 </div>

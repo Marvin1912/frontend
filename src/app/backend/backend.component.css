@@ -1,9 +1,189 @@
-/* Minimal custom CSS - Bootstrap handles most styling */
-.header-section {
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ── Design Tokens ───────────────────────────────── */
+:host {
+  --bg:          #06080e;
+  --surface:     #0c1018;
+  --raised:      #111826;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-mid:  rgba(255, 255, 255, 0.13);
+
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
+
+  --c-a:  #4da6ff;  --cg-a: rgba(77,  166, 255, 0.18);
+  --c-p:  #22d35e;  --cg-p: rgba(34,  211,  94, 0.18);
+  --c-e:  #fb7185;  --cg-e: rgba(251, 113, 133, 0.18);
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 70% 35% at 0% 0%,    rgba(77,  166, 255, 0.05) 0%, transparent 100%),
+    radial-gradient(ellipse 50% 35% at 100% 100%, rgba(167, 139, 250, 0.04) 0%, transparent 100%),
+    radial-gradient(circle, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: auto, auto, 28px 28px;
+}
+
+/* ── Shell ───────────────────────────────────────── */
+.backend {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Topbar ──────────────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: max(0.75rem, env(safe-area-inset-top)) max(1.25rem, env(safe-area-inset-right)) 0.75rem max(1.25rem, env(safe-area-inset-left));
+  background: rgba(6, 8, 14, 0.88);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 rgba(77, 166, 255, 0.06);
   flex-shrink: 0;
 }
 
-.content-section {
-  flex: 1;
+.topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.topbar__home-btn.mat-mdc-icon-button {
+  color: var(--text-muted) !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  transition: color 0.2s !important;
+}
+
+.topbar__home-btn.mat-mdc-icon-button:hover {
+  color: var(--c-a) !important;
+  background: rgba(77, 166, 255, 0.08) !important;
+}
+
+.topbar__hex {
+  color: var(--c-a);
+  font-size: 0.9rem;
+  filter: drop-shadow(0 0 6px rgba(77, 166, 255, 0.5));
+}
+
+.topbar__name {
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+}
+
+/* ── Topbar Actions ──────────────────────────────── */
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ── File Input ──────────────────────────────────── */
+.file-input {
+  position: relative;
+  cursor: pointer;
+}
+
+.file-input__native {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+}
+
+.file-input__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  height: 28px;
+  max-width: 240px;
+  padding: 0 0.75rem;
+  background: var(--raised);
+  border: 1px solid var(--border-mid);
+  border-radius: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: border-color 0.2s, color 0.2s;
+  pointer-events: none;
+}
+
+.file-input__icon {
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+  line-height: 14px !important;
+  flex-shrink: 0;
+}
+
+.file-input:hover .file-input__label {
+  border-color: rgba(77, 166, 255, 0.4);
+  color: var(--c-a);
+}
+
+/* ── Action Buttons ──────────────────────────────── */
+.action-btn.mat-mdc-mini-fab {
+  box-shadow: none !important;
+  width: 28px !important;
+  height: 28px !important;
+  border: 1px solid var(--border-mid) !important;
+}
+
+.action-btn .mat-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  line-height: 16px !important;
+}
+
+.action-btn--upload.mat-mdc-mini-fab {
+  background: rgba(77, 166, 255, 0.1) !important;
+  color: var(--c-a) !important;
+  border-color: rgba(77, 166, 255, 0.3) !important;
+}
+
+.action-btn--upload.mat-mdc-mini-fab:hover {
+  background: rgba(77, 166, 255, 0.2) !important;
+}
+
+.action-btn--backup.mat-mdc-mini-fab {
+  background: var(--raised) !important;
+  color: var(--text-muted) !important;
+}
+
+.action-btn--backup.mat-mdc-mini-fab:hover {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border-mid) !important;
+}
+
+/* ── Content Area ────────────────────────────────── */
+.backend__content {
+  flex: 1 1 auto;
+  overflow: hidden;
+  min-height: 0;
 }

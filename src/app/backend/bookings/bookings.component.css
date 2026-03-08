@@ -1,9 +1,216 @@
-/* Minimal custom CSS - Bootstrap handles most styling */
-.booking-header {
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ── Design Tokens ───────────────────────────────── */
+:host {
+  --bg:          #06080e;
+  --surface:     #0c1018;
+  --raised:      #111826;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-mid:  rgba(255, 255, 255, 0.13);
+
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
+
+  --c-a:  #4da6ff;  --cg-a: rgba(77,  166, 255, 0.18);
+  --c-p:  #22d35e;  --cg-p: rgba(34,  211,  94, 0.18);
+  --c-v:  #fbbf24;  --cg-v: rgba(251, 191,  36, 0.18);
+  --c-m:  #a78bfa;  --cg-m: rgba(167, 139, 250, 0.18);
+  --c-e:  #fb7185;  --cg-e: rgba(251, 113, 133, 0.18);
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 70% 35% at 0% 0%,    rgba(77,  166, 255, 0.05) 0%, transparent 100%),
+    radial-gradient(ellipse 50% 35% at 100% 100%, rgba(167, 139, 250, 0.04) 0%, transparent 100%),
+    radial-gradient(circle, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: auto, auto, 28px 28px;
+}
+
+/* ── Scroll Container ────────────────────────────── */
+.bookings {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.bookings__scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  overflow-y: auto;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .bookings__scroll {
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+}
+
+/* ── Booking Panel ───────────────────────────────── */
+.booking-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 calc(100% - 2rem);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  animation: fadeUp 0.45s ease both;
+}
+
+.booking-panel:nth-child(1) { animation-delay: 0.05s; }
+.booking-panel:nth-child(2) { animation-delay: 0.12s; }
+.booking-panel:nth-child(3) { animation-delay: 0.19s; }
+.booking-panel:nth-child(4) { animation-delay: 0.26s; }
+.booking-panel:nth-child(5) { animation-delay: 0.33s; }
+.booking-panel:nth-child(n+6) { animation-delay: 0.4s; }
+
+/* ── Panel Header ────────────────────────────────── */
+.panel__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--raised);
   flex-shrink: 0;
 }
 
-.booking-content {
-  flex: 1;
+.panel__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.panel__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-p);
+  flex-shrink: 0;
+  animation: blink 2s ease-in-out infinite;
+  box-shadow: 0 0 5px var(--c-p);
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.2; }
+}
+
+.panel__month {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text);
+}
+
+/* ── Stats Row ───────────────────────────────────── */
+.panel__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid var(--border-mid);
+  background: var(--surface);
+}
+
+.stat__key {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.stat__val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.stat--neutral .stat__val { color: var(--text-muted); }
+
+.stat--income {
+  border-color: rgba(34, 211, 94, 0.25);
+  background: rgba(34, 211, 94, 0.05);
+}
+.stat--income .stat__val { color: var(--c-p); }
+
+.stat--positive {
+  border-color: rgba(77, 166, 255, 0.25);
+  background: rgba(77, 166, 255, 0.05);
+}
+.stat--positive .stat__val { color: var(--c-a); }
+
+.stat--negative {
+  border-color: rgba(251, 113, 133, 0.25);
+  background: rgba(251, 113, 133, 0.05);
+}
+.stat--negative .stat__val { color: var(--c-e); }
+
+/* ── Panel Body ──────────────────────────────────── */
+.panel__body {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  flex: 1 1 auto;
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .panel__body {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.panel__col {
+  overflow: hidden;
+  min-height: 0;
+  border-right: 1px solid var(--border);
+}
+
+.panel__col:last-child {
+  border-right: none;
+}
+
+.panel__col--split {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel__col--split > * {
+  flex: 1 1 50%;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.panel__col--split > *:first-child {
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Entrance Animation ──────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
