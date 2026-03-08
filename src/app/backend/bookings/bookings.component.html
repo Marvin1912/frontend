@@ -1,41 +1,44 @@
-<div class="h-100 d-flex flex-column justify-content-center align-items-center bg-dark text-light">
-  <div class="h-100 w-100 d-flex flex-column overflow-auto gap-3">
+<div class="bookings">
+  <div class="bookings__scroll">
 
     @for (booking of bookings?.bookingsPerMonth; track $index) {
-      <div class="d-flex flex-column justify-content-between overflow-auto border border-secondary"
-           style="flex: 0 0 100%">
-        <div class="row m-0 booking-header" style="flex: 0 0 auto; padding: 0.25rem;">
-          <div class="d-flex flex-column align-items-center">
-            <h3 class="text-light fs-5 mb-2">{{ booking.year }}-{{ booking.month }}</h3>
-            <div class="d-flex gap-2">
-              <span class="badge bg-secondary">Gesamtausgaben: {{ getTotalAmount(booking) | number: '.2' : 'de' }}</span>
-              <span class="badge bg-success">Einnahmen: {{ getIncomeAmount(booking) | number: '.2' : 'de' }}</span>
-              <span class="badge"
-                [ngClass]="getEarningsDifference(booking) >= 0 ? 'bg-primary' : 'bg-danger'"
-              >Differenz: {{ getEarningsDifference(booking) | number: '.2' : 'de' }}
-                @if (getEarningsDifference(booking) < 0) {
-                  (Die Ausgaben sind höher als die Einnahmen!)
-                }
-              </span>
-            </div>
+      <div class="booking-panel">
+
+        <!-- ── Panel Header ──────────────────────────────── -->
+        <div class="panel__header">
+          <div class="panel__title">
+            <span class="panel__dot"></span>
+            <span class="panel__month">{{ booking.year }}-{{ booking.month }}</span>
+          </div>
+          <div class="panel__stats">
+            <span class="stat stat--neutral">
+              <span class="stat__key">Ausgaben</span>
+              <span class="stat__val">{{ getTotalAmount(booking) | number: '.2' : 'de' }}</span>
+            </span>
+            <span class="stat stat--income">
+              <span class="stat__key">Einnahmen</span>
+              <span class="stat__val">{{ getIncomeAmount(booking) | number: '.2' : 'de' }}</span>
+            </span>
+            <span class="stat"
+                  [class.stat--positive]="getEarningsDifference(booking) >= 0"
+                  [class.stat--negative]="getEarningsDifference(booking) < 0">
+              <span class="stat__key">Differenz</span>
+              <span class="stat__val">{{ getEarningsDifference(booking) | number: '.2' : 'de' }}</span>
+            </span>
           </div>
         </div>
 
-        <div class="row m-0 p-1 booking-content" style="flex: 1 1 auto; overflow: hidden;">
-          <div class="col h-100">
+        <!-- ── Panel Body ────────────────────────────────── -->
+        <div class="panel__body">
+          <div class="panel__col">
             <app-table title="Generelle Buchungen" [bookings]="booking.usualBookings"
                        (itemRemoved)="onItemRemoved($event, booking)"></app-table>
           </div>
-
-          <div class="col h-100 d-flex flex-column gap-1">
-            <div style="flex: 0 0 50%; overflow: hidden;">
-              <app-table title="Täglicher Bedarf" [bookings]="booking.dailyCosts"
-                         (itemRemoved)="onItemRemoved($event, booking)"></app-table>
-            </div>
-            <div style="flex: 0 0 50%; overflow: hidden;">
-              <app-table title="Einkommen" [bookings]="booking.incomes"
-                         (itemRemoved)="onItemRemoved($event, booking)"></app-table>
-            </div>
+          <div class="panel__col panel__col--split">
+            <app-table title="Täglicher Bedarf" [bookings]="booking.dailyCosts"
+                       (itemRemoved)="onItemRemoved($event, booking)"></app-table>
+            <app-table title="Einkommen" [bookings]="booking.incomes"
+                       (itemRemoved)="onItemRemoved($event, booking)"></app-table>
           </div>
         </div>
 
