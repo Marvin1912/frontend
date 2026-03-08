@@ -3,14 +3,15 @@ import {BookingsDTO} from '../model/BookingsDTO';
 import {TableComponent} from '../table/table.component';
 import {MonthlyBookingEntriesDTO} from '../model/MonthlyBookingEntriesDTO';
 import {BookingEntryDTO} from '../model/BookingEntryDTO';
-import {DecimalPipe, NgClass} from '@angular/common';
+import {DecimalPipe} from '@angular/common';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @Component({
   selector: 'app-bookings',
   imports: [
     TableComponent,
     DecimalPipe,
-    NgClass
+    MatExpansionModule
   ],
   templateUrl: './bookings.component.html',
   styleUrl: './bookings.component.css',

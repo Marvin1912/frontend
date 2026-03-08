@@ -56,16 +56,21 @@
   }
 }
 
-/* ── Booking Panel ───────────────────────────────── */
-.booking-panel {
+/* ── mat-accordion override ──────────────────────── */
+mat-accordion {
   display: flex;
   flex-direction: column;
-  flex: 0 0 calc(100% - 2rem);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  gap: 0.75rem;
+}
+
+/* ── Booking Panel (mat-expansion-panel) ─────────── */
+.booking-panel {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
   overflow: hidden;
   animation: fadeUp 0.45s ease both;
+  box-shadow: none !important;
 }
 
 .booking-panel:nth-child(1) { animation-delay: 0.05s; }
@@ -76,14 +81,26 @@
 .booking-panel:nth-child(n+6) { animation-delay: 0.4s; }
 
 /* ── Panel Header ────────────────────────────────── */
+::ng-deep .booking-panel .mat-expansion-panel-header {
+  background: var(--raised) !important;
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  height: auto !important;
+}
+
+::ng-deep .booking-panel .mat-expansion-panel-header:hover {
+  background: color-mix(in srgb, var(--raised) 85%, var(--c-a) 15%) !important;
+}
+
+::ng-deep .booking-panel .mat-expansion-indicator::after {
+  color: var(--text-muted);
+}
+
 .panel__header {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--border);
-  background: var(--raised);
   flex-shrink: 0;
 }
 
@@ -117,10 +134,17 @@
 }
 
 /* ── Stats Row ───────────────────────────────────── */
+::ng-deep .booking-panel .mat-expansion-panel-header .mat-expansion-panel-header-description {
+  flex-grow: 1;
+  margin: 0;
+  color: inherit;
+}
+
 .panel__stats {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
+  flex-grow: 1;
 }
 
 .stat {
