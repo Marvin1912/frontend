@@ -28,7 +28,13 @@
 
   <!-- ── Content ─────────────────────────────────────── -->
   <div class="backend__content">
-    <app-bookings [bookings]="responseData"></app-bookings>
+    @if (isLoading) {
+      <div class="backend__spinner">
+        <mat-spinner></mat-spinner>
+      </div>
+    } @else {
+      <app-bookings [bookings]="responseData"></app-bookings>
+    }
   </div>
 
 </div>

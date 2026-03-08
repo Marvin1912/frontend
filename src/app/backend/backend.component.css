@@ -187,3 +187,11 @@
   overflow: hidden;
   min-height: 0;
 }
+
+/* ── Spinner ─────────────────────────────────────── */
+.backend__spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
