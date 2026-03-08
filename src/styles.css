@@ -3,3 +3,32 @@
 html, body { height: 100vh; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+/* ── Bookings: mat-expansion-panel overrides ─────── */
+/* Scoped to .booking-panel to avoid leaking to other components. */
+.booking-panel .mat-expansion-panel-header {
+  background: var(--raised) !important;
+  border-bottom: 1px solid var(--border);
+  padding: 0.5rem 1rem;
+  height: auto !important;
+}
+
+.booking-panel .mat-expansion-panel-header:hover {
+  background: color-mix(in srgb, var(--raised) 85%, var(--c-a) 15%) !important;
+}
+
+.booking-panel .mat-expansion-indicator::after {
+  color: var(--text-muted);
+}
+
+.booking-panel .mat-expansion-panel-header .mat-expansion-panel-header-description {
+  flex-grow: 1;
+  margin: 0;
+  color: inherit;
+}
+
+.booking-panel .mat-expansion-panel-body {
+  padding: 0 !important;
+  height: calc(100vh - 165px);
+  overflow: hidden;
+}
+
