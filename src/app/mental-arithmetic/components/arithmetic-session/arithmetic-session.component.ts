@@ -488,7 +488,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   }
 
   viewResults(): void {
-    this.router.navigate(['/mental-arithmetic/main']);
+    this.router.navigate(['/mental-arithmetic/arithmetic-list']);
   }
 
   goToMain(): void {
