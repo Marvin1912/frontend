@@ -1,36 +1,41 @@
-<div class="h-100 d-flex flex-column border border-secondary bg-dark text-light">
-  <div class="d-flex justify-content-between align-items-center bg-secondary p-1">
-    <h6 class="m-0 text-light fs-6">{{ title || 'n/a' }}</h6>
-    <button mat-mini-fab (click)="toggleSort()"
-            matTooltip="Sortierung umschalten ({{ sortDirection === 'desc' ? 'Höchste zuerst' : 'Niedrigste zuerst' }}"
-            class="mat-dark">
-      <mat-icon>{{ sortDirection === 'desc' ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
-    </button>
+<div class="tbl">
+
+  <!-- ── Table Header ──────────────────────────────── -->
+  <div class="tbl__header">
+    <div class="tbl__title-row">
+      <h6 class="tbl__title">{{ title || 'n/a' }}</h6>
+      <button mat-mini-fab (click)="toggleSort()"
+              [matTooltip]="'Sortierung: ' + (sortDirection === 'desc' ? 'Höchste zuerst' : 'Niedrigste zuerst')"
+              class="tbl__sort-btn">
+        <mat-icon>{{ sortDirection === 'desc' ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
+      </button>
+    </div>
   </div>
-  <div class="table-header-separator" style="margin: 2px 0;"></div>
-  <div class="flex-grow-1 overflow-auto px-1">
-    <table mat-table [dataSource]="getSortedBookings() || []" class="text-light">
+
+  <!-- ── Table Body ────────────────────────────────── -->
+  <div class="tbl__body">
+    <table mat-table [dataSource]="getSortedBookings() || []" class="tbl__mat">
 
       <ng-container matColumnDef="creditName">
-        <th mat-header-cell *matHeaderCellDef class="text-light">An</th>
+        <th mat-header-cell *matHeaderCellDef>An</th>
         <td mat-cell *matCellDef="let element">{{ element.creditName }}</td>
       </ng-container>
 
       <ng-container matColumnDef="additionalInfo">
-        <th mat-header-cell *matHeaderCellDef class="text-light">Buchungstext</th>
+        <th mat-header-cell *matHeaderCellDef>Buchungstext</th>
         <td mat-cell *matCellDef="let element">{{ element.additionalInfo }}</td>
       </ng-container>
 
       <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef class="text-light">Betrag</th>
+        <th mat-header-cell *matHeaderCellDef>Betrag</th>
         <td mat-cell *matCellDef="let element">{{ element.amount | number: '.2' : 'de' }}</td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="text-light"></th>
+        <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let element">
           <button mat-mini-fab color="warn" (click)="removeItem(element)"
-                  matTooltip="Entfernen">
+                  matTooltip="Entfernen" class="tbl__delete-btn">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
@@ -41,8 +46,10 @@
     </table>
   </div>
 
-  <div class="border-top border-secondary bg-secondary mx-1 my-1 p-1">
-    <strong class="text-light fs-6 small">Summe: {{ getTotalAmount() | number: '.2' : 'de' }}</strong>
+  <!-- ── Table Footer ──────────────────────────────── -->
+  <div class="tbl__footer">
+    <span class="tbl__sum-label">Summe</span>
+    <span class="tbl__sum-val">{{ getTotalAmount() | number: '.2' : 'de' }}</span>
   </div>
 
 </div>
