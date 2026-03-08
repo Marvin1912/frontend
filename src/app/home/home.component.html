@@ -12,6 +12,40 @@
   <!-- ── Main Layout ────────────────────────────────── -->
   <div class="layout">
 
+    <!-- System Info Panel -->
+    <aside class="sysinfo">
+      <div class="sysinfo__header">
+        <span class="sysinfo__dot"></span>
+        <span>SYSTEM</span>
+      </div>
+      <div class="sysinfo__grid">
+        <div class="sysinfo__row">
+          <span class="sysinfo__key">node</span>
+          <span class="sysinfo__val">{{ metadata.nodeVersion }}</span>
+        </div>
+        <div class="sysinfo__row">
+          <span class="sysinfo__key">npm</span>
+          <span class="sysinfo__val">{{ metadata.npmVersion }}</span>
+        </div>
+        <div class="sysinfo__row">
+          <span class="sysinfo__key">angular</span>
+          <span class="sysinfo__val">{{ metadata.angularVersion }}</span>
+        </div>
+        <div class="sysinfo__row">
+          <span class="sysinfo__key">version</span>
+          <span class="sysinfo__val">{{ metadata.projectVersion }}</span>
+        </div>
+        <div class="sysinfo__row">
+          <span class="sysinfo__key">env</span>
+          <span class="sysinfo__val">{{ metadata.environment }}</span>
+        </div>
+        <div class="sysinfo__row">
+          <span class="sysinfo__key">built</span>
+          <span class="sysinfo__val">{{ metadata.buildTime | date:'dd.MM.yy HH:mm' }}</span>
+        </div>
+      </div>
+    </aside>
+
     <!-- Navigation Cards -->
     <main class="navsection">
       <div class="navgrid">
@@ -53,40 +87,6 @@
 
       </div>
     </main>
-
-    <!-- System Info Panel -->
-    <aside class="sysinfo">
-      <div class="sysinfo__header">
-        <span class="sysinfo__dot"></span>
-        <span>SYSTEM</span>
-      </div>
-      <div class="sysinfo__grid">
-        <div class="sysinfo__row">
-          <span class="sysinfo__key">node</span>
-          <span class="sysinfo__val">{{ metadata.nodeVersion }}</span>
-        </div>
-        <div class="sysinfo__row">
-          <span class="sysinfo__key">npm</span>
-          <span class="sysinfo__val">{{ metadata.npmVersion }}</span>
-        </div>
-        <div class="sysinfo__row">
-          <span class="sysinfo__key">angular</span>
-          <span class="sysinfo__val">{{ metadata.angularVersion }}</span>
-        </div>
-        <div class="sysinfo__row">
-          <span class="sysinfo__key">version</span>
-          <span class="sysinfo__val">{{ metadata.projectVersion }}</span>
-        </div>
-        <div class="sysinfo__row">
-          <span class="sysinfo__key">env</span>
-          <span class="sysinfo__val">{{ metadata.environment }}</span>
-        </div>
-        <div class="sysinfo__row">
-          <span class="sysinfo__key">built</span>
-          <span class="sysinfo__val">{{ metadata.buildTime | date:'dd.MM.yy HH:mm' }}</span>
-        </div>
-      </div>
-    </aside>
 
   </div>
 </div>

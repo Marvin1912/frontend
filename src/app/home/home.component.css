@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 /* ── Design Tokens ───────────────────────────────── */
 :host {
@@ -21,7 +21,7 @@
 
   display: block;
   min-height: 100dvh;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Outfit', sans-serif;
   color: var(--text);
   background-color: var(--bg);
   background-image:
@@ -51,9 +51,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-weight: 800;
-  font-size: 0.8rem;
-  letter-spacing: 0.15em;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
   color: var(--text-muted);
 }
 
@@ -114,9 +114,17 @@
   .navgrid { gap: 1rem; }
 }
 
-/* Last odd card spans both columns */
+/* Last odd card: centered at single-column width, not stretched */
 .navcard:last-child:nth-child(odd) {
   grid-column: 1 / -1;
+  justify-self: center;
+  width: calc(50% - 0.375rem);
+}
+
+@media (min-width: 640px) {
+  .navcard:last-child:nth-child(odd) {
+    width: calc(50% - 0.5rem);
+  }
 }
 
 /* ── Nav Cards ───────────────────────────────────── */
@@ -211,10 +219,11 @@
 /* ── Card Text ───────────────────────────────────── */
 .navcard__title {
   margin: 0;
-  font-size: clamp(0.85rem, 2vw, 1rem);
-  font-weight: 700;
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+  font-weight: 600;
   color: var(--text);
-  line-height: 1.2;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
 }
 
 .navcard__sub {
