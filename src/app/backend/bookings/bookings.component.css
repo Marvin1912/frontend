@@ -80,22 +80,6 @@ mat-accordion {
 .booking-panel:nth-child(5) { animation-delay: 0.33s; }
 .booking-panel:nth-child(n+6) { animation-delay: 0.4s; }
 
-/* ── Panel Header ────────────────────────────────── */
-::ng-deep .booking-panel .mat-expansion-panel-header {
-  background: var(--raised) !important;
-  border-bottom: 1px solid var(--border);
-  padding: 0.5rem 1rem;
-  height: auto !important;
-}
-
-::ng-deep .booking-panel .mat-expansion-panel-header:hover {
-  background: color-mix(in srgb, var(--raised) 85%, var(--c-a) 15%) !important;
-}
-
-::ng-deep .booking-panel .mat-expansion-indicator::after {
-  color: var(--text-muted);
-}
-
 .panel__header {
   display: flex;
   flex-wrap: wrap;
@@ -134,12 +118,6 @@ mat-accordion {
 }
 
 /* ── Stats Row ───────────────────────────────────── */
-::ng-deep .booking-panel .mat-expansion-panel-header .mat-expansion-panel-header-description {
-  flex-grow: 1;
-  margin: 0;
-  color: inherit;
-}
-
 .panel__stats {
   display: flex;
   flex-wrap: wrap;
@@ -192,13 +170,6 @@ mat-accordion {
   background: rgba(251, 113, 133, 0.05);
 }
 .stat--negative .stat__val { color: var(--c-e); }
-
-/* ── mat-expansion-panel body: remove padding, constrain height ── */
-::ng-deep .booking-panel .mat-expansion-panel-body {
-  padding: 0 !important;
-  height: calc(100vh - 165px);
-  overflow: hidden;
-}
 
 /* ── Panel Body ──────────────────────────────────── */
 .panel__body {
