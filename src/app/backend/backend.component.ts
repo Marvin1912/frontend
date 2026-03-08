@@ -8,6 +8,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {environment} from '../../environments/environment';
 import {MatTooltip} from '@angular/material/tooltip';
 import {RouterLink} from '@angular/router';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-backend',
@@ -18,7 +19,8 @@ import {RouterLink} from '@angular/router';
     MatButtonModule,
     MatIconModule,
     MatTooltip,
-    RouterLink
+    RouterLink,
+    MatProgressSpinnerModule
   ],
   styleUrls: ['./backend.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -27,6 +29,7 @@ export class BackendComponent {
 
   uploadedFile?: File;
   responseData?: BookingsDTO;
+  isLoading = false;
   private readonly http = inject(HttpClient);
   private readonly cdr = inject(ChangeDetectorRef);
 
@@ -39,14 +42,19 @@ export class BackendComponent {
     const formData = new FormData();
     formData.append('file', this.uploadedFile);
 
+    this.isLoading = true;
+    this.cdr.markForCheck();
+
     this.http.post<BookingsDTO>(`${environment.apiUrl}/camt-entries`, formData).subscribe({
       next: (response: BookingsDTO) => {
         this.responseData = response;
+        this.isLoading = false;
         this.cdr.markForCheck();
       },
       error: (error) => {
         console.error('Upload error:', error);
         alert('Error uploading file.');
+        this.isLoading = false;
         this.cdr.markForCheck();
       }
     });
