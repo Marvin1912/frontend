@@ -12,7 +12,10 @@
     <div class="topbar__actions">
       <label class="file-input">
         <input type="file" class="file-input__native" (change)="onFileSelected($event)" />
-        <span class="file-input__label">Datei wählen</span>
+        <span class="file-input__label">
+          <mat-icon class="file-input__icon">attach_file</mat-icon>
+          {{ uploadedFile ? uploadedFile.name : 'Datei wählen' }}
+        </span>
       </label>
       <button mat-mini-fab (click)="uploadFile()" matTooltip="Upload" class="action-btn action-btn--upload">
         <mat-icon>upload</mat-icon>

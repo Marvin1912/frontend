@@ -113,7 +113,9 @@
 .file-input__label {
   display: inline-flex;
   align-items: center;
+  gap: 0.35rem;
   height: 28px;
+  max-width: 240px;
   padding: 0 0.75rem;
   background: var(--raised);
   border: 1px solid var(--border-mid);
@@ -123,9 +125,19 @@
   font-weight: 500;
   letter-spacing: 0.06em;
   color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
   transition: border-color 0.2s, color 0.2s;
   pointer-events: none;
+}
+
+.file-input__icon {
+  font-size: 14px !important;
+  width: 14px !important;
+  height: 14px !important;
+  line-height: 14px !important;
+  flex-shrink: 0;
 }
 
 .file-input:hover .file-input__label {
