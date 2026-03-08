@@ -3,9 +3,10 @@
   <!-- ── Topbar ──────────────────────────────────────── -->
   <header class="topbar">
     <div class="topbar__brand">
-      <a class="topbar__home" routerLink="/" matTooltip="Home">
-        <span class="topbar__hex">⬡</span>
-      </a>
+      <button mat-icon-button routerLink="/" matTooltip="Home" class="topbar__home-btn">
+        <mat-icon>home</mat-icon>
+      </button>
+      <span class="topbar__hex">⬡</span>
       <span class="topbar__name">KONTOAUSZÜGE</span>
     </div>
     <div class="topbar__actions">

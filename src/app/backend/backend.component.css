@@ -62,23 +62,23 @@
   gap: 0.5rem;
 }
 
-.topbar__home {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: inherit;
-  -webkit-tap-highlight-color: transparent;
+.topbar__home-btn.mat-mdc-icon-button {
+  color: var(--text-muted) !important;
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  transition: color 0.2s !important;
+}
+
+.topbar__home-btn.mat-mdc-icon-button:hover {
+  color: var(--c-a) !important;
+  background: rgba(77, 166, 255, 0.08) !important;
 }
 
 .topbar__hex {
   color: var(--c-a);
   font-size: 0.9rem;
   filter: drop-shadow(0 0 6px rgba(77, 166, 255, 0.5));
-  transition: filter 0.2s;
-}
-
-.topbar__home:hover .topbar__hex {
-  filter: drop-shadow(0 0 10px rgba(77, 166, 255, 0.8));
 }
 
 .topbar__name {
