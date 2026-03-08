@@ -193,12 +193,19 @@ mat-accordion {
 }
 .stat--negative .stat__val { color: var(--c-e); }
 
+/* ── mat-expansion-panel body: remove padding, constrain height ── */
+::ng-deep .booking-panel .mat-expansion-panel-body {
+  padding: 0 !important;
+  height: calc(100vh - 165px);
+  overflow: hidden;
+}
+
 /* ── Panel Body ──────────────────────────────────── */
 .panel__body {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0;
-  flex: 1 1 auto;
+  height: 100%;
   overflow: hidden;
 }
 
