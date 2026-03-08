@@ -1,56 +1,92 @@
-<div class="home-container">
-  <div class="metadata-section">
-    <div class="metadata-card">
-      <h3>System Information</h3>
-      <div class="metadata-grid">
-        <div class="metadata-item">
-          <span class="metadata-label">Node.js:</span>
-          <span class="metadata-value">{{ metadata.nodeVersion }}</span>
+<div class="home">
+
+  <!-- ── Topbar ──────────────────────────────────────── -->
+  <header class="topbar">
+    <div class="topbar__brand">
+      <span class="topbar__hex">⬡</span>
+      <span class="topbar__name">DASHBOARD</span>
+    </div>
+    <div class="topbar__env">{{ metadata.environment | uppercase }}</div>
+  </header>
+
+  <!-- ── Main Layout ────────────────────────────────── -->
+  <div class="layout">
+
+    <!-- System Info Panel -->
+    <aside class="sysinfo">
+      <div class="sysinfo__header">
+        <span class="sysinfo__dot"></span>
+        <span>SYSTEM</span>
+      </div>
+      <div class="sysinfo__grid">
+        <div class="sysinfo__row">
+          <span class="sysinfo__key">node</span>
+          <span class="sysinfo__val">{{ metadata.nodeVersion }}</span>
         </div>
-        <div class="metadata-item">
-          <span class="metadata-label">npm:</span>
-          <span class="metadata-value">{{ metadata.npmVersion }}</span>
+        <div class="sysinfo__row">
+          <span class="sysinfo__key">npm</span>
+          <span class="sysinfo__val">{{ metadata.npmVersion }}</span>
         </div>
-        <div class="metadata-item">
-          <span class="metadata-label">Angular:</span>
-          <span class="metadata-value">{{ metadata.angularVersion }}</span>
+        <div class="sysinfo__row">
+          <span class="sysinfo__key">angular</span>
+          <span class="sysinfo__val">{{ metadata.angularVersion }}</span>
         </div>
-        <div class="metadata-item">
-          <span class="metadata-label">Version:</span>
-          <span class="metadata-value">{{ metadata.projectVersion }}</span>
+        <div class="sysinfo__row">
+          <span class="sysinfo__key">version</span>
+          <span class="sysinfo__val">{{ metadata.projectVersion }}</span>
         </div>
-        <div class="metadata-item">
-          <span class="metadata-label">Environment:</span>
-          <span class="metadata-value">{{ metadata.environment }}</span>
+        <div class="sysinfo__row">
+          <span class="sysinfo__key">env</span>
+          <span class="sysinfo__val">{{ metadata.environment }}</span>
         </div>
-        <div class="metadata-item">
-          <span class="metadata-label">Built:</span>
-          <span class="metadata-value">{{ metadata.buildTime | date:'dd.MM.yyyy HH:mm:ss' }}</span>
+        <div class="sysinfo__row">
+          <span class="sysinfo__key">built</span>
+          <span class="sysinfo__val">{{ metadata.buildTime | date:'dd.MM.yy HH:mm' }}</span>
         </div>
       </div>
-    </div>
-  </div>
+    </aside>
 
-  <div class="card-container">
-    <div class="card" routerLink="/account">
-      <h2>Account</h2>
-      <p>Account analysis</p>
-    </div>
-    <div class="card" routerLink="/plant-root">
-      <h2>Plants</h2>
-      <p>Manage plants</p>
-    </div>
-    <div class="card" routerLink="/vocabulary">
-      <h2>Vocabulary</h2>
-      <p>Manage Vocabulary</p>
-    </div>
-    <div class="card" routerLink="/mental-arithmetic">
-      <h2>Mental Arithmetic</h2>
-      <p>Practice mental math</p>
-    </div>
-    <div class="card" routerLink="/exports">
-      <h2>Exports</h2>
-      <p>Manage and view exports</p>
-    </div>
+    <!-- Navigation Cards -->
+    <main class="navsection">
+      <div class="navgrid">
+
+        <a class="navcard navcard--a" routerLink="/account">
+          <div class="navcard__mark">A</div>
+          <h2 class="navcard__title">Account</h2>
+          <p class="navcard__sub">Account analysis</p>
+          <span class="navcard__arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="navcard navcard--p" routerLink="/plant-root">
+          <div class="navcard__mark">P</div>
+          <h2 class="navcard__title">Plants</h2>
+          <p class="navcard__sub">Manage plants</p>
+          <span class="navcard__arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="navcard navcard--v" routerLink="/vocabulary">
+          <div class="navcard__mark">V</div>
+          <h2 class="navcard__title">Vocabulary</h2>
+          <p class="navcard__sub">Manage vocabulary</p>
+          <span class="navcard__arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="navcard navcard--m" routerLink="/mental-arithmetic">
+          <div class="navcard__mark">∑</div>
+          <h2 class="navcard__title">Mental Arithmetic</h2>
+          <p class="navcard__sub">Practice mental math</p>
+          <span class="navcard__arrow" aria-hidden="true">↗</span>
+        </a>
+
+        <a class="navcard navcard--e" routerLink="/exports">
+          <div class="navcard__mark">E</div>
+          <h2 class="navcard__title">Exports</h2>
+          <p class="navcard__sub">Manage and view exports</p>
+          <span class="navcard__arrow" aria-hidden="true">↗</span>
+        </a>
+
+      </div>
+    </main>
+
   </div>
 </div>
