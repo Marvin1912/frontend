@@ -196,7 +196,7 @@ Plant-specific accent: **green (`--c-p`)** as the primary plant color (life/natu
 
 ---
 
-### [ ] Step 7 — `plant-gallery.component` (HTML + CSS)
+### [x] Step 7 — `plant-gallery.component` (HTML + CSS)
 
 **Goal:** Dark plant cards with status coloring using design tokens (not Bootstrap `bg-danger`/`bg-success`).
 

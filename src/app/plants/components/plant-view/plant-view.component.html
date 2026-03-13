@@ -1,42 +1,41 @@
-<div class="container h-100 pt-2">
-  <mat-card appearance="raised" *ngIf="plant"
-            class="d-flex flex-column align-items-center plant-card h-100 overflow-auto">
-    <mat-card-header class="d-flex justify-content-center align-items-center py-2 plant-card-header">
-      <mat-card-title class="fs-1">{{ plant.name }}</mat-card-title>
-    </mat-card-header>
-    <div class="container row">
-      <div class="col-md-5">
-        <img mat-card-image [src]="getImageUrl(plant)" alt="{{ plant.name }}" class="img-fluid py-2">
+<div class="plant-view">
+  @if (plant) {
+    <div class="view-card">
+      <div class="view-card__header">
+        <span class="view-card__name">{{ plant.name }}</span>
       </div>
-      <div class="col-md-7">
-        <div class="row">
-          <mat-card-content
-            class="
-                    d-flex flex-column justify-content-between align-items-center
-                    flex-md-row
-                  ">
-            <span matTooltip="Spezies" matTooltipPosition="below" class="shadow p-1 rounded w-100">
-              {{ plant.species }}
-            </span>
-            <span matTooltip="Standort" matTooltipPosition="below" class="shadow p-1 rounded w-100">
-              {{ plant.location }}
-            </span>
-            <span matTooltip="Zuletzt gewässert" matTooltipPosition="below" class="shadow p-1 rounded w-100">
-              {{ plant.lastWateredDate | date: 'dd.MM.yyyy' }}
-            </span>
-          </mat-card-content>
+
+      <div class="view-card__body">
+        <div class="view-card__image-col">
+          <img [src]="getImageUrl(plant)" alt="{{ plant.name }}" class="view-card__img">
         </div>
-        <div class="row">
-          <mat-tab-group>
+
+        <div class="view-card__detail-col">
+          <div class="info-badges">
+            <div class="info-badge">
+              <span class="info-badge__label">Species</span>
+              <span class="info-badge__value">{{ plant.species }}</span>
+            </div>
+            <div class="info-badge">
+              <span class="info-badge__label">Location</span>
+              <span class="info-badge__value">{{ plant.location }}</span>
+            </div>
+            <div class="info-badge">
+              <span class="info-badge__label">Last Watered</span>
+              <span class="info-badge__value">{{ plant.lastWateredDate | date: 'dd.MM.yyyy' }}</span>
+            </div>
+          </div>
+
+          <mat-tab-group class="view-tabs">
             <mat-tab label="Beschreibung">
-              <div class="p-2 description">{{ plant.description }}</div>
+              <div class="tab-content">{{ plant.description }}</div>
             </mat-tab>
             <mat-tab label="Pflegehinweise">
-              <div class="p-2 care-instructions">{{ plant.careInstructions }}</div>
+              <div class="tab-content">{{ plant.careInstructions }}</div>
             </mat-tab>
           </mat-tab-group>
         </div>
       </div>
     </div>
-  </mat-card>
+  }
 </div>

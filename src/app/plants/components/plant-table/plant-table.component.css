@@ -1,36 +1,178 @@
-.table-container {
+:host {
+  display: block;
+  min-height: 100%;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(34, 211, 94, 0.06) 0%, transparent 70%),
+    radial-gradient(circle at 85% 85%, rgba(77, 166, 255, 0.04) 0%, transparent 50%);
+  background-attachment: fixed;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  position: relative;
+}
+
+:host::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.plant-table {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 2% 10% 0 10%;
-  position: relative; /* Required for positioning the preview */
-  max-height: 80vh;
-  overflow-y: auto;
+  padding: 2rem 4rem;
+  gap: 1rem;
 }
 
+/* Header */
+.table-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.table-header__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-p);
+  box-shadow: 0 0 6px var(--c-p);
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.table-header__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* Table container */
+.table-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 75vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 4px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: var(--border-mid);
+  border-radius: 2px;
+}
+
+/* Material table overrides */
+table {
+  width: 100%;
+  background: transparent !important;
+}
+
+.col-header {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.6rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--text-dim) !important;
+  background: var(--raised) !important;
+  border-bottom: 1px solid var(--border-mid) !important;
+  height: 36px !important;
+  padding: 0 16px !important;
+}
+
+::ng-deep .mat-mdc-header-row {
+  background: var(--raised) !important;
+}
+
+::ng-deep .mat-mdc-cell {
+  font-size: 0.8rem !important;
+  color: var(--text) !important;
+  background: transparent !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* Clickable rows */
 .clickable-row {
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-
-  &:hover {
-    background-color: rgba(63, 81, 181, 0.1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    transform: scale(1.01);
-    z-index: 1;
-    position: relative;
-  }
+  transition: background-color 0.2s ease;
 }
 
+.clickable-row:hover {
+  background-color: rgba(34, 211, 94, 0.08) !important;
+}
+
+.clickable-row:hover ::ng-deep .mat-mdc-cell {
+  background-color: transparent !important;
+}
+
+/* Column widths */
 .mat-column-image,
 .mat-column-delete {
   width: 10%;
 }
 
-/* Preview container styles */
+/* Icon buttons */
+.icon-btn {
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  border-radius: 8px !important;
+  border: 1px solid var(--border) !important;
+  background: transparent !important;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.icon-btn mat-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.icon-btn--blue mat-icon {
+  color: var(--c-a) !important;
+}
+
+.icon-btn--blue:hover {
+  background: rgba(77, 166, 255, 0.1) !important;
+  border-color: var(--c-a) !important;
+}
+
+.icon-btn--pink mat-icon {
+  color: var(--c-e) !important;
+}
+
+.icon-btn--pink:hover {
+  background: rgba(251, 113, 133, 0.1) !important;
+  border-color: var(--c-e) !important;
+}
+
+/* Preview container */
 .plant-preview-container {
   position: absolute;
   z-index: 1000;
-  pointer-events: auto; /* Enable interaction with the preview */
+  pointer-events: auto;
   animation: fadeInScale 0.2s ease-out;
 }
 

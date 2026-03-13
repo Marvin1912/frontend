@@ -1,72 +1,44 @@
-<div class="container-fluid h-100 d-flex justify-content-center align-items-center">
-  <div class="row w-100 h-100 overflow-auto d-flex justify-content-center">
-    <div *ngFor="let plant of plants()" class="col-sm-12 col-md-6 col-xl-4 h-100 p-2">
-      <mat-card appearance="outlined" class="h-100" [ngClass]="{ 'bg-danger': isWateringDue(plant), 'bg-success': !isWateringDue(plant) && isFertilizingDue(plant) }">
-        <mat-card-header>
-          <mat-card-title routerLink="/plant-root/view/{{plant.id}}" class="plant-link">{{ plant.name }}
-          </mat-card-title>
-          <mat-card-subtitle>{{ plant.species }}</mat-card-subtitle>
-        </mat-card-header>
-        <img mat-card-image [src]="getImageUrl(plant)" alt="{{ plant.name }}">
-        <mat-card-content class="d-flex flex-column justify-content-center">
-          <div class="row g-2 mb-2">
-            <div class="col-6">
-              <mat-card appearance="outlined" class="d-flex flex-column align-items-center">
-                <mat-card-header class="sub-header">
-                  <mat-card-title class="fs-6">Last watered</mat-card-title>
-                </mat-card-header>
-                <mat-card-content class="pb-2">
-                  {{ plant.lastWateredDate }}
-                </mat-card-content>
-              </mat-card>
-            </div>
-            <div class="col-6">
-              <mat-card appearance="outlined" class="d-flex flex-column align-items-center">
-                <mat-card-header class="sub-header">
-                  <mat-card-title class="fs-6">Next watered</mat-card-title>
-                </mat-card-header>
-                <mat-card-content class="pb-2">
-                  {{ (plant?.nextWateredDate) ?? 'n/a' }}
-                </mat-card-content>
-              </mat-card>
-            </div>
+<div class="gallery">
+  <div class="gallery__grid">
+    @for (plant of plants(); track plant.id; let i = $index) {
+      <div class="plant-card"
+           [class.plant-card--water]="isWateringDue(plant)"
+           [class.plant-card--fertilize]="!isWateringDue(plant) && isFertilizingDue(plant)"
+           [style.animation-delay]="(i * 0.07) + 's'">
+        <div class="plant-card__header">
+          <a class="plant-card__name" routerLink="/plant-root/view/{{plant.id}}">{{ plant.name }}</a>
+          <span class="plant-card__species">{{ plant.species }}</span>
+        </div>
+        <div class="plant-card__image">
+          <img [src]="getImageUrl(plant)" alt="{{ plant.name }}">
+        </div>
+        <div class="plant-card__info">
+          <div class="info-tile">
+            <span class="info-tile__label">Last watered</span>
+            <span class="info-tile__value">{{ plant.lastWateredDate }}</span>
           </div>
-          <div class="row g-2 mb-2">
-            <div class="col-6">
-              <mat-card appearance="outlined" class="d-flex flex-column align-items-center">
-                <mat-card-header class="sub-header">
-                  <mat-card-title class="fs-6">Last fertilized</mat-card-title>
-                </mat-card-header>
-                <mat-card-content class="pb-2">
-                  {{ plant.lastFertilizedDate ?? 'n/a' }}
-                </mat-card-content>
-              </mat-card>
-            </div>
-            <div class="col-6">
-              <mat-card appearance="outlined" class="d-flex flex-column align-items-center">
-                <mat-card-header class="sub-header">
-                  <mat-card-title class="fs-6">Next fertilized</mat-card-title>
-                </mat-card-header>
-                <mat-card-content class="pb-2">
-                  {{ (plant?.nextFertilizedDate) ?? 'n/a' }}
-                </mat-card-content>
-              </mat-card>
-            </div>
+          <div class="info-tile">
+            <span class="info-tile__label">Next watered</span>
+            <span class="info-tile__value">{{ plant.nextWateredDate ?? 'n/a' }}</span>
           </div>
-          <div class="row g-2">
-            <div class="col-12">
-              <mat-card appearance="outlined" class="d-flex flex-row justify-content-center">
-                <span class="fs-6 me-1">Location:</span>
-                <span>{{ plant.location }}</span>
-              </mat-card>
-            </div>
+          <div class="info-tile">
+            <span class="info-tile__label">Last fertilized</span>
+            <span class="info-tile__value">{{ plant.lastFertilizedDate ?? 'n/a' }}</span>
           </div>
-        </mat-card-content>
-        <mat-card-actions class="d-flex justify-content-center py-sm-0 py-md-2">
-          <button mat-button (click)="setWateredNow(plant)">Watered</button>
-          <button mat-button (click)="setFertilizedNow(plant)">Fertilized</button>
-        </mat-card-actions>
-      </mat-card>
-    </div>
+          <div class="info-tile">
+            <span class="info-tile__label">Next fertilized</span>
+            <span class="info-tile__value">{{ plant.nextFertilizedDate ?? 'n/a' }}</span>
+          </div>
+          <div class="info-tile info-tile--full">
+            <span class="info-tile__label">Location</span>
+            <span class="info-tile__value">{{ plant.location }}</span>
+          </div>
+        </div>
+        <div class="plant-card__actions">
+          <button class="action-btn action-btn--water" (click)="setWateredNow(plant)">Watered</button>
+          <button class="action-btn action-btn--fertilize" (click)="setFertilizedNow(plant)">Fertilized</button>
+        </div>
+      </div>
+    }
   </div>
 </div>

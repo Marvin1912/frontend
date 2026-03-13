@@ -3,24 +3,15 @@ import {Plant} from '../../models/plant.model';
 import {ActivatedRoute} from '@angular/router';
 import {environment} from '../../../../environments/environment';
 import {PlantService} from '../../services/plant.service';
-import {MatCard, MatCardContent, MatCardHeader, MatCardImage, MatCardTitle} from '@angular/material/card';
-import {DatePipe, NgIf} from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {MatTab, MatTabGroup} from '@angular/material/tabs';
-import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-plant-view',
   imports: [
-    MatCard,
-    MatCardHeader,
-    MatCardTitle,
-    NgIf,
-    MatCardImage,
-    MatCardContent,
     MatTabGroup,
     MatTab,
     DatePipe,
-    MatTooltip
   ],
   templateUrl: './plant-view.component.html',
   styleUrl: './plant-view.component.css'
