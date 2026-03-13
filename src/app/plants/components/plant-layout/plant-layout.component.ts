@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatFabButton} from "@angular/material/button";
+import {MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from "@angular/router";
 import {filter} from 'rxjs';
@@ -8,7 +8,7 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 @Component({
   selector: 'app-plant-layout',
   imports: [
-    MatFabButton,
+    MatIconButton,
     MatIcon,
     RouterLink,
     RouterOutlet,
