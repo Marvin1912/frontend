@@ -1,0 +1,96 @@
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+  background: var(--surface) !important;
+  border: 1px solid var(--border-mid) !important;
+  border-radius: 12px !important;
+  color: var(--text) !important;
+}
+
+::ng-deep .mat-mdc-dialog-title {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: var(--text) !important;
+  letter-spacing: 0.03em;
+}
+
+::ng-deep .mat-mdc-dialog-content {
+  color: var(--text-muted) !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+::ng-deep .mat-mdc-dialog-actions {
+  gap: 8px;
+  padding: 8px 24px 16px !important;
+}
+
+.file-input {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--raised);
+  border: 1px solid var(--border-mid);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.file-input:hover {
+  border-color: var(--c-a);
+}
+
+.file-input::file-selector-button {
+  background: var(--raised);
+  border: 1px solid var(--border-mid);
+  border-radius: 6px;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.file-input::file-selector-button:hover {
+  background: rgba(77, 166, 255, 0.1);
+  color: var(--c-a);
+}
+
+.btn-cancel {
+  background: transparent !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  color: var(--text-muted) !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 0.85rem !important;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-cancel:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: var(--border-mid) !important;
+}
+
+.btn-upload {
+  background: rgba(77, 166, 255, 0.15) !important;
+  border: 1px solid rgba(77, 166, 255, 0.35) !important;
+  border-radius: 8px !important;
+  color: var(--c-a) !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-upload:hover:not([disabled]) {
+  background: rgba(77, 166, 255, 0.25) !important;
+  box-shadow: 0 0 14px rgba(77, 166, 255, 0.3) !important;
+}
+
+.btn-upload[disabled] {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+}

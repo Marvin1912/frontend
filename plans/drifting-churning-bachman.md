@@ -36,7 +36,7 @@ Plant-specific accent: **green (`--c-p`)** as the primary plant color (life/natu
 
 ## Steps
 
-### [ ] Step 1 — `plant-layout.component` (HTML + CSS)
+### [x] Step 1 — `plant-layout.component` (HTML + CSS)
 
 **Goal:** Replace Bootstrap header row with a styled topbar matching `home.component`.
 
@@ -229,7 +229,7 @@ Plant-specific accent: **green (`--c-p`)** as the primary plant color (life/natu
 
 ---
 
-### [ ] Step 8 — `plant-preview.component` (HTML + CSS)
+### [x] Step 8 — `plant-preview.component` (HTML + CSS)
 
 **Goal:** Restyle hover preview popup to dark glassmorphism matching the overall theme.
 
@@ -252,7 +252,7 @@ Plant-specific accent: **green (`--c-p`)** as the primary plant color (life/natu
 
 ---
 
-### [ ] Step 9 — Dialog Components (HTML + CSS for all 3)
+### [x] Step 9 — Dialog Components (HTML + CSS for all 3)
 
 **Goal:** Style all three dialogs with dark theme overrides.
 
