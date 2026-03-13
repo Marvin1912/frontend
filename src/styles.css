@@ -1,5 +1,25 @@
 @use '@angular/material' as mat;
 
+/* ── Global Design Tokens ────────────────────────── */
+/* Promoted to :root so CDK overlays (dialogs, menus) can access them. */
+:root {
+  --bg:          #06080e;
+  --surface:     #0c1018;
+  --raised:      #111826;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-mid:  rgba(255, 255, 255, 0.13);
+
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
+
+  --c-a:  #4da6ff;  --cg-a: rgba(77,  166, 255, 0.18);
+  --c-p:  #22d35e;  --cg-p: rgba(34,  211,  94, 0.18);
+  --c-v:  #fbbf24;  --cg-v: rgba(251, 191,  36, 0.18);
+  --c-m:  #a78bfa;  --cg-m: rgba(167, 139, 250, 0.18);
+  --c-e:  #fb7185;  --cg-e: rgba(251, 113, 133, 0.18);
+}
+
 html, body { height: 100vh; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 

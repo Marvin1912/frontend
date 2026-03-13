@@ -1,41 +1,126 @@
-.header-button {
-  height: 35px;
-  width: 35px;
-}
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-.plant-layout-header-title {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
+/* ── Design Tokens ───────────────────────────────── */
+:host {
+  --bg:          #06080e;
+  --surface:     #0c1018;
+  --raised:      #111826;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-mid:  rgba(255, 255, 255, 0.13);
 
-.plant-root-image {
-  background-image: url('../../../../../public/roomplants.jpg');
-  background-size: cover;
-  background-position: center;
-  color: white;
-}
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
 
-.header-row {
-  height: 10%;
-}
+  --c-a:  #4da6ff;  --cg-a: rgba(77,  166, 255, 0.18);
+  --c-p:  #22d35e;  --cg-p: rgba(34,  211,  94, 0.18);
+  --c-v:  #fbbf24;  --cg-v: rgba(251, 191,  36, 0.18);
+  --c-m:  #a78bfa;  --cg-m: rgba(167, 139, 250, 0.18);
+  --c-e:  #fb7185;  --cg-e: rgba(251, 113, 133, 0.18);
 
-.image-row {
-  height: 20%;
-}
-
-.data-row {
-  height: 70%;
-}
-
-.mat-mdc-menu-content {
   display: flex;
   flex-direction: column;
+  min-height: 100dvh;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 70% 35% at 0% 0%,    rgba(34,  211,  94, 0.04) 0%, transparent 100%),
+    radial-gradient(ellipse 50% 35% at 100% 100%, rgba(77,  166, 255, 0.04) 0%, transparent 100%),
+    radial-gradient(circle, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: auto, auto, 28px 28px;
 }
 
-@media (min-width: 480px) {
-  .header-button {
-    height: 50px;
-    width: 50px;
-  }
+/* ── Layout ──────────────────────────────────────── */
+.plant-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* ── Topbar ──────────────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(0.5rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) 0.5rem max(1rem, env(safe-area-inset-left));
+  background: rgba(6, 8, 14, 0.88);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 rgba(34, 211, 94, 0.06);
+}
+
+.topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.topbar__right {
+  width: 80px;
+}
+
+.topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+}
+
+.topbar__hex {
+  color: var(--c-p);
+  font-size: 0.9rem;
+  filter: drop-shadow(0 0 6px rgba(34, 211, 94, 0.5));
+}
+
+/* ── Nav Buttons ─────────────────────────────────── */
+.nav-btn {
+  color: var(--text-muted) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  width: 36px !important;
+  height: 36px !important;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s !important;
+}
+
+.nav-btn:hover {
+  color: var(--c-p) !important;
+  border-color: var(--c-p) !important;
+  box-shadow: 0 0 10px rgba(34, 211, 94, 0.2) !important;
+}
+
+/* ── Content ─────────────────────────────────────── */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Menu Panel ──────────────────────────────────── */
+::ng-deep .mat-mdc-menu-panel {
+  background: var(--surface) !important;
+  border: 1px solid var(--border-mid) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+::ng-deep .mat-mdc-menu-item {
+  color: var(--text) !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+::ng-deep .mat-mdc-menu-item:hover .mdc-list-item__primary-text {
+  color: var(--c-p) !important;
+}
+
+::ng-deep .mat-mdc-menu-item:hover {
+  background: var(--raised) !important;
 }

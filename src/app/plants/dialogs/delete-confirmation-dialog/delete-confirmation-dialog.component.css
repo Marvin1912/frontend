@@ -1,0 +1,60 @@
+::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
+  background: var(--surface) !important;
+  border: 1px solid var(--border-mid) !important;
+  border-radius: 12px !important;
+  color: var(--text) !important;
+}
+
+::ng-deep .mat-mdc-dialog-title {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: var(--text) !important;
+  letter-spacing: 0.03em;
+}
+
+::ng-deep .mat-mdc-dialog-content {
+  color: var(--text-muted) !important;
+  font-family: 'Outfit', sans-serif !important;
+  font-size: 0.9rem !important;
+}
+
+::ng-deep .mat-mdc-dialog-actions {
+  gap: 10px;
+  padding-bottom: 16px !important;
+  justify-content: center !important;
+}
+
+.btn-confirm {
+  background: rgba(34, 211, 94, 0.10) !important;
+  border: 1px solid rgba(34, 211, 94, 0.3) !important;
+  border-radius: 8px !important;
+  color: var(--c-p) !important;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-confirm:hover {
+  background: rgba(34, 211, 94, 0.18) !important;
+  box-shadow: 0 0 12px rgba(34, 211, 94, 0.25) !important;
+}
+
+.btn-confirm mat-icon {
+  color: var(--c-p) !important;
+}
+
+.btn-cancel {
+  background: rgba(251, 113, 133, 0.10) !important;
+  border: 1px solid rgba(251, 113, 133, 0.3) !important;
+  border-radius: 8px !important;
+  color: var(--c-e) !important;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-cancel:hover {
+  background: rgba(251, 113, 133, 0.18) !important;
+  box-shadow: 0 0 12px rgba(251, 113, 133, 0.25) !important;
+}
+
+.btn-cancel mat-icon {
+  color: var(--c-e) !important;
+}

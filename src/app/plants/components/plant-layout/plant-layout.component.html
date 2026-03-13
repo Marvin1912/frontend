@@ -1,10 +1,10 @@
-<div class="container h-100 d-flex flex-column">
-  <header class="row header-row p-2">
-    <div class="col-4 col-sm-2 d-flex justify-content-between align-items-center">
-      <button mat-fab [routerLink]="homeLink" class="header-button">
+<div class="plant-layout">
+  <header class="topbar">
+    <div class="topbar__left">
+      <button mat-icon-button [routerLink]="homeLink" class="nav-btn" aria-label="Go home">
         <mat-icon>home</mat-icon>
       </button>
-      <button mat-fab [matMenuTriggerFor]="menu" class="header-button">
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="nav-btn" aria-label="Open menu">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
@@ -22,13 +22,16 @@
         </button>
       </mat-menu>
     </div>
-    <div class="col-8 col-sm-10 d-flex flex-column justify-content-center align-items-center">
-      <h1 class="plant-layout-header-title">Plants</h1>
+
+    <div class="topbar__brand">
+      <span class="topbar__hex">⬡</span>
+      <span class="topbar__name">PLANTS</span>
     </div>
+
+    <div class="topbar__right"></div>
   </header>
-  <main class="row data-row flex-grow-1">
-    <div class="col h-100">
-      <router-outlet></router-outlet>
-    </div>
+
+  <main class="content">
+    <router-outlet></router-outlet>
   </main>
 </div>

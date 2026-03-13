@@ -2,11 +2,11 @@
 
 <mat-dialog-content>
   <form (ngSubmit)="onSubmit()">
-    <input type="file" (change)="onFileSelected($event)" required/>
+    <input type="file" class="file-input" (change)="onFileSelected($event)" required/>
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="dialogRef.close()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!selectedFile">Upload</button>
+  <button mat-button class="btn-cancel" (click)="dialogRef.close()">Cancel</button>
+  <button mat-button class="btn-upload" (click)="onSubmit()" [disabled]="!selectedFile">Upload</button>
 </mat-dialog-actions>

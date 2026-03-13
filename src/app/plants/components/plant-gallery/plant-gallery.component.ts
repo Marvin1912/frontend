@@ -1,7 +1,6 @@
 import {Component, OnInit, signal} from '@angular/core';
-import {DatePipe, NgClass, NgForOf} from '@angular/common';
+import {DatePipe} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
 import {PlantService} from '../../services/plant.service';
 import {Plant} from '../../models/plant.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -11,7 +10,7 @@ import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-plant-gallery',
-  imports: [MatCardModule, MatButtonModule, NgForOf, RouterLink, NgClass],
+  imports: [MatButtonModule, RouterLink],
   templateUrl: './plant-gallery.component.html',
   styleUrl: './plant-gallery.component.css',
   providers: [DatePipe]
