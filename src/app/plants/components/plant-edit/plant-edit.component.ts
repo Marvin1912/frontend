@@ -2,12 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {PlantService} from '../../services/plant.service';
 import {Plant} from '../../models/plant.model';
-import {DatePipe, NgClass, NgForOf, NgIf} from '@angular/common';
+import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
-import {MatMiniFabButton} from '@angular/material/button';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatOption} from '@angular/material/core';
-import {MatLabel, MatSelect, MatSuffix} from '@angular/material/select';
+import {MatSelect, MatSuffix} from '@angular/material/select';
 import {PlantLocation} from '../../models/plant-location.enum';
 import {MatInput} from '@angular/material/input';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
@@ -21,13 +20,10 @@ import {ImageService} from '../../services/image.service';
     NgIf,
     MatIcon,
     FormsModule,
-    NgClass,
-    MatMiniFabButton,
     MatOption,
     MatSelect,
     NgForOf,
     ReactiveFormsModule,
-    MatLabel,
     MatInput,
     MatDatepickerInput,
     MatDatepicker,
