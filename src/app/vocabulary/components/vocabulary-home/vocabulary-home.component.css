@@ -50,29 +50,16 @@
 /* ── Nav Grid ────────────────────────────────────── */
 .navgrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.75rem;
   padding: 1rem;
-  max-width: 640px;
+  max-width: 900px;
   margin: 0 auto;
   box-sizing: border-box;
 }
 
 @media (min-width: 640px) {
   .navgrid { gap: 1rem; padding: 1.5rem; }
-}
-
-/* Last odd card: centered, not stretched */
-.navcard:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-  justify-self: center;
-  width: calc(50% - 0.375rem);
-}
-
-@media (min-width: 640px) {
-  .navcard:last-child:nth-child(odd) {
-    width: calc(50% - 0.5rem);
-  }
 }
 
 /* ── Nav Cards ───────────────────────────────────── */
@@ -84,12 +71,13 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 1.1rem 1rem 1.75rem;
+  padding: 1rem 1rem 1rem 1rem;
   cursor: pointer;
   display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  min-height: 140px;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 72px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
@@ -164,6 +152,15 @@
   background: color-mix(in srgb, var(--cc) 20%, transparent);
 }
 
+/* ── Card Body ───────────────────────────────────── */
+.navcard__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+  min-width: 0;
+}
+
 /* ── Card Text ───────────────────────────────────── */
 .navcard__title {
   margin: 0;
@@ -184,12 +181,10 @@
 
 /* ── Card Arrow ──────────────────────────────────── */
 .navcard__arrow {
-  position: absolute;
-  bottom: 0.75rem;
-  right: 0.875rem;
   font-size: 0.8rem;
   color: var(--text-dim);
   line-height: 1;
+  flex-shrink: 0;
   transition: color 0.2s, transform 0.2s;
 }
 

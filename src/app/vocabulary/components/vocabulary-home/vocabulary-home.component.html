@@ -8,22 +8,28 @@
 
   <a class="navcard" routerLink="/vocabulary/add">
     <div class="navcard__mark">+</div>
-    <h2 class="navcard__title">Add Word</h2>
-    <p class="navcard__sub">Look up and save new vocabulary</p>
+    <div class="navcard__body">
+      <h2 class="navcard__title">Add Word</h2>
+      <p class="navcard__sub">Look up and save new vocabulary</p>
+    </div>
     <span class="navcard__arrow" aria-hidden="true">↗</span>
   </a>
 
   <a class="navcard" routerLink="/vocabulary/list">
     <div class="navcard__mark">L</div>
-    <h2 class="navcard__title">List</h2>
-    <p class="navcard__sub">Browse all flashcards</p>
+    <div class="navcard__body">
+      <h2 class="navcard__title">List</h2>
+      <p class="navcard__sub">Browse all flashcards</p>
+    </div>
     <span class="navcard__arrow" aria-hidden="true">↗</span>
   </a>
 
   <div class="navcard navcard--action" (click)="openDialog()">
     <div class="navcard__mark">D</div>
-    <h2 class="navcard__title">Manage Decks</h2>
-    <p class="navcard__sub">Rename and organise decks</p>
+    <div class="navcard__body">
+      <h2 class="navcard__title">Manage Decks</h2>
+      <p class="navcard__sub">Rename and organise decks</p>
+    </div>
     <span class="navcard__arrow" aria-hidden="true">↗</span>
   </div>
 
