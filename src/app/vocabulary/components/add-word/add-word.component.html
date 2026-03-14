@@ -39,6 +39,7 @@
         </header>
       }
 
+      @if (wordToShow) {
       <div class="entries-container">
         <div class="word-entries-list">
           @for (wordEntry of wordEntries(); track entryIndex; let entryIndex = $index) {
@@ -92,6 +93,7 @@
           }
         </div>
       </div>
+      }
 
     </div>
 
