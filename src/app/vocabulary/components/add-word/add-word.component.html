@@ -93,44 +93,45 @@
         </div>
       </div>
 
-      <!-- Translation Section -->
-      @if (wordToShow) {
-        <div class="translation-section">
-          <header class="panel-header">
-            <span class="panel-dot"></span>
-            <span class="panel-label">TRANSLATION</span>
-          </header>
-
-          <form
-              [formGroup]="wordFormTranslation"
-              (ngSubmit)="onSubmitTranslation()"
-          >
-            <mat-form-field appearance="outline">
-              <mat-label>Word</mat-label>
-              <input matInput formControlName="word">
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Context</mat-label>
-              <input matInput formControlName="context">
-            </mat-form-field>
-
-            <button
-                mat-flat-button
-                color="primary"
-                [disabled]="!wordFormTranslation.valid"
-                type="submit"
-            >
-              Translate
-            </button>
-          </form>
-
-          @if (translation()) {
-            <div class="translation-result">{{ translation() }}</div>
-          }
-        </div>
-      }
     </div>
+
+    <!-- Translation Section -->
+    @if (wordToShow) {
+      <div class="translation-section">
+        <header class="panel-header">
+          <span class="panel-dot"></span>
+          <span class="panel-label">TRANSLATION</span>
+        </header>
+
+        <form
+            [formGroup]="wordFormTranslation"
+            (ngSubmit)="onSubmitTranslation()"
+        >
+          <mat-form-field appearance="outline">
+            <mat-label>Word</mat-label>
+            <input matInput formControlName="word">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Context</mat-label>
+            <input matInput formControlName="context">
+          </mat-form-field>
+
+          <button
+              mat-flat-button
+              color="primary"
+              [disabled]="!wordFormTranslation.valid"
+              type="submit"
+          >
+            Translate
+          </button>
+        </form>
+
+        @if (translation()) {
+          <div class="translation-result">{{ translation() }}</div>
+        }
+      </div>
+    }
 
     <!-- Save Word Section -->
     <div class="save-word-section">
