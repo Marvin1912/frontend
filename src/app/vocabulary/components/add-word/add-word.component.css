@@ -272,6 +272,7 @@
 
 /* Material form-field dark overrides */
 ::ng-deep .search-bar .mat-mdc-form-field,
+::ng-deep .search-bar .mat-mdc-form-field,
 ::ng-deep .dictionary-section .mat-mdc-form-field,
 ::ng-deep .translation-section .mat-mdc-form-field,
 ::ng-deep .save-word-section .mat-mdc-form-field {
@@ -290,6 +291,13 @@
 ::ng-deep .translation-section .mat-mdc-text-field-wrapper,
 ::ng-deep .save-word-section .mat-mdc-text-field-wrapper {
   background: var(--raised) !important;
+}
+
+::ng-deep .search-bar input.mat-mdc-input-element,
+::ng-deep .dictionary-section input.mat-mdc-input-element,
+::ng-deep .translation-section input.mat-mdc-input-element,
+::ng-deep .save-word-section input.mat-mdc-input-element {
+  color: var(--text) !important;
 }
 
 /* Button toggle group dark overrides */

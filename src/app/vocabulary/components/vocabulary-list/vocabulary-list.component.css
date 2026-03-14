@@ -191,6 +191,10 @@ table {
   background: var(--raised) !important;
 }
 
+::ng-deep .filter-panel input.mat-mdc-input-element {
+  color: var(--text) !important;
+}
+
 /* Mat checkbox */
 ::ng-deep .filter-panel .mat-mdc-checkbox .mdc-label {
   color: var(--text-muted);
