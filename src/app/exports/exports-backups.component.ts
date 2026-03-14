@@ -52,7 +52,9 @@ export class ExportsBackupsComponent implements OnInit {
 
     this.backupRunService.getBackupRuns(this.pageSize, this.pageIndex * this.pageSize).subscribe({
       next: (page) => {
-        this.backupRuns = page.content;
+        this.backupRuns = page.content.slice().sort((a, b) =>
+          new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
+        );
         this.totalElements = page.totalElements;
         this.isLoading = false;
         this.cdr.markForCheck();
