@@ -9,7 +9,7 @@ RUN npm install
 COPY . .
 
 RUN npm run env:production
-RUN npm run build:nice
+RUN npm run build
 
 FROM nginx:1.25 AS production-stage
 
