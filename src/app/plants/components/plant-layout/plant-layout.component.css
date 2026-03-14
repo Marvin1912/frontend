@@ -20,7 +20,8 @@
 
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
   font-family: 'Outfit', sans-serif;
   color: var(--text);
   background-color: var(--bg);
@@ -35,7 +36,7 @@
 .plant-layout {
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
+  height: 100%;
 }
 
 /* ── Topbar ──────────────────────────────────────── */
