@@ -1,77 +1,214 @@
-.vocabulary-home-container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* ── Design Tokens ───────────────────────────────── */
+:host {
+  --bg:          #06080e;
+  --surface:     #0c1018;
+  --raised:      #111826;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-mid:  rgba(255, 255, 255, 0.13);
+
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
+
+  --c-v:  #fbbf24;
+  --cg-v: rgba(251, 191, 36, 0.18);
+
+  display: block;
+  min-height: 100vh;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 60% 40% at 0% 0%, rgba(251, 191, 36, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(251, 191, 36, 0.06) 0%, transparent 70%),
+    radial-gradient(circle, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: auto, auto, 28px 28px;
 }
 
-.vocabulary-header {
-  height: 10%;
-  display: flex;
-  padding: 5px 0 10px 0;
+/* ── Page Header ─────────────────────────────────── */
+.page-header {
+  padding: 0.75rem 1rem;
 }
 
-.home-button-section {
-  flex: 0 0 5%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+::ng-deep .home-fab.mat-mdc-fab {
+  --mdc-fab-container-color: var(--surface);
+  --mdc-fab-icon-color: var(--c-v);
+  box-shadow: none !important;
+  width: 36px;
+  height: 36px;
 }
 
-.selection-section {
-  flex-grow: 1;
-  display: flex;
-  gap: 5px
+::ng-deep .home-fab.mat-mdc-fab .mat-icon {
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--c-v);
 }
 
-.manage-deck-section,
-.add-word-section,
-.list-section {
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0 5px 0 5px;
-  border: black solid 2px;
-  border-radius: 10px;
+/* ── Nav Grid ────────────────────────────────────── */
+.navgrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  padding: 1rem;
+  max-width: 640px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+@media (min-width: 640px) {
+  .navgrid { gap: 1rem; padding: 1.5rem; }
+}
+
+/* Last odd card: centered, not stretched */
+.navcard:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: calc(50% - 0.375rem);
+}
+
+@media (min-width: 640px) {
+  .navcard:last-child:nth-child(odd) {
+    width: calc(50% - 0.5rem);
+  }
+}
+
+/* ── Nav Cards ───────────────────────────────────── */
+.navcard {
+  --cc: var(--c-v);
+  --cc-glow: var(--cg-v);
+
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem 1rem 1.75rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-height: 140px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  animation: fadeUp 0.5s ease both;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.manage-deck-section:hover,
-.add-word-section:hover,
-.list-section:hover {
-  background-color: #cccccc;
+/* Radial glow overlay on hover */
+.navcard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 0% 0%, var(--cc-glow) 0%, transparent 65%);
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
 }
 
-.router-outlet-container {
-  flex-grow: 1;
-  height: 75%;
+/* Left accent stripe */
+.navcard::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 22%;
+  bottom: 22%;
+  width: 2px;
+  background: var(--cc);
+  border-radius: 0 2px 2px 0;
+  opacity: 0.35;
+  transition: opacity 0.2s, top 0.2s, bottom 0.2s;
 }
 
-span {
-  font-size: 20px;
-  font-weight: bold;
+.navcard:hover {
+  border-color: var(--cc);
+  box-shadow: 0 8px 28px var(--cc-glow);
+  transform: translateY(-3px);
 }
 
-@media (min-width: 821px) {
+.navcard:hover::before { opacity: 1; }
 
-  .vocabulary-header {
-    display: flex;
-    justify-content: start;
-  }
+.navcard:hover::after {
+  opacity: 0.9;
+  top: 12%;
+  bottom: 12%;
+}
 
-  .selection-section {
-    flex-direction: row;
-    align-items: center;
-    gap: 10px
-  }
+.navcard:active { transform: translateY(-1px); }
 
-  .manage-deck-section,
-  .add-word-section,
-  .list-section {
-    width: 20%;
-    align-items: center;
-  }
+.navcard--action {
+  user-select: none;
+}
 
+/* ── Card Mark ───────────────────────────────────── */
+.navcard__mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--cc) 40%, transparent);
+  background: color-mix(in srgb, var(--cc) 10%, transparent);
+  display: grid;
+  place-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--cc);
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.navcard:hover .navcard__mark {
+  background: color-mix(in srgb, var(--cc) 20%, transparent);
+}
+
+/* ── Card Text ───────────────────────────────────── */
+.navcard__title {
+  margin: 0;
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+}
+
+.navcard__sub {
+  margin: 0;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  font-weight: 400;
+}
+
+/* ── Card Arrow ──────────────────────────────────── */
+.navcard__arrow {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.875rem;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.navcard:hover .navcard__arrow {
+  color: var(--cc);
+  transform: translate(2px, -2px);
+}
+
+/* ── Entrance Animations ─────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.navcard:nth-child(1) { animation-delay: 0.05s; }
+.navcard:nth-child(2) { animation-delay: 0.12s; }
+.navcard:nth-child(3) { animation-delay: 0.19s; }
+
+/* ── Content Area ────────────────────────────────── */
+.content-area {
+  padding: 0 1rem;
 }
