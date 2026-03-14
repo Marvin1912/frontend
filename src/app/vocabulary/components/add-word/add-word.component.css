@@ -106,6 +106,7 @@
   display: flex;
   flex: 1;
   min-height: 0;
+  overflow: hidden;
   padding: 1rem;
   gap: 1rem;
 }
@@ -114,7 +115,7 @@
 .dictionary-section {
   display: flex;
   flex-direction: column;
-  flex: 1.5;
+  flex: 1.4;
   min-height: 0;
 }
 
@@ -221,8 +222,10 @@
 
 /* Translation section */
 .translation-section {
-  margin-top: 1rem;
-  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 0.8;
+  min-height: 0;
 }
 
 .translation-section form {
@@ -296,7 +299,8 @@
 ::ng-deep .search-bar input.mat-mdc-input-element,
 ::ng-deep .dictionary-section input.mat-mdc-input-element,
 ::ng-deep .translation-section input.mat-mdc-input-element,
-::ng-deep .save-word-section input.mat-mdc-input-element {
+::ng-deep .save-word-section input.mat-mdc-input-element,
+::ng-deep .save-word-section textarea.mat-mdc-input-element {
   color: var(--text) !important;
 }
 
@@ -350,6 +354,7 @@
   }
 
   .dictionary-section,
+  .translation-section,
   .save-word-section {
     flex: none;
     min-height: auto;
