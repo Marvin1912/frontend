@@ -299,7 +299,8 @@
 ::ng-deep .search-bar input.mat-mdc-input-element,
 ::ng-deep .dictionary-section input.mat-mdc-input-element,
 ::ng-deep .translation-section input.mat-mdc-input-element,
-::ng-deep .save-word-section input.mat-mdc-input-element {
+::ng-deep .save-word-section input.mat-mdc-input-element,
+::ng-deep .save-word-section textarea.mat-mdc-input-element {
   color: var(--text) !important;
 }
 
