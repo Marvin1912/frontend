@@ -1,12 +1,11 @@
 <h2 mat-dialog-title>Select an article!</h2>
 
 <mat-dialog-content>
-  <div class="d-flex justify-content-center gap-3">
+  <div class="article-btn-group">
     @for (article of articles; track $index) {
       <button
         mat-flat-button
-        style="flex: 1 1 0;
-        max-width: 25%"
+        class="article-btn"
         [mat-dialog-close]="article"
       >{{ article }}
       </button>
