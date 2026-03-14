@@ -1,13 +1,171 @@
-.clickable-row {
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
 
-  &:hover {
-    background-color: rgba(63, 81, 181, 0.1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
+:host {
+  --bg:          #06080e;
+  --surface:     #0c1018;
+  --raised:      #111826;
+  --border:      rgba(255,255,255,0.07);
+  --border-mid:  rgba(255,255,255,0.13);
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
+  --c-v:         #fbbf24;
+  --cg-v:        rgba(251,191,36,0.18);
+
+  display: block;
+  min-height: 100%;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 5% 10%, rgba(251,191,36,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 95% 90%, rgba(251,191,36,0.04) 0%, transparent 55%);
+  background-attachment: fixed;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  position: relative;
 }
 
+:host::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Layout */
+.vocab-list {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 4rem;
+  gap: 1rem;
+}
+
+/* Header */
+.table-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.table-header__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-v);
+  box-shadow: 0 0 6px var(--c-v);
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.table-header__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* Filter panel */
+.filter-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text);
+}
+
+.stats-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.25rem 0.625rem;
+  white-space: nowrap;
+}
+
+/* Table container */
+.table-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 75vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.table-container::-webkit-scrollbar {
+  width: 4px;
+}
+.table-container::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+.table-container::-webkit-scrollbar-thumb {
+  background: var(--border-mid);
+  border-radius: 2px;
+}
+
+/* Material table overrides */
+table {
+  width: 100%;
+  background: transparent !important;
+}
+
+.col-header {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.6rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--text-dim) !important;
+  background: var(--raised) !important;
+  border-bottom: 1px solid var(--border-mid) !important;
+  height: 36px !important;
+  padding: 0 16px !important;
+}
+
+::ng-deep .mat-mdc-header-row {
+  background: var(--raised) !important;
+}
+
+::ng-deep .mat-mdc-cell {
+  font-size: 0.8rem !important;
+  color: var(--text) !important;
+  background: transparent !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+/* Clickable rows */
+.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.clickable-row:hover {
+  background-color: rgba(251,191,36,0.08) !important;
+}
+
+.clickable-row:hover ::ng-deep .mat-mdc-cell {
+  background-color: transparent !important;
+}
+
+/* Column widths */
 .mat-column-deck,
 .mat-column-ankiId {
   width: 10%;
@@ -16,4 +174,46 @@
 .mat-column-front,
 .mat-column-back {
   width: 15%;
+}
+
+/* Material form-field (outline) dark overrides */
+::ng-deep .filter-panel .mat-mdc-form-field {
+  --mdc-outlined-text-field-outline-color: var(--border-mid);
+  --mdc-outlined-text-field-hover-outline-color: var(--c-v);
+  --mdc-outlined-text-field-focus-outline-color: var(--c-v);
+  --mdc-outlined-text-field-label-text-color: var(--text-muted);
+  --mdc-outlined-text-field-focus-label-text-color: var(--c-v);
+  --mdc-outlined-text-field-input-text-color: var(--text);
+  --mdc-outlined-text-field-container-shape: 8px;
+}
+
+::ng-deep .filter-panel .mat-mdc-text-field-wrapper {
+  background: var(--raised) !important;
+}
+
+/* Mat checkbox */
+::ng-deep .filter-panel .mat-mdc-checkbox .mdc-label {
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+}
+
+::ng-deep .filter-panel .mat-mdc-checkbox.mat-mdc-checkbox-checked .mdc-checkbox__background {
+  background-color: var(--c-v) !important;
+  border-color: var(--c-v) !important;
+}
+
+/* Mat select panel */
+::ng-deep .mat-mdc-select-value-text {
+  color: var(--text);
+}
+
+::ng-deep .mat-mdc-option {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+}
+
+::ng-deep .mat-mdc-option:hover,
+::ng-deep .mat-mdc-option.mat-mdc-option-active {
+  background: var(--raised) !important;
 }
