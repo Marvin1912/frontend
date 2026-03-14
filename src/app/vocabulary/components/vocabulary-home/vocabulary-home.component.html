@@ -2,38 +2,38 @@
   <button mat-fab routerLink="/" class="home-fab">
     <mat-icon>home</mat-icon>
   </button>
-</div>
 
-<main class="navgrid">
+  <div class="navgrid">
 
-  <a class="navcard" routerLink="/vocabulary/add">
-    <div class="navcard__mark">+</div>
-    <div class="navcard__body">
-      <h2 class="navcard__title">Add Word</h2>
-      <p class="navcard__sub">Look up and save new vocabulary</p>
+    <a class="navcard" routerLink="/vocabulary/add">
+      <div class="navcard__mark">+</div>
+      <div class="navcard__body">
+        <h2 class="navcard__title">Add Word</h2>
+        <p class="navcard__sub">Look up and save new vocabulary</p>
+      </div>
+      <span class="navcard__arrow" aria-hidden="true">↗</span>
+    </a>
+
+    <a class="navcard" routerLink="/vocabulary/list">
+      <div class="navcard__mark">L</div>
+      <div class="navcard__body">
+        <h2 class="navcard__title">List</h2>
+        <p class="navcard__sub">Browse all flashcards</p>
+      </div>
+      <span class="navcard__arrow" aria-hidden="true">↗</span>
+    </a>
+
+    <div class="navcard navcard--action" (click)="openDialog()">
+      <div class="navcard__mark">D</div>
+      <div class="navcard__body">
+        <h2 class="navcard__title">Manage Decks</h2>
+        <p class="navcard__sub">Rename and organise decks</p>
+      </div>
+      <span class="navcard__arrow" aria-hidden="true">↗</span>
     </div>
-    <span class="navcard__arrow" aria-hidden="true">↗</span>
-  </a>
 
-  <a class="navcard" routerLink="/vocabulary/list">
-    <div class="navcard__mark">L</div>
-    <div class="navcard__body">
-      <h2 class="navcard__title">List</h2>
-      <p class="navcard__sub">Browse all flashcards</p>
-    </div>
-    <span class="navcard__arrow" aria-hidden="true">↗</span>
-  </a>
-
-  <div class="navcard navcard--action" (click)="openDialog()">
-    <div class="navcard__mark">D</div>
-    <div class="navcard__body">
-      <h2 class="navcard__title">Manage Decks</h2>
-      <p class="navcard__sub">Rename and organise decks</p>
-    </div>
-    <span class="navcard__arrow" aria-hidden="true">↗</span>
   </div>
-
-</main>
+</div>
 
 <div class="content-area">
   <router-outlet></router-outlet>

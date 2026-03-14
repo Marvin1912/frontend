@@ -29,6 +29,9 @@
 
 /* ── Page Header ─────────────────────────────────── */
 .page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   padding: 0.75rem 1rem;
 }
 
@@ -52,14 +55,13 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.75rem;
-  padding: 1rem;
-  max-width: 900px;
-  margin: 0 auto;
+  flex: 1;
+  min-width: 0;
   box-sizing: border-box;
 }
 
 @media (min-width: 640px) {
-  .navgrid { gap: 1rem; padding: 1.5rem; }
+  .navgrid { gap: 1rem; }
 }
 
 /* ── Nav Cards ───────────────────────────────────── */
