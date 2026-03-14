@@ -2,7 +2,7 @@
 
   @if (!isFromRouteCall) {
     <div class="search-section">
-      <div class="search-input-wrapper">
+      <div class="search-bar">
         <mat-form-field appearance="outline">
           <mat-label>Enter English word</mat-label>
           <input
@@ -16,7 +16,7 @@
         @if (word) {
           <button
               mat-icon-button
-              color="primary"
+              class="icon-btn icon-btn--yellow"
               aria-label="Search word"
               (click)="getWord(word)"
               type="button"
@@ -31,14 +31,15 @@
   <div class="add-word-main">
 
     <!-- Dictionary Results Section -->
-    <div class="dictionary-results-section">
+    <div class="dictionary-section">
       @if (wordToShow) {
-        <div class="word-header">
-          <h1 class="word-title">{{ wordToShow }}</h1>
-        </div>
+        <header class="panel-header">
+          <span class="panel-dot"></span>
+          <span class="panel-label">DICTIONARY — {{ wordToShow }}</span>
+        </header>
       }
 
-      <div class="word-entries-container">
+      <div class="entries-container">
         <div class="word-entries-list">
           @for (wordEntry of wordEntries(); track entryIndex; let entryIndex = $index) {
             <div class="word-entry">
@@ -95,9 +96,10 @@
       <!-- Translation Section -->
       @if (wordToShow) {
         <div class="translation-section">
-          <div class="translation-header">
-            <h5 class="translation-title">Translation</h5>
-          </div>
+          <header class="panel-header">
+            <span class="panel-dot"></span>
+            <span class="panel-label">TRANSLATION</span>
+          </header>
 
           <form
               [formGroup]="wordFormTranslation"
@@ -133,9 +135,10 @@
     <!-- Save Word Section -->
     <div class="save-word-section">
       @if (wordToShow) {
-        <div class="save-word-header">
-          <h1>Save Word</h1>
-        </div>
+        <header class="panel-header">
+          <span class="panel-dot"></span>
+          <span class="panel-label">SAVE WORD</span>
+        </header>
 
         <div class="save-word-content">
           <div class="part-of-speech-toggle-group">

@@ -1,91 +1,88 @@
-<div class="h-100 d-flex flex-column p-2">
+<div class="vocab-list">
 
-  <div class="row m-0">
-    <div class="col-3 p-0 d-flex flex-column flex-shrink-1">
-      <mat-form-field>
-        <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)">
-      </mat-form-field>
-    </div>
-    <div class="col-5 d-flex justify-content-between flex-wrap">
-      <mat-checkbox
-          [(ngModel)]="withoutArticle"
-          (change)="filterWithoutArticle('withoutArticle')">
-        Without Article
-      </mat-checkbox>
-      <mat-checkbox
-          [(ngModel)]="markedAsupdated"
-          (change)="filterMarkedAsUpdated('markedAsUpdated')">
-        Updated
-      </mat-checkbox>
-      <mat-checkbox
-          [(ngModel)]="withoutDescription"
-          (change)="filterWithoutDescription('withoutDescription')">
-        Without Description
-      </mat-checkbox>
-      <mat-form-field>
-        <mat-label>Deck</mat-label>
-        <mat-select (selectionChange)="filterDeck($event)">
-          @for (deck of decks(); track deck.id) {
-            <mat-option value="{{deck.id}}">{{ deck.name }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div class="col-4">
-      @if (hasActiveFilters()) {
-        <div class="alert alert-info mb-0 py-2 px-3">
-          <small>
-            <strong>{{ filteredCount() }}</strong> of <strong>{{ totalCount() }}</strong> entries match current filters
-          </small>
-        </div>
-      } @else {
-        <div class="alert alert-info mb-0 py-2 px-3 text-center">
-          <small>
-            <strong>{{ totalCount() }}</strong> entries
-          </small>
-        </div>
-      }
-    </div>
+  <header class="table-header">
+    <span class="table-header__dot"></span>
+    <span class="table-header__label">VOCABULARY</span>
+  </header>
+
+  <div class="filter-panel">
+    <mat-form-field appearance="outline">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)">
+    </mat-form-field>
+
+    <mat-checkbox
+        [(ngModel)]="withoutArticle"
+        (change)="filterWithoutArticle('withoutArticle')">
+      Without Article
+    </mat-checkbox>
+    <mat-checkbox
+        [(ngModel)]="markedAsupdated"
+        (change)="filterMarkedAsUpdated('markedAsUpdated')">
+      Updated
+    </mat-checkbox>
+    <mat-checkbox
+        [(ngModel)]="withoutDescription"
+        (change)="filterWithoutDescription('withoutDescription')">
+      Without Description
+    </mat-checkbox>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Deck</mat-label>
+      <mat-select (selectionChange)="filterDeck($event)">
+        @for (deck of decks(); track deck.id) {
+          <mat-option value="{{deck.id}}">{{ deck.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (hasActiveFilters()) {
+      <span class="stats-badge">
+        <strong>{{ filteredCount() }}</strong> / <strong>{{ totalCount() }}</strong> entries
+      </span>
+    } @else {
+      <span class="stats-badge">
+        <strong>{{ totalCount() }}</strong> entries
+      </span>
+    }
   </div>
 
-  <div class="border border-black border-1 overflow-auto">
-    <div>
-      <table mat-table [dataSource]="flashcards" matSort>
+  <div class="table-container">
+    <table mat-table [dataSource]="flashcards" matSort>
 
-        <ng-container matColumnDef="deck">
-          <th mat-header-cell *matHeaderCellDef>deck</th>
-          <td mat-cell *matCellDef="let element">{{ getDeck(element) }}</td>
-        </ng-container>
+      <ng-container matColumnDef="deck">
+        <th mat-header-cell *matHeaderCellDef class="col-header">deck</th>
+        <td mat-cell *matCellDef="let element">{{ getDeck(element) }}</td>
+      </ng-container>
 
-        <ng-container matColumnDef="front">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>front</th>
-          <td mat-cell *matCellDef="let element">{{ element.front }}</td>
-        </ng-container>
+      <ng-container matColumnDef="front">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-header">front</th>
+        <td mat-cell *matCellDef="let element">{{ element.front }}</td>
+      </ng-container>
 
-        <ng-container matColumnDef="back">
-          <th mat-header-cell *matHeaderCellDef>back</th>
-          <td mat-cell *matCellDef="let element">{{ element.back }}</td>
-        </ng-container>
+      <ng-container matColumnDef="back">
+        <th mat-header-cell *matHeaderCellDef class="col-header">back</th>
+        <td mat-cell *matCellDef="let element">{{ element.back }}</td>
+      </ng-container>
 
-        <ng-container matColumnDef="description">
-          <th mat-header-cell *matHeaderCellDef>description</th>
-          <td mat-cell *matCellDef="let element">{{ element.description }}</td>
-        </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef class="col-header">description</th>
+        <td mat-cell *matCellDef="let element">{{ element.description }}</td>
+      </ng-container>
 
-        <ng-container matColumnDef="ankiId">
-          <th mat-header-cell *matHeaderCellDef>ankiId</th>
-          <td mat-cell *matCellDef="let element">{{ element.ankiId }}</td>
-        </ng-container>
+      <ng-container matColumnDef="ankiId">
+        <th mat-header-cell *matHeaderCellDef class="col-header">ankiId</th>
+        <td mat-cell *matCellDef="let element">{{ element.ankiId }}</td>
+      </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr
-            mat-row
-            *matRowDef="let word; columns: displayedColumns;"
-            (click)="navigateToWord(word.id)"
-        ></tr>
-      </table>
-    </div>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+          mat-row
+          class="clickable-row"
+          *matRowDef="let word; columns: displayedColumns;"
+          (click)="navigateToWord(word.id)"
+      ></tr>
+    </table>
   </div>
 
 </div>
