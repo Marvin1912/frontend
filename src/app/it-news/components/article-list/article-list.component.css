@@ -1,0 +1,211 @@
+/* ── Design Tokens ───────────────────────────────── */
+:host {
+  --bg:          #06080e;
+  --surface:     #0c1018;
+  --raised:      #111826;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-mid:  rgba(255, 255, 255, 0.13);
+
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
+
+  --c-n:  #2dd4bf;  --cg-n: rgba(45, 212, 191, 0.18);
+
+  display: block;
+  height: 100%;
+  overflow-y: auto;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem;
+}
+
+/* ── Controls ────────────────────────────────────── */
+.controls {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.filter-field {
+  flex: 1;
+  min-width: 140px;
+}
+
+/* Material form field dark theme overrides */
+::ng-deep .filter-field .mat-mdc-text-field-wrapper {
+  background: var(--surface) !important;
+}
+
+::ng-deep .filter-field .mdc-notched-outline__leading,
+::ng-deep .filter-field .mdc-notched-outline__notch,
+::ng-deep .filter-field .mdc-notched-outline__trailing {
+  border-color: var(--border-mid) !important;
+}
+
+::ng-deep .filter-field .mat-mdc-select-value-text {
+  color: var(--text) !important;
+}
+
+::ng-deep .filter-field .mat-mdc-floating-label {
+  color: var(--text-muted) !important;
+}
+
+::ng-deep .filter-field .mat-mdc-select-arrow {
+  color: var(--text-muted) !important;
+}
+
+::ng-deep .mat-mdc-option {
+  color: var(--text) !important;
+}
+
+::ng-deep .mat-mdc-select-panel {
+  background: var(--surface) !important;
+  border: 1px solid var(--border-mid) !important;
+}
+
+.refresh-btn {
+  background: var(--c-n) !important;
+  color: #06080e !important;
+  font-weight: 600 !important;
+  height: 48px;
+}
+
+.refresh-btn:disabled {
+  opacity: 0.5 !important;
+}
+
+/* ── Loading / Empty ─────────────────────────────── */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem;
+  color: var(--text-muted);
+}
+
+::ng-deep .loading .mat-mdc-progress-spinner circle {
+  stroke: var(--c-n) !important;
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* ── Article List ────────────────────────────────── */
+.article-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.article-card {
+  display: block;
+  padding: 1rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.article-card:hover {
+  border-color: var(--c-n);
+  box-shadow: 0 4px 20px var(--cg-n);
+  transform: translateY(-2px);
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.badge.category {
+  background: rgba(45, 212, 191, 0.12);
+  color: var(--c-n);
+}
+
+.badge.source {
+  background: var(--raised);
+  color: var(--text-muted);
+}
+
+.date {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.article-title {
+  margin: 0 0 0.35rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.article-desc {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── Pagination ──────────────────────────────────── */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 1rem 0;
+}
+
+.pagination button {
+  color: var(--text-muted) !important;
+  border-color: var(--border-mid) !important;
+}
+
+.pagination button:hover:not(:disabled) {
+  color: var(--c-n) !important;
+  border-color: var(--c-n) !important;
+}
+
+.pagination button:disabled {
+  opacity: 0.3 !important;
+}
+
+.page-info {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+}

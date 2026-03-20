@@ -1,0 +1,69 @@
+<div class="container">
+  <div class="controls">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Category</mat-label>
+      <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onFilterChange()">
+        <mat-option value="">All Categories</mat-option>
+        @for (cat of categories; track cat) {
+          <mat-option [value]="cat">{{ cat }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Source</mat-label>
+      <mat-select [(ngModel)]="selectedSource" (selectionChange)="onFilterChange()">
+        <mat-option value="">All Sources</mat-option>
+        @for (src of sources; track src.name) {
+          <mat-option [value]="src.name">{{ src.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-flat-button (click)="refreshFeeds()" [disabled]="fetching" class="refresh-btn">
+      <mat-icon>refresh</mat-icon>
+      {{ fetching ? 'Fetching...' : 'Refresh' }}
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading">
+      <mat-spinner diameter="36"></mat-spinner>
+      <span>Loading articles...</span>
+    </div>
+  }
+
+  @if (!loading && articles.length === 0) {
+    <div class="empty">
+      No articles found. Try refreshing the feeds or adjusting your filters.
+    </div>
+  }
+
+  <div class="article-list">
+    @for (article of articles; track article.id) {
+      <a [href]="article.link" target="_blank" rel="noopener noreferrer" class="article-card">
+        <div class="article-meta">
+          <span class="badge category">{{ article.category }}</span>
+          <span class="badge source">{{ article.source }}</span>
+          <span class="date">{{ formatDate(article.publishedAt) }}</span>
+        </div>
+        <h2 class="article-title">{{ article.title }}</h2>
+        @if (article.description) {
+          <p class="article-desc">{{ article.description }}</p>
+        }
+      </a>
+    }
+  </div>
+
+  @if (totalPages > 1) {
+    <div class="pagination">
+      <button mat-stroked-button (click)="prevPage()" [disabled]="currentPage === 0">
+        <mat-icon>chevron_left</mat-icon> Previous
+      </button>
+      <span class="page-info">Page {{ currentPage + 1 }} of {{ totalPages }} ({{ totalElements }} articles)</span>
+      <button mat-stroked-button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
+        Next <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  }
+</div>
