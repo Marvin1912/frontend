@@ -161,6 +161,48 @@
   font-family: 'JetBrains Mono', monospace;
 }
 
+.mark-read-btn {
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  line-height: 28px !important;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.mark-read-btn:hover {
+  color: var(--c-n);
+}
+
+.mark-read-btn .mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.read-indicator {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--c-n);
+  flex-shrink: 0;
+}
+
+.show-read-checkbox {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-left: 0.25rem;
+}
+
+::ng-deep .show-read-checkbox .mdc-checkbox__background {
+  border-color: var(--text-dim) !important;
+}
+
+::ng-deep .show-read-checkbox .mdc-checkbox--selected .mdc-checkbox__background {
+  background-color: var(--c-n) !important;
+  border-color: var(--c-n) !important;
+}
+
 .article-title {
   margin: 0 0 0.35rem 0;
   font-size: 1rem;

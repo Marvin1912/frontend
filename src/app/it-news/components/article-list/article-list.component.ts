@@ -6,6 +6,8 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import {Article, ArticlePage, FeedSource} from '../../models/article.model';
 import {ArticleService} from '../../services/article.service';
 
@@ -18,7 +20,9 @@ import {ArticleService} from '../../services/article.service';
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatCheckboxModule,
+    MatTooltipModule
   ],
   templateUrl: './article-list.component.html',
   styleUrl: './article-list.component.css',
@@ -36,6 +40,7 @@ export class ArticleListComponent implements OnInit {
   currentPage = 0;
   totalPages = 0;
   totalElements = 0;
+  showRead = false;
   loading = false;
   fetching = false;
 
@@ -67,7 +72,8 @@ export class ArticleListComponent implements OnInit {
         this.currentPage,
         20,
         this.selectedCategory || undefined,
-        this.selectedSource || undefined
+        this.selectedSource || undefined,
+        this.showRead
       )
       .subscribe({
         next: (page: ArticlePage) => {
@@ -103,6 +109,24 @@ export class ArticleListComponent implements OnInit {
   onSourceChange(): void {
     this.currentPage = 0;
     this.loadArticles();
+  }
+
+  onShowReadChange(): void {
+    this.currentPage = 0;
+    this.loadArticles();
+  }
+
+  markAsRead(event: Event, article: Article): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.articleService.markAsRead(article.id).subscribe(() => {
+      article.isRead = true;
+      if (!this.showRead) {
+        this.articles = this.articles.filter(a => a.id !== article.id);
+        this.totalElements--;
+      }
+      this.cdr.markForCheck();
+    });
   }
 
   nextPage(): void {

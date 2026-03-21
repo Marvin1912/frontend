@@ -12,10 +12,11 @@ export class ArticleService {
   constructor(private http: HttpClient) {
   }
 
-  getArticles(page = 0, size = 20, category?: string, source?: string): Observable<ArticlePage> {
+  getArticles(page = 0, size = 20, category?: string, source?: string, includeRead = false): Observable<ArticlePage> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('size', size.toString());
+      .set('size', size.toString())
+      .set('includeRead', includeRead.toString());
     if (category) {
       params = params.set('category', category);
     }
@@ -23,6 +24,10 @@ export class ArticleService {
       params = params.set('source', source);
     }
     return this.http.get<ArticlePage>(`${this.baseUrl}/articles`, {params});
+  }
+
+  markAsRead(id: number): Observable<void> {
+    return this.http.patch<void>(`${this.baseUrl}/articles/${id}/read`, null);
   }
 
   getSources(): Observable<FeedSource[]> {
