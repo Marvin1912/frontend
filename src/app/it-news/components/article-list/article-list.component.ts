@@ -28,6 +28,7 @@ export class ArticleListComponent implements OnInit {
 
   articles: Article[] = [];
   sources: FeedSource[] = [];
+  filteredSources: FeedSource[] = [];
   categories: string[] = [];
 
   selectedCategory = '';
@@ -53,6 +54,7 @@ export class ArticleListComponent implements OnInit {
     this.articleService.getSources().subscribe(sources => {
       this.sources = sources;
       this.categories = [...new Set(sources.map(s => s.category))];
+      this.updateFilteredSources();
       this.cdr.markForCheck();
     });
   }
@@ -82,7 +84,23 @@ export class ArticleListComponent implements OnInit {
       });
   }
 
-  onFilterChange(): void {
+  updateFilteredSources(): void {
+    this.filteredSources = this.selectedCategory
+      ? this.sources.filter(s => s.category === this.selectedCategory)
+      : [...this.sources];
+  }
+
+  onCategoryChange(): void {
+    this.updateFilteredSources();
+    if (this.selectedSource &&
+        !this.filteredSources.some(s => s.name === this.selectedSource)) {
+      this.selectedSource = '';
+    }
+    this.currentPage = 0;
+    this.loadArticles();
+  }
+
+  onSourceChange(): void {
     this.currentPage = 0;
     this.loadArticles();
   }

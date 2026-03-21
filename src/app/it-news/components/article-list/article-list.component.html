@@ -2,7 +2,7 @@
   <div class="controls">
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>Category</mat-label>
-      <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onFilterChange()">
+      <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onCategoryChange()">
         <mat-option value="">All Categories</mat-option>
         @for (cat of categories; track cat) {
           <mat-option [value]="cat">{{ cat }}</mat-option>
@@ -12,9 +12,9 @@
 
     <mat-form-field appearance="outline" class="filter-field">
       <mat-label>Source</mat-label>
-      <mat-select [(ngModel)]="selectedSource" (selectionChange)="onFilterChange()">
+      <mat-select [(ngModel)]="selectedSource" (selectionChange)="onSourceChange()">
         <mat-option value="">All Sources</mat-option>
-        @for (src of sources; track src.name) {
+        @for (src of filteredSources; track src.name) {
           <mat-option [value]="src.name">{{ src.name }}</mat-option>
         }
       </mat-select>
