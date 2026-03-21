@@ -19,6 +19,8 @@ import {ArithmeticListComponent} from './mental-arithmetic/components/arithmetic
 import {ExportsComponent} from './exports/exports.component';
 import {ExportsFilesComponent} from './exports/exports-files.component';
 import {ExportsBackupsComponent} from './exports/exports-backups.component';
+import {ItNewsLayoutComponent} from './it-news/components/it-news-layout/it-news-layout.component';
+import {ArticleListComponent} from './it-news/components/article-list/article-list.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -61,6 +63,13 @@ export const routes: Routes = [
       {path: 'settings', component: ArithmeticSettingsComponent, data: {home: '/mental-arithmetic'}},
       {path: 'session', component: ArithmeticSessionComponent, data: {home: '/mental-arithmetic'}},
       {path: 'arithmetic-list', component: ArithmeticListComponent, data: {home: '/mental-arithmetic'}}
+    ]
+  },
+  {
+    path: 'it-news',
+    component: ItNewsLayoutComponent,
+    children: [
+      {path: '', component: ArticleListComponent, data: {home: '/'}},
     ]
   }
 ];
