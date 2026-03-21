@@ -24,6 +24,10 @@
       <mat-icon>refresh</mat-icon>
       {{ fetching ? 'Fetching...' : 'Refresh' }}
     </button>
+
+    <mat-checkbox [(ngModel)]="showRead" (change)="onShowReadChange()" class="show-read-checkbox">
+      Show read
+    </mat-checkbox>
   </div>
 
   @if (loading) {
@@ -46,6 +50,16 @@
           <span class="badge category">{{ article.category }}</span>
           <span class="badge source">{{ article.source }}</span>
           <span class="date">{{ formatDate(article.publishedAt) }}</span>
+          @if (!article.isRead) {
+            <button mat-icon-button
+                    class="mark-read-btn"
+                    matTooltip="Mark as read"
+                    (click)="markAsRead($event, article)">
+              <mat-icon>done</mat-icon>
+            </button>
+          } @else {
+            <mat-icon class="read-indicator" matTooltip="Already read">done_all</mat-icon>
+          }
         </div>
         <h2 class="article-title">{{ article.title }}</h2>
         @if (article.description) {

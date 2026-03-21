@@ -7,6 +7,7 @@ export interface Article {
   category: string;
   publishedAt: string;
   fetchedAt: string;
+  isRead: boolean;
 }
 
 export interface ArticlePage {
