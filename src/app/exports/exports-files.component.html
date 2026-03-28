@@ -1,110 +1,90 @@
-<div class="container mt-4 exports-shell">
-  <div class="d-flex justify-content-between align-items-center">
-    <h2>Files</h2>
-    <div class="d-flex align-items-center" style="gap: 8px;">
-      <button mat-icon-button routerLink="/exports" matTooltip="Back to Exports">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-      <button mat-icon-button routerLink="/" matTooltip="Back to Home">
-        <mat-icon>home</mat-icon>
-      </button>
-    </div>
+<div class="topbar">
+  <div class="topbar__left">
+    <button class="topbar__btn" routerLink="/">
+      <mat-icon>home</mat-icon>
+    </button>
+    <button class="topbar__btn" routerLink="/exports">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
   </div>
-
-  <!-- Files Section -->
-  <div class="mt-5 exports-files">
-    <h3>Exported Files</h3>
-
-    @if (isLoadingFiles) {
-      <div class="text-center mt-4">
-        <mat-spinner></mat-spinner>
-        <p class="mt-2">Loading files...</p>
-      </div>
-    }
-
-    @if (filesError) {
-      <div class="alert alert-danger mt-4">
-        <strong>Error:</strong> {{ filesError }}
-      </div>
-    }
-
-    @if (!isLoadingFiles && !filesError && files.length === 0) {
-      <div class="alert alert-info mt-4">
-        No files found.
-      </div>
-    }
-
-    @if (!isLoadingFiles && !filesError && files.length > 0) {
-      <div class="mt-4">
-        <div class="card">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Available Files ({{ files.length }})</h5>
-            <button mat-icon-button (click)="loadFiles()" [disabled]="isLoadingFiles">
-              <mat-icon>refresh</mat-icon>
-            </button>
-          </div>
-          <div class="card-body">
-            <table mat-table [dataSource]="files" class="w-100">
-              <!-- Name Column -->
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Name</th>
-                <td mat-cell *matCellDef="let file">{{ file.name }}</td>
-              </ng-container>
-
-              <!-- Size Column -->
-              <ng-container matColumnDef="size">
-                <th mat-header-cell *matHeaderCellDef>Size</th>
-                <td mat-cell *matCellDef="let file">
-                  @if (file.size) {
-                    <span>{{ formatFileSize(file.size) }}</span>
-                  } @else {
-                    <span>-</span>
-                  }
-                </td>
-              </ng-container>
-
-              <!-- Modified Time Column -->
-              <ng-container matColumnDef="modifiedTime">
-                <th mat-header-cell *matHeaderCellDef>Modified</th>
-                <td mat-cell *matCellDef="let file">
-                  @if (file.modifiedTime) {
-                    <span>{{ formatDate(file.modifiedTime) }}</span>
-                  } @else {
-                    <span>-</span>
-                  }
-                </td>
-              </ng-container>
-
-              <!-- Actions Column -->
-              <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>Actions</th>
-                <td mat-cell *matCellDef="let file">
-                  <button
-                    mat-icon-button
-                    [disabled]="!file.webViewLink"
-                    (click)="openFile(file.webViewLink)"
-                    matTooltip="Open file"
-                  >
-                    <mat-icon>open_in_new</mat-icon>
-                  </button>
-                  <button
-                    mat-icon-button
-                    (click)="deleteFile(file.id, file.name)"
-                    matTooltip="Delete file"
-                    class="text-danger"
-                  >
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-            </table>
-          </div>
-        </div>
-      </div>
-    }
-  </div>
+  <span class="topbar__icon">&#x2B21;</span>
+  <span class="topbar__title">Files</span>
 </div>
 
+<div class="layout">
+
+  @if (isLoadingFiles) {
+    <div class="state-box">
+      <mat-spinner [diameter]="36"></mat-spinner>
+      <span class="state-box__text">Loading files&#x2026;</span>
+    </div>
+  }
+
+  @if (filesError) {
+    <div class="alert-box alert-box--danger">
+      <strong>Error:</strong> {{ filesError }}
+    </div>
+  }
+
+  @if (!isLoadingFiles && !filesError && files.length === 0) {
+    <div class="alert-box alert-box--info">
+      No files found.
+    </div>
+  }
+
+  @if (!isLoadingFiles && !filesError && files.length > 0) {
+    <section class="panel">
+      <div class="panel__header">
+        <div class="panel__label">
+          <span class="panel__dot"></span>
+          <span>Available Files ({{ files.length }})</span>
+        </div>
+        <button class="panel__action" (click)="loadFiles()" [disabled]="isLoadingFiles">
+          <mat-icon>refresh</mat-icon>
+        </button>
+      </div>
+
+      <table mat-table [dataSource]="files">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let file">{{ file.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="size">
+          <th mat-header-cell *matHeaderCellDef>Size</th>
+          <td mat-cell *matCellDef="let file">
+            {{ file.size ? formatFileSize(file.size) : '-' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="modifiedTime">
+          <th mat-header-cell *matHeaderCellDef>Modified</th>
+          <td mat-cell *matCellDef="let file">
+            {{ file.modifiedTime ? formatDate(file.modifiedTime) : '-' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let file">
+            <button
+              class="tbl-btn"
+              [disabled]="!file.webViewLink"
+              (click)="openFile(file.webViewLink)">
+              <mat-icon>open_in_new</mat-icon>
+            </button>
+            <button
+              class="tbl-btn tbl-btn--danger"
+              (click)="deleteFile(file.id, file.name)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </section>
+  }
+
+</div>

@@ -1,34 +1,30 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {RouterModule} from '@angular/router';
+import {MatIconModule} from '@angular/material/icon';
+import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatTableModule} from '@angular/material/table';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
-import { BackupRunService } from './services/backup/backup-run.service';
-import { BackupRun } from './services/backup/backup-run.model';
+import {BackupRunService} from './services/backup/backup-run.service';
+import {BackupRun} from './services/backup/backup-run.model';
 
 @Component({
   selector: 'app-exports-backups',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
     RouterModule,
     MatTableModule,
     MatIconModule,
-    MatButtonModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
-    MatPaginatorModule
+    MatPaginatorModule,
   ],
   templateUrl: './exports-backups.component.html',
-  styleUrl: './exports-backups.component.css'
+  styleUrl: './exports-backups.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExportsBackupsComponent implements OnInit {
+
   backupRuns: BackupRun[] = [];
   isLoading = true;
   error: string | null = null;
@@ -37,10 +33,8 @@ export class ExportsBackupsComponent implements OnInit {
   pageSize = 20;
   pageIndex = 0;
 
-  constructor(
-    private backupRunService: BackupRunService,
-    private cdr: ChangeDetectorRef
-  ) {}
+  private backupRunService = inject(BackupRunService);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.loadBackupRuns();

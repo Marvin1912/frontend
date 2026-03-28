@@ -1,112 +1,107 @@
-<div class="container mt-4 exports-shell">
-  <div class="d-flex justify-content-between align-items-center">
-    <h2>Backups</h2>
-    <div class="d-flex align-items-center" style="gap: 8px;">
-      <button mat-icon-button routerLink="/exports" matTooltip="Back to Exports">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-      <button mat-icon-button routerLink="/" matTooltip="Back to Home">
-        <mat-icon>home</mat-icon>
-      </button>
+<div class="topbar">
+  <div class="topbar__left">
+    <button class="topbar__btn" routerLink="/">
+      <mat-icon>home</mat-icon>
+    </button>
+    <button class="topbar__btn" routerLink="/exports">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+  <span class="topbar__icon">&#x2B21;</span>
+  <span class="topbar__title">Backups</span>
+</div>
+
+<div class="layout">
+
+  @if (isLoading) {
+    <div class="state-box">
+      <mat-spinner [diameter]="36"></mat-spinner>
+      <span class="state-box__text">Loading backup runs&#x2026;</span>
     </div>
-  </div>
+  }
 
-  <div class="mt-5 exports-backups">
-    <h3>Backup Run History</h3>
+  @if (error) {
+    <div class="alert-box alert-box--danger">
+      <strong>Error:</strong> {{ error }}
+    </div>
+  }
 
-    @if (isLoading) {
-      <div class="text-center mt-4">
-        <mat-spinner></mat-spinner>
-        <p class="mt-2">Loading backup runs...</p>
-      </div>
-    }
+  @if (!isLoading && !error && backupRuns.length === 0) {
+    <div class="alert-box alert-box--info">
+      No backup runs found.
+    </div>
+  }
 
-    @if (error) {
-      <div class="alert alert-danger mt-4">
-        <strong>Error:</strong> {{ error }}
-      </div>
-    }
-
-    @if (!isLoading && !error && backupRuns.length === 0) {
-      <div class="alert alert-info mt-4">
-        No backup runs found.
-      </div>
-    }
-
-    @if (!isLoading && !error && backupRuns.length > 0) {
-      <div class="mt-4">
-        <div class="card">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Backup Runs ({{ totalElements }})</h5>
-            <button mat-icon-button (click)="loadBackupRuns()" [disabled]="isLoading" matTooltip="Refresh">
-              <mat-icon>refresh</mat-icon>
-            </button>
-          </div>
-          <div class="card-body">
-            <table mat-table [dataSource]="backupRuns" class="w-100">
-
-              <!-- File Name Column -->
-              <ng-container matColumnDef="fileName">
-                <th mat-header-cell *matHeaderCellDef>File Name</th>
-                <td mat-cell *matCellDef="let run">{{ run.fileName }}</td>
-              </ng-container>
-
-              <!-- Status Column -->
-              <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef>Status</th>
-                <td mat-cell *matCellDef="let run">
-                  <span class="status-badge" [class]="'status-' + run.status.toLowerCase().replace('_', '-')">
-                    {{ run.status }}
-                  </span>
-                </td>
-              </ng-container>
-
-              <!-- Started At Column -->
-              <ng-container matColumnDef="startedAt">
-                <th mat-header-cell *matHeaderCellDef>Started</th>
-                <td mat-cell *matCellDef="let run">{{ formatDateTime(run.startedAt) }}</td>
-              </ng-container>
-
-              <!-- Finished At Column -->
-              <ng-container matColumnDef="finishedAt">
-                <th mat-header-cell *matHeaderCellDef>Finished</th>
-                <td mat-cell *matCellDef="let run">{{ formatDateTime(run.finishedAt) }}</td>
-              </ng-container>
-
-              <!-- Duration Column -->
-              <ng-container matColumnDef="durationMs">
-                <th mat-header-cell *matHeaderCellDef>Duration</th>
-                <td mat-cell *matCellDef="let run">{{ formatDuration(run.durationMs) }}</td>
-              </ng-container>
-
-              <!-- Upload Success Column -->
-              <ng-container matColumnDef="uploadSuccess">
-                <th mat-header-cell *matHeaderCellDef>Upload</th>
-                <td mat-cell *matCellDef="let run">
-                  @if (run.uploadSuccess === true) {
-                    <mat-icon class="icon-success" matTooltip="Upload successful">check_circle</mat-icon>
-                  } @else if (run.uploadSuccess === false) {
-                    <mat-icon class="icon-danger" [matTooltip]="run.errorMessage || 'Upload failed'">cancel</mat-icon>
-                  } @else {
-                    <span>-</span>
-                  }
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-            </table>
-
-            <mat-paginator
-              [length]="totalElements"
-              [pageSize]="pageSize"
-              [pageIndex]="pageIndex"
-              [pageSizeOptions]="[10, 20, 50]"
-              (page)="onPageChange($event)"
-            ></mat-paginator>
-          </div>
+  @if (!isLoading && !error && backupRuns.length > 0) {
+    <section class="panel">
+      <div class="panel__header">
+        <div class="panel__label">
+          <span class="panel__dot"></span>
+          <span>Backup Runs ({{ totalElements }})</span>
         </div>
+        <button class="panel__action" (click)="loadBackupRuns()" [disabled]="isLoading">
+          <mat-icon>refresh</mat-icon>
+        </button>
       </div>
-    }
-  </div>
+
+      <table mat-table [dataSource]="backupRuns">
+        <ng-container matColumnDef="fileName">
+          <th mat-header-cell *matHeaderCellDef>File Name</th>
+          <td mat-cell *matCellDef="let run">{{ run.fileName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let run">
+            <span class="badge"
+              [class.badge--success]="run.status === 'SUCCESS'"
+              [class.badge--failed]="run.status === 'FAILED'"
+              [class.badge--in-progress]="run.status === 'IN_PROGRESS'">
+              {{ run.status }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="startedAt">
+          <th mat-header-cell *matHeaderCellDef>Started</th>
+          <td mat-cell *matCellDef="let run">{{ formatDateTime(run.startedAt) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="finishedAt">
+          <th mat-header-cell *matHeaderCellDef>Finished</th>
+          <td mat-cell *matCellDef="let run">{{ formatDateTime(run.finishedAt) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="durationMs">
+          <th mat-header-cell *matHeaderCellDef>Duration</th>
+          <td mat-cell *matCellDef="let run">{{ formatDuration(run.durationMs) }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="uploadSuccess">
+          <th mat-header-cell *matHeaderCellDef>Upload</th>
+          <td mat-cell *matCellDef="let run">
+            @if (run.uploadSuccess === true) {
+              <mat-icon class="icon-success" matTooltip="Upload successful">check_circle</mat-icon>
+            } @else if (run.uploadSuccess === false) {
+              <mat-icon class="icon-danger" [matTooltip]="run.errorMessage || 'Upload failed'">cancel</mat-icon>
+            } @else {
+              <span>-</span>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [length]="totalElements"
+        [pageSize]="pageSize"
+        [pageIndex]="pageIndex"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="onPageChange($event)">
+      </mat-paginator>
+    </section>
+  }
+
 </div>
