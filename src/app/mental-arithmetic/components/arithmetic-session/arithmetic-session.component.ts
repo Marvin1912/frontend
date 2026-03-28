@@ -551,15 +551,18 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
       padding: 20px;
       text-align: center;
       min-width: 300px;
+      background: #0c1018;
+      color: #c8d4e8;
     }
 
     h2 {
-      color: #1976d2;
+      color: #a78bfa;
       margin-bottom: 20px;
     }
 
     .session-stats {
-      background-color: #f5f5f5;
+      background-color: #111826;
+      border: 1px solid rgba(255, 255, 255, 0.07);
       padding: 15px;
       border-radius: 8px;
       margin: 15px 0;
@@ -568,11 +571,11 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
 
     .session-stats p {
       margin: 8px 0;
-      color: #333;
+      color: #c8d4e8;
     }
 
     .warning-text {
-      color: #666;
+      color: #7a93b0;
       font-style: italic;
       margin: 15px 0;
     }
@@ -585,8 +588,9 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     }
 
     .confirm-button {
-      background-color: #f44336;
-      color: white;
+      background-color: rgba(251, 113, 133, 0.15);
+      border: 1px solid rgba(251, 113, 133, 0.3);
+      color: #fb7185;
       border-radius: 20px;
       padding: 8px 16px;
       display: flex;
@@ -595,12 +599,13 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     }
 
     .confirm-button:hover {
-      background-color: #d32f2f;
+      background-color: rgba(251, 113, 133, 0.25);
     }
 
     .cancel-button {
-      background-color: #4caf50;
-      color: white;
+      background-color: rgba(34, 211, 94, 0.15);
+      border: 1px solid rgba(34, 211, 94, 0.3);
+      color: #22d35e;
       border-radius: 20px;
       padding: 8px 16px;
       display: flex;
@@ -609,7 +614,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     }
 
     .cancel-button:hover {
-      background-color: #388e3c;
+      background-color: rgba(34, 211, 94, 0.25);
     }
 
     mat-icon {
