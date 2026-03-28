@@ -21,6 +21,7 @@ import {ExportsFilesComponent} from './exports/exports-files.component';
 import {ExportsBackupsComponent} from './exports/exports-backups.component';
 import {ItNewsLayoutComponent} from './it-news/components/it-news-layout/it-news-layout.component';
 import {ArticleListComponent} from './it-news/components/article-list/article-list.component';
+import {FeedConfigComponent} from './it-news/components/feed-config/feed-config.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -70,6 +71,7 @@ export const routes: Routes = [
     component: ItNewsLayoutComponent,
     children: [
       {path: '', component: ArticleListComponent, data: {home: '/'}},
+      {path: 'feeds', component: FeedConfigComponent, data: {home: '/it-news'}}
     ]
   }
 ];
