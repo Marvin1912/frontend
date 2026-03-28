@@ -1,0 +1,173 @@
+/* ── Design Tokens ───────────────────────────────── */
+:host {
+  --bg:          #06080e;
+  --surface:     #0c1018;
+  --raised:      #111826;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-mid:  rgba(255, 255, 255, 0.13);
+
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
+
+  --c-n:  #2dd4bf;  --cg-n: rgba(45, 212, 191, 0.18);
+  --c-e:  #fb7185;
+
+  display: block;
+  height: 100%;
+  overflow-y: auto;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem;
+}
+
+/* ── Controls ────────────────────────────────────── */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.section-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--text);
+}
+
+.add-btn {
+  background: var(--c-n) !important;
+  color: #06080e !important;
+  font-weight: 600 !important;
+}
+
+/* ── Loading / Empty ─────────────────────────────── */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem;
+  color: var(--text-muted);
+}
+
+::ng-deep .loading .mat-mdc-progress-spinner circle {
+  stroke: var(--c-n) !important;
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* ── Table ───────────────────────────────────────── */
+.table-wrapper {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+}
+
+::ng-deep .mat-mdc-header-row {
+  background: var(--raised) !important;
+}
+
+::ng-deep .mat-mdc-header-cell {
+  color: var(--text-muted) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-bottom-color: var(--border-mid) !important;
+}
+
+::ng-deep .mat-mdc-row {
+  background: var(--surface) !important;
+  transition: background 0.15s;
+}
+
+::ng-deep .mat-mdc-row:hover {
+  background: var(--raised) !important;
+}
+
+::ng-deep .mat-mdc-cell {
+  color: var(--text) !important;
+  font-size: 0.88rem !important;
+  border-bottom-color: var(--border) !important;
+}
+
+.url-cell {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.78rem !important;
+  color: var(--text-muted) !important;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Badge ───────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.badge.category {
+  background: rgba(45, 212, 191, 0.12);
+  color: var(--c-n);
+}
+
+/* ── Active Toggle ──────────────────────────────── */
+.active-toggle {
+  transform: scale(0.85);
+}
+
+::ng-deep .active-toggle .mdc-switch--selected .mdc-switch__track::after {
+  background: rgba(45, 212, 191, 0.4) !important;
+}
+
+::ng-deep .active-toggle .mdc-switch--selected .mdc-switch__handle::after {
+  background: var(--c-n) !important;
+}
+
+/* ── Action Buttons ─────────────────────────────── */
+.actions-cell {
+  white-space: nowrap;
+}
+
+.action-btn {
+  color: var(--text-dim) !important;
+  transition: color 0.2s;
+}
+
+.action-btn:hover {
+  color: var(--c-n) !important;
+}
+
+.delete-btn:hover {
+  color: var(--c-e) !important;
+}
+
+.action-btn .mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}

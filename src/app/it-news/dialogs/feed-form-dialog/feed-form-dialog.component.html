@@ -1,0 +1,29 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Feed' : 'Add Feed' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="feedForm" class="feed-form">
+    <mat-form-field class="form-field">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="e.g. Baeldung">
+    </mat-form-field>
+
+    <mat-form-field class="form-field">
+      <mat-label>URL</mat-label>
+      <input matInput formControlName="url" placeholder="https://example.com/feed.xml">
+    </mat-form-field>
+
+    <mat-form-field class="form-field">
+      <mat-label>Category</mat-label>
+      <input matInput formControlName="category" placeholder="e.g. Java">
+    </mat-form-field>
+
+    <mat-slide-toggle formControlName="active" class="active-toggle">Active</mat-slide-toggle>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close class="btn-cancel">Cancel</button>
+  <button mat-flat-button (click)="save()" [disabled]="feedForm.invalid" class="btn-save">
+    {{ isEdit ? 'Update' : 'Create' }}
+  </button>
+</mat-dialog-actions>

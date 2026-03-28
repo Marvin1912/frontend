@@ -20,7 +20,9 @@ export interface ArticlePage {
 }
 
 export interface FeedSource {
+  id?: number;
   name: string;
   url: string;
   category: string;
+  active?: boolean;
 }

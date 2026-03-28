@@ -1,0 +1,69 @@
+<div class="container">
+  <div class="controls">
+    <span class="section-title">Feed Configuration</span>
+    <button mat-flat-button (click)="openAddDialog()" class="add-btn">
+      <mat-icon>add</mat-icon> Add Feed
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <mat-progress-spinner mode="indeterminate" diameter="28"></mat-progress-spinner>
+      <span>Loading feeds...</span>
+    </div>
+  }
+
+  @if (!loading() && feeds().length > 0) {
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="feeds()">
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let feed">{{ feed.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="url">
+          <th mat-header-cell *matHeaderCellDef>URL</th>
+          <td mat-cell *matCellDef="let feed" class="url-cell">{{ feed.url }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef>Category</th>
+          <td mat-cell *matCellDef="let feed">
+            <span class="badge category">{{ feed.category }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="active">
+          <th mat-header-cell *matHeaderCellDef>Active</th>
+          <td mat-cell *matCellDef="let feed">
+            <mat-slide-toggle
+              [checked]="feed.active"
+              (change)="toggleActive(feed)"
+              class="active-toggle">
+            </mat-slide-toggle>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let feed" class="actions-cell">
+            <button mat-icon-button (click)="openEditDialog(feed)" class="action-btn" aria-label="Edit feed">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button (click)="openDeleteDialog(feed)" class="action-btn delete-btn" aria-label="Delete feed">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  }
+
+  @if (!loading() && feeds().length === 0) {
+    <div class="empty">No feed sources configured yet.</div>
+  }
+</div>
