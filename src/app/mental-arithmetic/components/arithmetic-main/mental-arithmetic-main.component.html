@@ -1,14 +1,20 @@
-<div class="mental-arithmetic-card-container">
-  <div class="mental-arithmetic-card" (click)="onStartTraining()">
-    <h2>Start Training</h2>
-    <span>Begin your mental arithmetic training!</span>
+<div class="card-container">
+  <div class="navcard navcard--start" (click)="onStartTraining()">
+    <div class="navcard__mark">▶</div>
+    <h2 class="navcard__title">Start Training</h2>
+    <p class="navcard__sub">Begin your mental arithmetic training!</p>
+    <span class="navcard__arrow">↗</span>
   </div>
-  <div class="mental-arithmetic-card" routerLink="/mental-arithmetic/settings">
-    <h2>Settings</h2>
-    <span>Configure difficulty and operations!</span>
+  <div class="navcard navcard--settings" routerLink="/mental-arithmetic/settings">
+    <div class="navcard__mark">⚙</div>
+    <h2 class="navcard__title">Settings</h2>
+    <p class="navcard__sub">Configure difficulty and operations!</p>
+    <span class="navcard__arrow">↗</span>
   </div>
-  <div class="mental-arithmetic-card" routerLink="/mental-arithmetic/arithmetic-list">
-    <h2>Statistics & History</h2>
-    <span>View your training progress and performance!</span>
+  <div class="navcard navcard--history" routerLink="/mental-arithmetic/arithmetic-list">
+    <div class="navcard__mark">📊</div>
+    <h2 class="navcard__title">Statistics & History</h2>
+    <p class="navcard__sub">View your training progress and performance!</p>
+    <span class="navcard__arrow">↗</span>
   </div>
 </div>

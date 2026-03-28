@@ -1,34 +1,29 @@
-<div class="container h-100">
-  <header class="row header-row p-2">
-    <div class="col-4 col-sm-2 d-flex justify-content-between align-items-center">
-      <button mat-fab [routerLink]="homeLink" class="header-button">
-        <mat-icon>home</mat-icon>
+<div class="topbar">
+  <div class="topbar__left">
+    <button class="topbar__btn" [routerLink]="homeLink">
+      <mat-icon>home</mat-icon>
+    </button>
+    <button class="topbar__btn" [matMenuTriggerFor]="menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="/mental-arithmetic/session">
+        <span>Start Training</span>
       </button>
-      <button mat-fab [matMenuTriggerFor]="menu" class="header-button">
-        <mat-icon>more_vert</mat-icon>
+      <button mat-menu-item routerLink="/mental-arithmetic/settings">
+        <span>Settings</span>
       </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="/mental-arithmetic/session">
-          <span>Start Training</span>
-        </button>
-        <button mat-menu-item routerLink="/mental-arithmetic/settings">
-          <span>Settings</span>
-        </button>
-        <button mat-menu-item routerLink="/mental-arithmetic/arithmetic-list">
-          <span>History</span>
-        </button>
-        <button mat-menu-item routerLink="/mental-arithmetic">
-          <span>Home</span>
-        </button>
-      </mat-menu>
-    </div>
-    <div class="col-8 col-sm-10 d-flex flex-column justify-content-center align-items-center">
-      <h1 class="mental-arithmetic-root-header-title">Mental Arithmetic</h1>
-    </div>
-  </header>
-  <main class="row data-row">
-    <div class="col h-100">
-      <router-outlet></router-outlet>
-    </div>
-  </main>
+      <button mat-menu-item routerLink="/mental-arithmetic/arithmetic-list">
+        <span>History</span>
+      </button>
+      <button mat-menu-item routerLink="/mental-arithmetic">
+        <span>Home</span>
+      </button>
+    </mat-menu>
+  </div>
+  <span class="topbar__icon">⬡</span>
+  <span class="topbar__title">Mental Arithmetic</span>
+</div>
+<div class="layout">
+  <router-outlet></router-outlet>
 </div>
