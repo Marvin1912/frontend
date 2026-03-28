@@ -1,40 +1,33 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTableModule } from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {RouterModule} from '@angular/router';
+import {MatIconModule} from '@angular/material/icon';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatTableModule} from '@angular/material/table';
 
-import { FileService } from './services/file/file.service';
-import { FileDeleteResponse, FileItem, FileItemTime, FileListResponse } from './services/file/file.model';
+import {FileService} from './services/file/file.service';
+import {FileDeleteResponse, FileItem, FileItemTime, FileListResponse} from './services/file/file.model';
 
 @Component({
   selector: 'app-exports-files',
-  standalone: true,
   imports: [
-    CommonModule,
     RouterModule,
     MatTableModule,
     MatIconModule,
-    MatButtonModule,
     MatProgressSpinnerModule,
-    MatTooltipModule
   ],
   templateUrl: './exports-files.component.html',
-  styleUrl: './exports-files.component.css'
+  styleUrl: './exports-files.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExportsFilesComponent implements OnInit {
-  // Files table properties
+
   files: FileItem[] = [];
   isLoadingFiles = false;
   filesError: string | null = null;
   displayedColumns: string[] = ['name', 'size', 'modifiedTime', 'actions'];
 
-  constructor(
-    private fileService: FileService
-  ) {}
+  private fileService = inject(FileService);
+  private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
     this.loadFiles();
@@ -52,16 +45,16 @@ export class ExportsFilesComponent implements OnInit {
         } else {
           this.filesError = 'Failed to load files: Invalid response format';
         }
+        this.cdr.markForCheck();
       },
       error: (error) => {
         this.isLoadingFiles = false;
         this.filesError = 'Failed to load files: ' + error.message;
-        console.error('Error loading files:', error);
+        this.cdr.markForCheck();
       }
     });
   }
 
-  // File utility methods
   formatFileSize(bytes?: number): string {
     if (!bytes) return '-';
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -89,18 +82,17 @@ export class ExportsFilesComponent implements OnInit {
       this.fileService.deleteFile(fileId).subscribe({
         next: (response: FileDeleteResponse) => {
           if (response.success) {
-            // Reload the files list after successful deletion
             this.loadFiles();
           } else {
             this.filesError = response.error || 'Failed to delete file';
+            this.cdr.markForCheck();
           }
         },
         error: (error) => {
           this.filesError = 'Failed to delete file: ' + error.message;
-          console.error('Error deleting file:', error);
+          this.cdr.markForCheck();
         }
       });
     }
   }
 }
-

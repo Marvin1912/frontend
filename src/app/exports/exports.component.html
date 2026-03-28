@@ -1,56 +1,36 @@
-<div class="container mt-4 exports-shell">
-  <div class="d-flex justify-content-between align-items-center">
-    <h2>Exports</h2>
-    <button mat-icon-button routerLink="/" matTooltip="Back to Home">
+<div class="topbar">
+  <div class="topbar__left">
+    <button class="topbar__btn" routerLink="/">
       <mat-icon>home</mat-icon>
     </button>
   </div>
+  <span class="topbar__icon">&#x2B21;</span>
+  <span class="topbar__title">Exports</span>
+</div>
 
-  <!-- Export Options Cards -->
-  <div class="export-cards-container mt-4">
-    <mat-card class="export-card" routerLink="files">
-      <mat-card-header>
-        <mat-card-title>Files</mat-card-title>
-        <mat-card-subtitle>Quick exports and exported files</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="card-icon">
-          <mat-icon>folder</mat-icon>
-        </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary">OPEN</button>
-      </mat-card-actions>
-    </mat-card>
+<div class="layout">
+  <div class="navgrid">
 
-    <mat-card class="export-card" routerLink="backups">
-      <mat-card-header>
-        <mat-card-title>Backups</mat-card-title>
-        <mat-card-subtitle>Uploaded backup run history</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="card-icon">
-          <mat-icon>backup</mat-icon>
-        </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary">OPEN</button>
-      </mat-card-actions>
-    </mat-card>
+    <a class="navcard navcard--files" routerLink="files">
+      <div class="navcard__mark">F</div>
+      <h2 class="navcard__title">Files</h2>
+      <p class="navcard__sub">Quick exports and exported files</p>
+      <span class="navcard__arrow" aria-hidden="true">&#x2197;</span>
+    </a>
 
-    <mat-card class="export-card">
-      <mat-card-header>
-        <mat-card-title>Anki Sync</mat-card-title>
-        <mat-card-subtitle>Synchronization of Anki decks</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-content>
-        <div class="card-icon">
-          <mat-icon>menu_book</mat-icon>
-        </div>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button color="primary" (click)="syncAnki()">SYNC</button>
-      </mat-card-actions>
-    </mat-card>
+    <a class="navcard navcard--backups" routerLink="backups">
+      <div class="navcard__mark">B</div>
+      <h2 class="navcard__title">Backups</h2>
+      <p class="navcard__sub">Uploaded backup run history</p>
+      <span class="navcard__arrow" aria-hidden="true">&#x2197;</span>
+    </a>
+
+    <div class="navcard navcard--anki">
+      <div class="navcard__mark">A</div>
+      <h2 class="navcard__title">Anki Sync</h2>
+      <p class="navcard__sub">Synchronization of Anki decks</p>
+      <button class="navcard__action" (click)="syncAnki()">Sync</button>
+    </div>
+
   </div>
 </div>
