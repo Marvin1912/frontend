@@ -24,11 +24,6 @@ export class TemperatureCardComponent {
 
   temperatureDisplay = computed(() => this.reading().temperatureC.toFixed(1));
 
-  humidityDisplay = computed(() => {
-    const h = this.reading().humidityPct;
-    return h === undefined ? null : Math.round(h);
-  });
-
   freshness = computed<Freshness>(() => {
     const ageMin = (Date.now() - new Date(this.reading().measuredAt).getTime()) / 60_000;
     if (ageMin < 2) return 'fresh';

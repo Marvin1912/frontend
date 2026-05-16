@@ -7,12 +7,6 @@
     <span class="card__temp-value">{{ temperatureDisplay() }}</span>
     <span class="card__temp-unit">°C</span>
   </div>
-  @if (humidityDisplay() !== null) {
-    <div class="card__humidity">
-      <span class="card__humidity-value">{{ humidityDisplay() }}</span>
-      <span class="card__humidity-unit">% RH</span>
-    </div>
-  }
   @if (variant() === 'hero') {
     <div class="card__meta">
       <span class="card__meta-label">Updated</span>

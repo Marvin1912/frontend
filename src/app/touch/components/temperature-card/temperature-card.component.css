@@ -93,20 +93,6 @@
   color: var(--text-muted);
 }
 
-.card__humidity {
-  display: flex;
-  align-items: baseline;
-  gap: 0.3rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.card__humidity-value {
-  color: var(--text);
-  font-weight: 600;
-}
-
 .card__meta {
   display: flex;
   align-items: baseline;
@@ -145,8 +131,4 @@
 
 :host(.is-hero) .card__temp-unit {
   font-size: 1.6rem;
-}
-
-:host(.is-hero) .card__humidity {
-  font-size: 1.2rem;
 }
