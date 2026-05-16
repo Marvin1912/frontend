@@ -19,10 +19,7 @@
   border-radius: 14px;
   color: var(--text);
   font-family: 'Outfit', sans-serif;
-  text-decoration: none;
   overflow: hidden;
-  transition: border-color 0.2s, background 0.2s, transform 0.05s;
-  -webkit-tap-highlight-color: transparent;
 }
 
 .tile::before {
@@ -35,17 +32,6 @@
 
 .tile > * {
   position: relative;
-}
-
-.tile:hover,
-.tile:focus-visible {
-  border-color: var(--accent);
-  outline: none;
-}
-
-.tile:active {
-  transform: scale(0.997);
-  background: color-mix(in srgb, var(--surface) 92%, var(--accent) 8%);
 }
 
 .tile__header {
@@ -89,29 +75,50 @@
   font-size: 0.78rem;
   letter-spacing: 0.08em;
   color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.tile__cta:hover,
+.tile__cta:focus-visible {
+  color: var(--accent);
+  outline: none;
 }
 
 .tile__list {
   margin: 0;
   padding: 0;
   list-style: none;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   align-content: center;
-  gap: 0.6rem 1.5rem;
 }
 
 .tile__row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  font-size: 0.95rem;
+  padding: 0.55rem 0;
   min-width: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.tile__row:last-child {
+  border-bottom: none;
+}
+
+.tile__row-info {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .tile__name {
   color: var(--text);
+  font-size: 0.95rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -126,6 +133,55 @@
 
 .tile__due.is-overdue {
   color: var(--c-e);
+}
+
+.tile__row-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.tile__btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid var(--border-mid);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.05s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tile__btn:active {
+  transform: scale(0.96);
+}
+
+.tile__btn--water {
+  border-color: color-mix(in srgb, var(--c-p) 55%, var(--border-mid));
+  color: var(--c-p);
+}
+
+.tile__btn--water:hover,
+.tile__btn--water:focus-visible {
+  border-color: var(--c-p);
+  background: var(--cg-p);
+  outline: none;
+}
+
+.tile__btn--fertilize {
+  border-color: color-mix(in srgb, var(--c-v) 55%, var(--border-mid));
+  color: var(--c-v);
+}
+
+.tile__btn--fertilize:hover,
+.tile__btn--fertilize:focus-visible {
+  border-color: var(--c-v);
+  background: var(--cg-v);
+  outline: none;
 }
 
 .tile__empty,

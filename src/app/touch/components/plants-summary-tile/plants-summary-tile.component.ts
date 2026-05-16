@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
-import {AsyncPipe} from '@angular/common';
+import {AsyncPipe, formatDate} from '@angular/common';
 import {RouterLink} from '@angular/router';
-import {map} from 'rxjs';
+import {BehaviorSubject, map, switchMap} from 'rxjs';
 import {PlantService} from '../../../plants/services/plant.service';
 import {Plant} from '../../../plants/models/plant.model';
 
@@ -27,10 +27,34 @@ interface PlantsSummary {
 export class PlantsSummaryTileComponent {
 
   private plants = inject(PlantService);
+  private refresh$ = new BehaviorSubject<void>(undefined);
 
-  summary$ = this.plants.getPlants().pipe(
+  summary$ = this.refresh$.pipe(
+    switchMap(() => this.plants.getPlants()),
     map(plants => this.buildSummary(plants))
   );
+
+  water(id: number, ev: Event): void {
+    ev.stopPropagation();
+    ev.preventDefault();
+    this.plants.wateredPlant(id, this.today()).subscribe({
+      next: () => this.refresh$.next(),
+      error: err => console.error('Watering plant failed', err)
+    });
+  }
+
+  fertilize(id: number, ev: Event): void {
+    ev.stopPropagation();
+    ev.preventDefault();
+    this.plants.fertilizedPlant(id, this.today()).subscribe({
+      next: () => this.refresh$.next(),
+      error: err => console.error('Fertilizing plant failed', err)
+    });
+  }
+
+  private today(): string {
+    return formatDate(new Date(), 'yyyy-MM-dd', 'en-US');
+  }
 
   private buildSummary(plants: Plant[]): PlantsSummary {
     const now = Date.now();
