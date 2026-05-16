@@ -1,4 +1,4 @@
-<a class="tile" routerLink="/plant-root/gallery" aria-label="Open plant gallery">
+<section class="tile">
   @if (summary$ | async; as summary) {
     <header class="tile__header">
       <div class="tile__title">
@@ -6,15 +6,29 @@
         <span class="tile__total">{{ summary.total }}</span>
         <span class="tile__total-suffix">total</span>
       </div>
-      <span class="tile__cta" aria-hidden="true">tap to open gallery ›</span>
+      <a class="tile__cta" routerLink="/plant-root/gallery">tap to open gallery ›</a>
     </header>
     <ul class="tile__list">
       @for (plant of summary.upcoming; track plant.id) {
         <li class="tile__row">
-          <span class="tile__name">{{ plant.name }}</span>
-          <span class="tile__due" [class.is-overdue]="plant.overdue">
-            {{ plant.dueLabel }}
-          </span>
+          <div class="tile__row-info">
+            <span class="tile__name">{{ plant.name }}</span>
+            <span class="tile__due" [class.is-overdue]="plant.overdue">
+              {{ plant.dueLabel }}
+            </span>
+          </div>
+          <div class="tile__row-actions">
+            <button type="button"
+                    class="tile__btn tile__btn--water"
+                    (click)="water(plant.id, $event)"
+                    aria-label="Mark watered today">Water
+            </button>
+            <button type="button"
+                    class="tile__btn tile__btn--fertilize"
+                    (click)="fertilize(plant.id, $event)"
+                    aria-label="Mark fertilized today">Fertilize
+            </button>
+          </div>
         </li>
       } @empty {
         <li class="tile__empty">No watering scheduled.</li>
@@ -23,4 +37,4 @@
   } @else {
     <span class="tile__loading">Loading plants…</span>
   }
-</a>
+</section>
