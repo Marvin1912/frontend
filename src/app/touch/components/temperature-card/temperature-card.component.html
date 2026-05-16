@@ -13,4 +13,10 @@
       <span class="card__humidity-unit">% RH</span>
     </div>
   }
+  @if (variant() === 'hero') {
+    <div class="card__meta">
+      <span class="card__meta-label">Updated</span>
+      <span class="card__meta-value">{{ ageLabel() }}</span>
+    </div>
+  }
 </div>

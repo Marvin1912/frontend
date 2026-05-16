@@ -1,15 +1,15 @@
 <div class="touch-layout">
   <header class="topbar">
     <div class="topbar__left">
-      <button class="topbar__btn" aria-label="Go home" [routerLink]="homeLink">
-        <mat-icon>home</mat-icon>
-      </button>
-    </div>
-    <div class="topbar__brand">
       <span class="topbar__hex">⬡</span>
-      <span class="topbar__name">TOUCH</span>
+      <span class="topbar__section">Climate</span>
     </div>
-    <div class="topbar__right"></div>
+    @if (now$ | async; as now) {
+      <div class="topbar__right">
+        <span class="topbar__date">{{ now | date:'EEE d MMM y' }}</span>
+        <span class="topbar__time">{{ now | date:'HH:mm' }}</span>
+      </div>
+    }
   </header>
 
   <main class="content">

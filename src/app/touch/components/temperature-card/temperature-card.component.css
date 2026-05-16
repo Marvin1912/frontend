@@ -6,8 +6,13 @@
 }
 
 :host(.is-outdoor) {
-  --accent: var(--c-p);
-  --accent-glow: var(--cg-p);
+  --accent: var(--c-c);
+  --accent-glow: var(--cg-c);
+}
+
+:host(.is-indoor) {
+  --accent: var(--c-a);
+  --accent-glow: var(--cg-a);
 }
 
 .card {
@@ -100,4 +105,48 @@
 .card__humidity-value {
   color: var(--text);
   font-weight: 600;
+}
+
+.card__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.card__meta-value {
+  color: var(--text-muted);
+}
+
+/* ── Hero variant ────────────────────────────────── */
+:host(.is-hero) .card {
+  padding: 1.5rem 1.75rem;
+  gap: 0.75rem;
+}
+
+:host(.is-hero) .card__header {
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+}
+
+:host(.is-hero) .card__dot {
+  width: 12px;
+  height: 12px;
+}
+
+:host(.is-hero) .card__temp-value {
+  font-size: 5.5rem;
+}
+
+:host(.is-hero) .card__temp-unit {
+  font-size: 1.6rem;
+}
+
+:host(.is-hero) .card__humidity {
+  font-size: 1.2rem;
 }
