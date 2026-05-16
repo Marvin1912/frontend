@@ -124,6 +124,18 @@
   white-space: nowrap;
 }
 
+.tile__needs {
+  display: inline-flex;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.tile__need {
+  filter: saturate(1.1);
+}
+
 .tile__due {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.78rem;
