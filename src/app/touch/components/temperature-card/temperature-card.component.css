@@ -1,7 +1,8 @@
 :host {
   display: block;
-  --accent: var(--c-c, var(--c-a));
-  --accent-glow: rgba(77, 166, 255, 0.18);
+  height: 100%;
+  --accent: var(--c-c);
+  --accent-glow: var(--cg-c);
 }
 
 :host(.is-outdoor) {
@@ -11,16 +12,18 @@
 
 .card {
   position: relative;
+  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   padding: 1rem 1.25rem;
   background: var(--surface);
   border: 1px solid var(--border-mid);
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   font-family: 'Outfit', sans-serif;
   color: var(--text);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
 .card::before {
@@ -31,51 +34,56 @@
   background: radial-gradient(ellipse 80% 50% at 100% 0%, var(--accent-glow), transparent 70%);
 }
 
+.card > * {
+  position: relative;
+}
+
 .card__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.7rem;
-  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
 
 .card__dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--c-p);
-  box-shadow: 0 0 6px var(--cg-p);
+  box-shadow: 0 0 8px var(--cg-p);
 }
 
 .card__dot[data-freshness='aging'] {
   background: var(--c-v);
-  box-shadow: 0 0 6px var(--cg-v);
+  box-shadow: 0 0 8px var(--cg-v);
 }
 
 .card__dot[data-freshness='stale'] {
   background: var(--c-e);
-  box-shadow: 0 0 6px var(--cg-e);
+  box-shadow: 0 0 8px var(--cg-e);
 }
 
 .card__temp {
   display: flex;
   align-items: baseline;
-  gap: 0.25rem;
+  gap: 0.3rem;
   color: var(--accent);
+  margin-top: auto;
 }
 
 .card__temp-value {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 2.75rem;
+  font-size: 3rem;
   font-weight: 700;
   line-height: 1;
 }
 
 .card__temp-unit {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 500;
   color: var(--text-muted);
 }
@@ -83,9 +91,9 @@
 .card__humidity {
   display: flex;
   align-items: baseline;
-  gap: 0.25rem;
+  gap: 0.3rem;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
 }
 
