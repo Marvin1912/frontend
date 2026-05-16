@@ -16,7 +16,7 @@ export class TouchLayoutComponent {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
-  now$ = timer(0, 60_000).pipe(
+  now$ = timer(60_000 - (Date.now() % 60_000) + 50, 60_000).pipe(
     map(() => new Date()),
     startWith(new Date())
   );
