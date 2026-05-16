@@ -1,15 +1,11 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
-import {MatIcon} from '@angular/material/icon';
-import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
-import {filter} from 'rxjs';
+import {AsyncPipe, DatePipe} from '@angular/common';
+import {ActivatedRoute, NavigationEnd, Router, RouterOutlet} from '@angular/router';
+import {filter, map, startWith, timer} from 'rxjs';
 
 @Component({
   selector: 'app-touch-layout',
-  imports: [
-    MatIcon,
-    RouterLink,
-    RouterOutlet
-  ],
+  imports: [AsyncPipe, DatePipe, RouterOutlet],
   templateUrl: './touch-layout.component.html',
   styleUrl: './touch-layout.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -19,6 +15,11 @@ export class TouchLayoutComponent {
   homeLink: string = '/';
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+
+  now$ = timer(0, 60_000).pipe(
+    map(() => new Date()),
+    startWith(new Date())
+  );
 
   constructor() {
     this.router.events

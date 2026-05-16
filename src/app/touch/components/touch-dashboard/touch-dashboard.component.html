@@ -1,21 +1,48 @@
 <div class="dashboard">
-  <section class="dashboard__section dashboard__section--climate">
-    <h2 class="dashboard__heading">Climate</h2>
-    @if (readings$ | async; as readings) {
-      <div class="dashboard__grid">
-        @for (reading of readings; track reading.sensorId) {
-          <app-temperature-card [reading]="reading" />
-        } @empty {
-          <p class="dashboard__empty">No sensors reporting.</p>
+  <section class="dashboard__climate">
+    @if (view$ | async; as view) {
+      @switch (view.status) {
+        @case ('ready') {
+          @if (view.hero) {
+            <app-temperature-card class="dashboard__hero" variant="hero" [reading]="view.hero" />
+          } @else {
+            <div class="dashboard__hero dashboard__placeholder">No outdoor sensor.</div>
+          }
+          <div class="dashboard__rooms">
+            @for (reading of view.rooms; track reading.sensorId) {
+              <app-temperature-card variant="cell" [reading]="reading" />
+            } @empty {
+              <div class="dashboard__placeholder dashboard__placeholder--span">No indoor sensors reporting.</div>
+            }
+          </div>
         }
-      </div>
+        @case ('empty') {
+          <div class="dashboard__hero dashboard__placeholder">No readings available.</div>
+          <div class="dashboard__rooms">
+            <div class="dashboard__placeholder dashboard__placeholder--span">Retry in 60 s.</div>
+          </div>
+        }
+        @case ('error') {
+          <div class="dashboard__hero dashboard__placeholder dashboard__placeholder--error">
+            Climate service unreachable.
+          </div>
+          <div class="dashboard__rooms">
+            <div class="dashboard__placeholder dashboard__placeholder--span">Retry in 60 s.</div>
+          </div>
+        }
+      }
     } @else {
-      <p class="dashboard__empty">Loading climate readings…</p>
+      <div class="dashboard__hero dashboard__skeleton"></div>
+      <div class="dashboard__rooms">
+        <div class="dashboard__skeleton"></div>
+        <div class="dashboard__skeleton"></div>
+        <div class="dashboard__skeleton"></div>
+        <div class="dashboard__skeleton"></div>
+      </div>
     }
   </section>
 
-  <section class="dashboard__section dashboard__section--plants">
-    <h2 class="dashboard__heading">Care</h2>
+  <section class="dashboard__care">
     <app-plants-summary-tile />
   </section>
 </div>

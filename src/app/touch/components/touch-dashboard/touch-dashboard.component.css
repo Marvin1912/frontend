@@ -1,45 +1,85 @@
 .dashboard {
   flex: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1.75fr) minmax(360px, 1fr);
-  grid-template-rows: 100%;
+  grid-template-rows: minmax(0, 1fr) minmax(180px, 220px);
   gap: 1.25rem;
   padding: 1.25rem;
   overflow: hidden;
 }
 
-.dashboard__section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  min-width: 0;
+.dashboard__climate {
+  display: grid;
+  grid-template-columns: minmax(360px, 480px) minmax(0, 1fr);
+  gap: 1.25rem;
   min-height: 0;
 }
 
-.dashboard__heading {
-  margin: 0;
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+.dashboard__hero {
+  min-height: 0;
 }
 
-.dashboard__grid {
-  flex: 1;
+.dashboard__rooms {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: minmax(140px, 1fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
   gap: 1rem;
   min-height: 0;
 }
 
-.dashboard__empty {
-  margin: 0;
+.dashboard__care {
+  min-height: 0;
+}
+
+/* ── Placeholders ────────────────────────────────── */
+.dashboard__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px dashed var(--border-mid);
+  border-radius: 14px;
   font-family: 'Outfit', sans-serif;
-  color: var(--text-muted);
-  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 1rem;
+}
+
+.dashboard__placeholder--span {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+}
+
+.dashboard__placeholder--error {
+  color: var(--c-e);
+  border-color: rgba(251, 113, 133, 0.4);
+}
+
+/* ── Skeleton loading ────────────────────────────── */
+.dashboard__skeleton {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard__skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.04),
+    transparent
+  );
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }

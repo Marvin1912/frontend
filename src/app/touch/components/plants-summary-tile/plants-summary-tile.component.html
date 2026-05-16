@@ -1,8 +1,12 @@
 <a class="tile" routerLink="/plant-root/gallery" aria-label="Open plant gallery">
   @if (summary$ | async; as summary) {
     <header class="tile__header">
-      <span class="tile__label">Plants</span>
-      <span class="tile__total">{{ summary.total }}</span>
+      <div class="tile__title">
+        <span class="tile__label">Plants</span>
+        <span class="tile__total">{{ summary.total }}</span>
+        <span class="tile__total-suffix">total</span>
+      </div>
+      <span class="tile__cta" aria-hidden="true">tap to open gallery ›</span>
     </header>
     <ul class="tile__list">
       @for (plant of summary.upcoming; track plant.id) {
