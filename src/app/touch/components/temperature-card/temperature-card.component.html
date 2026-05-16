@@ -1,0 +1,16 @@
+<div class="card">
+  <div class="card__header">
+    <span class="card__label">{{ reading().label }}</span>
+    <span class="card__dot" aria-hidden="true" [attr.data-freshness]="freshness()"></span>
+  </div>
+  <div class="card__temp">
+    <span class="card__temp-value">{{ temperatureDisplay() }}</span>
+    <span class="card__temp-unit">°C</span>
+  </div>
+  @if (humidityDisplay() !== null) {
+    <div class="card__humidity">
+      <span class="card__humidity-value">{{ humidityDisplay() }}</span>
+      <span class="card__humidity-unit">% RH</span>
+    </div>
+  }
+</div>
