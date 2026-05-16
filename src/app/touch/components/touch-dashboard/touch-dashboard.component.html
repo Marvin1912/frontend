@@ -1,13 +1,21 @@
 <div class="dashboard">
-  @if (readings$ | async; as readings) {
-    <section class="dashboard__grid">
-      @for (reading of readings; track reading.sensorId) {
-        <app-temperature-card [reading]="reading" />
-      } @empty {
-        <p class="dashboard__empty">No sensors reporting.</p>
-      }
-    </section>
-  } @else {
-    <p class="dashboard__empty">Loading climate readings…</p>
-  }
+  <section class="dashboard__section dashboard__section--climate">
+    <h2 class="dashboard__heading">Climate</h2>
+    @if (readings$ | async; as readings) {
+      <div class="dashboard__grid">
+        @for (reading of readings; track reading.sensorId) {
+          <app-temperature-card [reading]="reading" />
+        } @empty {
+          <p class="dashboard__empty">No sensors reporting.</p>
+        }
+      </div>
+    } @else {
+      <p class="dashboard__empty">Loading climate readings…</p>
+    }
+  </section>
+
+  <section class="dashboard__section dashboard__section--plants">
+    <h2 class="dashboard__heading">Care</h2>
+    <app-plants-summary-tile />
+  </section>
 </div>
