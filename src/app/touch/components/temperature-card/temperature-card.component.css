@@ -93,6 +93,29 @@
   color: var(--text-muted);
 }
 
+.card__humidity {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.card__humidity-icon {
+  font-size: 0.95em;
+  filter: drop-shadow(0 0 6px var(--accent-glow));
+}
+
+.card__humidity-value {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.card__humidity-unit {
+  color: var(--text-dim);
+}
+
 .card__meta {
   display: flex;
   align-items: baseline;
@@ -131,4 +154,9 @@
 
 :host(.is-hero) .card__temp-unit {
   font-size: 1.6rem;
+}
+
+:host(.is-hero) .card__humidity {
+  font-size: 1.25rem;
+  margin-top: 0.25rem;
 }

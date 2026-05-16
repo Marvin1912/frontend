@@ -3,5 +3,6 @@ export interface TemperatureReading {
   label: string;
   location: 'indoor' | 'outdoor';
   temperatureC: number;
+  humidityPct?: number;
   measuredAt: string;
 }
