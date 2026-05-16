@@ -10,6 +10,8 @@ interface UpcomingPlant {
   name: string;
   dueLabel: string;
   overdue: boolean;
+  needsWater: boolean;
+  needsFertilize: boolean;
 }
 
 interface PlantsSummary {
@@ -57,22 +59,45 @@ export class PlantsSummaryTileComponent {
   }
 
   private buildSummary(plants: Plant[]): PlantsSummary {
-    const now = Date.now();
+    const today = this.today();
+    const nowMidnight = new Date(today).getTime();
     const upcoming = plants
-      .filter((p): p is Plant & {nextWateredDate: string} => !!p.nextWateredDate)
-      .sort((a, b) => new Date(a.nextWateredDate).getTime() - new Date(b.nextWateredDate).getTime())
+      .map(p => this.toDuePlant(p, today, nowMidnight))
+      .filter((p): p is UpcomingPlant & {referenceTime: number} => p !== null)
+      .sort((a, b) => a.referenceTime - b.referenceTime)
       .slice(0, 3)
-      .map(p => {
-        const dueTime = new Date(p.nextWateredDate).getTime();
-        return {
-          id: p.id,
-          name: p.name,
-          dueLabel: this.formatDue(dueTime, now),
-          overdue: dueTime < now
-        };
-      });
+      .map(({referenceTime, ...rest}) => rest);
 
     return {total: plants.length, upcoming};
+  }
+
+  private toDuePlant(
+    plant: Plant,
+    today: string,
+    nowMidnight: number
+  ): (UpcomingPlant & {referenceTime: number}) | null {
+    const needsWater = !!plant.nextWateredDate && plant.nextWateredDate <= today;
+    const needsFertilize = !!plant.nextFertilizedDate && plant.nextFertilizedDate <= today;
+    if (!needsWater && !needsFertilize) {
+      return null;
+    }
+    const candidates: number[] = [];
+    if (needsWater && plant.nextWateredDate) {
+      candidates.push(new Date(plant.nextWateredDate).getTime());
+    }
+    if (needsFertilize && plant.nextFertilizedDate) {
+      candidates.push(new Date(plant.nextFertilizedDate).getTime());
+    }
+    const referenceTime = Math.min(...candidates);
+    return {
+      id: plant.id,
+      name: plant.name,
+      dueLabel: this.formatDue(referenceTime, nowMidnight),
+      overdue: referenceTime < nowMidnight,
+      needsWater,
+      needsFertilize,
+      referenceTime
+    };
   }
 
   private formatDue(dueTime: number, now: number): string {

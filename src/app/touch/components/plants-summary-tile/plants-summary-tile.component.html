@@ -13,6 +13,14 @@
         <li class="tile__row">
           <div class="tile__row-info">
             <span class="tile__name">{{ plant.name }}</span>
+            <span class="tile__needs">
+              @if (plant.needsWater) {
+                <span class="tile__need" title="Needs watering" aria-label="Needs watering">💧</span>
+              }
+              @if (plant.needsFertilize) {
+                <span class="tile__need" title="Needs fertilizing" aria-label="Needs fertilizing">🌱</span>
+              }
+            </span>
             <span class="tile__due" [class.is-overdue]="plant.overdue">
               {{ plant.dueLabel }}
             </span>
@@ -31,7 +39,7 @@
           </div>
         </li>
       } @empty {
-        <li class="tile__empty">No watering scheduled.</li>
+        <li class="tile__empty">All plants are happy 🌿</li>
       }
     </ul>
   } @else {
