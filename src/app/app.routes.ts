@@ -22,6 +22,8 @@ import {ExportsBackupsComponent} from './exports/exports-backups.component';
 import {ItNewsLayoutComponent} from './it-news/components/it-news-layout/it-news-layout.component';
 import {ArticleListComponent} from './it-news/components/article-list/article-list.component';
 import {FeedConfigComponent} from './it-news/components/feed-config/feed-config.component';
+import {TouchLayoutComponent} from './touch/components/touch-layout/touch-layout.component';
+import {TouchDashboardComponent} from './touch/components/touch-dashboard/touch-dashboard.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -72,6 +74,13 @@ export const routes: Routes = [
     children: [
       {path: '', component: ArticleListComponent, data: {home: '/'}},
       {path: 'feeds', component: FeedConfigComponent, data: {home: '/it-news'}}
+    ]
+  },
+  {
+    path: 'touch',
+    component: TouchLayoutComponent,
+    children: [
+      {path: '', component: TouchDashboardComponent, data: {home: '/touch'}}
     ]
   }
 ];

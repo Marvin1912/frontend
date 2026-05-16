@@ -1,0 +1,18 @@
+<div class="touch-layout">
+  <header class="topbar">
+    <div class="topbar__left">
+      <button class="topbar__btn" [routerLink]="homeLink" aria-label="Go home">
+        <mat-icon>home</mat-icon>
+      </button>
+    </div>
+    <div class="topbar__brand">
+      <span class="topbar__hex">⬡</span>
+      <span class="topbar__name">TOUCH</span>
+    </div>
+    <div class="topbar__right"></div>
+  </header>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
