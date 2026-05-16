@@ -1,7 +1,7 @@
 <div class="touch-layout">
   <header class="topbar">
     <div class="topbar__left">
-      <button class="topbar__btn" [routerLink]="homeLink" aria-label="Go home">
+      <button class="topbar__btn" aria-label="Go home" [routerLink]="homeLink">
         <mat-icon>home</mat-icon>
       </button>
     </div>
@@ -13,6 +13,6 @@
   </header>
 
   <main class="content">
-    <router-outlet></router-outlet>
+    <router-outlet />
   </main>
 </div>

@@ -1,2 +1,13 @@
 <div class="dashboard">
+  @if (readings$ | async; as readings) {
+    <section class="dashboard__grid">
+      @for (reading of readings; track reading.sensorId) {
+        <app-temperature-card [reading]="reading" />
+      } @empty {
+        <p class="dashboard__empty">No sensors reporting.</p>
+      }
+    </section>
+  } @else {
+    <p class="dashboard__empty">Loading climate readings…</p>
+  }
 </div>
