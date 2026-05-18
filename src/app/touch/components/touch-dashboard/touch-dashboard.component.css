@@ -21,9 +21,17 @@
 .dashboard__rooms {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
   gap: 1rem;
   min-height: 0;
+}
+
+.dashboard__rooms app-temperature-card {
+  animation: room-fade-in 420ms ease-out;
+}
+
+@keyframes room-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .dashboard__care {
