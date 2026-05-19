@@ -7,17 +7,15 @@
     <span class="card__temp-value">{{ temperatureDisplay() }}</span>
     <span class="card__temp-unit">°C</span>
   </div>
-  @if (variant() === 'hero' && humidityDisplay() !== null) {
+  @if (humidityDisplay() !== null) {
     <div class="card__humidity">
       <span class="card__humidity-icon" aria-hidden="true">💧</span>
       <span class="card__humidity-value">{{ humidityDisplay() }}</span>
       <span class="card__humidity-unit">%</span>
     </div>
   }
-  @if (variant() === 'hero') {
-    <div class="card__meta">
-      <span class="card__meta-label">Updated</span>
-      <span class="card__meta-value">{{ ageLabel() }}</span>
-    </div>
-  }
+  <div class="card__meta">
+    <span class="card__meta-label">Updated</span>
+    <span class="card__meta-value">{{ ageLabel() }}</span>
+  </div>
 </div>
