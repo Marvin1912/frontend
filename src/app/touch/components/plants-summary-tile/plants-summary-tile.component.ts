@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {AsyncPipe, formatDate} from '@angular/common';
 import {RouterLink} from '@angular/router';
+import {MatIconModule} from '@angular/material/icon';
 import {EMPTY, Subject, catchError, map, merge, switchMap, timer} from 'rxjs';
 import {PlantService} from '../../../plants/services/plant.service';
 import {Plant} from '../../../plants/models/plant.model';
@@ -23,7 +24,7 @@ interface PlantsSummary {
 
 @Component({
   selector: 'app-plants-summary-tile',
-  imports: [AsyncPipe, RouterLink],
+  imports: [AsyncPipe, RouterLink, MatIconModule],
   templateUrl: './plants-summary-tile.component.html',
   styleUrl: './plants-summary-tile.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
