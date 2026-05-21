@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, switchMap, timer} from 'rxjs';
+import {EMPTY, Observable, catchError, shareReplay, switchMap, timer} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {TemperatureReading} from '../models/temperature-reading.model';
 
@@ -14,7 +14,10 @@ export class ClimateService {
   private http = inject(HttpClient);
 
   readings$: Observable<TemperatureReading[]> = timer(0, 60_000).pipe(
-    switchMap(() => this.getReadings())
+    switchMap(() => this.getReadings().pipe(
+      catchError(() => EMPTY)
+    )),
+    shareReplay({bufferSize: 1, refCount: true})
   );
 
   getReadings(): Observable<TemperatureReading[]> {

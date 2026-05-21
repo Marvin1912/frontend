@@ -1,9 +1,11 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {AsyncPipe, formatDate} from '@angular/common';
 import {RouterLink} from '@angular/router';
-import {BehaviorSubject, map, switchMap} from 'rxjs';
+import {EMPTY, Subject, catchError, map, merge, switchMap, timer} from 'rxjs';
 import {PlantService} from '../../../plants/services/plant.service';
 import {Plant} from '../../../plants/models/plant.model';
+
+const PLANTS_REFRESH_MS = 3_600_000;
 
 interface UpcomingPlant {
   id: number;
@@ -29,10 +31,12 @@ interface PlantsSummary {
 export class PlantsSummaryTileComponent {
 
   private plants = inject(PlantService);
-  private refresh$ = new BehaviorSubject<void>(undefined);
+  private refresh$ = new Subject<void>();
 
-  summary$ = this.refresh$.pipe(
-    switchMap(() => this.plants.getPlants()),
+  summary$ = merge(timer(0, PLANTS_REFRESH_MS), this.refresh$).pipe(
+    switchMap(() => this.plants.getPlants().pipe(
+      catchError(() => EMPTY)
+    )),
     map(plants => this.buildSummary(plants))
   );
 
