@@ -126,14 +126,25 @@
 
 .tile__needs {
   display: inline-flex;
+  align-items: center;
   gap: 0.25rem;
   flex-shrink: 0;
-  font-size: 0.95rem;
   line-height: 1;
 }
 
 .tile__need {
-  filter: saturate(1.1);
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  line-height: 1.1rem;
+}
+
+.tile__need--water {
+  color: var(--c-p);
+}
+
+.tile__need--fertilize {
+  color: var(--c-v);
 }
 
 .tile__due {
