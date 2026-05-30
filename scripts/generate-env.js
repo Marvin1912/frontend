@@ -22,11 +22,13 @@ const environments = {
   development: {
     production: false,
     apiUrl: 'http://localhost:9001',
+    portfolioApiUrl: 'http://localhost:8000',
     outputFile: 'src/environments/environment.ts'
   },
   production: {
     production: true,
     apiUrl: 'http://backend.home-lab.com',
+    portfolioApiUrl: 'http://portfolio.home-lab.com',
     outputFile: 'src/environments/environment.prod.ts'
   }
 };
@@ -47,6 +49,8 @@ async function replaceTemplate(template, config) {
   result = result.replace(/###production###/g, config.production);
   const apiUrl = config.apiUrl.startsWith("'") ? config.apiUrl : `'${config.apiUrl}'`;
   result = result.replace(/###apiUrl###/g, apiUrl);
+  const portfolioApiUrl = config.portfolioApiUrl.startsWith("'") ? config.portfolioApiUrl : `'${config.portfolioApiUrl}'`;
+  result = result.replace(/###portfolioApiUrl###/g, portfolioApiUrl);
 
   if (options.includeBuildTime) {
     const buildTime = new Date().toISOString();
