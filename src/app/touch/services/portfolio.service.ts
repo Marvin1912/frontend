@@ -13,14 +13,14 @@ export class PortfolioService {
   private http = inject(HttpClient);
 
   portfolioValue$: Observable<PortfolioValue> = timer(0, 300_000).pipe(
-    switchMap(() => this.http.get<PortfolioValue>(`${this.host}/portfolio/value`).pipe(
+    switchMap(() => this.http.get<PortfolioValue>(`${this.host}/api/v1/portfolio/value`).pipe(
       catchError(() => EMPTY)
     )),
     shareReplay({bufferSize: 1, refCount: true})
   );
 
   bitcoinValue$: Observable<BitcoinValue> = timer(0, 300_000).pipe(
-    switchMap(() => this.http.get<BitcoinValue>(`${this.host}/portfolio/bitcoin`).pipe(
+    switchMap(() => this.http.get<BitcoinValue>(`${this.host}/api/v1/portfolio/bitcoin`).pipe(
       catchError(() => EMPTY)
     )),
     shareReplay({bufferSize: 1, refCount: true})
