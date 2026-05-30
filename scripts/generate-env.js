@@ -28,7 +28,7 @@ const environments = {
   production: {
     production: true,
     apiUrl: 'http://backend.home-lab.com',
-    portfolioApiUrl: 'http://portfolio.home-lab.com',
+    portfolioApiUrl: 'http://stock.home-lab.com',
     outputFile: 'src/environments/environment.prod.ts'
   }
 };
