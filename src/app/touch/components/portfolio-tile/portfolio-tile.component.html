@@ -1,0 +1,26 @@
+@if (view$ | async; as v) {
+  <div class="tile">
+    <div class="tile__header">
+      <div class="tile__title">
+        <span class="tile__label">Portfolio</span>
+        <span class="tile__total">{{ v.total }}</span>
+        <span class="tile__total-suffix">{{ v.currency }}</span>
+      </div>
+      <span class="tile__timestamp">{{ v.asOf }}</span>
+    </div>
+    <div class="tile__btc">
+      <span class="tile__btc-label">Bitcoin</span>
+      <div class="tile__btc-row">
+        <span class="tile__btc-price">{{ v.btcPrice }} {{ v.currency }}</span>
+        <span class="tile__btc-sep">/</span>
+        <span class="tile__btc-value">{{ v.btcValue }} {{ v.currency }}</span>
+        <span class="tile__btc-pct">{{ v.btcPct }}%</span>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="tile tile--loading">
+    <div class="tile__skeleton tile__skeleton--header"></div>
+    <div class="tile__skeleton tile__skeleton--row"></div>
+  </div>
+}
