@@ -9,5 +9,7 @@ export interface Receipt {
 export interface ReceiptItem {
   id: string;
   name: string;
+  singlePrice: number;
+  quantity: number;
   price: number;
 }
