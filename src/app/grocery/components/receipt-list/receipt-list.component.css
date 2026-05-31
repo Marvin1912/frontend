@@ -134,3 +134,18 @@ table {
 .clickable-row:hover ::ng-deep .mat-mdc-cell {
   background-color: transparent !important;
 }
+
+.col-actions {
+  width: 48px;
+  padding: 0 4px !important;
+  text-align: right;
+}
+
+.btn-delete {
+  color: rgba(251, 113, 133, 0.5) !important;
+  transition: color 0.2s;
+}
+
+.btn-delete:hover {
+  color: #fb7185 !important;
+}
