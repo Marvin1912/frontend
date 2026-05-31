@@ -26,4 +26,8 @@ export class ReceiptService {
   getReceiptItems(id: string): Observable<ReceiptItem[]> {
     return this.http.get<ReceiptItem[]>(`${this.host}/receipts/${id}/items`);
   }
+
+  deleteReceipt(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.host}/receipts/${id}`);
+  }
 }
