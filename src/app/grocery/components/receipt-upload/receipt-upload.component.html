@@ -1,0 +1,36 @@
+<div class="upload-page">
+  <div class="upload-card">
+    <header class="upload-card__header">
+      <span class="upload-card__dot"></span>
+      <span class="upload-card__label">KASSENBON HOCHLADEN</span>
+    </header>
+
+    <div class="upload-card__body">
+      <label class="file-label" [class.file-label--selected]="selectedFile">
+        <input
+          type="file"
+          accept="image/*"
+          capture="environment"
+          (change)="onFileSelected($event)"
+          class="file-input"
+        />
+        <span class="file-label__icon">{{ selectedFile ? '✓' : '📷' }}</span>
+        <span class="file-label__text">
+          {{ selectedFile ? selectedFile.name : 'Bon auswählen oder fotografieren' }}
+        </span>
+      </label>
+
+      @if (uploading) {
+        <mat-progress-bar mode="indeterminate" class="progress"></mat-progress-bar>
+      }
+
+      <button
+        class="submit-btn"
+        [disabled]="!selectedFile || uploading"
+        (click)="onSubmit()"
+      >
+        {{ uploading ? 'Wird hochgeladen…' : 'Hochladen' }}
+      </button>
+    </div>
+  </div>
+</div>

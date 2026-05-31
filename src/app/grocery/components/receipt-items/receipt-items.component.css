@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:host {
+  --bg:          #06080e;
+  --surface:     #0c1018;
+  --raised:      #111826;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-mid:  rgba(255, 255, 255, 0.13);
+
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
+
+  --c-g:  #f97316;
+
+  display: block;
+  min-height: 100%;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(249, 115, 22, 0.06) 0%, transparent 70%);
+  background-attachment: fixed;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  position: relative;
+}
+
+:host::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.receipt-items {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 4rem;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .receipt-items { padding: 1rem; }
+}
+
+/* Header */
+.table-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.table-header__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-g);
+  box-shadow: 0 0 6px var(--c-g);
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.table-header__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* Table container */
+.table-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.table-container::-webkit-scrollbar { width: 4px; }
+.table-container::-webkit-scrollbar-track { background: var(--surface); }
+.table-container::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 2px; }
+
+table {
+  width: 100%;
+  background: transparent !important;
+}
+
+.col-header {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.6rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--text-dim) !important;
+  background: var(--raised) !important;
+  border-bottom: 1px solid var(--border-mid) !important;
+  height: 36px !important;
+  padding: 0 16px !important;
+}
+
+::ng-deep .mat-mdc-header-row {
+  background: var(--raised) !important;
+}
+
+::ng-deep .mat-mdc-cell {
+  font-size: 0.8rem !important;
+  color: var(--text) !important;
+  background: transparent !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.mat-column-price {
+  text-align: right;
+  padding-right: 1rem !important;
+}
