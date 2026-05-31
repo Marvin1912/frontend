@@ -24,6 +24,11 @@ import {ArticleListComponent} from './it-news/components/article-list/article-li
 import {FeedConfigComponent} from './it-news/components/feed-config/feed-config.component';
 import {TouchLayoutComponent} from './touch/components/touch-layout/touch-layout.component';
 import {TouchDashboardComponent} from './touch/components/touch-dashboard/touch-dashboard.component';
+import {GroceryLayoutComponent} from './grocery/components/grocery-layout/grocery-layout.component';
+import {GroceryHomeComponent} from './grocery/components/grocery-home/grocery-home.component';
+import {ReceiptUploadComponent} from './grocery/components/receipt-upload/receipt-upload.component';
+import {ReceiptListComponent} from './grocery/components/receipt-list/receipt-list.component';
+import {ReceiptItemsComponent} from './grocery/components/receipt-items/receipt-items.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -81,6 +86,16 @@ export const routes: Routes = [
     component: TouchLayoutComponent,
     children: [
       {path: '', component: TouchDashboardComponent, data: {home: '/touch'}}
+    ]
+  },
+  {
+    path: 'grocery',
+    component: GroceryLayoutComponent,
+    children: [
+      {path: '', component: GroceryHomeComponent, data: {home: '/'}},
+      {path: 'upload', component: ReceiptUploadComponent, data: {home: '/grocery'}},
+      {path: 'receipts', component: ReceiptListComponent, data: {home: '/grocery'}},
+      {path: 'receipts/:id/items', component: ReceiptItemsComponent, data: {home: '/grocery/receipts'}}
     ]
   }
 ];
