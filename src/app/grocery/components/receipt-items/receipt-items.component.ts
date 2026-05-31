@@ -39,7 +39,7 @@ import {ReceiptService} from '../../services/receipt.service';
 export class ReceiptItemsComponent implements OnInit {
 
   items = new MatTableDataSource<ReceiptItem>();
-  columnsToDisplay = ['name', 'price'];
+  columnsToDisplay = ['name', 'quantity', 'singlePrice', 'price'];
 
   constructor(
     private receiptService: ReceiptService,
