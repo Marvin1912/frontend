@@ -136,7 +136,7 @@
   bottom: 0.75rem;
   right: 0.875rem;
   font-size: 0.8rem;
-  color: var(--text-dim, #3d5470);
+  color: var(--text-muted, #7a93b0);
   line-height: 1;
   transition: color 0.2s, transform 0.2s;
 }
