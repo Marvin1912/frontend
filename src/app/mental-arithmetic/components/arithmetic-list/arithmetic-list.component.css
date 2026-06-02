@@ -79,7 +79,7 @@
 
 .stat-icon {
   font-size: 2rem;
-  color: var(--text-dim, #3d5470);
+  color: var(--text-muted, #7a93b0);
   opacity: 0.8;
   margin-left: 12px;
   display: flex;
@@ -167,7 +167,7 @@
 }
 
 .session-count {
-  color: var(--text-dim, #3d5470);
+  color: var(--text-muted, #7a93b0);
   font-size: 0.8rem;
   font-family: 'JetBrains Mono', monospace;
 }
@@ -279,7 +279,7 @@ table {
 
 .empty-icon {
   font-size: 2.5rem;
-  color: var(--text-dim, #3d5470);
+  color: var(--text-muted, #7a93b0);
   margin-bottom: 1.25rem;
   width: 50px;
   height: 50px;
@@ -292,7 +292,7 @@ table {
 }
 
 .empty-state p {
-  color: var(--text-dim, #3d5470);
+  color: var(--text-muted, #7a93b0);
   margin-bottom: 1.5rem;
   max-width: 400px;
 }
@@ -389,17 +389,17 @@ table {
 
 .problem-item.correct {
   border-left-color: #22d35e;
-  background: rgba(34, 211, 94, 0.05);
+  background: rgba(34, 211, 94, 0.09);
 }
 
 .problem-item.incorrect {
   border-left-color: #fb7185;
-  background: rgba(251, 113, 133, 0.05);
+  background: rgba(251, 113, 133, 0.09);
 }
 
 .problem-number {
   font-weight: bold;
-  color: var(--text-dim, #3d5470);
+  color: var(--text-muted, #7a93b0);
   min-width: 28px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.85rem;
@@ -426,7 +426,7 @@ table {
 }
 
 .problem-time {
-  color: var(--text-dim, #3d5470);
+  color: var(--text-muted, #7a93b0);
   font-size: 0.8rem;
   font-family: 'JetBrains Mono', monospace;
   margin-left: auto;
