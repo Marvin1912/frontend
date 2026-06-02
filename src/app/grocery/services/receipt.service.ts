@@ -30,4 +30,11 @@ export class ReceiptService {
   deleteReceipt(id: string): Observable<void> {
     return this.http.delete<void>(`${this.host}/receipts/${id}`);
   }
+
+  updateReceiptItem(receiptId: string, item: ReceiptItem): Observable<ReceiptItem> {
+    return this.http.put<ReceiptItem>(
+      `${this.host}/receipts/${receiptId}/items/${item.id}`,
+      {name: item.name, quantity: item.quantity, singlePrice: item.singlePrice}
+    );
+  }
 }

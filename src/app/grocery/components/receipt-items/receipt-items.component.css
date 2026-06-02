@@ -125,3 +125,18 @@ table {
   text-align: right;
   padding-right: 1rem !important;
 }
+
+.mat-column-actions {
+  width: 48px;
+  text-align: right;
+  padding-right: 8px !important;
+}
+
+.btn-edit {
+  color: var(--text-dim);
+  transition: color 0.2s;
+}
+
+.btn-edit:hover {
+  color: var(--c-g);
+}
