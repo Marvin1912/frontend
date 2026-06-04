@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>Artikel hinzufügen</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="edit-form">
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Artikel</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+
+    <div class="field-row">
+      <mat-form-field appearance="outline" class="field-half">
+        <mat-label>Menge</mat-label>
+        <input matInput type="number" formControlName="quantity" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="field-half">
+        <mat-label>Einzelpreis (€)</mat-label>
+        <input matInput type="number" step="0.01" formControlName="singlePrice" />
+      </mat-form-field>
+    </div>
+
+    <div class="price-row">
+      <span class="price-label">Gesamtpreis</span>
+      <span class="price-value">{{ calculatedPrice | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button mat-mini-fab class="btn-confirm" (click)="save()" [disabled]="form.invalid">
+    <mat-icon>check_circle</mat-icon>
+  </button>
+  <button mat-mini-fab mat-dialog-close class="btn-cancel">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-dialog-actions>
