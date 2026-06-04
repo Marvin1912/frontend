@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {
   MatCell,
   MatCellDef,
@@ -18,6 +18,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
+import {MatSort, MatSortModule} from '@angular/material/sort';
 import {Receipt} from '../../models/receipt.model';
 import {ReceiptService} from '../../services/receipt.service';
 import {ReceiptDeleteDialogComponent} from '../../dialogs/receipt-delete-dialog/receipt-delete-dialog.component';
@@ -39,12 +40,17 @@ import {ReceiptDeleteDialogComponent} from '../../dialogs/receipt-delete-dialog/
     DatePipe,
     CurrencyPipe,
     MatIconButton,
-    MatIcon
+    MatIcon,
+    MatSortModule
   ],
   templateUrl: './receipt-list.component.html',
   styleUrl: './receipt-list.component.css'
 })
 export class ReceiptListComponent implements OnInit {
+
+  @ViewChild(MatSort) set sort(sort: MatSort) {
+    this.receipts.sort = sort;
+  }
 
   receipts = new MatTableDataSource<Receipt>();
   columnsToDisplay = ['receiptDate', 'creationDate', 'totalAmount', 'actions'];
@@ -55,7 +61,14 @@ export class ReceiptListComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    this.receipts.sortingDataAccessor = (receipt, column) => {
+      if (column === 'receiptDate') {
+        return new Date(receipt.receiptDate ?? receipt.creationDate).getTime();
+      }
+      return '';
+    };
+  }
 
   ngOnInit(): void {
     this.receiptService.getReceipts().subscribe(receipts => {

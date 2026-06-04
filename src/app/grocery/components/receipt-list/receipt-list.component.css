@@ -149,3 +149,12 @@ table {
 .btn-delete:hover {
   color: #fb7185 !important;
 }
+
+::ng-deep .mat-sort-header-arrow {
+  color: var(--text-dim) !important;
+}
+
+::ng-deep .mat-sort-header-container:hover .mat-sort-header-arrow,
+::ng-deep [aria-sort] .mat-sort-header-arrow {
+  color: var(--c-g) !important;
+}
