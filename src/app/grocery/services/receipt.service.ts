@@ -37,4 +37,8 @@ export class ReceiptService {
       {name: item.name, quantity: item.quantity, singlePrice: item.singlePrice}
     );
   }
+
+  addReceiptItem(receiptId: string, item: {name: string; quantity: number; singlePrice: number}): Observable<ReceiptItem> {
+    return this.http.post<ReceiptItem>(`${this.host}/receipts/${receiptId}/items`, item);
+  }
 }

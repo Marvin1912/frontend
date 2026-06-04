@@ -140,3 +140,13 @@ table {
 .btn-edit:hover {
   color: var(--c-g);
 }
+
+.btn-add {
+  margin-left: auto;
+  color: var(--text-dim);
+  transition: color 0.2s;
+}
+
+.btn-add:hover {
+  color: var(--c-g);
+}

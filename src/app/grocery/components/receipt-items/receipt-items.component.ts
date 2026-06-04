@@ -21,6 +21,7 @@ import {MatIcon} from '@angular/material/icon';
 import {ReceiptItem} from '../../models/receipt.model';
 import {ReceiptService} from '../../services/receipt.service';
 import {ReceiptItemEditDialogComponent} from '../../dialogs/receipt-item-edit-dialog/receipt-item-edit-dialog.component';
+import {ReceiptItemAddDialogComponent} from '../../dialogs/receipt-item-add-dialog/receipt-item-add-dialog.component';
 
 @Component({
   selector: 'app-receipt-items',
@@ -76,6 +77,22 @@ export class ReceiptItemsComponent implements OnInit {
         },
         error: () => {
           this.snackBar.open('Artikel konnte nicht gespeichert werden', 'Schließen', {duration: 5000});
+        }
+      });
+    });
+  }
+
+  openAddDialog(): void {
+    const ref = this.dialog.open(ReceiptItemAddDialogComponent);
+    ref.afterClosed().subscribe((result: {name: string; quantity: number; singlePrice: number} | undefined) => {
+      if (!result) return;
+      this.receiptService.addReceiptItem(this.receiptId, result).subscribe({
+        next: (created) => {
+          this.items.data = [...this.items.data, created];
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.snackBar.open('Artikel konnte nicht hinzugefügt werden', 'Schließen', {duration: 5000});
         }
       });
     });
