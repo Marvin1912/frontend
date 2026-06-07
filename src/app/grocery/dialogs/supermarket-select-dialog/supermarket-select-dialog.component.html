@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Supermarkt auswählen</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="select-form">
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Supermarkt</mat-label>
+      <mat-select formControlName="supermarket">
+        @for (market of supermarkets; track market.value) {
+          <mat-option [value]="market.value">{{ market.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button mat-mini-fab class="btn-confirm" (click)="save()" [disabled]="form.invalid">
+    <mat-icon>check_circle</mat-icon>
+  </button>
+  <button mat-mini-fab mat-dialog-close class="btn-cancel">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-dialog-actions>

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
-import {Receipt, ReceiptItem} from '../models/receipt.model';
+import {Receipt, ReceiptItem, Supermarket} from '../models/receipt.model';
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +40,9 @@ export class ReceiptService {
 
   addReceiptItem(receiptId: string, item: {name: string; quantity: number; singlePrice: number}): Observable<ReceiptItem> {
     return this.http.post<ReceiptItem>(`${this.host}/receipts/${receiptId}/items`, item);
+  }
+
+  updateSupermarket(id: string, supermarket: Supermarket): Observable<Receipt> {
+    return this.http.patch<Receipt>(`${this.host}/receipts/${id}/supermarket`, {supermarket});
   }
 }
