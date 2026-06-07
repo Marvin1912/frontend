@@ -1,58 +1,137 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 :host {
+  --surface:     #0c1018;
+  --border:      rgba(255, 255, 255, 0.07);
+
   --text:        #c8d4e8;
   --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
 
-  --c-g:  #a3e635;  --cg-g: rgba(163, 230, 53, 0.18);
+  --c-w:  #a3e635;  --cg-w: rgba(163, 230,  53, 0.18);
+  --c-p:  #4da6ff;  --cg-p: rgba(77,  166, 255, 0.18);
 
   display: block;
   height: 100%;
+  overflow-y: auto;
   font-family: 'Outfit', sans-serif;
   color: var(--text);
 }
 
-/* ── Empty State ─────────────────────────────────── */
-.empty {
+.dashboard {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  height: 100%;
-  padding: 2rem 1rem;
-  text-align: center;
-  animation: fadeUp 0.5s ease both;
+  gap: 1.5rem;
+  padding: 2rem clamp(1rem, 6vw, 4rem);
+  max-width: 760px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
-.empty__mark {
-  width: 56px;
-  height: 56px;
+/* ── Nav Grid ────────────────────────────────────── */
+.navgrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 480px) {
+  .navgrid { grid-template-columns: 1fr; }
+}
+
+/* ── Nav Cards ───────────────────────────────────── */
+.navcard {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
-  border: 1px solid color-mix(in srgb, var(--c-g) 40%, transparent);
-  background: color-mix(in srgb, var(--c-g) 10%, transparent);
+  padding: 1.1rem 1rem 1.75rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-height: 130px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  animation: fadeUp 0.5s ease both;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.navcard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 0% 0%, var(--cc-glow, transparent) 0%, transparent 65%);
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+
+.navcard:hover {
+  border-color: var(--cc);
+  box-shadow: 0 8px 28px var(--cc-glow);
+  transform: translateY(-3px);
+}
+
+.navcard:hover::before { opacity: 1; }
+
+.navcard--w { --cc: var(--c-w); --cc-glow: var(--cg-w); }
+.navcard--p { --cc: var(--c-p); --cc-glow: var(--cg-p); }
+
+.navcard__mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, var(--cc) 40%, transparent);
+  background: color-mix(in srgb, var(--cc) 10%, transparent);
   display: grid;
   place-items: center;
-  font-size: 1.6rem;
-  color: var(--c-g);
+  font-size: 1.1rem;
+  color: var(--cc);
+  flex-shrink: 0;
+  transition: background 0.2s;
 }
 
-.empty__title {
+.navcard:hover .navcard__mark {
+  background: color-mix(in srgb, var(--cc) 20%, transparent);
+}
+
+.navcard__title {
   margin: 0;
-  font-size: clamp(1.1rem, 3vw, 1.4rem);
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
   font-weight: 600;
-  letter-spacing: 0.01em;
+  color: var(--text);
+  line-height: 1.25;
 }
 
-.empty__sub {
+.navcard__sub {
   margin: 0;
-  max-width: 28ch;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
-  line-height: 1.5;
+  line-height: 1.4;
+}
+
+.navcard__arrow {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.875rem;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  line-height: 1;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.navcard:hover .navcard__arrow {
+  color: var(--cc);
+  transform: translate(2px, -2px);
 }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+.navcard:nth-child(1) { animation-delay: 0.05s; }
+.navcard:nth-child(2) { animation-delay: 0.12s; }
