@@ -29,6 +29,8 @@ import {GroceryHomeComponent} from './grocery/components/grocery-home/grocery-ho
 import {ReceiptUploadComponent} from './grocery/components/receipt-upload/receipt-upload.component';
 import {ReceiptListComponent} from './grocery/components/receipt-list/receipt-list.component';
 import {ReceiptItemsComponent} from './grocery/components/receipt-items/receipt-items.component';
+import {NutritionLayoutComponent} from './nutrition/components/nutrition-layout/nutrition-layout.component';
+import {NutritionHomeComponent} from './nutrition/components/nutrition-home/nutrition-home.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -96,6 +98,13 @@ export const routes: Routes = [
       {path: 'upload', component: ReceiptUploadComponent, data: {home: '/grocery'}},
       {path: 'receipts', component: ReceiptListComponent, data: {home: '/grocery'}},
       {path: 'receipts/:id/items', component: ReceiptItemsComponent, data: {home: '/grocery/receipts'}}
+    ]
+  },
+  {
+    path: 'nutrition',
+    component: NutritionLayoutComponent,
+    children: [
+      {path: '', component: NutritionHomeComponent, data: {home: '/'}}
     ]
   }
 ];

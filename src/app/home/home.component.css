@@ -20,6 +20,7 @@
   --c-e:  #fb7185;  --cg-e: rgba(251, 113, 133, 0.18);
   --c-n:  #2dd4bf;  --cg-n: rgba(45,  212, 191, 0.18);
   --c-g:  #f97316;  --cg-g: rgba(249, 115,  22, 0.18);
+  --c-nu: #a3e635;  --cg-nu: rgba(163, 230,  53, 0.18);
 
   display: block;
   min-height: 100dvh;
@@ -198,6 +199,7 @@
 .navcard--e { --cc: var(--c-e); --cc-glow: var(--cg-e); }
 .navcard--n { --cc: var(--c-n); --cc-glow: var(--cg-n); }
 .navcard--g { --cc: var(--c-g); --cc-glow: var(--cg-g); }
+.navcard--nu { --cc: var(--c-nu); --cc-glow: var(--cg-nu); }
 
 /* ── Card Mark ───────────────────────────────────── */
 .navcard__mark {

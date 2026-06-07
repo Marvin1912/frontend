@@ -1,0 +1,28 @@
+<div class="nutrition-layout">
+  <header class="topbar">
+    <div class="topbar__left">
+      <button mat-icon-button [routerLink]="homeLink" class="nav-btn" aria-label="Go home">
+        <mat-icon>home</mat-icon>
+      </button>
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="nav-btn" aria-label="Open menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item routerLink="/nutrition">
+          <span>Home</span>
+        </button>
+      </mat-menu>
+    </div>
+
+    <div class="topbar__brand">
+      <span class="topbar__hex">⬡</span>
+      <span class="topbar__name">NUTRITION</span>
+    </div>
+
+    <div class="topbar__right"></div>
+  </header>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
