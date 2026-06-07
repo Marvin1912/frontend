@@ -1,0 +1,230 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:host {
+  --bg:          #06080e;
+  --surface:     #0c1018;
+  --raised:      #111826;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-mid:  rgba(255, 255, 255, 0.13);
+
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
+
+  --c-g:  #a3e635;
+  --c-n:  #2dd4bf;
+  --c-e:  #fb7185;
+
+  display: block;
+  height: 100%;
+  overflow-y: auto;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+}
+
+.foods {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem clamp(1rem, 6vw, 4rem);
+  max-width: 760px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ── Panels ──────────────────────────────────────── */
+.panel__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.panel__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-g);
+  box-shadow: 0 0 6px var(--c-g);
+}
+
+.panel__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* ── Toolbar ─────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.field-search { flex: 1 1 220px; }
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-add,
+.btn-scan {
+  height: 56px;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-add {
+  background: color-mix(in srgb, var(--c-g) 14%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--c-g) 35%, transparent) !important;
+  color: var(--c-g) !important;
+}
+
+.btn-add:hover {
+  background: color-mix(in srgb, var(--c-g) 22%, transparent) !important;
+  box-shadow: 0 0 12px rgba(163, 230, 53, 0.25) !important;
+}
+
+.btn-scan {
+  background: color-mix(in srgb, var(--c-n) 14%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--c-n) 35%, transparent) !important;
+  color: var(--c-n) !important;
+}
+
+.btn-scan:hover:not([disabled]) {
+  background: color-mix(in srgb, var(--c-n) 22%, transparent) !important;
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.25) !important;
+}
+
+.btn-scan[disabled] { opacity: 0.55 !important; }
+
+.btn-scan mat-spinner { margin-right: 4px; }
+
+::ng-deep .btn-scan mat-spinner circle { stroke: var(--c-n) !important; }
+
+/* ── Table ───────────────────────────────────────── */
+.table-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  background: transparent !important;
+}
+
+.col-header {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 0.6rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--text-dim) !important;
+  background: var(--raised) !important;
+  border-bottom: 1px solid var(--border-mid) !important;
+  height: 36px !important;
+  padding: 0 12px !important;
+}
+
+::ng-deep .mat-mdc-header-row {
+  background: var(--raised) !important;
+}
+
+::ng-deep .mat-mdc-cell {
+  font-size: 0.85rem !important;
+  color: var(--text) !important;
+  background: transparent !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding: 0 12px !important;
+}
+
+.col-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.food-name { display: block; }
+
+.food-brand {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.col-actions {
+  width: 96px;
+  text-align: right;
+  padding-right: 8px !important;
+  white-space: nowrap;
+}
+
+.btn-edit {
+  color: var(--text-dim);
+  transition: color 0.2s;
+}
+
+.btn-edit:hover { color: var(--c-g); }
+
+.btn-del {
+  color: var(--text-dim);
+  transition: color 0.2s;
+}
+
+.btn-del:hover { color: var(--c-e); }
+
+.hint {
+  margin: 0.6rem 0 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+}
+
+/* ── Empty ───────────────────────────────────────── */
+.empty {
+  margin: 0;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px dashed var(--border-mid);
+  border-radius: 12px;
+}
+
+/* ── Dark form fields ────────────────────────────── */
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__leading,
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__notch,
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__trailing {
+  border-color: var(--border-mid) !important;
+}
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  color: var(--text) !important;
+}
+
+::ng-deep .mat-mdc-form-field .mat-mdc-floating-label {
+  color: var(--text-dim) !important;
+}
+
+::ng-deep .mat-mdc-form-field .mat-icon {
+  color: var(--text-dim) !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--c-g) !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
+  color: var(--c-g) !important;
+}

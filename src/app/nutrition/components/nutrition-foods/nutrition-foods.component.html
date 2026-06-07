@@ -1,0 +1,99 @@
+<div class="foods">
+
+  <section class="panel">
+    <header class="panel__head">
+      <span class="panel__dot"></span>
+      <span class="panel__label">LEBENSMITTEL</span>
+    </header>
+
+    <div class="toolbar">
+      <mat-form-field appearance="outline" class="field-search">
+        <mat-label>Suchen</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput autocomplete="off" [formControl]="search" />
+      </mat-form-field>
+
+      <div class="actions">
+        <button mat-flat-button type="button" class="btn-add" (click)="openAddDialog()">
+          <mat-icon>add</mat-icon>
+          Neu
+        </button>
+        <button mat-flat-button type="button" class="btn-scan" [disabled]="scanning" (click)="triggerPhoto()">
+          @if (scanning) {
+            <mat-spinner diameter="18" />
+          } @else {
+            <mat-icon>photo_camera</mat-icon>
+          }
+          Foto
+        </button>
+        <input #photoInput type="file" accept="image/*" capture="environment" hidden
+               (change)="onPhotoSelected($event)" />
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    @if (foods.data.length) {
+      <div class="table-container">
+        <table mat-table [dataSource]="foods">
+
+          <ng-container matColumnDef="name">
+            <th *matHeaderCellDef mat-header-cell class="col-header">Name</th>
+            <td *matCellDef="let food" mat-cell>
+              <span class="food-name">{{ food.name }}</span>
+              @if (food.brand) {
+                <span class="food-brand">{{ food.brand }}</span>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="kcal">
+            <th *matHeaderCellDef mat-header-cell class="col-header col-num">kcal</th>
+            <td *matCellDef="let food" mat-cell class="col-num">{{ food.kcalPer100 | number:'1.0-0':'de' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="protein">
+            <th *matHeaderCellDef mat-header-cell class="col-header col-num">P</th>
+            <td *matCellDef="let food" mat-cell class="col-num">{{ food.proteinPer100 | number:'1.0-1':'de' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="carbs">
+            <th *matHeaderCellDef mat-header-cell class="col-header col-num">KH</th>
+            <td *matCellDef="let food" mat-cell class="col-num">{{ food.carbsPer100 | number:'1.0-1':'de' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="fat">
+            <th *matHeaderCellDef mat-header-cell class="col-header col-num">F</th>
+            <td *matCellDef="let food" mat-cell class="col-num">{{ food.fatPer100 | number:'1.0-1':'de' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th *matHeaderCellDef mat-header-cell class="col-header"></th>
+            <td *matCellDef="let food" mat-cell class="col-actions">
+              <button mat-icon-button class="btn-edit" (click)="openEditDialog(food)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="btn-del" (click)="openDeleteDialog(food)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr *matHeaderRowDef="columnsToDisplay" mat-header-row></tr>
+          <tr *matRowDef="let food; columns: columnsToDisplay;" mat-row></tr>
+
+        </table>
+      </div>
+      <p class="hint">Werte je 100 g · P Protein · KH Kohlenhydrate · F Fett</p>
+    } @else {
+      <p class="empty">
+        @if (searchTerm) {
+          Keine Treffer für «{{ searchTerm }}».
+        } @else {
+          Noch keine Lebensmittel. Lege eins manuell an oder scanne ein Etikett.
+        }
+      </p>
+    }
+  </section>
+
+</div>
