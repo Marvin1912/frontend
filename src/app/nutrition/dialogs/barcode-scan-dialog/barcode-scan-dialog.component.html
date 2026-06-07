@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Barcode scannen</h2>
+
+<mat-dialog-content>
+  <div class="scan-body">
+
+    @if (cameraSupported) {
+      <div class="viewport" [class.viewport--off]="!cameraActive">
+        <video #video class="viewport__video" muted playsinline></video>
+        <div class="viewport__frame" aria-hidden="true"></div>
+        @if (looking) {
+          <div class="viewport__overlay">Suche…</div>
+        }
+      </div>
+    }
+
+    @if (message) {
+      <p class="msg">{{ message }}</p>
+    } @else if (cameraActive) {
+      <p class="hint">Barcode vor die Kamera halten.</p>
+    }
+
+    <form class="manual" (ngSubmit)="lookupManual()">
+      <mat-form-field appearance="outline" class="manual__field">
+        <mat-label>Barcode (EAN)</mat-label>
+        <input matInput inputmode="numeric" autocomplete="off" [formControl]="manualEan" />
+      </mat-form-field>
+      <button mat-flat-button type="submit" class="btn-lookup" [disabled]="looking">
+        <mat-icon>search</mat-icon>
+        Suchen
+      </button>
+    </form>
+
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button mat-mini-fab mat-dialog-close class="btn-cancel" aria-label="Abbrechen">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-dialog-actions>

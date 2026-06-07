@@ -13,6 +13,7 @@
 
   --c-g:  #a3e635;
   --c-n:  #2dd4bf;
+  --c-b:  #4da6ff;
   --c-e:  #fb7185;
 
   display: block;
@@ -73,7 +74,8 @@
 }
 
 .btn-add,
-.btn-scan {
+.btn-scan,
+.btn-barcode {
   height: 56px;
   border-radius: 8px !important;
   font-weight: 600 !important;
@@ -103,6 +105,17 @@
 }
 
 .btn-scan[disabled] { opacity: 0.55 !important; }
+
+.btn-barcode {
+  background: color-mix(in srgb, var(--c-b) 14%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--c-b) 35%, transparent) !important;
+  color: var(--c-b) !important;
+}
+
+.btn-barcode:hover {
+  background: color-mix(in srgb, var(--c-b) 22%, transparent) !important;
+  box-shadow: 0 0 12px rgba(77, 166, 255, 0.25) !important;
+}
 
 .btn-scan mat-spinner { margin-right: 4px; }
 

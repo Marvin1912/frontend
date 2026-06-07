@@ -85,6 +85,15 @@ export class NutritionService {
     return this.http.post<FoodDraft>(`${this.host}/foods/scan-label`, formData);
   }
 
+  /**
+   * Look up a packaged food by its EAN/UPC barcode via OpenFoodFacts. Returns a
+   * transient draft food (not persisted); the user reviews and saves it. A 404
+   * means the barcode is unknown to OpenFoodFacts.
+   */
+  getFoodByBarcode(ean: string): Observable<FoodDraft> {
+    return this.http.get<FoodDraft>(`${this.host}/foods/barcode/${ean}`);
+  }
+
   getMeals(date: string): Observable<MealEntry[]> {
     return this.http.get<MealEntry[]>(`${this.host}/meals`, {params: {date}});
   }

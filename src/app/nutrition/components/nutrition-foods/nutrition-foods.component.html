@@ -26,6 +26,10 @@
           }
           Foto
         </button>
+        <button mat-flat-button type="button" class="btn-barcode" (click)="openBarcodeDialog()">
+          <mat-icon>barcode_scanner</mat-icon>
+          Barcode
+        </button>
         <input #photoInput type="file" accept="image/*" capture="environment" hidden
                (change)="onPhotoSelected($event)" />
       </div>

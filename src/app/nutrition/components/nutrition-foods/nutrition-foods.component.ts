@@ -23,9 +23,10 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {debounceTime, distinctUntilChanged, startWith, switchMap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
-import {Food, FoodInput} from '../../models/nutrition.model';
+import {Food, FoodDraft, FoodInput} from '../../models/nutrition.model';
 import {FoodEditDialogComponent, FoodEditDialogData} from '../../dialogs/food-edit-dialog/food-edit-dialog.component';
 import {FoodDeleteDialogComponent} from '../../dialogs/food-delete-dialog/food-delete-dialog.component';
+import {BarcodeScanDialogComponent} from '../../dialogs/barcode-scan-dialog/barcode-scan-dialog.component';
 
 @Component({
   selector: 'app-nutrition-foods',
@@ -115,6 +116,15 @@ export class NutritionFoodsComponent implements OnInit {
           this.snackBar.open(msg, 'Schließen', {duration: 5000});
         }
       });
+    });
+  }
+
+  openBarcodeDialog(): void {
+    const ref = this.dialog.open(BarcodeScanDialogComponent);
+    ref.afterClosed().subscribe((draft: FoodDraft | undefined) => {
+      if (!draft) return;
+      // Same review-and-save flow as the photo scan, tagged as a BARCODE source.
+      this.openFoodDialog({food: null, prefill: draft, source: 'BARCODE'}, null);
     });
   }
 
