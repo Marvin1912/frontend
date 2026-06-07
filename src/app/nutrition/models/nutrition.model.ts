@@ -53,14 +53,39 @@ export interface Targets {
   basis: TargetBasis;
 }
 
+/** Where a food's macro values originated. */
+export type FoodSource = 'MANUAL' | 'PHOTO' | 'ESTIMATE' | 'BARCODE';
+
 export interface Food {
   id: string;
   name: string;
   brand: string | null;
-  caloriesPer100g: number;
-  proteinPer100g: number;
-  carbsPer100g: number;
-  fatPer100g: number;
+  kcalPer100: number;
+  proteinPer100: number;
+  carbsPer100: number;
+  fatPer100: number;
+  fiberPer100: number | null;
+  defaultServingG: number | null;
+  source: FoodSource;
+}
+
+/** Create/update payload for a food (no audit/id fields). */
+export type FoodInput = Omit<Food, 'id'>;
+
+/**
+ * Transient food parsed from a nutrition-label photo (POST /nutrition/foods/scan-label).
+ * Not persisted — the user reviews it and saves via the food CRUD endpoint.
+ * Note the per-serving size is `servingG` here vs `defaultServingG` on a stored food.
+ */
+export interface FoodDraft {
+  name: string;
+  brand: string | null;
+  kcalPer100: number;
+  proteinPer100: number;
+  carbsPer100: number;
+  fatPer100: number;
+  fiberPer100: number | null;
+  servingG: number | null;
 }
 
 export interface MealEntry {

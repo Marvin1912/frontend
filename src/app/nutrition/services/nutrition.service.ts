@@ -5,6 +5,8 @@ import {environment} from '../../../environments/environment';
 import {
   DaySummary,
   Food,
+  FoodDraft,
+  FoodInput,
   MealEntry,
   Profile,
   ProfileInput,
@@ -59,6 +61,28 @@ export class NutritionService {
 
   searchFoods(query: string): Observable<Food[]> {
     return this.http.get<Food[]>(`${this.host}/foods`, {params: {q: query}});
+  }
+
+  createFood(food: FoodInput): Observable<Food> {
+    return this.http.post<Food>(`${this.host}/foods`, food);
+  }
+
+  updateFood(id: string, food: FoodInput): Observable<Food> {
+    return this.http.put<Food>(`${this.host}/foods/${id}`, food);
+  }
+
+  deleteFood(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.host}/foods/${id}`);
+  }
+
+  /**
+   * Upload a nutrition-label photo for parsing. The image is only used for this
+   * request and is not stored; the backend returns a transient draft food.
+   */
+  scanLabel(file: File): Observable<FoodDraft> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<FoodDraft>(`${this.host}/foods/scan-label`, formData);
   }
 
   getMeals(date: string): Observable<MealEntry[]> {

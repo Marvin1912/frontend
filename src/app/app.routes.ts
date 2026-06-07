@@ -33,6 +33,7 @@ import {NutritionLayoutComponent} from './nutrition/components/nutrition-layout/
 import {NutritionHomeComponent} from './nutrition/components/nutrition-home/nutrition-home.component';
 import {NutritionWeightComponent} from './nutrition/components/nutrition-weight/nutrition-weight.component';
 import {NutritionProfileComponent} from './nutrition/components/nutrition-profile/nutrition-profile.component';
+import {NutritionFoodsComponent} from './nutrition/components/nutrition-foods/nutrition-foods.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -108,6 +109,7 @@ export const routes: Routes = [
     children: [
       {path: '', component: NutritionHomeComponent, data: {home: '/'}},
       {path: 'weight', component: NutritionWeightComponent, data: {home: '/nutrition'}},
+      {path: 'foods', component: NutritionFoodsComponent, data: {home: '/nutrition'}},
       {path: 'profile', component: NutritionProfileComponent, data: {home: '/nutrition'}}
     ]
   }
