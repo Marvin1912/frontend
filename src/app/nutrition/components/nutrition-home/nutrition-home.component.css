@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:host {
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+
+  --c-g:  #a3e635;  --cg-g: rgba(163, 230, 53, 0.18);
+
+  display: block;
+  height: 100%;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+}
+
+/* ── Empty State ─────────────────────────────────── */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  height: 100%;
+  padding: 2rem 1rem;
+  text-align: center;
+  animation: fadeUp 0.5s ease both;
+}
+
+.empty__mark {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--c-g) 40%, transparent);
+  background: color-mix(in srgb, var(--c-g) 10%, transparent);
+  display: grid;
+  place-items: center;
+  font-size: 1.6rem;
+  color: var(--c-g);
+}
+
+.empty__title {
+  margin: 0;
+  font-size: clamp(1.1rem, 3vw, 1.4rem);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.empty__sub {
+  margin: 0;
+  max-width: 28ch;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
