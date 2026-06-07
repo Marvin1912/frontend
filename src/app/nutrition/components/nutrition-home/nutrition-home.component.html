@@ -1,5 +1,21 @@
-<div class="empty">
-  <div class="empty__mark">⚖</div>
-  <h2 class="empty__title">Nutrition</h2>
-  <p class="empty__sub">Kalorien- &amp; Ernährungs-Tracker — in Vorbereitung.</p>
+<div class="dashboard">
+
+  <app-targets-card />
+
+  <div class="navgrid">
+    <a class="navcard navcard--w" routerLink="/nutrition/weight">
+      <div class="navcard__mark">⚖</div>
+      <h2 class="navcard__title">Gewicht</h2>
+      <p class="navcard__sub">Gewicht erfassen & Verlauf</p>
+      <span class="navcard__arrow" aria-hidden="true">↗</span>
+    </a>
+
+    <a class="navcard navcard--p" routerLink="/nutrition/profile">
+      <div class="navcard__mark">☰</div>
+      <h2 class="navcard__title">Profil</h2>
+      <p class="navcard__sub">Eckdaten & Zielvorgaben</p>
+      <span class="navcard__arrow" aria-hidden="true">↗</span>
+    </a>
+  </div>
+
 </div>

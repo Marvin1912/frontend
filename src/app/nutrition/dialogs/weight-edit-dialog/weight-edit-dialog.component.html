@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Gewicht bearbeiten</h2>
+
+<mat-dialog-content>
+  <form class="edit-form" [formGroup]="form">
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Datum</mat-label>
+      <input matInput formControlName="entryDate" [matDatepicker]="picker" />
+      <mat-datepicker-toggle matIconSuffix [for]="picker" />
+      <mat-datepicker #picker />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Gewicht (kg)</mat-label>
+      <input matInput type="number" step="0.1" formControlName="weightKg" />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button mat-mini-fab class="btn-confirm" [disabled]="form.invalid" (click)="save()">
+    <mat-icon>check_circle</mat-icon>
+  </button>
+  <button mat-mini-fab mat-dialog-close class="btn-cancel">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-dialog-actions>

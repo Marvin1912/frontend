@@ -1,0 +1,82 @@
+<div class="profile">
+
+  <app-targets-card />
+
+  <section class="panel">
+    <header class="panel__head">
+      <span class="panel__dot"></span>
+      <span class="panel__label">PROFIL</span>
+    </header>
+
+    <form class="profile-form" [formGroup]="form" (ngSubmit)="save()">
+
+      <div class="grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Geschlecht</mat-label>
+          <mat-select formControlName="sex">
+            @for (s of sexes; track s.value) {
+              <mat-option [value]="s.value">{{ s.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Geburtsdatum</mat-label>
+          <input matInput formControlName="birthDate" [matDatepicker]="picker" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker" />
+          <mat-datepicker #picker />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Größe (cm)</mat-label>
+          <input matInput type="number" formControlName="heightCm" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Aktivitätslevel</mat-label>
+          <mat-select formControlName="activityLevel">
+            @for (a of activityLevels; track a.value) {
+              <mat-option [value]="a.value">{{ a.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Ziel</mat-label>
+          <mat-select formControlName="goal">
+            @for (g of goals; track g.value) {
+              <mat-option [value]="g.value">{{ g.label }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Protein pro kg</mat-label>
+          <input matInput type="number" step="0.1" formControlName="proteinPerKg" />
+          <span matTextSuffix>g/kg</span>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fettanteil</mat-label>
+          <input matInput type="number" formControlName="fatPctPercent" />
+          <span matTextSuffix>%</span>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Grundumsatz (manuell)</mat-label>
+          <input matInput type="number" formControlName="basalKcal" />
+          <span matTextSuffix>kcal</span>
+          <mat-hint>Optional — überschreibt die Formel, wenn gesetzt</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="actions">
+        <button mat-flat-button type="submit" class="btn-save" [disabled]="form.invalid || saving">
+          <mat-icon>save</mat-icon>
+          Speichern
+        </button>
+      </div>
+    </form>
+  </section>
+
+</div>

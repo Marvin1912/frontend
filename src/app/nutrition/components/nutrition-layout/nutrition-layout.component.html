@@ -1,15 +1,21 @@
 <div class="nutrition-layout">
   <header class="topbar">
     <div class="topbar__left">
-      <button mat-icon-button [routerLink]="homeLink" class="nav-btn" aria-label="Go home">
+      <button mat-icon-button class="nav-btn" aria-label="Go home" [routerLink]="homeLink">
         <mat-icon>home</mat-icon>
       </button>
-      <button mat-icon-button [matMenuTriggerFor]="menu" class="nav-btn" aria-label="Open menu">
+      <button mat-icon-button class="nav-btn" aria-label="Open menu" [matMenuTriggerFor]="menu">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item routerLink="/nutrition">
           <span>Home</span>
+        </button>
+        <button mat-menu-item routerLink="/nutrition/weight">
+          <span>Gewicht</span>
+        </button>
+        <button mat-menu-item routerLink="/nutrition/profile">
+          <span>Profil</span>
         </button>
       </mat-menu>
     </div>
@@ -23,6 +29,6 @@
   </header>
 
   <main class="content">
-    <router-outlet></router-outlet>
+    <router-outlet />
   </main>
 </div>

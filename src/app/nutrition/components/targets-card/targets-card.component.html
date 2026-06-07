@@ -1,0 +1,58 @@
+<section class="card">
+  <header class="card__head">
+    <span class="card__dot"></span>
+    <span class="card__label">TAGESZIELE</span>
+  </header>
+
+  @if (loading) {
+    <div class="card__state">
+      <mat-progress-spinner mode="indeterminate" diameter="28" />
+    </div>
+  } @else if (unavailable) {
+    <div class="card__state card__state--empty">
+      <mat-icon>info</mat-icon>
+      <p>{{ unavailable }}</p>
+    </div>
+  } @else if (targets) {
+    <div class="kcal">
+      <div class="kcal__main">
+        <span class="kcal__value">{{ targets.targetKcal | number:'1.0-0':'de' }}</span>
+        <span class="kcal__unit">kcal / Tag</span>
+      </div>
+      <div class="kcal__sub">
+        <div class="kcal__sub-item">
+          <span class="kcal__sub-label">Grundumsatz (BMR)</span>
+          <span class="kcal__sub-value">{{ targets.bmr | number:'1.0-0':'de' }} kcal</span>
+        </div>
+        <div class="kcal__sub-item">
+          <span class="kcal__sub-label">Erhaltungsbedarf</span>
+          <span class="kcal__sub-value">{{ targets.maintenanceKcal | number:'1.0-0':'de' }} kcal</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="macros">
+      <div class="macro macro--p">
+        <span class="macro__value">{{ targets.proteinG | number:'1.0-0':'de' }}<span class="macro__unit">g</span></span>
+        <span class="macro__label">Protein</span>
+      </div>
+      <div class="macro macro--c">
+        <span class="macro__value">{{ targets.carbsG | number:'1.0-0':'de' }}<span class="macro__unit">g</span></span>
+        <span class="macro__label">Kohlenhydrate</span>
+      </div>
+      <div class="macro macro--f">
+        <span class="macro__value">{{ targets.fatG | number:'1.0-0':'de' }}<span class="macro__unit">g</span></span>
+        <span class="macro__label">Fett</span>
+      </div>
+    </div>
+
+    <div class="basis" [class.basis--manual]="targets.basis === 'MANUAL'">
+      <mat-icon>{{ targets.basis === 'MANUAL' ? 'tune' : 'functions' }}</mat-icon>
+      <span>
+        {{ targets.basis === 'MANUAL'
+          ? 'BMR aus manuellem Wert'
+          : 'BMR aus Mifflin–St-Jeor-Formel' }}
+      </span>
+    </div>
+  }
+</section>

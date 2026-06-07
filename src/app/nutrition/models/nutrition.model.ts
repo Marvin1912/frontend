@@ -7,9 +7,12 @@ export type Sex = 'MALE' | 'FEMALE';
 
 export type ActivityLevel = 'SEDENTARY' | 'LIGHT' | 'MODERATE' | 'ACTIVE' | 'VERY_ACTIVE';
 
-export type Goal = 'LOSE' | 'MAINTAIN' | 'GAIN';
+export type Goal = 'CUT' | 'MAINTAIN' | 'BULK';
 
 export type MealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK';
+
+/** Whether the BMR used for the targets came from the manual value or the formula. */
+export type TargetBasis = 'MANUAL' | 'FORMULA';
 
 export interface Profile {
   id: string;
@@ -18,19 +21,36 @@ export interface Profile {
   heightCm: number;
   activityLevel: ActivityLevel;
   goal: Goal;
+  proteinPerKg: number;
+  /** Fat share of target kcal as a fraction, e.g. 0.30 for 30 %. */
+  fatPct: number;
+  /** Manual basal kcal; when set it overrides the Mifflin–St Jeor formula. */
+  basalKcal: number | null;
 }
+
+/** Editable profile payload sent on PUT /nutrition/profile (no audit/id fields). */
+export type ProfileInput = Omit<Profile, 'id'>;
 
 export interface WeightEntry {
   id: string;
-  date: string;
+  entryDate: string;
+  weightKg: number;
+}
+
+/** Create/update payload for a weight entry. */
+export interface WeightEntryInput {
+  entryDate: string;
   weightKg: number;
 }
 
 export interface Targets {
-  calories: number;
+  bmr: number;
+  maintenanceKcal: number;
+  targetKcal: number;
   proteinG: number;
-  carbsG: number;
   fatG: number;
+  carbsG: number;
+  basis: TargetBasis;
 }
 
 export interface Food {

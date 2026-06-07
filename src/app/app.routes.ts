@@ -31,6 +31,8 @@ import {ReceiptListComponent} from './grocery/components/receipt-list/receipt-li
 import {ReceiptItemsComponent} from './grocery/components/receipt-items/receipt-items.component';
 import {NutritionLayoutComponent} from './nutrition/components/nutrition-layout/nutrition-layout.component';
 import {NutritionHomeComponent} from './nutrition/components/nutrition-home/nutrition-home.component';
+import {NutritionWeightComponent} from './nutrition/components/nutrition-weight/nutrition-weight.component';
+import {NutritionProfileComponent} from './nutrition/components/nutrition-profile/nutrition-profile.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -104,7 +106,9 @@ export const routes: Routes = [
     path: 'nutrition',
     component: NutritionLayoutComponent,
     children: [
-      {path: '', component: NutritionHomeComponent, data: {home: '/'}}
+      {path: '', component: NutritionHomeComponent, data: {home: '/'}},
+      {path: 'weight', component: NutritionWeightComponent, data: {home: '/nutrition'}},
+      {path: 'profile', component: NutritionProfileComponent, data: {home: '/nutrition'}}
     ]
   }
 ];

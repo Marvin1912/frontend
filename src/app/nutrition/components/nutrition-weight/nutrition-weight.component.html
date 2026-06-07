@@ -1,0 +1,73 @@
+<div class="weight">
+
+  <app-targets-card />
+
+  <section class="panel">
+    <header class="panel__head">
+      <span class="panel__dot"></span>
+      <span class="panel__label">GEWICHT ERFASSEN</span>
+    </header>
+
+    <form class="add-form" [formGroup]="form" (ngSubmit)="add()">
+      <mat-form-field appearance="outline" class="field-date">
+        <mat-label>Datum</mat-label>
+        <input matInput formControlName="entryDate" [matDatepicker]="picker" />
+        <mat-datepicker-toggle matIconSuffix [for]="picker" />
+        <mat-datepicker #picker />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="field-weight">
+        <mat-label>Gewicht (kg)</mat-label>
+        <input matInput type="number" step="0.1" formControlName="weightKg" />
+      </mat-form-field>
+
+      <button mat-flat-button type="submit" class="btn-add" [disabled]="form.invalid">
+        <mat-icon>add</mat-icon>
+        Hinzufügen
+      </button>
+    </form>
+  </section>
+
+  <section class="panel">
+    <header class="panel__head">
+      <span class="panel__dot"></span>
+      <span class="panel__label">VERLAUF</span>
+    </header>
+
+    @if (entries.data.length) {
+      <div class="table-container">
+        <table mat-table [dataSource]="entries">
+
+          <ng-container matColumnDef="entryDate">
+            <th *matHeaderCellDef mat-header-cell class="col-header">Datum</th>
+            <td *matCellDef="let entry" mat-cell>{{ entry.entryDate | date:'dd.MM.yyyy':'':'de' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="weightKg">
+            <th *matHeaderCellDef mat-header-cell class="col-header">Gewicht</th>
+            <td *matCellDef="let entry" mat-cell>{{ entry.weightKg | number:'1.1-1':'de' }} kg</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th *matHeaderCellDef mat-header-cell class="col-header"></th>
+            <td *matCellDef="let entry" mat-cell class="col-actions">
+              <button mat-icon-button class="btn-edit" (click)="openEditDialog(entry)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="btn-del" (click)="openDeleteDialog(entry)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr *matHeaderRowDef="columnsToDisplay" mat-header-row></tr>
+          <tr *matRowDef="let entry; columns: columnsToDisplay;" mat-row></tr>
+
+        </table>
+      </div>
+    } @else {
+      <p class="empty">Noch keine Gewichtseinträge.</p>
+    }
+  </section>
+
+</div>
