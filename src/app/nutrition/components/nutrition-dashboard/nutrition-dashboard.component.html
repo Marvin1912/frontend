@@ -1,0 +1,113 @@
+<div class="dash">
+
+  @if (loading) {
+    <div class="state">
+      <mat-spinner diameter="32" />
+    </div>
+  } @else {
+
+    <!-- ── Weight trend ───────────────────────────── -->
+    <section class="panel">
+      <header class="panel__head">
+        <span class="panel__dot panel__dot--w"></span>
+        <span class="panel__label">GEWICHTSVERLAUF</span>
+        @if (latestWeight !== null) {
+          <span class="panel__stat">
+            {{ latestWeight | number:'1.1-1':'de' }} kg
+            @if (weightDelta !== null) {
+              <span class="delta" [class.delta--up]="weightDelta > 0" [class.delta--down]="weightDelta < 0">
+                {{ weightDelta > 0 ? '+' : '' }}{{ weightDelta | number:'1.1-1':'de' }}
+              </span>
+            }
+          </span>
+        }
+      </header>
+
+      @if (hasWeight) {
+        <div class="chart">
+          <svg [attr.viewBox]="'0 0 ' + vbW + ' ' + vbH" preserveAspectRatio="none" class="svg">
+            <polygon class="area area--w" [attr.points]="weightArea" />
+            <polyline class="line line--w" [attr.points]="weightLine" />
+            @for (p of weightPoints; track p.label + p.x) {
+              <circle class="dot dot--w" [attr.cx]="p.x" [attr.cy]="p.y" r="2.4" />
+            }
+          </svg>
+        </div>
+        <div class="axis">
+          <span>{{ weightPoints[0].label }}</span>
+          <span>{{ weightPoints[weightPoints.length - 1].label }}</span>
+        </div>
+      } @else {
+        <p class="empty">Noch keine Gewichtseinträge.</p>
+      }
+    </section>
+
+    <!-- ── Intake vs. target ──────────────────────── -->
+    <section class="panel">
+      <header class="panel__head">
+        <span class="panel__dot panel__dot--k"></span>
+        <span class="panel__label">KALORIEN ({{ intakeDays.length }} TAGE)</span>
+        @if (intakeTargetKcal !== null) {
+          <span class="panel__stat">Ziel {{ intakeTargetKcal | number:'1.0-0':'de' }} kcal</span>
+        }
+      </header>
+
+      @if (hasIntake) {
+        <div class="chart">
+          <svg [attr.viewBox]="'0 0 ' + vbW + ' ' + vbH" class="svg">
+            @for (d of intakeDays; track d.date) {
+              <rect class="bar bar--{{ d.state }}"
+                    [attr.x]="d.x" [attr.y]="d.y" [attr.width]="barWidth" [attr.height]="d.h" rx="1.5" />
+            }
+            @if (intakeTargetY !== null) {
+              <line class="target-line"
+                    [attr.x1]="axisX1" [attr.x2]="axisX2" [attr.y1]="intakeTargetY" [attr.y2]="intakeTargetY" />
+            }
+          </svg>
+        </div>
+        <div class="axis">
+          <span>{{ intakeDays[0].label }}</span>
+          <span>{{ intakeDays[intakeDays.length - 1].label }}</span>
+        </div>
+        <p class="legend">
+          <span class="legend__item legend__item--within">im Ziel</span>
+          <span class="legend__item legend__item--under">darunter</span>
+          <span class="legend__item legend__item--over">darüber</span>
+        </p>
+      } @else {
+        <p class="empty">Noch keine erfassten Tage.</p>
+      }
+    </section>
+
+    <!-- ── Adherence summary ──────────────────────── -->
+    <section class="panel">
+      <header class="panel__head">
+        <span class="panel__dot panel__dot--a"></span>
+        <span class="panel__label">BILANZ</span>
+      </header>
+
+      <div class="stats">
+        <div class="stat">
+          <span class="stat__v">
+            @if (avgKcal !== null) {
+              {{ avgKcal | number:'1.0-0':'de' }}
+            } @else {
+              –
+            }
+          </span>
+          <span class="stat__u">Ø kcal / Tag</span>
+        </div>
+        <div class="stat">
+          <span class="stat__v">{{ daysOnTarget }}<span class="stat__sub">/{{ daysWithData }}</span></span>
+          <span class="stat__u">Tage im Ziel</span>
+        </div>
+        <div class="stat">
+          <span class="stat__v">{{ daysWithData }}</span>
+          <span class="stat__u">Tage erfasst</span>
+        </div>
+      </div>
+    </section>
+
+  }
+
+</div>
