@@ -8,6 +8,7 @@
   --text-muted:  #7a93b0;
   --text-dim:    #3d5470;
 
+  --c-b:  #f472b6;  --cg-b: rgba(244, 114, 182, 0.18);
   --c-d:  #fbbf24;  --cg-d: rgba(251, 191,  36, 0.18);
   --c-c:  #4da6ff;  --cg-c: rgba(77,  166, 255, 0.18);
   --c-w:  #a3e635;  --cg-w: rgba(163, 230,  53, 0.18);
@@ -80,6 +81,7 @@
 
 .navcard:hover::before { opacity: 1; }
 
+.navcard--b { --cc: var(--c-b); --cc-glow: var(--cg-b); }
 .navcard--d { --cc: var(--c-d); --cc-glow: var(--cg-d); }
 .navcard--c { --cc: var(--c-c); --cc-glow: var(--cg-c); }
 .navcard--w { --cc: var(--c-w); --cc-glow: var(--cg-w); }
@@ -144,3 +146,4 @@
 .navcard:nth-child(3) { animation-delay: 0.19s; }
 .navcard:nth-child(4) { animation-delay: 0.26s; }
 .navcard:nth-child(5) { animation-delay: 0.33s; }
+.navcard:nth-child(6) { animation-delay: 0.40s; }
