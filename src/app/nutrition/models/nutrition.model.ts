@@ -88,25 +88,77 @@ export interface FoodDraft {
   servingG: number | null;
 }
 
-export interface MealEntry {
-  id: string;
-  date: string;
-  mealType: MealType;
-  foodId: string;
-  foodName: string;
-  amountG: number;
-  calories: number;
+/** A set of macro values (used for day totals and remaining-vs-target). */
+export interface Macros {
+  kcal: number;
   proteinG: number;
   carbsG: number;
   fatG: number;
 }
 
+/**
+ * A logged meal entry. Either references a stored food (`foodId` + `quantityG`)
+ * or is ad-hoc (`description` + supplied macros, e.g. a canteen estimate). The
+ * macro values are snapshotted at log time so historical totals stay stable.
+ */
+export interface MealEntry {
+  id: string;
+  entryDate: string;
+  mealType: MealType;
+  foodId: string | null;
+  /** Name of the referenced food, when the backend resolves it for display. */
+  foodName: string | null;
+  /** Free-text label for ad-hoc entries (null for food-based entries). */
+  description: string | null;
+  /** Portion in grams for food-based entries (null for ad-hoc). */
+  quantityG: number | null;
+  kcal: number;
+  proteinG: number;
+  carbsG: number;
+  fatG: number;
+}
+
+/** Log a stored food eaten in a given portion (POST /days/{date}/entries). */
+export interface FoodEntryInput {
+  mealType: MealType;
+  foodId: string;
+  quantityG: number;
+}
+
+/** Log an ad-hoc entry with supplied macros, e.g. a canteen estimate. */
+export interface AdHocEntryInput {
+  mealType: MealType;
+  description: string;
+  kcal: number;
+  proteinG: number;
+  carbsG: number;
+  fatG: number;
+}
+
+export type MealEntryInput = FoodEntryInput | AdHocEntryInput;
+
+/** Edit payload for PUT /entries/{id}: a new portion, or new ad-hoc values. */
+export type MealEntryUpdate =
+  | { quantityG: number }
+  | { description: string; kcal: number; proteinG: number; carbsG: number; fatG: number };
+
 export interface DaySummary {
   date: string;
+  entries: MealEntry[];
+  totals: Macros;
   targets: Targets;
-  consumedCalories: number;
-  consumedProteinG: number;
-  consumedCarbsG: number;
-  consumedFatG: number;
-  meals: MealEntry[];
+  remaining: Macros;
+}
+
+/**
+ * Rough macro estimate for a free-text meal description, produced by Claude
+ * (POST /nutrition/estimate). Directly usable as an ad-hoc entry payload.
+ */
+export interface MealEstimate {
+  kcal: number;
+  proteinG: number;
+  carbsG: number;
+  fatG: number;
+  /** Short note on the assumptions made (portion size, ingredients, …). */
+  assumptions: string;
 }

@@ -1,0 +1,260 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:host {
+  --bg:          #06080e;
+  --surface:     #0c1018;
+  --raised:      #111826;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-mid:  rgba(255, 255, 255, 0.13);
+
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
+
+  --c-kcal: #a3e635;
+  --c-p:    #2dd4bf;
+  --c-c:    #4da6ff;
+  --c-f:    #fb7185;
+
+  display: block;
+  height: 100%;
+  overflow-y: auto;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem clamp(1rem, 6vw, 4rem);
+  max-width: 760px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ── Panels ──────────────────────────────────────── */
+.panel__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.panel__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-kcal);
+  box-shadow: 0 0 6px var(--c-kcal);
+}
+
+.panel__dot--n { background: var(--c-p); box-shadow: 0 0 6px var(--c-p); }
+
+.panel__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* ── Toolbar ─────────────────────────────────────── */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.field-date { flex: 1 1 200px; }
+
+.btn-add {
+  height: 56px;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  background: color-mix(in srgb, var(--c-kcal) 14%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--c-kcal) 35%, transparent) !important;
+  color: var(--c-kcal) !important;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-add:hover {
+  background: color-mix(in srgb, var(--c-kcal) 22%, transparent) !important;
+  box-shadow: 0 0 12px rgba(163, 230, 53, 0.25) !important;
+}
+
+/* ── Summary bars ────────────────────────────────── */
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.1rem;
+}
+
+.bar--kcal { --bc: var(--c-kcal); }
+.bar--p    { --bc: var(--c-p); }
+.bar--c    { --bc: var(--c-c); }
+.bar--f    { --bc: var(--c-f); }
+
+.bar__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.3rem;
+}
+
+.bar__name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.bar__nums {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.bar__track {
+  height: 7px;
+  border-radius: 4px;
+  background: var(--raised);
+  overflow: hidden;
+}
+
+.bar__fill {
+  height: 100%;
+  border-radius: 4px;
+  background: var(--bc);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--bc) 50%, transparent);
+  transition: width 0.4s ease;
+}
+
+.bar__rem {
+  display: block;
+  margin-top: 0.25rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+/* ── Meal groups ─────────────────────────────────── */
+.meal__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+
+.meal__title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.meal__kcal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--c-kcal);
+}
+
+.entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.entry:last-child { border-bottom: none; }
+
+.entry__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.entry__name {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.entry__meta {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  letter-spacing: 0.02em;
+}
+
+.entry__actions {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.btn-edit { color: var(--text-dim); transition: color 0.2s; }
+.btn-edit:hover { color: var(--c-kcal); }
+.btn-del { color: var(--text-dim); transition: color 0.2s; }
+.btn-del:hover { color: var(--c-f); }
+
+/* ── States ──────────────────────────────────────── */
+.state {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+::ng-deep .state mat-spinner circle { stroke: var(--c-p) !important; }
+
+.empty {
+  margin: 0;
+  padding: 1.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px dashed var(--border-mid);
+  border-radius: 12px;
+}
+
+/* ── Dark form fields ────────────────────────────── */
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__leading,
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__notch,
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__trailing {
+  border-color: var(--border-mid) !important;
+}
+
+::ng-deep .mat-mdc-form-field .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  color: var(--text) !important;
+}
+
+::ng-deep .mat-mdc-form-field .mat-mdc-floating-label { color: var(--text-dim) !important; }
+
+::ng-deep .mat-mdc-form-field .mat-icon,
+::ng-deep .mat-mdc-form-field .mat-datepicker-toggle { color: var(--text-dim) !important; }
+
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
+  border-color: var(--c-kcal) !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-floating-label { color: var(--c-kcal) !important; }
