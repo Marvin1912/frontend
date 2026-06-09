@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>Eintrag bearbeiten</h2>
+
+<mat-dialog-content>
+  <p class="entry-label">{{ label }}</p>
+
+  <form class="edit-form" [formGroup]="form">
+    @if (isAdHoc) {
+      <mat-form-field appearance="outline" class="field-full">
+        <mat-label>Beschreibung</mat-label>
+        <input matInput formControlName="description" />
+      </mat-form-field>
+
+      <div class="grid">
+        <mat-form-field appearance="outline">
+          <mat-label>kcal</mat-label>
+          <input matInput type="number" step="1" formControlName="kcal" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Protein (g)</mat-label>
+          <input matInput type="number" step="0.1" formControlName="proteinG" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Kohlenhydrate (g)</mat-label>
+          <input matInput type="number" step="0.1" formControlName="carbsG" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fett (g)</mat-label>
+          <input matInput type="number" step="0.1" formControlName="fatG" />
+        </mat-form-field>
+      </div>
+    } @else {
+      <mat-form-field appearance="outline" class="field-full">
+        <mat-label>Menge</mat-label>
+        <input matInput type="number" step="1" formControlName="quantityG" />
+        <span matSuffix>g</span>
+      </mat-form-field>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button mat-mini-fab class="btn-confirm" [disabled]="form.invalid" (click)="save()">
+    <mat-icon>check_circle</mat-icon>
+  </button>
+  <button mat-mini-fab mat-dialog-close class="btn-cancel">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-dialog-actions>

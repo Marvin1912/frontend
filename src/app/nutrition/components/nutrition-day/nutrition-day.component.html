@@ -1,0 +1,104 @@
+<div class="day">
+
+  <section class="panel">
+    <header class="panel__head">
+      <span class="panel__dot"></span>
+      <span class="panel__label">TAGEBUCH</span>
+    </header>
+
+    <div class="toolbar">
+      <mat-form-field appearance="outline" class="field-date">
+        <mat-label>Datum</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="date" />
+        <mat-datepicker-toggle matIconSuffix [for]="picker" />
+        <mat-datepicker #picker />
+      </mat-form-field>
+
+      <button mat-flat-button type="button" class="btn-add" (click)="openAddDialog()">
+        <mat-icon>add</mat-icon>
+        Essen
+      </button>
+    </div>
+  </section>
+
+  @if (loading) {
+    <div class="state">
+      <mat-spinner diameter="32" />
+    </div>
+  } @else if (unavailable) {
+    <p class="empty">{{ unavailable }}</p>
+  } @else if (summary) {
+
+    <section class="panel summary">
+      <header class="panel__head">
+        <span class="panel__dot panel__dot--n"></span>
+        <span class="panel__label">ÜBERSICHT</span>
+      </header>
+
+      <div class="bars">
+        @for (b of bars; track b.label) {
+          <div class="bar bar--{{ b.cls }}">
+            <div class="bar__top">
+              <span class="bar__name">{{ b.label }}</span>
+              <span class="bar__nums">
+                {{ b.consumed | number:'1.0-0':'de' }} / {{ b.target | number:'1.0-0':'de' }} {{ b.unit }}
+              </span>
+            </div>
+            <div class="bar__track">
+              <div class="bar__fill" [style.width.%]="b.pct"></div>
+            </div>
+            <span class="bar__rem">
+              @if (b.remaining > 0) {
+                noch {{ b.remaining | number:'1.0-0':'de' }} {{ b.unit }}
+              } @else {
+                {{ -b.remaining | number:'1.0-0':'de' }} {{ b.unit }} über Ziel
+              }
+            </span>
+          </div>
+        }
+      </div>
+    </section>
+
+    @if (hasEntries) {
+      @for (group of groups; track group.type) {
+        <section class="panel meal">
+          <header class="meal__head">
+            <span class="meal__title">{{ group.label }}</span>
+            <span class="meal__kcal">{{ group.kcal | number:'1.0-0':'de' }} kcal</span>
+          </header>
+
+          <ul class="entries">
+            @for (entry of group.entries; track entry.id) {
+              <li class="entry">
+                <div class="entry__main">
+                  <span class="entry__name">{{ entryName(entry) }}</span>
+                  <span class="entry__meta">
+                    @if (entry.quantityG !== null) {
+                      {{ entry.quantityG | number:'1.0-0':'de' }} g ·
+                    }
+                    {{ entry.kcal | number:'1.0-0':'de' }} kcal ·
+                    P {{ entry.proteinG | number:'1.0-1':'de' }} ·
+                    KH {{ entry.carbsG | number:'1.0-1':'de' }} ·
+                    F {{ entry.fatG | number:'1.0-1':'de' }}
+                  </span>
+                </div>
+                <div class="entry__actions">
+                  <button mat-icon-button class="btn-edit" (click)="openEditDialog(entry)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button class="btn-del" (click)="openDeleteDialog(entry)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    } @else {
+      <p class="empty">Noch nichts erfasst. Füge dein erstes Essen hinzu.</p>
+    }
+
+  }
+
+</div>

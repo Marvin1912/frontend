@@ -8,6 +8,9 @@ import {
   FoodDraft,
   FoodInput,
   MealEntry,
+  MealEntryInput,
+  MealEntryUpdate,
+  MealEstimate,
   Profile,
   ProfileInput,
   Targets,
@@ -94,11 +97,27 @@ export class NutritionService {
     return this.http.get<FoodDraft>(`${this.host}/foods/barcode/${ean}`);
   }
 
-  getMeals(date: string): Observable<MealEntry[]> {
-    return this.http.get<MealEntry[]>(`${this.host}/meals`, {params: {date}});
-  }
-
+  /** Day summary: logged entries, totals, targets and remaining amounts. */
   getDaySummary(date: string): Observable<DaySummary> {
     return this.http.get<DaySummary>(`${this.host}/days/${date}`);
+  }
+
+  /** Log a meal entry on a day, either food-based or ad-hoc. */
+  addEntry(date: string, entry: MealEntryInput): Observable<MealEntry> {
+    return this.http.post<MealEntry>(`${this.host}/days/${date}/entries`, entry);
+  }
+
+  /** Edit an entry's portion (food-based) or values (ad-hoc). */
+  updateEntry(id: string, update: MealEntryUpdate): Observable<MealEntry> {
+    return this.http.put<MealEntry>(`${this.host}/entries/${id}`, update);
+  }
+
+  deleteEntry(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.host}/entries/${id}`);
+  }
+
+  /** Estimate macros for a free-text meal description via Claude. */
+  estimateMeal(description: string): Observable<MealEstimate> {
+    return this.http.post<MealEstimate>(`${this.host}/estimate`, {description});
   }
 }

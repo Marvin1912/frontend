@@ -1,0 +1,72 @@
+<h2 mat-dialog-title>Essen hinzufügen</h2>
+
+<mat-dialog-content>
+  <form class="entry-form" [formGroup]="form">
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Mahlzeit</mat-label>
+      <mat-select formControlName="mealType">
+        @for (m of mealTypes; track m.value) {
+          <mat-option [value]="m.value">{{ m.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Lebensmittel</mat-label>
+      <mat-icon matSuffix>search</mat-icon>
+      <input matInput autocomplete="off" formControlName="foodSearch"
+             [matAutocomplete]="auto" placeholder="Suchen…" />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFood"
+                        (optionSelected)="onFoodSelected($event)">
+        @for (food of results; track food.id) {
+          <mat-option [value]="food">
+            <span class="opt-name">{{ food.name }}</span>
+            @if (food.brand) {
+              <span class="opt-brand">{{ food.brand }}</span>
+            }
+            <span class="opt-kcal">{{ food.kcalPer100 | number:'1.0-0':'de' }} kcal / 100 g</span>
+          </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Menge</mat-label>
+      <input matInput type="number" step="1" formControlName="quantityG" />
+      <span matSuffix>g</span>
+    </mat-form-field>
+
+    @if (selected) {
+      <div class="macros">
+        <span class="macros__label">Für {{ quantityG.value || 0 }} g</span>
+        <div class="macros__grid">
+          <div class="macro macro--kcal">
+            <span class="macro__v">{{ scaled(selected.kcalPer100) | number:'1.0-0':'de' }}</span>
+            <span class="macro__u">kcal</span>
+          </div>
+          <div class="macro macro--p">
+            <span class="macro__v">{{ scaled(selected.proteinPer100) | number:'1.0-1':'de' }}</span>
+            <span class="macro__u">P</span>
+          </div>
+          <div class="macro macro--c">
+            <span class="macro__v">{{ scaled(selected.carbsPer100) | number:'1.0-1':'de' }}</span>
+            <span class="macro__u">KH</span>
+          </div>
+          <div class="macro macro--f">
+            <span class="macro__v">{{ scaled(selected.fatPer100) | number:'1.0-1':'de' }}</span>
+            <span class="macro__u">F</span>
+          </div>
+        </div>
+      </div>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button mat-mini-fab class="btn-confirm" [disabled]="!canSave" (click)="save()">
+    <mat-icon>check_circle</mat-icon>
+  </button>
+  <button mat-mini-fab mat-dialog-close class="btn-cancel">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-dialog-actions>
