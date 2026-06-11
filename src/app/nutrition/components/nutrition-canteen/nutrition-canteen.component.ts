@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatFormField, MatHint, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {MatSelect} from '@angular/material/select';
 import {MatOption} from '@angular/material/core';
@@ -27,6 +27,7 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
     ReactiveFormsModule,
     MatFormField,
     MatLabel,
+    MatHint,
     MatInput,
     MatSelect,
     MatOption,
@@ -45,6 +46,8 @@ export class NutritionCanteenComponent implements OnInit {
   readonly mealTypes = MEAL_TYPES;
 
   description = new FormControl('', {nonNullable: true, validators: Validators.required});
+  /** Optional hint on portion size to sharpen the estimate. */
+  portionHint = new FormControl('', {nonNullable: true});
   mealType = new FormControl<MealType>('LUNCH', {nonNullable: true});
   date = new FormControl<Date>(new Date(), {nonNullable: true});
 
@@ -74,7 +77,8 @@ export class NutritionCanteenComponent implements OnInit {
     this.estimating = true;
     this.cdr.markForCheck();
 
-    this.nutritionService.estimateMeal(this.description.value.trim()).subscribe({
+    const hint = this.portionHint.value.trim();
+    this.nutritionService.estimateMeal(this.description.value.trim(), hint || undefined).subscribe({
       next: (estimate: MealEstimate) => {
         this.applyEstimate(estimate);
         this.estimating = false;
@@ -132,6 +136,7 @@ export class NutritionCanteenComponent implements OnInit {
 
   private reset(): void {
     this.description.reset('');
+    this.portionHint.reset('');
     this.assumptions = '';
     this.hasEstimate = false;
     this.valuesForm.reset({kcal: 0, proteinG: 0, carbsG: 0, fatG: 0});
