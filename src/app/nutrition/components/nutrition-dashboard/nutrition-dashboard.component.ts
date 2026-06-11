@@ -141,7 +141,7 @@ export class NutritionDashboardComponent implements OnInit {
 
   // ── Intake ─────────────────────────────────────────
   private buildIntakeChart(dates: string[], days: (DaySummary | null)[]): void {
-    const target = days.find(d => d?.targets)?.targets.targetKcal ?? null;
+    const target = days.find(d => d?.targets)?.targets?.targetKcal ?? null;
     this.intakeTargetKcal = target;
 
     const consumed = days.map(d => d?.totals.kcal ?? 0);
@@ -156,7 +156,7 @@ export class NutritionDashboardComponent implements OnInit {
     this.intakeDays = dates.map((date, i) => {
       const summary = days[i];
       const kcal = summary?.totals.kcal ?? 0;
-      const dayTarget = summary?.targets.targetKcal ?? target ?? 0;
+      const dayTarget = summary?.targets?.targetKcal ?? target ?? 0;
       const h = innerH * (kcal / this.intakeMax);
       const x = PAD_L + slot * i + (slot - this.barWidth) / 2;
       const y = PAD_T + innerH - h;

@@ -146,8 +146,10 @@ export interface DaySummary {
   date: string;
   entries: MealEntry[];
   totals: Macros;
-  targets: Targets;
-  remaining: Macros;
+  /** Null when no profile/weight exists yet (backend returns 200 with null). */
+  targets: Targets | null;
+  /** Null when no profile/weight exists yet (backend returns 200 with null). */
+  remaining: Macros | null;
 }
 
 /**
