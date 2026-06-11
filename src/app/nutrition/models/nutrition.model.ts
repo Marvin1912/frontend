@@ -18,7 +18,7 @@ export type MealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK';
 export type TargetBasis = 'BASAL_KCAL' | 'MIFFLIN_ST_JEOR';
 
 export interface Profile {
-  id: string;
+  id: number;
   sex: Sex;
   birthDate: string;
   heightCm: number;
@@ -35,7 +35,7 @@ export interface Profile {
 export type ProfileInput = Omit<Profile, 'id'>;
 
 export interface WeightEntry {
-  id: string;
+  id: number;
   entryDate: string;
   weightKg: number;
 }
