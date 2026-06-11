@@ -11,8 +11,11 @@ export type Goal = 'CUT' | 'MAINTAIN' | 'BULK';
 
 export type MealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK';
 
-/** Whether the BMR used for the targets came from the manual value or the formula. */
-export type TargetBasis = 'MANUAL' | 'FORMULA';
+/**
+ * Whether the BMR used for the targets came from a manual basal value
+ * (`BASAL_KCAL`) or the Mifflin–St Jeor formula (`MIFFLIN_ST_JEOR`).
+ */
+export type TargetBasis = 'BASAL_KCAL' | 'MIFFLIN_ST_JEOR';
 
 export interface Profile {
   id: string;
