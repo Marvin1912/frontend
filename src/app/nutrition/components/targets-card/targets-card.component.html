@@ -46,10 +46,10 @@
       </div>
     </div>
 
-    <div class="basis" [class.basis--manual]="targets.basis === 'MANUAL'">
-      <mat-icon>{{ targets.basis === 'MANUAL' ? 'tune' : 'functions' }}</mat-icon>
+    <div class="basis" [class.basis--manual]="targets.basis === 'BASAL_KCAL'">
+      <mat-icon>{{ targets.basis === 'BASAL_KCAL' ? 'tune' : 'functions' }}</mat-icon>
       <span>
-        {{ targets.basis === 'MANUAL'
+        {{ targets.basis === 'BASAL_KCAL'
           ? 'BMR aus manuellem Wert'
           : 'BMR aus Mifflin–St-Jeor-Formel' }}
       </span>
