@@ -29,6 +29,7 @@
     <p class="empty">{{ unavailable }}</p>
   } @else if (summary) {
 
+    @if (hasTargets) {
     <section class="panel summary">
       <header class="panel__head">
         <span class="panel__dot panel__dot--n"></span>
@@ -58,6 +59,9 @@
         }
       </div>
     </section>
+    } @else {
+      <p class="empty">Tagesziele nicht verfügbar. Bitte zuerst ein Profil und einen Gewichtseintrag erfassen.</p>
+    }
 
     @if (hasEntries) {
       @for (group of groups; track group.type) {
