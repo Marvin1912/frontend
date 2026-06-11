@@ -17,6 +17,13 @@
                 placeholder="z. B. Schnitzel mit Pommes und Salat, großer Teller"></textarea>
     </mat-form-field>
 
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Portionsgröße (optional)</mat-label>
+      <input matInput [formControl]="portionHint"
+             placeholder="z. B. großer Teller, ca. 350 g" />
+      <mat-hint>Hilft der KI, die Menge besser einzuschätzen.</mat-hint>
+    </mat-form-field>
+
     <button mat-flat-button type="button" class="btn-estimate"
             [disabled]="description.invalid || estimating" (click)="estimate()">
       @if (estimating) {

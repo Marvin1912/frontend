@@ -116,8 +116,15 @@ export class NutritionService {
     return this.http.delete<void>(`${this.host}/entries/${id}`);
   }
 
-  /** Estimate macros for a free-text meal description via Claude. */
-  estimateMeal(description: string): Observable<MealEstimate> {
-    return this.http.post<MealEstimate>(`${this.host}/estimate`, {description});
+  /**
+   * Estimate macros for a free-text meal description via Claude. An optional
+   * portion hint (e.g. "großer Teller", "ca. 350 g") improves accuracy.
+   */
+  estimateMeal(description: string, portionHint?: string): Observable<MealEstimate> {
+    const body: { description: string; portionHint?: string } = {description};
+    if (portionHint) {
+      body.portionHint = portionHint;
+    }
+    return this.http.post<MealEstimate>(`${this.host}/estimate`, body);
   }
 }
