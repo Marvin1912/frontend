@@ -54,11 +54,11 @@ export class NutritionService {
     return this.http.post<WeightEntry>(`${this.host}/weight`, entry);
   }
 
-  updateWeightEntry(id: string, entry: WeightEntryInput): Observable<WeightEntry> {
+  updateWeightEntry(id: number, entry: WeightEntryInput): Observable<WeightEntry> {
     return this.http.put<WeightEntry>(`${this.host}/weight/${id}`, entry);
   }
 
-  deleteWeightEntry(id: string): Observable<void> {
+  deleteWeightEntry(id: number): Observable<void> {
     return this.http.delete<void>(`${this.host}/weight/${id}`);
   }
 
