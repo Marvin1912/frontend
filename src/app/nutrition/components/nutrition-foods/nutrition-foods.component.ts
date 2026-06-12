@@ -22,7 +22,7 @@ import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {debounceTime, distinctUntilChanged, startWith, switchMap} from 'rxjs';
+import {debounceTime, distinctUntilChanged, EMPTY, startWith, switchMap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
 import {Food, FoodDraft, FoodInput} from '../../models/nutrition.model';
 import {FoodEditDialogComponent, FoodEditDialogData} from '../../dialogs/food-edit-dialog/food-edit-dialog.component';
@@ -106,25 +106,25 @@ export class NutritionFoodsComponent implements OnInit {
 
   openDeleteDialog(food: Food): void {
     const ref = this.dialog.open(FoodDeleteDialogComponent, {data: {name: food.name}});
-    ref.afterClosed().subscribe(result => {
-      if (result !== 'confirmed') return;
-      this.nutritionService.deleteFood(food.id).subscribe({
-        next: () => {
-          this.foods.data = this.foods.data.filter(f => f.id !== food.id);
-          this.cdr.markForCheck();
-          this.snackBar.open('Lebensmittel gelöscht', 'OK', {duration: 3000});
-        },
-        error: err => {
-          const msg = err.status === 404 ? 'Lebensmittel nicht gefunden' : 'Lebensmittel konnte nicht gelöscht werden';
-          this.snackBar.open(msg, 'Schließen', {duration: 5000});
-        }
-      });
+    ref.afterClosed().pipe(
+      switchMap(result => result === 'confirmed' ? this.nutritionService.deleteFood(food.id) : EMPTY),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => {
+        this.foods.data = this.foods.data.filter(f => f.id !== food.id);
+        this.cdr.markForCheck();
+        this.snackBar.open('Lebensmittel gelöscht', 'OK', {duration: 3000});
+      },
+      error: err => {
+        const msg = err.status === 404 ? 'Lebensmittel nicht gefunden' : 'Lebensmittel konnte nicht gelöscht werden';
+        this.snackBar.open(msg, 'Schließen', {duration: 5000});
+      }
     });
   }
 
   openBarcodeDialog(): void {
     const ref = this.dialog.open(BarcodeScanDialogComponent);
-    ref.afterClosed().subscribe((draft: FoodDraft | undefined) => {
+    ref.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((draft: FoodDraft | undefined) => {
       if (!draft) return;
       // Same review-and-save flow as the photo scan, tagged as a BARCODE source.
       this.openFoodDialog({food: null, prefill: draft, source: 'BARCODE'}, null);
@@ -161,37 +161,26 @@ export class NutritionFoodsComponent implements OnInit {
 
   private openFoodDialog(data: FoodEditDialogData, existing: Food | null): void {
     const ref = this.dialog.open(FoodEditDialogComponent, {data});
-    ref.afterClosed().subscribe((result: FoodInput | undefined) => {
-      if (!result) return;
-      if (existing) {
-        this.update(existing.id, result);
-      } else {
-        this.create(result);
-      }
-    });
-  }
-
-  private create(input: FoodInput): void {
-    this.nutritionService.createFood(input).subscribe({
-      next: () => {
-        this.reload();
-        this.snackBar.open('Lebensmittel gespeichert', 'OK', {duration: 3000});
-      },
-      error: () => {
-        this.snackBar.open('Lebensmittel konnte nicht gespeichert werden', 'Schließen', {duration: 5000});
-      }
-    });
-  }
-
-  private update(id: string, input: FoodInput): void {
-    this.nutritionService.updateFood(id, input).subscribe({
+    ref.afterClosed().pipe(
+      switchMap((result: FoodInput | undefined) => {
+        if (!result) return EMPTY;
+        return existing ? this.nutritionService.updateFood(existing.id, result) : this.nutritionService.createFood(result);
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: updated => {
-        this.foods.data = this.foods.data.map(f => f.id === updated.id ? updated : f);
-        this.cdr.markForCheck();
-        this.snackBar.open('Lebensmittel aktualisiert', 'OK', {duration: 3000});
+        if (existing) {
+          this.foods.data = this.foods.data.map(f => f.id === updated.id ? updated : f);
+          this.cdr.markForCheck();
+          this.snackBar.open('Lebensmittel aktualisiert', 'OK', {duration: 3000});
+        } else {
+          this.reload();
+          this.snackBar.open('Lebensmittel gespeichert', 'OK', {duration: 3000});
+        }
       },
       error: () => {
-        this.snackBar.open('Lebensmittel konnte nicht aktualisiert werden', 'Schließen', {duration: 5000});
+        const msg = existing ? 'Lebensmittel konnte nicht aktualisiert werden' : 'Lebensmittel konnte nicht gespeichert werden';
+        this.snackBar.open(msg, 'Schließen', {duration: 5000});
       }
     });
   }

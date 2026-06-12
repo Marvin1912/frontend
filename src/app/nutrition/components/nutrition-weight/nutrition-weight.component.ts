@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, ViewChild} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DatePipe, DecimalPipe} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {
@@ -21,6 +22,7 @@ import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {EMPTY, switchMap} from 'rxjs';
 import {format} from 'date-fns';
 import {NutritionService} from '../../services/nutrition.service';
 import {WeightEntry, WeightEntryInput} from '../../models/nutrition.model';
@@ -73,6 +75,7 @@ export class NutritionWeightComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.form = this.fb.group({
@@ -116,38 +119,38 @@ export class NutritionWeightComponent implements OnInit {
 
   openEditDialog(entry: WeightEntry): void {
     const ref = this.dialog.open(WeightEditDialogComponent, {data: entry});
-    ref.afterClosed().subscribe((result: WeightEntryInput | undefined) => {
-      if (!result) return;
-      this.nutritionService.updateWeightEntry(entry.id, result).subscribe({
-        next: updated => {
-          this.entries.data = this.sortDesc(this.entries.data.map(e => e.id === updated.id ? updated : e));
-          this.targetsCard?.reload();
-          this.cdr.markForCheck();
-          this.snackBar.open('Gewicht aktualisiert', 'OK', {duration: 3000});
-        },
-        error: () => {
-          this.snackBar.open('Gewicht konnte nicht aktualisiert werden', 'Schließen', {duration: 5000});
-        }
-      });
+    ref.afterClosed().pipe(
+      switchMap((result: WeightEntryInput | undefined) => result ? this.nutritionService.updateWeightEntry(entry.id, result) : EMPTY),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: updated => {
+        this.entries.data = this.sortDesc(this.entries.data.map(e => e.id === updated.id ? updated : e));
+        this.targetsCard?.reload();
+        this.cdr.markForCheck();
+        this.snackBar.open('Gewicht aktualisiert', 'OK', {duration: 3000});
+      },
+      error: () => {
+        this.snackBar.open('Gewicht konnte nicht aktualisiert werden', 'Schließen', {duration: 5000});
+      }
     });
   }
 
   openDeleteDialog(entry: WeightEntry): void {
     const ref = this.dialog.open(WeightDeleteDialogComponent);
-    ref.afterClosed().subscribe(result => {
-      if (result !== 'confirmed') return;
-      this.nutritionService.deleteWeightEntry(entry.id).subscribe({
-        next: () => {
-          this.entries.data = this.entries.data.filter(e => e.id !== entry.id);
-          this.targetsCard?.reload();
-          this.cdr.markForCheck();
-          this.snackBar.open('Gewicht gelöscht', 'OK', {duration: 3000});
-        },
-        error: err => {
-          const msg = err.status === 404 ? 'Eintrag nicht gefunden' : 'Gewicht konnte nicht gelöscht werden';
-          this.snackBar.open(msg, 'Schließen', {duration: 5000});
-        }
-      });
+    ref.afterClosed().pipe(
+      switchMap(result => result === 'confirmed' ? this.nutritionService.deleteWeightEntry(entry.id) : EMPTY),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => {
+        this.entries.data = this.entries.data.filter(e => e.id !== entry.id);
+        this.targetsCard?.reload();
+        this.cdr.markForCheck();
+        this.snackBar.open('Gewicht gelöscht', 'OK', {duration: 3000});
+      },
+      error: err => {
+        const msg = err.status === 404 ? 'Eintrag nicht gefunden' : 'Gewicht konnte nicht gelöscht werden';
+        this.snackBar.open(msg, 'Schließen', {duration: 5000});
+      }
     });
   }
 }
