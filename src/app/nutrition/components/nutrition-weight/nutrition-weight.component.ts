@@ -86,9 +86,14 @@ export class NutritionWeightComponent implements OnInit {
   }
 
   private loadEntries(): void {
-    this.nutritionService.getWeightEntries().subscribe(entries => {
-      this.entries.data = this.sortDesc(entries);
-      this.cdr.markForCheck();
+    this.nutritionService.getWeightEntries().subscribe({
+      next: entries => {
+        this.entries.data = this.sortDesc(entries);
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.snackBar.open('Gewichtseinträge konnten nicht geladen werden', 'Schließen', {duration: 5000});
+      }
     });
   }
 
