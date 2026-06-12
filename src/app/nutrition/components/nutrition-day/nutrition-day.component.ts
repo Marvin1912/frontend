@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {HttpErrorResponse} from '@angular/common/http';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
@@ -76,9 +77,10 @@ export class NutritionDayComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-    this.date.valueChanges.subscribe(() => this.load());
+    this.date.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.load());
     this.load();
   }
 
