@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
@@ -53,6 +54,7 @@ export class AddDayEntryDialogComponent implements OnInit {
   private nutritionService = inject(NutritionService);
   private dialogRef = inject(MatDialogRef<AddDayEntryDialogComponent>);
   private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
   private data = inject<AddDayEntryDialogData>(MAT_DIALOG_DATA, {optional: true});
 
   readonly mealTypes = MEAL_TYPES;
@@ -71,7 +73,8 @@ export class AddDayEntryDialogComponent implements OnInit {
       // Once a food is picked the control holds a Food object; skip searching then.
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(value => this.nutritionService.searchFoods(typeof value === 'string' ? value.trim() : ''))
+      switchMap(value => this.nutritionService.searchFoods(typeof value === 'string' ? value.trim() : '')),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(foods => {
       this.results = foods;
       this.cdr.markForCheck();

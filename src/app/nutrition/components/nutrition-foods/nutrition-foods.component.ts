@@ -1,4 +1,5 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, ViewChild} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -73,13 +74,15 @@ export class NutritionFoodsComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.search.valueChanges.pipe(
       startWith(this.search.value),
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(query => this.nutritionService.searchFoods(query.trim()))
+      switchMap(query => this.nutritionService.searchFoods(query.trim())),
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(foods => {
       this.foods.data = foods;
       this.cdr.markForCheck();
