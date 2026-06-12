@@ -11,6 +11,7 @@ import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {EMPTY, switchMap} from 'rxjs';
 import {format} from 'date-fns';
 import {NutritionService} from '../../services/nutrition.service';
 import {DaySummary, FoodEntryInput, MealEntry, MealEntryUpdate, MealType} from '../../models/nutrition.model';
@@ -154,46 +155,46 @@ export class NutritionDayComponent implements OnInit {
   openAddDialog(mealType?: MealType): void {
     const data: AddDayEntryDialogData = {mealType};
     const ref = this.dialog.open(AddDayEntryDialogComponent, {data});
-    ref.afterClosed().subscribe((result: FoodEntryInput | undefined) => {
-      if (!result) return;
-      this.nutritionService.addEntry(this.isoDate, result).subscribe({
-        next: () => {
-          this.load();
-          this.snackBar.open('Eintrag hinzugefügt', 'OK', {duration: 3000});
-        },
-        error: () => this.snackBar.open('Eintrag konnte nicht gespeichert werden', 'Schließen', {duration: 5000})
-      });
+    ref.afterClosed().pipe(
+      switchMap((result: FoodEntryInput | undefined) => result ? this.nutritionService.addEntry(this.isoDate, result) : EMPTY),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => {
+        this.load();
+        this.snackBar.open('Eintrag hinzugefügt', 'OK', {duration: 3000});
+      },
+      error: () => this.snackBar.open('Eintrag konnte nicht gespeichert werden', 'Schließen', {duration: 5000})
     });
   }
 
   openEditDialog(entry: MealEntry): void {
     const ref = this.dialog.open(EntryEditDialogComponent, {data: entry});
-    ref.afterClosed().subscribe((update: MealEntryUpdate | undefined) => {
-      if (!update) return;
-      this.nutritionService.updateEntry(entry.id, update).subscribe({
-        next: () => {
-          this.load();
-          this.snackBar.open('Eintrag aktualisiert', 'OK', {duration: 3000});
-        },
-        error: () => this.snackBar.open('Eintrag konnte nicht aktualisiert werden', 'Schließen', {duration: 5000})
-      });
+    ref.afterClosed().pipe(
+      switchMap((update: MealEntryUpdate | undefined) => update ? this.nutritionService.updateEntry(entry.id, update) : EMPTY),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => {
+        this.load();
+        this.snackBar.open('Eintrag aktualisiert', 'OK', {duration: 3000});
+      },
+      error: () => this.snackBar.open('Eintrag konnte nicht aktualisiert werden', 'Schließen', {duration: 5000})
     });
   }
 
   openDeleteDialog(entry: MealEntry): void {
     const ref = this.dialog.open(EntryDeleteDialogComponent, {data: {label: this.entryName(entry)}});
-    ref.afterClosed().subscribe(result => {
-      if (result !== 'confirmed') return;
-      this.nutritionService.deleteEntry(entry.id).subscribe({
-        next: () => {
-          this.load();
-          this.snackBar.open('Eintrag gelöscht', 'OK', {duration: 3000});
-        },
-        error: err => {
-          const msg = err.status === 404 ? 'Eintrag nicht gefunden' : 'Eintrag konnte nicht gelöscht werden';
-          this.snackBar.open(msg, 'Schließen', {duration: 5000});
-        }
-      });
+    ref.afterClosed().pipe(
+      switchMap(result => result === 'confirmed' ? this.nutritionService.deleteEntry(entry.id) : EMPTY),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => {
+        this.load();
+        this.snackBar.open('Eintrag gelöscht', 'OK', {duration: 3000});
+      },
+      error: err => {
+        const msg = err.status === 404 ? 'Eintrag nicht gefunden' : 'Eintrag konnte nicht gelöscht werden';
+        this.snackBar.open(msg, 'Schließen', {duration: 5000});
+      }
     });
   }
 }
