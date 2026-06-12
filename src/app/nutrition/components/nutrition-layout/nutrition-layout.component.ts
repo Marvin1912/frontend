@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
@@ -19,13 +20,21 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
   templateUrl: './nutrition-layout.component.html',
   styleUrl: './nutrition-layout.component.css'
 })
-export class NutritionLayoutComponent {
+export class NutritionLayoutComponent implements OnInit {
 
   homeLink = '/';
 
+  private destroyRef = inject(DestroyRef);
+
   constructor(private router: Router, private route: ActivatedRoute) {
+  }
+
+  ngOnInit(): void {
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe(() => {
         const home = this.getDeepestChild(this.route).snapshot.data['home'];
         this.homeLink = home || '/';
