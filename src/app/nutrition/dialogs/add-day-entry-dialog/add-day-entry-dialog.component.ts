@@ -10,7 +10,7 @@ import {MatOption} from '@angular/material/core';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatButton, MatIconButton, MatMiniFabButton} from '@angular/material/button';
+import {MatButton, MatIconButton} from '@angular/material/button';
 import {catchError, debounceTime, distinctUntilChanged, finalize, of, startWith, switchMap, tap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
 import {Food, FoodEntryInput, Macros, MealType} from '../../models/nutrition.model';
@@ -54,7 +54,6 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
     MatAutocompleteTrigger,
     MatIcon,
     MatProgressSpinner,
-    MatMiniFabButton,
     MatIconButton,
     MatButton
   ],
