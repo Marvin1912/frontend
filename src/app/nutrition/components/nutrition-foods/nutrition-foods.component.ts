@@ -18,6 +18,7 @@ import {
 import {MatFormField, MatLabel, MatPrefix} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {MatSort, MatSortModule} from '@angular/material/sort';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
@@ -56,7 +57,8 @@ import {BarcodeScanDialogComponent} from '../../dialogs/barcode-scan-dialog/barc
     MatIcon,
     MatProgressSpinner,
     MatTooltip,
-    MatSortModule
+    MatSortModule,
+    MatPaginatorModule
   ],
   templateUrl: './nutrition-foods.component.html',
   styleUrl: './nutrition-foods.component.css'
@@ -65,10 +67,12 @@ export class NutritionFoodsComponent implements OnInit, AfterViewInit {
 
   @ViewChild('photoInput') photoInput!: { nativeElement: HTMLInputElement };
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   search = new FormControl('', {nonNullable: true});
   foods = new MatTableDataSource<Food>();
   columnsToDisplay = ['name', 'kcal', 'protein', 'carbs', 'fat', 'actions'];
+  pageSizeOptions = [10, 25, 50, 100];
   scanning = false;
   searching = false;
 
@@ -84,6 +88,7 @@ export class NutritionFoodsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.foods.sort = this.sort;
+    this.foods.paginator = this.paginator;
   }
 
   ngOnInit(): void {
@@ -104,6 +109,9 @@ export class NutritionFoodsComponent implements OnInit, AfterViewInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(foods => {
       this.foods.data = foods;
+      if (this.foods.paginator) {
+        this.foods.paginator.firstPage();
+      }
       this.cdr.markForCheck();
     });
   }
