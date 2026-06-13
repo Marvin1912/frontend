@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} f
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormField, MatHint, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
+import {NoWheelDirective} from '../../directives/no-wheel.directive';
 import {MatSelect} from '@angular/material/select';
 import {MatOption} from '@angular/material/core';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
@@ -32,6 +33,7 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
     MatLabel,
     MatHint,
     MatInput,
+    NoWheelDirective,
     MatSelect,
     MatOption,
     MatDatepicker,

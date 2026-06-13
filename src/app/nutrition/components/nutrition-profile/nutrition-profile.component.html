@@ -29,7 +29,7 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Größe (cm)</mat-label>
-          <input matInput type="number" formControlName="heightCm" />
+          <input matInput type="number" inputmode="numeric" formControlName="heightCm" />
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -52,19 +52,19 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Protein pro kg</mat-label>
-          <input matInput type="number" step="0.1" formControlName="proteinPerKg" />
+          <input matInput type="number" step="0.1" inputmode="decimal" formControlName="proteinPerKg" />
           <span matTextSuffix>g/kg</span>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Fettanteil</mat-label>
-          <input matInput type="number" formControlName="fatPctPercent" />
+          <input matInput type="number" inputmode="numeric" formControlName="fatPctPercent" />
           <span matTextSuffix>%</span>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Grundumsatz (manuell)</mat-label>
-          <input matInput type="number" formControlName="basalKcal" />
+          <input matInput type="number" inputmode="numeric" formControlName="basalKcal" />
           <span matTextSuffix>kcal</span>
           <mat-hint>Optional — überschreibt die Formel, wenn gesetzt</mat-hint>
         </mat-form-field>

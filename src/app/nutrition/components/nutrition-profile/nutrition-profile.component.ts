@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {HttpErrorResponse} from '@angular/common/http';
 import {MatFormField, MatHint, MatLabel, MatSuffix} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
+import {NoWheelDirective} from '../../directives/no-wheel.directive';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatButton} from '@angular/material/button';
@@ -23,6 +24,7 @@ import {TargetsCardComponent} from '../targets-card/targets-card.component';
     MatHint,
     MatSuffix,
     MatInput,
+    NoWheelDirective,
     MatSelect,
     MatOption,
     MatDatepicker,

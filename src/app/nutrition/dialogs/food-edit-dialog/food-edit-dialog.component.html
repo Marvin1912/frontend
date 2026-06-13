@@ -15,32 +15,32 @@
     <div class="grid">
       <mat-form-field appearance="outline">
         <mat-label>kcal / 100 g</mat-label>
-        <input matInput type="number" step="1" formControlName="kcalPer100" />
+        <input matInput type="number" step="1" inputmode="numeric" formControlName="kcalPer100" />
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Protein (g)</mat-label>
-        <input matInput type="number" step="0.1" formControlName="proteinPer100" />
+        <input matInput type="number" step="0.1" inputmode="decimal" formControlName="proteinPer100" />
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Kohlenhydrate (g)</mat-label>
-        <input matInput type="number" step="0.1" formControlName="carbsPer100" />
+        <input matInput type="number" step="0.1" inputmode="decimal" formControlName="carbsPer100" />
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Fett (g)</mat-label>
-        <input matInput type="number" step="0.1" formControlName="fatPer100" />
+        <input matInput type="number" step="0.1" inputmode="decimal" formControlName="fatPer100" />
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Ballaststoffe (g)</mat-label>
-        <input matInput type="number" step="0.1" formControlName="fiberPer100" />
+        <input matInput type="number" step="0.1" inputmode="decimal" formControlName="fiberPer100" />
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Portion (g)</mat-label>
-        <input matInput type="number" step="1" formControlName="defaultServingG" />
+        <input matInput type="number" step="1" inputmode="numeric" formControlName="defaultServingG" />
       </mat-form-field>
     </div>
   </form>
