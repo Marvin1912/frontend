@@ -9,14 +9,20 @@ import {MatSelect} from '@angular/material/select';
 import {MatOption} from '@angular/material/core';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatIcon} from '@angular/material/icon';
-import {MatMiniFabButton} from '@angular/material/button';
+import {MatButton, MatIconButton, MatMiniFabButton} from '@angular/material/button';
 import {catchError, debounceTime, distinctUntilChanged, of, startWith, switchMap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
-import {Food, FoodEntryInput, MealType} from '../../models/nutrition.model';
+import {Food, FoodEntryInput, Macros, MealType} from '../../models/nutrition.model';
 
 /** Optional defaults for the add-entry dialog (e.g. the meal type tapped). */
 export interface AddDayEntryDialogData {
   mealType?: MealType;
+}
+
+/** A food + portion staged for the batch result, before the dialog is confirmed. */
+interface StagedItem {
+  food: Food;
+  quantityG: number;
 }
 
 const MEAL_TYPES: { value: MealType; label: string }[] = [
@@ -45,7 +51,9 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatIcon,
-    MatMiniFabButton
+    MatMiniFabButton,
+    MatIconButton,
+    MatButton
   ],
   templateUrl: './add-day-entry-dialog.component.html',
   styleUrl: './add-day-entry-dialog.component.css'
@@ -68,6 +76,9 @@ export class AddDayEntryDialogComponent implements OnInit {
   results: Food[] = [];
   selected: Food | null = null;
   searchFailed = false;
+
+  /** Foods staged in this dialog session, returned together as one batch on confirm. */
+  staged: StagedItem[] = [];
 
   ngOnInit(): void {
     this.foodSearch.valueChanges.pipe(
@@ -110,17 +121,55 @@ export class AddDayEntryDialogComponent implements OnInit {
     return per100 * qty / 100;
   }
 
-  get canSave(): boolean {
+  /** Macro value for a staged item's portion, scaled from the per-100 g figure. */
+  scaledFor(item: StagedItem, per100: number): number {
+    return per100 * item.quantityG / 100;
+  }
+
+  /** Running macro totals across all staged items. */
+  get totals(): Macros {
+    return this.staged.reduce((acc, item) => ({
+      kcal: acc.kcal + this.scaledFor(item, item.food.kcalPer100),
+      proteinG: acc.proteinG + this.scaledFor(item, item.food.proteinPer100),
+      carbsG: acc.carbsG + this.scaledFor(item, item.food.carbsPer100),
+      fatG: acc.fatG + this.scaledFor(item, item.food.fatPer100)
+    }), {kcal: 0, proteinG: 0, carbsG: 0, fatG: 0});
+  }
+
+  get canAdd(): boolean {
     return !!this.selected && this.quantityG.valid && Number(this.quantityG.value) > 0;
   }
 
+  get canSave(): boolean {
+    return this.staged.length > 0 || this.canAdd;
+  }
+
+  /** Append the currently selected food + quantity to the staged list and reset the inputs. */
+  addToStaged(): void {
+    if (!this.canAdd || !this.selected) return;
+    this.staged.push({food: this.selected, quantityG: Number(this.quantityG.value)});
+    this.selected = null;
+    this.foodSearch.setValue('');
+    this.quantityG.setValue(null);
+    this.cdr.markForCheck();
+  }
+
+  removeStaged(index: number): void {
+    this.staged.splice(index, 1);
+    this.cdr.markForCheck();
+  }
+
   save(): void {
-    if (!this.canSave || !this.selected) return;
-    const result: FoodEntryInput = {
+    const items = [...this.staged];
+    if (this.canAdd && this.selected) {
+      items.push({food: this.selected, quantityG: Number(this.quantityG.value)});
+    }
+    if (items.length === 0) return;
+    const result: FoodEntryInput[] = items.map(item => ({
       mealType: this.mealType.value,
-      foodId: this.selected.id,
-      quantityG: Number(this.quantityG.value)
-    };
+      foodId: item.food.id,
+      quantityG: item.quantityG
+    }));
     this.dialogRef.close(result);
   }
 }
