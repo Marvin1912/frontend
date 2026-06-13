@@ -36,6 +36,7 @@ interface MacroBar {
   target: number;
   remaining: number;
   pct: number;
+  over: boolean;
   cls: string;
 }
 
@@ -144,7 +145,7 @@ export class NutritionDayComponent implements OnInit {
 
   private bar(label: string, unit: string, consumed: number, target: number, remaining: number, cls: string): MacroBar {
     const pct = target > 0 ? Math.min(100, Math.round(consumed / target * 100)) : 0;
-    return {label, unit, consumed, target, remaining, pct, cls};
+    return {label, unit, consumed, target, remaining, pct, over: remaining < 0, cls};
   }
 
   entryName(entry: MealEntry): string {

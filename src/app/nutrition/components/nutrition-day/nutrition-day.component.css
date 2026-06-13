@@ -15,6 +15,7 @@
   --c-p:    #2dd4bf;
   --c-c:    #4da6ff;
   --c-f:    #fb7185;
+  --c-warn: #ff5252;
 
   display: block;
   height: 100%;
@@ -136,6 +137,15 @@
   transition: width 0.4s ease;
 }
 
+.bar__fill--over {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--c-warn) 0 6px,
+    color-mix(in srgb, var(--c-warn) 70%, black) 6px 12px
+  );
+  box-shadow: 0 0 8px color-mix(in srgb, var(--c-warn) 60%, transparent);
+}
+
 .bar__rem {
   display: block;
   margin-top: 0.25rem;
@@ -143,6 +153,11 @@
   font-size: 0.6rem;
   letter-spacing: 0.04em;
   color: var(--text-dim);
+}
+
+.bar__rem--over {
+  color: var(--c-warn);
+  font-weight: 600;
 }
 
 /* ── Meal groups ─────────────────────────────────── */
