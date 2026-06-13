@@ -121,6 +121,8 @@
 
 ::ng-deep .btn-scan mat-spinner circle { stroke: var(--c-n) !important; }
 
+::ng-deep .field-search mat-spinner circle { stroke: var(--c-g) !important; }
+
 /* ── Table ───────────────────────────────────────── */
 .table-container {
   background: var(--surface);

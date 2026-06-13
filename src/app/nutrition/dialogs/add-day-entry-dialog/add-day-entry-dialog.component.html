@@ -13,7 +13,11 @@
 
     <mat-form-field appearance="outline" class="field-full">
       <mat-label>Lebensmittel</mat-label>
-      <mat-icon matSuffix>search</mat-icon>
+      @if (searching) {
+        <mat-spinner matSuffix diameter="18" />
+      } @else {
+        <mat-icon matSuffix>search</mat-icon>
+      }
       <input matInput autocomplete="off" formControlName="foodSearch"
              [matAutocomplete]="auto" placeholder="Suchen…" />
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFood"

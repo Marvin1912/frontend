@@ -22,7 +22,7 @@ import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {debounceTime, distinctUntilChanged, EMPTY, startWith, switchMap} from 'rxjs';
+import {debounceTime, distinctUntilChanged, EMPTY, finalize, startWith, switchMap, tap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
 import {Food, FoodDraft, FoodInput} from '../../models/nutrition.model';
 import {FoodEditDialogComponent, FoodEditDialogData} from '../../dialogs/food-edit-dialog/food-edit-dialog.component';
@@ -65,6 +65,7 @@ export class NutritionFoodsComponent implements OnInit {
   foods = new MatTableDataSource<Food>();
   columnsToDisplay = ['name', 'kcal', 'protein', 'carbs', 'fat', 'actions'];
   scanning = false;
+  searching = false;
 
   get searchTerm(): string {
     return this.search.value.trim();
@@ -81,7 +82,16 @@ export class NutritionFoodsComponent implements OnInit {
       startWith(this.search.value),
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(query => this.nutritionService.searchFoods(query.trim())),
+      tap(() => {
+        this.searching = true;
+        this.cdr.markForCheck();
+      }),
+      switchMap(query => this.nutritionService.searchFoods(query.trim()).pipe(
+        finalize(() => {
+          this.searching = false;
+          this.cdr.markForCheck();
+        })
+      )),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(foods => {
       this.foods.data = foods;

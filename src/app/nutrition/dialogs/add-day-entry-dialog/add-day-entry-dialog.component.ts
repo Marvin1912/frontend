@@ -9,8 +9,9 @@ import {MatSelect} from '@angular/material/select';
 import {MatOption} from '@angular/material/core';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatIcon} from '@angular/material/icon';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatButton, MatIconButton, MatMiniFabButton} from '@angular/material/button';
-import {catchError, debounceTime, distinctUntilChanged, of, startWith, switchMap} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, finalize, of, startWith, switchMap, tap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
 import {Food, FoodEntryInput, Macros, MealType} from '../../models/nutrition.model';
 
@@ -52,6 +53,7 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatIcon,
+    MatProgressSpinner,
     MatMiniFabButton,
     MatIconButton,
     MatButton
@@ -77,6 +79,7 @@ export class AddDayEntryDialogComponent implements OnInit {
   results: Food[] = [];
   selected: Food | null = null;
   searchFailed = false;
+  searching = false;
 
   /** Foods staged in this dialog session, returned together as one batch on confirm. */
   staged: StagedItem[] = [];
@@ -87,12 +90,20 @@ export class AddDayEntryDialogComponent implements OnInit {
       // Once a food is picked the control holds a Food object; skip searching then.
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(value => {
+      tap(() => {
         this.searchFailed = false;
+        this.searching = true;
+        this.cdr.markForCheck();
+      }),
+      switchMap(value => {
         return this.nutritionService.searchFoods(typeof value === 'string' ? value.trim() : '').pipe(
           catchError(() => {
             this.searchFailed = true;
             return of<Food[]>([]);
+          }),
+          finalize(() => {
+            this.searching = false;
+            this.cdr.markForCheck();
           })
         );
       }),
