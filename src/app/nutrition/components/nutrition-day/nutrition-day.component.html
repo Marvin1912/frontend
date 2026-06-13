@@ -46,9 +46,9 @@
               </span>
             </div>
             <div class="bar__track">
-              <div class="bar__fill" [style.width.%]="b.pct"></div>
+              <div class="bar__fill" [class.bar__fill--over]="b.over" [style.width.%]="b.pct"></div>
             </div>
-            <span class="bar__rem">
+            <span class="bar__rem" [class.bar__rem--over]="b.over">
               @if (b.remaining > 0) {
                 noch {{ b.remaining | number:'1.0-0':'de' }} {{ b.unit }}
               } @else {
