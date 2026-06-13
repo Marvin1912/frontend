@@ -58,6 +58,10 @@
   color: var(--c-e);
 }
 
+::ng-deep .mat-mdc-form-field mat-spinner circle {
+  stroke: var(--c-n) !important;
+}
+
 /* ── Autocomplete options ────────────────────────── */
 .opt-name { font-weight: 600; }
 

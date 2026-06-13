@@ -9,7 +9,11 @@
     <div class="toolbar">
       <mat-form-field appearance="outline" class="field-search">
         <mat-label>Suchen</mat-label>
-        <mat-icon matPrefix>search</mat-icon>
+        @if (searching) {
+          <mat-spinner matPrefix diameter="18" />
+        } @else {
+          <mat-icon matPrefix>search</mat-icon>
+        }
         <input matInput autocomplete="off" [formControl]="search" />
       </mat-form-field>
 
