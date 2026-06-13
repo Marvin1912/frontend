@@ -69,7 +69,70 @@
   gap: 0.75rem;
 }
 
-.field-date { flex: 1 1 200px; }
+.date-nav {
+  display: flex;
+  flex: 1 1 320px;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.field-date { flex: 1 1 160px; }
+
+.btn-step {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 1.34375em; /* align with form-field input baseline (subscript wrapper) */
+  color: var(--text-muted);
+  border: 1px solid var(--border-mid);
+  border-radius: 8px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.btn-step:hover:not([disabled]) {
+  color: var(--c-kcal);
+  border-color: color-mix(in srgb, var(--c-kcal) 40%, transparent);
+  background: color-mix(in srgb, var(--c-kcal) 8%, transparent);
+}
+
+.btn-step[disabled] {
+  color: var(--text-dim);
+  opacity: 0.4;
+}
+
+.date-rel {
+  flex-shrink: 0;
+  margin-bottom: 1.34375em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-p);
+  white-space: nowrap;
+}
+
+.btn-today {
+  flex-shrink: 0;
+  height: 44px;
+  margin-bottom: 1.34375em;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 0.78rem !important;
+  color: var(--text-muted) !important;
+  border-color: var(--border-mid) !important;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.btn-today:hover:not([disabled]) {
+  color: var(--c-kcal) !important;
+  border-color: color-mix(in srgb, var(--c-kcal) 40%, transparent) !important;
+  background: color-mix(in srgb, var(--c-kcal) 8%, transparent) !important;
+}
+
+.btn-today[disabled] {
+  opacity: 0.4;
+}
 
 .btn-add {
   height: 56px;
