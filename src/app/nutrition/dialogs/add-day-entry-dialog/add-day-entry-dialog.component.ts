@@ -23,6 +23,7 @@ export interface AddDayEntryDialogData {
 interface StagedItem {
   food: Food;
   quantityG: number;
+  mealType: MealType;
 }
 
 const MEAL_TYPES: { value: MealType; label: string }[] = [
@@ -126,6 +127,11 @@ export class AddDayEntryDialogComponent implements OnInit {
     return per100 * item.quantityG / 100;
   }
 
+  /** Human-readable label for a staged item's meal type. */
+  mealTypeLabel(mealType: MealType): string {
+    return this.mealTypes.find(m => m.value === mealType)?.label ?? mealType;
+  }
+
   /** Running macro totals across all staged items. */
   get totals(): Macros {
     return this.staged.reduce((acc, item) => ({
@@ -147,7 +153,7 @@ export class AddDayEntryDialogComponent implements OnInit {
   /** Append the currently selected food + quantity to the staged list and reset the inputs. */
   addToStaged(): void {
     if (!this.canAdd || !this.selected) return;
-    this.staged.push({food: this.selected, quantityG: Number(this.quantityG.value)});
+    this.staged.push({food: this.selected, quantityG: Number(this.quantityG.value), mealType: this.mealType.value});
     this.selected = null;
     this.foodSearch.setValue('');
     this.quantityG.setValue(null);
@@ -162,11 +168,11 @@ export class AddDayEntryDialogComponent implements OnInit {
   save(): void {
     const items = [...this.staged];
     if (this.canAdd && this.selected) {
-      items.push({food: this.selected, quantityG: Number(this.quantityG.value)});
+      items.push({food: this.selected, quantityG: Number(this.quantityG.value), mealType: this.mealType.value});
     }
     if (items.length === 0) return;
     const result: FoodEntryInput[] = items.map(item => ({
-      mealType: this.mealType.value,
+      mealType: item.mealType,
       foodId: item.food.id,
       quantityG: item.quantityG
     }));

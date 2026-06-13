@@ -200,6 +200,15 @@
   white-space: nowrap;
 }
 
+.staged-item__meal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
 .staged-item__qty,
 .staged-item__kcal {
   font-family: 'JetBrains Mono', monospace;

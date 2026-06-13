@@ -75,6 +75,7 @@
       @for (item of staged; track item; let i = $index) {
         <div class="staged-item">
           <span class="staged-item__name">{{ item.food.name }}</span>
+          <span class="staged-item__meal">{{ mealTypeLabel(item.mealType) }}</span>
           <span class="staged-item__qty">{{ item.quantityG | number:'1.0-0':'de' }} g</span>
           <span class="staged-item__kcal">{{ scaledFor(item, item.food.kcalPer100) | number:'1.0-0':'de' }} kcal</span>
           <button mat-icon-button type="button" class="staged-item__remove" (click)="removeStaged(i)">
