@@ -153,12 +153,13 @@ export class NutritionDayComponent implements OnInit {
     const data: AddDayEntryDialogData = {mealType};
     const ref = this.dialog.open(AddDayEntryDialogComponent, {data});
     ref.afterClosed().pipe(
-      switchMap((result: FoodEntryInput | undefined) => result ? this.nutritionService.addEntry(this.isoDate, result) : EMPTY),
+      switchMap((result: FoodEntryInput[] | undefined) => result?.length ? this.nutritionService.addEntries(this.isoDate, result) : EMPTY),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
-      next: () => {
+      next: created => {
         this.load();
-        this.snackBar.open('Eintrag hinzugefügt', 'OK', {duration: 3000});
+        const message = created.length === 1 ? '1 Eintrag hinzugefügt' : `${created.length} Einträge hinzugefügt`;
+        this.snackBar.open(message, 'OK', {duration: 3000});
       },
       error: () => this.snackBar.open('Eintrag konnte nicht gespeichert werden', 'Schließen', {duration: 5000})
     });

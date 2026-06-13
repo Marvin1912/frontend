@@ -112,6 +112,11 @@ export class NutritionService {
     return this.http.post<MealEntry>(`${this.host}/days/${date}/entries`, entry);
   }
 
+  /** Log multiple meal entries on a day in a single transaction. */
+  addEntries(date: string, entries: MealEntryInput[]): Observable<MealEntry[]> {
+    return this.http.post<MealEntry[]>(`${this.host}/days/${date}/entries/batch`, {entries});
+  }
+
   /** Edit an entry's portion (food-based) or values (ad-hoc). */
   updateEntry(id: string, update: MealEntryUpdate): Observable<MealEntry> {
     return this.http.put<MealEntry>(`${this.host}/entries/${id}`, update);

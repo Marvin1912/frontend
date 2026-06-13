@@ -62,8 +62,50 @@
           </div>
         </div>
       </div>
+
+      <button mat-stroked-button type="button" class="btn-add-staged" [disabled]="!canAdd" (click)="addToStaged()">
+        <mat-icon>playlist_add</mat-icon>
+        Hinzufügen
+      </button>
     }
   </form>
+
+  @if (staged.length > 0) {
+    <div class="staged-list">
+      @for (item of staged; track item; let i = $index) {
+        <div class="staged-item">
+          <span class="staged-item__name">{{ item.food.name }}</span>
+          <span class="staged-item__qty">{{ item.quantityG | number:'1.0-0':'de' }} g</span>
+          <span class="staged-item__kcal">{{ scaledFor(item, item.food.kcalPer100) | number:'1.0-0':'de' }} kcal</span>
+          <button mat-icon-button type="button" class="staged-item__remove" (click)="removeStaged(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+
+    <div class="macros macros--total">
+      <span class="macros__label">Gesamt</span>
+      <div class="macros__grid">
+        <div class="macro macro--kcal">
+          <span class="macro__v">{{ totals.kcal | number:'1.0-0':'de' }}</span>
+          <span class="macro__u">kcal</span>
+        </div>
+        <div class="macro macro--p">
+          <span class="macro__v">{{ totals.proteinG | number:'1.0-1':'de' }}</span>
+          <span class="macro__u">P</span>
+        </div>
+        <div class="macro macro--c">
+          <span class="macro__v">{{ totals.carbsG | number:'1.0-1':'de' }}</span>
+          <span class="macro__u">KH</span>
+        </div>
+        <div class="macro macro--f">
+          <span class="macro__v">{{ totals.fatG | number:'1.0-1':'de' }}</span>
+          <span class="macro__u">F</span>
+        </div>
+      </div>
+    </div>
+  }
 </mat-dialog-content>
 
 <mat-dialog-actions align="center">

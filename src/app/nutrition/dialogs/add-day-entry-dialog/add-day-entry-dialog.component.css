@@ -159,6 +159,74 @@
 
 ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-floating-label { color: var(--c-g) !important; }
 
+/* ── Staged list ─────────────────────────────────── */
+.btn-add-staged {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  border-color: var(--border-mid) !important;
+  color: var(--c-n) !important;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+}
+
+.btn-add-staged mat-icon {
+  margin-right: 0.25rem;
+  color: var(--c-n) !important;
+}
+
+.staged-list {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.staged-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.staged-item__name {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.staged-item__qty,
+.staged-item__kcal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.staged-item__remove {
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  color: var(--c-e) !important;
+}
+
+.staged-item__remove mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--c-e) !important;
+}
+
+.macros--total {
+  margin-top: 0.5rem;
+  border-color: var(--border-mid);
+}
+
 /* ── Buttons ─────────────────────────────────────── */
 .btn-confirm {
   background: rgba(45, 212, 191, 0.10) !important;
