@@ -43,10 +43,10 @@
   <section class="panel">
     @if (foods.data.length) {
       <div class="table-container">
-        <table mat-table [dataSource]="foods">
+        <table mat-table [dataSource]="foods" matSort>
 
           <ng-container matColumnDef="name">
-            <th *matHeaderCellDef mat-header-cell class="col-header">Name</th>
+            <th *matHeaderCellDef mat-header-cell mat-sort-header class="col-header">Name</th>
             <td *matCellDef="let food" mat-cell>
               <span class="food-name">{{ food.name }}</span>
               @if (food.brand) {
@@ -56,22 +56,22 @@
           </ng-container>
 
           <ng-container matColumnDef="kcal">
-            <th *matHeaderCellDef mat-header-cell class="col-header col-num">kcal</th>
+            <th *matHeaderCellDef mat-header-cell mat-sort-header class="col-header col-num">kcal</th>
             <td *matCellDef="let food" mat-cell class="col-num">{{ food.kcalPer100 | number:'1.0-0':'de' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="protein">
-            <th *matHeaderCellDef mat-header-cell class="col-header col-num">P</th>
+            <th *matHeaderCellDef mat-header-cell mat-sort-header class="col-header col-num">P</th>
             <td *matCellDef="let food" mat-cell class="col-num">{{ food.proteinPer100 | number:'1.0-1':'de' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="carbs">
-            <th *matHeaderCellDef mat-header-cell class="col-header col-num">KH</th>
+            <th *matHeaderCellDef mat-header-cell mat-sort-header class="col-header col-num">KH</th>
             <td *matCellDef="let food" mat-cell class="col-num">{{ food.carbsPer100 | number:'1.0-1':'de' }}</td>
           </ng-container>
 
           <ng-container matColumnDef="fat">
-            <th *matHeaderCellDef mat-header-cell class="col-header col-num">F</th>
+            <th *matHeaderCellDef mat-header-cell mat-sort-header class="col-header col-num">F</th>
             <td *matCellDef="let food" mat-cell class="col-num">{{ food.fatPer100 | number:'1.0-1':'de' }}</td>
           </ng-container>
 
