@@ -114,10 +114,12 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="center">
-  <button mat-mini-fab class="btn-confirm" [disabled]="!canSave" (click)="save()">
+  <button mat-flat-button type="button" class="btn-confirm" [disabled]="!canSave" (click)="save()">
     <mat-icon>check_circle</mat-icon>
+    Speichern
   </button>
-  <button mat-mini-fab mat-dialog-close class="btn-cancel">
+  <button mat-stroked-button type="button" mat-dialog-close class="btn-cancel">
     <mat-icon>close</mat-icon>
+    Abbrechen
   </button>
 </mat-dialog-actions>
