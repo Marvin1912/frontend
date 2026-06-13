@@ -24,15 +24,24 @@
       <mat-hint>Hilft der KI, die Menge besser einzuschätzen.</mat-hint>
     </mat-form-field>
 
-    <button mat-flat-button type="button" class="btn-estimate"
-            [disabled]="description.invalid || estimating" (click)="estimate()">
+    <div class="estimate-row">
+      <button mat-flat-button type="button" class="btn-estimate"
+              [disabled]="description.invalid || estimating" (click)="estimate()">
+        @if (estimating) {
+          <mat-spinner diameter="18" />
+        } @else {
+          <mat-icon>auto_awesome</mat-icon>
+        }
+        Schätzen
+      </button>
+
       @if (estimating) {
-        <mat-spinner diameter="18" />
-      } @else {
-        <mat-icon>auto_awesome</mat-icon>
+        <button mat-stroked-button type="button" class="btn-cancel" (click)="cancelEstimate()">
+          <mat-icon>close</mat-icon>
+          Abbrechen
+        </button>
       }
-      Schätzen
-    </button>
+    </div>
   </section>
 
   @if (hasEstimate) {

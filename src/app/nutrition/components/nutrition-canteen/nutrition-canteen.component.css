@@ -68,6 +68,18 @@
 .field-full { width: 100%; }
 
 /* ── Buttons ─────────────────────────────────────── */
+.estimate-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.estimate-row .btn-estimate {
+  flex: 1 1 auto;
+  margin-top: 0;
+}
+
 .btn-estimate,
 .btn-log {
   height: 48px;
@@ -75,6 +87,19 @@
   font-weight: 600 !important;
   margin-top: 0.5rem;
   transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-cancel {
+  height: 48px;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  flex: 0 0 auto;
+  color: var(--text-muted) !important;
+  border-color: var(--border-mid) !important;
+}
+
+.btn-cancel:hover {
+  background: color-mix(in srgb, #ffffff 6%, transparent) !important;
 }
 
 .btn-estimate {

@@ -10,8 +10,11 @@ import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {format} from 'date-fns';
+import {Subscription, timeout, TimeoutError} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
 import {AdHocEntryInput, MealEstimate, MealType} from '../../models/nutrition.model';
+
+const ESTIMATE_TIMEOUT_MS = 30000;
 
 const MEAL_TYPES: { value: MealType; label: string }[] = [
   {value: 'BREAKFAST', label: 'Frühstück'},
@@ -62,6 +65,7 @@ export class NutritionCanteenComponent implements OnInit {
   private nutritionService = inject(NutritionService);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
+  private estimateSubscription?: Subscription;
 
   ngOnInit(): void {
     this.valuesForm = this.fb.group({
@@ -78,19 +82,32 @@ export class NutritionCanteenComponent implements OnInit {
     this.cdr.markForCheck();
 
     const hint = this.portionHint.value.trim();
-    this.nutritionService.estimateMeal(this.description.value.trim(), hint || undefined).subscribe({
-      next: (estimate: MealEstimate) => {
-        this.applyEstimate(estimate);
-        this.estimating = false;
-        this.hasEstimate = true;
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.estimating = false;
-        this.cdr.markForCheck();
-        this.snackBar.open('Schätzung fehlgeschlagen', 'Schließen', {duration: 5000});
-      }
-    });
+    this.estimateSubscription = this.nutritionService.estimateMeal(this.description.value.trim(), hint || undefined)
+      .pipe(timeout(ESTIMATE_TIMEOUT_MS))
+      .subscribe({
+        next: (estimate: MealEstimate) => {
+          this.applyEstimate(estimate);
+          this.estimating = false;
+          this.hasEstimate = true;
+          this.cdr.markForCheck();
+        },
+        error: (err: unknown) => {
+          this.estimating = false;
+          this.cdr.markForCheck();
+          if (err instanceof TimeoutError) {
+            this.snackBar.open('Schätzung dauert zu lange – bitte erneut versuchen.', 'Schließen', {duration: 5000});
+          } else {
+            this.snackBar.open('Schätzung fehlgeschlagen', 'Schließen', {duration: 5000});
+          }
+        }
+      });
+  }
+
+  cancelEstimate(): void {
+    if (!this.estimating) return;
+    this.estimateSubscription?.unsubscribe();
+    this.estimating = false;
+    this.cdr.markForCheck();
   }
 
   private applyEstimate(estimate: MealEstimate): void {
