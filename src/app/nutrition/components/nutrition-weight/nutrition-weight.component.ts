@@ -20,6 +20,7 @@ import {MatInput} from '@angular/material/input';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatTooltip} from '@angular/material/tooltip';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -58,6 +59,7 @@ import {WeightDeleteDialogComponent} from '../../dialogs/weight-delete-dialog/we
     MatButton,
     MatIconButton,
     MatIcon,
+    MatProgressSpinner,
     MatTooltip,
     TargetsCardComponent
   ],
@@ -69,6 +71,7 @@ export class NutritionWeightComponent implements OnInit {
   @ViewChild(TargetsCardComponent) targetsCard?: TargetsCardComponent;
 
   form!: FormGroup;
+  saving = false;
   entries = new MatTableDataSource<WeightEntry>();
   columnsToDisplay = ['entryDate', 'weightKg', 'actions'];
 
@@ -110,8 +113,11 @@ export class NutritionWeightComponent implements OnInit {
       entryDate: format(entryDate, 'yyyy-MM-dd'),
       weightKg: Number(weightKg)
     };
+    this.saving = true;
+    this.cdr.markForCheck();
     this.nutritionService.addWeightEntry(payload).subscribe({
       next: created => {
+        this.saving = false;
         this.entries.data = this.sortDesc([...this.entries.data, created]);
         this.form.reset({entryDate: new Date(), weightKg: null});
         this.targetsCard?.reload();
@@ -119,6 +125,8 @@ export class NutritionWeightComponent implements OnInit {
         this.snackBar.open('Gewicht gespeichert', 'OK', {duration: 3000});
       },
       error: () => {
+        this.saving = false;
+        this.cdr.markForCheck();
         this.snackBar.open('Gewicht konnte nicht gespeichert werden', 'Schließen', {duration: 5000});
       }
     });
