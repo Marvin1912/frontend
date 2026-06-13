@@ -121,11 +121,16 @@ export class NutritionDayComponent implements OnInit {
         entries: groupEntries,
         kcal: groupEntries.reduce((sum, e) => sum + e.kcal, 0)
       };
-    }).filter(g => g.entries.length > 0);
+    });
   }
 
-  get hasEntries(): boolean {
-    return (this.summary?.entries?.length ?? 0) > 0;
+  /** Default meal type based on the current time of day (German meal conventions). */
+  private defaultMealType(): MealType {
+    const hour = new Date().getHours();
+    if (hour < 11) return 'BREAKFAST';
+    if (hour < 15) return 'LUNCH';
+    if (hour < 21) return 'DINNER';
+    return 'SNACK';
   }
 
   get hasTargets(): boolean {
@@ -153,7 +158,7 @@ export class NutritionDayComponent implements OnInit {
   }
 
   openAddDialog(mealType?: MealType): void {
-    const data: AddDayEntryDialogData = {mealType};
+    const data: AddDayEntryDialogData = {mealType: mealType ?? this.defaultMealType()};
     const ref = this.dialog.open(AddDayEntryDialogComponent, {data});
     ref.afterClosed().pipe(
       switchMap((result: FoodEntryInput[] | undefined) => result?.length ? this.nutritionService.addEntries(this.isoDate, result) : EMPTY),
