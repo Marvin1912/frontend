@@ -21,8 +21,12 @@
         <input matInput type="number" step="0.1" formControlName="weightKg" />
       </mat-form-field>
 
-      <button mat-flat-button type="submit" class="btn-add" [disabled]="form.invalid">
-        <mat-icon>add</mat-icon>
+      <button mat-flat-button type="submit" class="btn-add" [disabled]="form.invalid || saving">
+        @if (saving) {
+          <mat-spinner diameter="18" />
+        } @else {
+          <mat-icon>add</mat-icon>
+        }
         Hinzufügen
       </button>
     </form>

@@ -84,6 +84,10 @@
 
 .btn-add[disabled] { opacity: 0.4 !important; }
 
+.btn-add mat-spinner { margin-right: 4px; }
+
+::ng-deep .btn-add mat-spinner circle { stroke: var(--c-g) !important; }
+
 /* ── Table ───────────────────────────────────────── */
 .table-container {
   background: var(--surface);
