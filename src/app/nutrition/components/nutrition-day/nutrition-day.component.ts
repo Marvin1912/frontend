@@ -122,7 +122,7 @@ export class NutritionDayComponent implements OnInit {
   }
 
   get hasEntries(): boolean {
-    return (this.summary?.entries.length ?? 0) > 0;
+    return (this.summary?.entries?.length ?? 0) > 0;
   }
 
   get hasTargets(): boolean {

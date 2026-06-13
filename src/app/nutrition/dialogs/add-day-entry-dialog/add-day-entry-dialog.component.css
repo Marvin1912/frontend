@@ -52,6 +52,12 @@
 
 .field-full { width: 100%; }
 
+.search-error {
+  margin: 0 0 0.25rem;
+  font-size: 0.75rem;
+  color: var(--c-e);
+}
+
 /* ── Autocomplete options ────────────────────────── */
 .opt-name { font-weight: 600; }
 

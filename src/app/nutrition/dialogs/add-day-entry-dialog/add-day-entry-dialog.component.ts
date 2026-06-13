@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, injec
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {MatSelect} from '@angular/material/select';
@@ -10,7 +10,7 @@ import {MatOption} from '@angular/material/core';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatIcon} from '@angular/material/icon';
 import {MatMiniFabButton} from '@angular/material/button';
-import {debounceTime, distinctUntilChanged, startWith, switchMap} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, of, startWith, switchMap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
 import {Food, FoodEntryInput, MealType} from '../../models/nutrition.model';
 
@@ -35,6 +35,7 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
     MatDialogTitle,
     MatDialogContent,
     MatDialogActions,
+    MatDialogClose,
     MatFormField,
     MatLabel,
     MatSuffix,
@@ -66,6 +67,7 @@ export class AddDayEntryDialogComponent implements OnInit {
 
   results: Food[] = [];
   selected: Food | null = null;
+  searchFailed = false;
 
   ngOnInit(): void {
     this.foodSearch.valueChanges.pipe(
@@ -73,7 +75,15 @@ export class AddDayEntryDialogComponent implements OnInit {
       // Once a food is picked the control holds a Food object; skip searching then.
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(value => this.nutritionService.searchFoods(typeof value === 'string' ? value.trim() : '')),
+      switchMap(value => {
+        this.searchFailed = false;
+        return this.nutritionService.searchFoods(typeof value === 'string' ? value.trim() : '').pipe(
+          catchError(() => {
+            this.searchFailed = true;
+            return of<Food[]>([]);
+          })
+        );
+      }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(foods => {
       this.results = foods;
