@@ -4,6 +4,15 @@
   <p class="entry-label">{{ label }}</p>
 
   <form class="edit-form" [formGroup]="form">
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Mahlzeit</mat-label>
+      <mat-select formControlName="mealType">
+        @for (m of mealTypes; track m.value) {
+          <mat-option [value]="m.value">{{ m.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
     @if (isAdHoc) {
       <mat-form-field appearance="outline" class="field-full">
         <mat-label>Beschreibung</mat-label>
