@@ -127,6 +127,11 @@ table {
   padding-right: 8px !important;
 }
 
+.btn-edit, .btn-del {
+  min-width: 48px;
+  min-height: 48px;
+}
+
 .btn-edit {
   color: var(--text-dim);
   transition: color 0.2s;

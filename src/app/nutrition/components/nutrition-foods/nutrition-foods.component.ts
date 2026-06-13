@@ -20,6 +20,7 @@ import {MatInput} from '@angular/material/input';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {MatTooltip} from '@angular/material/tooltip';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {debounceTime, distinctUntilChanged, EMPTY, finalize, startWith, switchMap, tap} from 'rxjs';
@@ -52,7 +53,8 @@ import {BarcodeScanDialogComponent} from '../../dialogs/barcode-scan-dialog/barc
     MatButton,
     MatIconButton,
     MatIcon,
-    MatProgressSpinner
+    MatProgressSpinner,
+    MatTooltip
   ],
   templateUrl: './nutrition-foods.component.html',
   styleUrl: './nutrition-foods.component.css'

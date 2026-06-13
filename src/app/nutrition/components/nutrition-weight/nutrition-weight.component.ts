@@ -20,6 +20,7 @@ import {MatInput} from '@angular/material/input';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
+import {MatTooltip} from '@angular/material/tooltip';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {EMPTY, switchMap} from 'rxjs';
@@ -57,6 +58,7 @@ import {WeightDeleteDialogComponent} from '../../dialogs/weight-delete-dialog/we
     MatButton,
     MatIconButton,
     MatIcon,
+    MatTooltip,
     TargetsCardComponent
   ],
   templateUrl: './nutrition-weight.component.html',
