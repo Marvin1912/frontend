@@ -140,10 +140,10 @@ export interface AdHocEntryInput {
 
 export type MealEntryInput = FoodEntryInput | AdHocEntryInput;
 
-/** Edit payload for PUT /entries/{id}: a new portion, or new ad-hoc values. */
+/** Edit payload for PUT /entries/{id}: a new portion, or new ad-hoc values; the meal type can always be changed. */
 export type MealEntryUpdate =
-  | { quantityG: number }
-  | { description: string; kcal: number; proteinG: number; carbsG: number; fatG: number };
+  | { mealType?: MealType; quantityG: number }
+  | { mealType?: MealType; description: string; kcal: number; proteinG: number; carbsG: number; fatG: number };
 
 export interface DaySummary {
   date: string;
