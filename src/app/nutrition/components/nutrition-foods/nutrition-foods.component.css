@@ -138,7 +138,7 @@ table {
 
 .col-header {
   font-family: 'JetBrains Mono', monospace !important;
-  font-size: 0.6rem !important;
+  font-size: 0.75rem !important;
   font-weight: 700 !important;
   letter-spacing: 0.12em !important;
   text-transform: uppercase !important;
@@ -147,6 +147,14 @@ table {
   border-bottom: 1px solid var(--border-mid) !important;
   height: 36px !important;
   padding: 0 12px !important;
+}
+
+::ng-deep .col-header .mat-sort-header-arrow {
+  color: var(--text-muted) !important;
+}
+
+::ng-deep .col-header.mat-sort-header-sorted {
+  color: var(--c-g) !important;
 }
 
 ::ng-deep .mat-mdc-header-row {

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, ViewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
@@ -17,6 +17,7 @@ import {
 } from '@angular/material/table';
 import {MatFormField, MatLabel, MatPrefix} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
+import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
@@ -54,14 +55,16 @@ import {BarcodeScanDialogComponent} from '../../dialogs/barcode-scan-dialog/barc
     MatIconButton,
     MatIcon,
     MatProgressSpinner,
-    MatTooltip
+    MatTooltip,
+    MatSortModule
   ],
   templateUrl: './nutrition-foods.component.html',
   styleUrl: './nutrition-foods.component.css'
 })
-export class NutritionFoodsComponent implements OnInit {
+export class NutritionFoodsComponent implements OnInit, AfterViewInit {
 
   @ViewChild('photoInput') photoInput!: { nativeElement: HTMLInputElement };
+  @ViewChild(MatSort) sort!: MatSort;
 
   search = new FormControl('', {nonNullable: true});
   foods = new MatTableDataSource<Food>();
@@ -78,6 +81,10 @@ export class NutritionFoodsComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
+
+  ngAfterViewInit(): void {
+    this.foods.sort = this.sort;
+  }
 
   ngOnInit(): void {
     this.search.valueChanges.pipe(
