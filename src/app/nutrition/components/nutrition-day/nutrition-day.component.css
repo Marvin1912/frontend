@@ -163,12 +163,13 @@
 /* ── Meal groups ─────────────────────────────────── */
 .meal__head {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
+  gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
 .meal__title {
+  flex: 1;
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--text);
@@ -178,6 +179,40 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.72rem;
   color: var(--c-kcal);
+}
+
+.btn-meal-add {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  color: var(--text-dim);
+  transition: color 0.2s, background 0.2s;
+}
+
+.btn-meal-add:hover {
+  color: var(--c-kcal);
+  background: color-mix(in srgb, var(--c-kcal) 12%, transparent);
+}
+
+.meal__empty {
+  display: block;
+  width: 100%;
+  padding: 0.85rem;
+  text-align: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px dashed var(--border-mid);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+.meal__empty:hover {
+  color: var(--c-kcal);
+  border-color: color-mix(in srgb, var(--c-kcal) 40%, transparent);
+  background: color-mix(in srgb, var(--c-kcal) 6%, transparent);
 }
 
 .entries {

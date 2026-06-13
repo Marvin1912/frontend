@@ -63,14 +63,17 @@
       <p class="empty">Tagesziele nicht verfügbar. Bitte zuerst ein Profil und einen Gewichtseintrag erfassen.</p>
     }
 
-    @if (hasEntries) {
-      @for (group of groups; track group.type) {
-        <section class="panel meal">
-          <header class="meal__head">
-            <span class="meal__title">{{ group.label }}</span>
-            <span class="meal__kcal">{{ group.kcal | number:'1.0-0':'de' }} kcal</span>
-          </header>
+    @for (group of groups; track group.type) {
+      <section class="panel meal">
+        <header class="meal__head">
+          <span class="meal__title">{{ group.label }}</span>
+          <span class="meal__kcal">{{ group.kcal | number:'1.0-0':'de' }} kcal</span>
+          <button mat-icon-button class="btn-meal-add" matTooltip="Hinzufügen" (click)="openAddDialog(group.type)">
+            <mat-icon>add</mat-icon>
+          </button>
+        </header>
 
+        @if (group.entries.length > 0) {
           <ul class="entries">
             @for (entry of group.entries; track entry.id) {
               <li class="entry">
@@ -97,10 +100,12 @@
               </li>
             }
           </ul>
-        </section>
-      }
-    } @else {
-      <p class="empty">Noch nichts erfasst. Füge dein erstes Essen hinzu.</p>
+        } @else {
+          <button type="button" class="meal__empty" (click)="openAddDialog(group.type)">
+            Noch nichts erfasst – hinzufügen
+          </button>
+        }
+      </section>
     }
 
   }
