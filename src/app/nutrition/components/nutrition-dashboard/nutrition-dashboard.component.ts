@@ -86,9 +86,8 @@ export class NutritionDashboardComponent implements OnInit {
 
     forkJoin({
       weights: this.nutritionService.getWeightEntries().pipe(catchError(() => of([] as WeightEntry[]))),
-      // A day without targets/entries 4xx's; treat it as "no data" rather than failing all.
-      days: forkJoin(dates.map(d =>
-        this.nutritionService.getDaySummary(d).pipe(catchError(() => of(null)))))
+      days: this.nutritionService.getDaySummaries(dates[0], dates[dates.length - 1])
+        .pipe(catchError(() => of([] as DaySummary[])))
     }).subscribe(({weights, days}) => {
       this.buildWeightChart(weights);
       this.buildIntakeChart(dates, days);
@@ -140,11 +139,12 @@ export class NutritionDashboardComponent implements OnInit {
   }
 
   // ── Intake ─────────────────────────────────────────
-  private buildIntakeChart(dates: string[], days: (DaySummary | null)[]): void {
-    const target = days.find(d => d?.targets)?.targets?.targetKcal ?? null;
+  private buildIntakeChart(dates: string[], days: DaySummary[]): void {
+    const byDate = new Map(days.map(d => [d.date, d]));
+    const target = days.find(d => d.targets)?.targets?.targetKcal ?? null;
     this.intakeTargetKcal = target;
 
-    const consumed = days.map(d => d?.totals.kcal ?? 0);
+    const consumed = dates.map(date => byDate.get(date)?.totals.kcal ?? 0);
     const maxConsumed = Math.max(0, ...consumed);
     this.intakeMax = Math.max(maxConsumed, (target ?? 0) * 1.1, 1);
 
@@ -154,7 +154,7 @@ export class NutritionDashboardComponent implements OnInit {
     this.barWidth = slot * 0.6;
 
     this.intakeDays = dates.map((date, i) => {
-      const summary = days[i];
+      const summary = byDate.get(date);
       const kcal = summary?.totals.kcal ?? 0;
       const dayTarget = summary?.targets?.targetKcal ?? target ?? 0;
       const h = innerH * (kcal / this.intakeMax);

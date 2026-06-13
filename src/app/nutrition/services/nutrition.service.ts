@@ -102,6 +102,11 @@ export class NutritionService {
     return this.http.get<DaySummary>(`${this.host}/days/${date}`);
   }
 
+  /** Day summaries for every date in [from, to] (inclusive), in a single request. */
+  getDaySummaries(from: string, to: string): Observable<DaySummary[]> {
+    return this.http.get<DaySummary[]>(`${this.host}/days`, {params: {from, to}});
+  }
+
   /** Log a meal entry on a day, either food-based or ad-hoc. */
   addEntry(date: string, entry: MealEntryInput): Observable<MealEntry> {
     return this.http.post<MealEntry>(`${this.host}/days/${date}/entries`, entry);
