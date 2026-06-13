@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
-import {HttpErrorResponse} from '@angular/common/http';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
@@ -71,7 +70,7 @@ export class NutritionDayComponent implements OnInit {
   date = new FormControl<Date>(new Date(), {nonNullable: true});
   summary: DaySummary | null = null;
   loading = false;
-  /** Set when the day summary cannot be loaded (e.g. no targets yet). */
+  /** Set when the day summary cannot be loaded due to an error. */
   unavailable: string | null = null;
 
   private nutritionService = inject(NutritionService);
@@ -100,12 +99,10 @@ export class NutritionDayComponent implements OnInit {
         this.loading = false;
         this.cdr.markForCheck();
       },
-      error: (err: HttpErrorResponse) => {
+      error: () => {
         this.summary = null;
         this.loading = false;
-        this.unavailable = err.status >= 400 && err.status < 500
-          ? 'Keine Tagesübersicht verfügbar. Bitte zuerst ein Profil und einen Gewichtseintrag erfassen.'
-          : 'Tagesübersicht konnte nicht geladen werden.';
+        this.unavailable = 'Tagesübersicht konnte nicht geladen werden.';
         this.cdr.markForCheck();
       }
     });
