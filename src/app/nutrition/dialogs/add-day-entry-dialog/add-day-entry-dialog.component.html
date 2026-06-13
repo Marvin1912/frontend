@@ -30,6 +30,10 @@
       </mat-autocomplete>
     </mat-form-field>
 
+    @if (searchFailed) {
+      <p class="search-error">Lebensmittel konnten nicht geladen werden.</p>
+    }
+
     <mat-form-field appearance="outline" class="field-full">
       <mat-label>Menge</mat-label>
       <input matInput type="number" step="1" formControlName="quantityG" />
