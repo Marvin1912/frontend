@@ -156,6 +156,57 @@
   color: var(--c-n) !important;
 }
 
+/* ── Found confirmation ──────────────────────────── */
+.found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.5rem 0.5rem;
+  text-align: center;
+}
+
+.found__icon {
+  font-size: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--c-g) !important;
+}
+
+.found__text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.btn-confirm {
+  background: color-mix(in srgb, var(--c-g) 14%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--c-g) 35%, transparent) !important;
+  border-radius: 8px !important;
+  color: var(--c-g) !important;
+  font-weight: 600 !important;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-confirm:hover {
+  background: color-mix(in srgb, var(--c-g) 22%, transparent) !important;
+  box-shadow: 0 0 12px rgba(163, 230, 53, 0.25) !important;
+}
+
+.btn-rescan {
+  background: color-mix(in srgb, var(--c-n) 14%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--c-n) 35%, transparent) !important;
+  border-radius: 8px !important;
+  color: var(--c-n) !important;
+  font-weight: 600 !important;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-rescan:hover {
+  background: color-mix(in srgb, var(--c-n) 22%, transparent) !important;
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.25) !important;
+}
+
 /* ── Cancel button ───────────────────────────────── */
 .btn-cancel {
   background: rgba(251, 113, 133, 0.10) !important;

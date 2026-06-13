@@ -14,6 +14,7 @@ import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {MatIcon} from '@angular/material/icon';
 import {MatButton, MatMiniFabButton} from '@angular/material/button';
+import {FoodDraft} from '../../models/nutrition.model';
 import {NutritionService} from '../../services/nutrition.service';
 
 /**
@@ -69,6 +70,9 @@ export class BarcodeScanDialogComponent implements AfterViewInit, OnDestroy {
   cameraActive = false;
   looking = false;
   message = '';
+
+  /** Set once a barcode lookup succeeds, pending user confirmation. */
+  foundFood: FoodDraft | null = null;
 
   private dialogRef = inject(MatDialogRef<BarcodeScanDialogComponent>);
   private service = inject(NutritionService);
@@ -142,7 +146,11 @@ export class BarcodeScanDialogComponent implements AfterViewInit, OnDestroy {
     this.message = '';
     this.cdr.markForCheck();
     this.service.getFoodByBarcode(ean).subscribe({
-      next: draft => this.dialogRef.close(draft),
+      next: draft => {
+        this.looking = false;
+        this.foundFood = draft;
+        this.cdr.markForCheck();
+      },
       error: err => {
         this.looking = false;
         this.message = err.status === 404
@@ -154,6 +162,22 @@ export class BarcodeScanDialogComponent implements AfterViewInit, OnDestroy {
         this.cdr.markForCheck();
       }
     });
+  }
+
+  /** User confirmed the matched product; hand off to the food-edit-dialog. */
+  confirmFound(): void {
+    if (!this.foundFood) return;
+    this.dialogRef.close(this.foundFood);
+  }
+
+  /** User rejected the match; return to scanning. */
+  rescan(): void {
+    this.foundFood = null;
+    this.handled = false;
+    this.message = '';
+    this.manualEan.reset('');
+    if (this.cameraSupported) void this.startCamera();
+    this.cdr.markForCheck();
   }
 
   private stopCamera(): void {
