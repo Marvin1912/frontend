@@ -7,12 +7,33 @@
     </header>
 
     <div class="toolbar">
-      <mat-form-field appearance="outline" class="field-date">
-        <mat-label>Datum</mat-label>
-        <input matInput [matDatepicker]="picker" [formControl]="date" />
-        <mat-datepicker-toggle matIconSuffix [for]="picker" />
-        <mat-datepicker #picker />
-      </mat-form-field>
+      <div class="date-nav">
+        <button mat-icon-button type="button" class="btn-step" matTooltip="Vorheriger Tag"
+                (click)="stepDay(-1)">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <mat-form-field appearance="outline" class="field-date">
+          <mat-label>Datum</mat-label>
+          <input matInput [matDatepicker]="picker" [formControl]="date" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker" />
+          <mat-datepicker #picker />
+        </mat-form-field>
+
+        <button mat-icon-button type="button" class="btn-step" matTooltip="Nächster Tag"
+                [disabled]="isToday" (click)="stepDay(1)">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+
+        @if (relativeLabel) {
+          <span class="date-rel">{{ relativeLabel }}</span>
+        }
+
+        <button mat-stroked-button type="button" class="btn-today"
+                [disabled]="isToday" (click)="goToToday()">
+          Heute
+        </button>
+      </div>
 
       <button mat-flat-button type="button" class="btn-add" (click)="openAddDialog()">
         <mat-icon>add</mat-icon>

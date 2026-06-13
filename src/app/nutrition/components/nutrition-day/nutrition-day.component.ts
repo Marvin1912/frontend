@@ -12,7 +12,7 @@ import {MatTooltip} from '@angular/material/tooltip';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {EMPTY, switchMap} from 'rxjs';
-import {format} from 'date-fns';
+import {addDays, differenceInCalendarDays, format, isSameDay, startOfDay} from 'date-fns';
 import {NutritionService} from '../../services/nutrition.service';
 import {DaySummary, FoodEntryInput, MealEntry, MealEntryUpdate, MealType} from '../../models/nutrition.model';
 import {
@@ -89,6 +89,38 @@ export class NutritionDayComponent implements OnInit {
 
   private get isoDate(): string {
     return format(this.date.value, 'yyyy-MM-dd');
+  }
+
+  /** True when the selected date is today; stepping forward is then disabled. */
+  get isToday(): boolean {
+    return isSameDay(this.date.value, new Date());
+  }
+
+  /** Relative orientation label (Heute / Gestern / Vorgestern) or null. */
+  get relativeLabel(): string | null {
+    const diff = differenceInCalendarDays(startOfDay(this.date.value), startOfDay(new Date()));
+    switch (diff) {
+      case 0:
+        return 'Heute';
+      case -1:
+        return 'Gestern';
+      case -2:
+        return 'Vorgestern';
+      default:
+        return null;
+    }
+  }
+
+  /** Step the diary date by the given number of days. */
+  stepDay(days: number): void {
+    this.date.setValue(addDays(this.date.value, days));
+  }
+
+  /** Jump back to today. */
+  goToToday(): void {
+    if (!this.isToday) {
+      this.date.setValue(new Date());
+    }
   }
 
   private load(): void {
