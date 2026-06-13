@@ -210,6 +210,10 @@
   white-space: nowrap;
 }
 
+.btn-edit, .btn-del {
+  min-width: 48px;
+  min-height: 48px;
+}
 .btn-edit { color: var(--text-dim); transition: color 0.2s; }
 .btn-edit:hover { color: var(--c-kcal); }
 .btn-del { color: var(--text-dim); transition: color 0.2s; }

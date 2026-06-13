@@ -8,6 +8,7 @@ import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/m
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {MatTooltip} from '@angular/material/tooltip';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {EMPTY, switchMap} from 'rxjs';
@@ -60,7 +61,8 @@ const MEAL_GROUPS: { type: MealType; label: string }[] = [
     MatButton,
     MatIconButton,
     MatIcon,
-    MatProgressSpinner
+    MatProgressSpinner,
+    MatTooltip
   ],
   templateUrl: './nutrition-day.component.html',
   styleUrl: './nutrition-day.component.css'
