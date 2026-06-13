@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
+import {NoWheelDirective} from '../../directives/no-wheel.directive';
 import {MatSelect} from '@angular/material/select';
 import {MatOption} from '@angular/material/core';
 import {MatIcon} from '@angular/material/icon';
@@ -34,6 +35,7 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
     MatLabel,
     MatSuffix,
     MatInput,
+    NoWheelDirective,
     MatSelect,
     MatOption,
     MatIcon,
