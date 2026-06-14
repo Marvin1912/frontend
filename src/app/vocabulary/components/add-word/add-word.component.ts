@@ -1,6 +1,7 @@
-import {Component, OnInit, signal, WritableSignal, DestroyRef} from '@angular/core';
+import {Component, ElementRef, OnInit, signal, WritableSignal, DestroyRef, ViewChild} from '@angular/core';
 import {VocabularyService} from '../../services/vocabulary.service';
-import {MatFormField, MatInput} from '@angular/material/input';
+import {MatInput} from '@angular/material/input';
+import {MatError, MatFormField} from '@angular/material/form-field';
 import {
   AbstractControl,
   FormControl,
@@ -22,6 +23,7 @@ import {ActivatedRoute} from '@angular/router';
 import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgClass} from '@angular/common';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {
   DictionaryApiError,
   DictionaryServiceUnavailableError,
@@ -86,7 +88,9 @@ function validateWordPrefix(
     MatFormField,
     MatButtonToggleGroup,
     MatButtonToggle,
-    NgClass
+    NgClass,
+    MatProgressSpinnerModule,
+    MatError
   ],
   templateUrl: './add-word.component.html',
   styleUrl: './add-word.component.css',
@@ -106,6 +110,11 @@ export class AddWordComponent implements OnInit {
   public isFromRouteCall: boolean = false;
   public chosenIndex: string | null = null;
   public chosenForContext: ChosenContextItem[] = [];
+  public isTranslating: WritableSignal<boolean> = signal(false);
+  public isSaving: WritableSignal<boolean> = signal(false);
+
+  @ViewChild('wordFormTranslationEl') private wordFormTranslationEl?: ElementRef<HTMLFormElement>;
+  @ViewChild('wordFormEl') private wordFormEl?: ElementRef<HTMLFormElement>;
 
   private id: number | null = null;
   private ankiId: string | null = null;
@@ -338,24 +347,38 @@ export class AddWordComponent implements OnInit {
   }
 
   public onSubmit(): void {
+    if (this.wordForm.invalid) {
+      this.wordForm.markAllAsTouched();
+      this.focusFirstInvalidControl(this.wordFormEl);
+      return;
+    }
+
     const flashcard: Flashcard = this.createFlashcardFromForm();
 
     const observable = this.update()
       ? this.vocabularyService.updateFlashcard(flashcard)
       : this.vocabularyService.postFlashcard(flashcard);
 
+    this.isSaving.set(true);
     observable
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
           const message = this.update() ? 'Flashcard updated successfully' : 'Flashcard created successfully';
           this.showSnackBar(message, 10000);
+          this.isSaving.set(false);
         },
         error: err => {
           const action = this.update() ? 'update' : 'creation';
           this.showSnackBar(`Flashcard ${action} failed: ${err.error.message}`, 10000);
+          this.isSaving.set(false);
         }
       });
+  }
+
+  private focusFirstInvalidControl(formRef?: ElementRef<HTMLFormElement>): void {
+    const invalidControl = formRef?.nativeElement?.querySelector<HTMLElement>('.ng-invalid');
+    invalidControl?.focus();
   }
 
   private createFlashcardFromForm(): Flashcard {
@@ -371,6 +394,12 @@ export class AddWordComponent implements OnInit {
   }
 
   public onSubmitTranslation(): void {
+    if (this.wordFormTranslation.invalid) {
+      this.wordFormTranslation.markAllAsTouched();
+      this.focusFirstInvalidControl(this.wordFormTranslationEl);
+      return;
+    }
+
     const word: string = this.wordFormTranslation.get('word')?.value;
     const context: string = this.wordFormTranslation.get('context')?.value;
 
@@ -379,6 +408,7 @@ export class AddWordComponent implements OnInit {
     }
 
     this.translation.set('');
+    this.isTranslating.set(true);
     this.vocabularyService.getTranslation(word, context)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
@@ -386,9 +416,11 @@ export class AddWordComponent implements OnInit {
           if (response && response.length > 0) {
             this.translation.set(response[0].text);
           }
+          this.isTranslating.set(false);
         },
         error: err => {
           this.showSnackBar(`Getting translation failed: ${err.error.message}`, 10000);
+          this.isTranslating.set(false);
         }
       });
   }

@@ -8,9 +8,10 @@
           <input
               matInput
               type="text"
+              autocomplete="off"
               [(ngModel)]="word"
               (keyup.enter)="getWord(word)"
-              placeholder="Type a word and press Enter"
+              placeholder="Type a word and press Enter…"
           >
         </mat-form-field>
         @if (word) {
@@ -63,10 +64,10 @@
                             type="button"
                         >
                           @if (isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))) {
-                            <mat-icon>check_circle</mat-icon>
+                            <mat-icon aria-hidden="true">check_circle</mat-icon>
                             <span>Using as description</span>
                           } @else {
-                            <mat-icon>description</mat-icon>
+                            <mat-icon aria-hidden="true">description</mat-icon>
                             <span>Use as description</span>
                           }
                         </button>
@@ -77,10 +78,10 @@
                             type="button"
                         >
                           @if (isChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))) {
-                            <mat-icon>check_circle</mat-icon>
+                            <mat-icon aria-hidden="true">check_circle</mat-icon>
                             <span>Added to context</span>
                           } @else {
-                            <mat-icon>add_circle</mat-icon>
+                            <mat-icon aria-hidden="true">add_circle</mat-icon>
                             <span>Add to context</span>
                           }
                         </button>
@@ -106,31 +107,42 @@
         </header>
 
         <form
+            #wordFormTranslationEl
             [formGroup]="wordFormTranslation"
             (ngSubmit)="onSubmitTranslation()"
         >
           <mat-form-field appearance="outline">
             <mat-label>Word</mat-label>
-            <input matInput formControlName="word">
+            <input matInput formControlName="word" autocomplete="off">
+            @if (wordFormTranslation.get('word')?.invalid) {
+              <mat-error>Word is required.</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Context</mat-label>
-            <input matInput formControlName="context">
+            <input matInput formControlName="context" autocomplete="off">
+            @if (wordFormTranslation.get('context')?.invalid) {
+              <mat-error>Context is required.</mat-error>
+            }
           </mat-form-field>
 
           <button
               mat-flat-button
               color="primary"
-              [disabled]="!wordFormTranslation.valid"
+              [disabled]="isTranslating()"
               type="submit"
           >
-            Translate
+            @if (isTranslating()) {
+              <mat-spinner diameter="18" aria-hidden="true"></mat-spinner>
+            } @else {
+              Translate
+            }
           </button>
         </form>
 
         @if (translation()) {
-          <div class="translation-result">{{ translation() }}</div>
+          <div class="translation-result" aria-live="polite">{{ translation() }}</div>
         }
       </div>
     }
@@ -158,36 +170,59 @@
           </div>
 
           <form
+              #wordFormEl
               [formGroup]="wordForm"
               (ngSubmit)="onSubmit()"
           >
             <mat-form-field appearance="outline">
               <mat-label>Deck</mat-label>
-              <input matInput formControlName="deck">
+              <input matInput formControlName="deck" autocomplete="off">
+              @if (wordForm.get('deck')?.invalid) {
+                <mat-error>Deck is required.</mat-error>
+              }
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Front</mat-label>
-              <input matInput formControlName="front">
+              <input matInput formControlName="front" autocomplete="off">
+              @if (wordForm.get('front')?.hasError('required')) {
+                <mat-error>Front is required.</mat-error>
+              } @else if (wordForm.get('front')?.hasError('partOfSpeechIsMissing')) {
+                <mat-error>Please select a part of speech above.</mat-error>
+              } @else if (wordForm.get('front')?.hasError('articleIsMissing')) {
+                <mat-error>Noun must start with "a" or "an".</mat-error>
+              } @else if (wordForm.get('front')?.hasError('toIsMissing')) {
+                <mat-error>Verb must start with "to".</mat-error>
+              }
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Back</mat-label>
-              <input matInput formControlName="back">
+              <input matInput formControlName="back" autocomplete="off">
+              @if (wordForm.get('back')?.invalid) {
+                <mat-error>Back is required.</mat-error>
+              }
             </mat-form-field>
 
             <mat-form-field appearance="outline">
               <mat-label>Description</mat-label>
-              <textarea matInput formControlName="description" rows="3"></textarea>
+              <textarea matInput formControlName="description" rows="3" autocomplete="off"></textarea>
+              @if (wordForm.get('description')?.invalid) {
+                <mat-error>Description is required.</mat-error>
+              }
             </mat-form-field>
 
             <button
                 mat-flat-button
                 color="primary"
-                [disabled]="!wordForm.valid"
+                [disabled]="isSaving()"
                 type="submit"
             >
-              {{ update() ? 'Update' : 'Save' }}
+              @if (isSaving()) {
+                <mat-spinner diameter="18" aria-hidden="true"></mat-spinner>
+              } @else {
+                {{ update() ? 'Update' : 'Save' }}
+              }
             </button>
           </form>
         </div>
