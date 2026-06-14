@@ -5,6 +5,9 @@
     <mat-form-field appearance="outline" class="field-full">
       <mat-label>Name</mat-label>
       <input matInput formControlName="name" />
+      @if (form.get('name')?.hasError('required')) {
+        <mat-error>Name ist erforderlich</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="field-full">
@@ -16,31 +19,57 @@
       <mat-form-field appearance="outline">
         <mat-label>kcal / 100 g</mat-label>
         <input matInput type="number" step="1" inputmode="numeric" formControlName="kcalPer100" />
+        @if (form.get('kcalPer100')?.hasError('required')) {
+          <mat-error>Erforderlich</mat-error>
+        } @else if (form.get('kcalPer100')?.hasError('min')) {
+          <mat-error>Muss 0 oder größer sein</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Protein (g)</mat-label>
         <input matInput type="number" step="0.1" inputmode="decimal" formControlName="proteinPer100" />
+        @if (form.get('proteinPer100')?.hasError('required')) {
+          <mat-error>Erforderlich</mat-error>
+        } @else if (form.get('proteinPer100')?.hasError('min')) {
+          <mat-error>Muss 0 oder größer sein</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Kohlenhydrate (g)</mat-label>
         <input matInput type="number" step="0.1" inputmode="decimal" formControlName="carbsPer100" />
+        @if (form.get('carbsPer100')?.hasError('required')) {
+          <mat-error>Erforderlich</mat-error>
+        } @else if (form.get('carbsPer100')?.hasError('min')) {
+          <mat-error>Muss 0 oder größer sein</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Fett (g)</mat-label>
         <input matInput type="number" step="0.1" inputmode="decimal" formControlName="fatPer100" />
+        @if (form.get('fatPer100')?.hasError('required')) {
+          <mat-error>Erforderlich</mat-error>
+        } @else if (form.get('fatPer100')?.hasError('min')) {
+          <mat-error>Muss 0 oder größer sein</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Ballaststoffe (g)</mat-label>
         <input matInput type="number" step="0.1" inputmode="decimal" formControlName="fiberPer100" />
+        @if (form.get('fiberPer100')?.hasError('min')) {
+          <mat-error>Muss 0 oder größer sein</mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Portion (g)</mat-label>
         <input matInput type="number" step="1" inputmode="numeric" formControlName="defaultServingG" />
+        @if (form.get('defaultServingG')?.hasError('min')) {
+          <mat-error>Muss 0 oder größer sein</mat-error>
+        }
       </mat-form-field>
     </div>
   </form>

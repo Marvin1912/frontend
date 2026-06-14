@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpErrorResponse} from '@angular/common/http';
-import {MatFormField, MatHint, MatLabel, MatSuffix} from '@angular/material/form-field';
+import {MatError, MatFormField, MatHint, MatLabel, MatSuffix} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
 import {MatOption, MatSelect} from '@angular/material/select';
@@ -22,6 +22,7 @@ import {TargetsCardComponent} from '../targets-card/targets-card.component';
     MatFormField,
     MatLabel,
     MatHint,
+    MatError,
     MatSuffix,
     MatInput,
     NoWheelDirective,

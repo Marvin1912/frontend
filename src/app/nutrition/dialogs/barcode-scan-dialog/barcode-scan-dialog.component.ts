@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatError, MatFormField, MatHint, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {MatIcon} from '@angular/material/icon';
 import {MatButton, MatMiniFabButton} from '@angular/material/button';
@@ -51,6 +51,8 @@ const EAN_PATTERN = /^\d{8,14}$/;
     MatDialogClose,
     MatFormField,
     MatLabel,
+    MatError,
+    MatHint,
     MatInput,
     MatIcon,
     MatButton,

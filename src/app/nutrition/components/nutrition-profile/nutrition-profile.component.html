@@ -25,11 +25,19 @@
           <input matInput formControlName="birthDate" [matDatepicker]="picker" />
           <mat-datepicker-toggle matIconSuffix [for]="picker" />
           <mat-datepicker #picker />
+          @if (form.get('birthDate')?.hasError('required')) {
+            <mat-error>Geburtsdatum ist erforderlich</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Größe (cm)</mat-label>
           <input matInput type="number" inputmode="numeric" formControlName="heightCm" />
+          @if (form.get('heightCm')?.hasError('required')) {
+            <mat-error>Größe ist erforderlich</mat-error>
+          } @else if (form.get('heightCm')?.hasError('min')) {
+            <mat-error>Muss 0 oder größer sein</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -54,12 +62,24 @@
           <mat-label>Protein pro kg</mat-label>
           <input matInput type="number" step="0.1" inputmode="decimal" formControlName="proteinPerKg" />
           <span matTextSuffix>g/kg</span>
+          @if (form.get('proteinPerKg')?.hasError('required')) {
+            <mat-error>Protein pro kg ist erforderlich</mat-error>
+          } @else if (form.get('proteinPerKg')?.hasError('min')) {
+            <mat-error>Muss 0 oder größer sein</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Fettanteil</mat-label>
           <input matInput type="number" inputmode="numeric" formControlName="fatPctPercent" />
           <span matTextSuffix>%</span>
+          @if (form.get('fatPctPercent')?.hasError('required')) {
+            <mat-error>Fettanteil ist erforderlich</mat-error>
+          } @else if (form.get('fatPctPercent')?.hasError('min')) {
+            <mat-error>Muss 0 oder größer sein</mat-error>
+          } @else if (form.get('fatPctPercent')?.hasError('max')) {
+            <mat-error>Höchstens 100 %</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -67,6 +87,9 @@
           <input matInput type="number" inputmode="numeric" formControlName="basalKcal" />
           <span matTextSuffix>kcal</span>
           <mat-hint>Optional — überschreibt die Formel, wenn gesetzt</mat-hint>
+          @if (form.get('basalKcal')?.hasError('min')) {
+            <mat-error>Muss 0 oder größer sein</mat-error>
+          }
         </mat-form-field>
       </div>
 
