@@ -199,10 +199,19 @@ export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy
     this.flashcards.sortingDataAccessor = (data, sortHeaderId) => {
       if (sortHeaderId === 'front') {
         return data[sortHeaderId]?.toLowerCase();
-      } else {
-        return (data as any)[sortHeaderId];
       }
+
+      if (this.isFlashcardKey(data, sortHeaderId)) {
+        const value = data[sortHeaderId];
+        return typeof value === 'string' || typeof value === 'number' ? value : '';
+      }
+
+      return '';
     }
+  }
+
+  private isFlashcardKey(data: Flashcard, key: string): key is keyof Flashcard {
+    return key in data;
   }
 
   navigateToWord(id: number) {
