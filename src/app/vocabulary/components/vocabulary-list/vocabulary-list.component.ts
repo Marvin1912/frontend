@@ -29,7 +29,7 @@ import {Deck} from "../../model/Deck";
 
 function applyFilter(flashcard: Flashcard, filter: string, value: string): boolean {
 
-  const deckFilter: RegExpExecArray | null = /deck#([0-9])+/i.exec(filter);
+  const deckFilter: RegExpExecArray | null = /deck#([0-9]+)/i.exec(filter);
   if (deckFilter) {
     return flashcard.deckId === Number(deckFilter[1]);
   }
