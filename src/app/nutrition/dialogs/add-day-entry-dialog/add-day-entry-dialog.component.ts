@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -71,6 +71,8 @@ export class AddDayEntryDialogComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private data = inject<AddDayEntryDialogData>(MAT_DIALOG_DATA, {optional: true});
 
+  @ViewChild('quantityInput') quantityInput?: ElementRef<HTMLInputElement>;
+
   readonly mealTypes = MEAL_TYPES;
 
   mealType = new FormControl<MealType>(this.data?.mealType ?? 'LUNCH', {nonNullable: true});
@@ -126,6 +128,12 @@ export class AddDayEntryDialogComponent implements OnInit {
       this.quantityG.setValue(this.selected.defaultServingG);
     }
     this.cdr.markForCheck();
+    // Move focus to the quantity field after the value is patched and the input is rendered/enabled.
+    setTimeout(() => {
+      const input = this.quantityInput?.nativeElement;
+      input?.focus();
+      input?.select();
+    });
   }
 
   /** Macro value for the current portion, scaled from the per-100 g figure. */

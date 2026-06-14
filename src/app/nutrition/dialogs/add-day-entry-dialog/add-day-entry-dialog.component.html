@@ -40,7 +40,7 @@
 
     <mat-form-field appearance="outline" class="field-full">
       <mat-label>Menge</mat-label>
-      <input matInput type="number" step="1" inputmode="numeric" formControlName="quantityG" />
+      <input matInput #quantityInput type="number" step="1" inputmode="numeric" formControlName="quantityG" />
       <span matSuffix>g</span>
       @if (quantityG.hasError('required')) {
         <mat-error>Menge ist erforderlich</mat-error>
@@ -74,7 +74,7 @@
 
       <button mat-stroked-button type="button" class="btn-add-staged" [disabled]="!canAdd" (click)="addToStaged()">
         <mat-icon>playlist_add</mat-icon>
-        Hinzufügen
+        Weiteres hinzufügen
       </button>
     }
   </form>
@@ -121,7 +121,11 @@
 <mat-dialog-actions align="center">
   <button mat-flat-button type="button" class="btn-confirm" [disabled]="!canSave" (click)="save()">
     <mat-icon>check_circle</mat-icon>
-    Speichern
+    @if (staged.length > 0) {
+      Speichern ({{ staged.length + (canAdd ? 1 : 0) }})
+    } @else {
+      Speichern
+    }
   </button>
   <button mat-stroked-button type="button" mat-dialog-close class="btn-cancel">
     <mat-icon>close</mat-icon>
