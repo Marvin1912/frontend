@@ -44,6 +44,7 @@ export class NutritionProfileComponent implements OnInit {
 
   form!: FormGroup;
   saving = false;
+  readonly today = new Date();
 
   readonly sexes: {value: Sex; label: string}[] = [
     {value: 'MALE', label: 'Männlich'},

@@ -74,6 +74,7 @@ export class NutritionWeightComponent implements OnInit {
 
   form!: FormGroup;
   saving = false;
+  readonly today = new Date();
   entries = new MatTableDataSource<WeightEntry>();
   columnsToDisplay = ['entryDate', 'weightKg', 'actions'];
 

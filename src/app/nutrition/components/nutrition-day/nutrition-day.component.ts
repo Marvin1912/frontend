@@ -71,6 +71,7 @@ const MEAL_GROUPS: { type: MealType; label: string }[] = [
 export class NutritionDayComponent implements OnInit {
 
   date = new FormControl<Date>(new Date(), {nonNullable: true});
+  readonly today = new Date();
   summary: DaySummary | null = null;
   loading = false;
   /** Set when the day summary cannot be loaded due to an error. */
