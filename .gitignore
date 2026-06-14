@@ -44,3 +44,4 @@ Thumbs.db
 dependency-check-bin/**
 reports/**
 *.iml
+.claude/worktrees/
