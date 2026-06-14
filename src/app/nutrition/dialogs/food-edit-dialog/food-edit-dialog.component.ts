@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
 import {MatIcon} from '@angular/material/icon';
@@ -33,6 +33,7 @@ export interface FoodEditDialogData {
     MatDialogClose,
     MatFormField,
     MatLabel,
+    MatError,
     MatInput,
     NoWheelDirective,
     MatIcon,

@@ -32,6 +32,11 @@
         <mat-form-field appearance="outline" class="manual__field">
           <mat-label>Barcode (EAN)</mat-label>
           <input matInput inputmode="numeric" autocomplete="off" [formControl]="manualEan" />
+          @if (manualEan.hasError('pattern')) {
+            <mat-error>8–14 Ziffern</mat-error>
+          } @else {
+            <mat-hint>8–14 Ziffern</mat-hint>
+          }
         </mat-form-field>
         <button mat-flat-button type="submit" class="btn-lookup" [disabled]="looking">
           <mat-icon>search</mat-icon>

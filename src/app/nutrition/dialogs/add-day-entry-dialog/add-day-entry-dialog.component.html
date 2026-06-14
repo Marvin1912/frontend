@@ -42,6 +42,11 @@
       <mat-label>Menge</mat-label>
       <input matInput type="number" step="1" inputmode="numeric" formControlName="quantityG" />
       <span matSuffix>g</span>
+      @if (quantityG.hasError('required')) {
+        <mat-error>Menge ist erforderlich</mat-error>
+      } @else if (quantityG.hasError('min')) {
+        <mat-error>Muss 0 oder größer sein</mat-error>
+      }
     </mat-form-field>
 
     @if (selected) {
