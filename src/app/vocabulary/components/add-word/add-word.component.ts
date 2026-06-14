@@ -33,7 +33,8 @@ import {
   WordNotFoundError
 } from '../../model/dictionary-error.model';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {EMPTY, Subject} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 
 const DEFAULT_DECK = 1;
 const ARTICLE_PATTERN = /^(?:a|an) [a-z]+/i;
@@ -116,6 +117,8 @@ export class AddWordComponent implements OnInit {
   @ViewChild('wordFormTranslationEl') private wordFormTranslationEl?: ElementRef<HTMLFormElement>;
   @ViewChild('wordFormEl') private wordFormEl?: ElementRef<HTMLFormElement>;
 
+  private readonly wordLookup$: Subject<string> = new Subject<string>();
+
   private id: number | null = null;
   private ankiId: string | null = null;
   public deck: number | null = null;
@@ -132,7 +135,26 @@ export class AddWordComponent implements OnInit {
   ) {
     this.initializeForms();
     this.setupFormSubscriptions();
+    this.setupWordLookup();
     this.deck = DEFAULT_DECK;
+  }
+
+  private setupWordLookup(): void {
+    this.wordLookup$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        switchMap(word => this.vocabularyService.getWord(word)
+          .pipe(
+            map(res => ({word, res})),
+            catchError(err => {
+              this.handleDictionaryError(err, word);
+              return EMPTY;
+            })
+          ))
+      )
+      .subscribe(({word, res}) => {
+        this.handleWordLookupSuccess(res, word);
+      });
   }
 
   private initializeForms(): void {
@@ -255,16 +277,7 @@ export class AddWordComponent implements OnInit {
     this.front = word;
     this.back = null;
 
-    this.vocabularyService.getWord(word)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: res => {
-          this.handleWordLookupSuccess(res, word);
-        },
-        error: err => {
-          this.handleDictionaryError(err, word);
-        }
-      });
+    this.wordLookup$.next(word);
   }
 
   private resetWordState(): void {
