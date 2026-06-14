@@ -52,4 +52,31 @@ describe('ListComponent', () => {
     expect(component.flashcards.filteredData).toEqual([flashcardDeck12]);
     expect(component.flashcards.filteredData).not.toContain(flashcardDeck2);
   });
+
+  it('should filter by search term containing digits, spaces and accented characters', () => {
+    const flashcardMatching: Flashcard = {
+      id: 1,
+      deckId: 1,
+      ankiId: null,
+      front: 'café 123',
+      back: 'back1',
+      description: '',
+      updated: false
+    };
+    const flashcardNonMatching: Flashcard = {
+      id: 2,
+      deckId: 1,
+      ankiId: null,
+      front: 'other word',
+      back: 'back2',
+      description: '',
+      updated: false
+    };
+
+    component.flashcards.data = [flashcardMatching, flashcardNonMatching];
+    component.flashcards.filter = '####café 123####';
+
+    expect(component.flashcards.filteredData).toEqual([flashcardMatching]);
+    expect(component.flashcards.filteredData).not.toContain(flashcardNonMatching);
+  });
 });
