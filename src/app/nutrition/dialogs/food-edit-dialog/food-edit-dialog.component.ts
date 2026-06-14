@@ -5,7 +5,7 @@ import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
 import {MatIcon} from '@angular/material/icon';
-import {MatMiniFabButton} from '@angular/material/button';
+import {MatButton} from '@angular/material/button';
 import {Food, FoodDraft, FoodInput, FoodSource} from '../../models/nutrition.model';
 
 /**
@@ -37,7 +37,7 @@ export interface FoodEditDialogData {
     MatInput,
     NoWheelDirective,
     MatIcon,
-    MatMiniFabButton
+    MatButton
   ],
   templateUrl: './food-edit-dialog.component.html',
   styleUrl: './food-edit-dialog.component.css'

@@ -88,12 +88,29 @@
 }
 
 /* Buttons */
+.btn-confirm,
+.btn-cancel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px !important;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-confirm mat-icon,
+.btn-cancel mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
 .btn-confirm {
   background: rgba(45, 212, 191, 0.10) !important;
   border: 1px solid rgba(45, 212, 191, 0.3) !important;
-  border-radius: 8px !important;
   color: var(--c-n) !important;
-  transition: background 0.2s, box-shadow 0.2s;
 }
 
 .btn-confirm:hover:not([disabled]) {
@@ -110,9 +127,7 @@
 .btn-cancel {
   background: rgba(251, 113, 133, 0.10) !important;
   border: 1px solid rgba(251, 113, 133, 0.3) !important;
-  border-radius: 8px !important;
   color: var(--c-e) !important;
-  transition: background 0.2s, box-shadow 0.2s;
 }
 
 .btn-cancel:hover {
@@ -121,3 +136,11 @@
 }
 
 .btn-cancel mat-icon { color: var(--c-e) !important; }
+
+@media (max-width: 420px) {
+  .btn-confirm,
+  .btn-cancel {
+    flex: 1;
+    justify-content: center;
+  }
+}
