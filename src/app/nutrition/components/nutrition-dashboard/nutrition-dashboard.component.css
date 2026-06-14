@@ -116,10 +116,15 @@
   stroke-width: 1.5;
 }
 
-.bar { transition: opacity 0.2s; }
+.bar { transition: opacity 0.2s; cursor: pointer; }
 .bar--within { fill: var(--c-within); }
 .bar--under  { fill: var(--c-under); opacity: 0.65; }
-.bar--over   { fill: var(--c-over); }
+.bar--over   { fill: url(#overHatch); }
+
+.dot--w { cursor: pointer; }
+
+.hatch-bg { fill: var(--c-over); }
+.hatch-fg { fill: color-mix(in srgb, var(--c-over) 70%, black); }
 
 .target-line {
   stroke: var(--text-muted);
@@ -160,7 +165,44 @@
 
 .legend__item--within::before { background: var(--c-within); }
 .legend__item--under::before  { background: var(--c-under); opacity: 0.65; }
-.legend__item--over::before   { background: var(--c-over); }
+.legend__item--over::before {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--c-over) 0 3px,
+    color-mix(in srgb, var(--c-over) 70%, black) 3px 6px
+  );
+}
+
+/* ── Range toggle ────────────────────────────────── */
+.range-toggle {
+  display: flex;
+  margin-bottom: 0.75rem;
+}
+
+::ng-deep .range-toggle .mat-button-toggle {
+  background: var(--raised);
+  color: var(--text-muted);
+}
+
+::ng-deep .range-toggle .mat-button-toggle-label-content {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  line-height: 32px;
+  padding: 0 0.75rem;
+}
+
+::ng-deep .range-toggle .mat-button-toggle-checked {
+  background: color-mix(in srgb, var(--c-k) 18%, transparent);
+  color: var(--c-k);
+}
+
+::ng-deep .range-toggle.mat-button-toggle-group {
+  border-color: var(--border-mid);
+}
+
+::ng-deep .range-toggle .mat-button-toggle + .mat-button-toggle {
+  border-left: 1px solid var(--border-mid);
+}
 
 /* ── Stats ───────────────────────────────────────── */
 .stats {

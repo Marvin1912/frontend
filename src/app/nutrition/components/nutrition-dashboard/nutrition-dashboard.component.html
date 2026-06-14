@@ -25,11 +25,14 @@
 
       @if (hasWeight) {
         <div class="chart">
-          <svg [attr.viewBox]="'0 0 ' + vbW + ' ' + vbH" preserveAspectRatio="none" class="svg">
+          <svg [attr.viewBox]="'0 0 ' + vbW + ' ' + vbH" preserveAspectRatio="none" class="svg"
+               role="img" [attr.aria-label]="weightChartLabel">
             <polygon class="area area--w" [attr.points]="weightArea" />
             <polyline class="line line--w" [attr.points]="weightLine" />
             @for (p of weightPoints; track p.label + p.x) {
-              <circle class="dot dot--w" [attr.cx]="p.x" [attr.cy]="p.y" r="2.4" />
+              <circle class="dot dot--w" [attr.cx]="p.x" [attr.cy]="p.y" r="2.4"
+                      tabindex="0" role="img" [attr.aria-label]="p.tooltip"
+                      [matTooltip]="p.tooltip" />
             }
           </svg>
         </div>
@@ -52,12 +55,29 @@
         }
       </header>
 
+      <mat-button-toggle-group class="range-toggle" name="intakeRange" aria-label="Zeitraum"
+                                [value]="intakeRangeDays"
+                                (change)="onIntakeRangeChange($event.value)">
+        @for (range of intakeRanges; track range) {
+          <mat-button-toggle [value]="range">{{ range }} Tage</mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+
       @if (hasIntake) {
         <div class="chart">
-          <svg [attr.viewBox]="'0 0 ' + vbW + ' ' + vbH" class="svg">
+          <svg [attr.viewBox]="'0 0 ' + vbW + ' ' + vbH" class="svg"
+               role="img" [attr.aria-label]="intakeChartLabel">
+            <defs>
+              <pattern id="overHatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(135)">
+                <rect width="6" height="6" class="hatch-bg" />
+                <rect width="3" height="6" class="hatch-fg" />
+              </pattern>
+            </defs>
             @for (d of intakeDays; track d.date) {
               <rect class="bar bar--{{ d.state }}"
-                    [attr.x]="d.x" [attr.y]="d.y" [attr.width]="barWidth" [attr.height]="d.h" rx="1.5" />
+                    [attr.x]="d.x" [attr.y]="d.y" [attr.width]="barWidth" [attr.height]="d.h" rx="1.5"
+                    tabindex="0" role="img" [attr.aria-label]="d.tooltip"
+                    [matTooltip]="d.tooltip" />
             }
             @if (intakeTargetY !== null) {
               <line class="target-line"

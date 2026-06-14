@@ -1,6 +1,8 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {DecimalPipe} from '@angular/common';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {catchError, forkJoin, of} from 'rxjs';
 import {format, parseISO, subDays} from 'date-fns';
 import {NutritionService} from '../../services/nutrition.service';
@@ -14,8 +16,11 @@ const PAD_R = 6;
 const PAD_T = 12;
 const PAD_B = 20;
 
-/** Days of intake history to load for the trend chart. */
-const INTAKE_DAYS = 14;
+/** Selectable ranges (in days) for the intake trend chart. */
+const INTAKE_RANGES = [7, 14, 30] as const;
+
+/** Default number of days of intake history to load for the trend chart. */
+const DEFAULT_INTAKE_DAYS = 14;
 
 /** A day's consumed kcal against its target, for the intake chart. */
 interface IntakeDay {
@@ -29,6 +34,7 @@ interface IntakeDay {
   h: number;
   /** within | under | over target */
   state: 'within' | 'under' | 'over';
+  tooltip: string;
 }
 
 interface WeightPoint {
@@ -36,12 +42,13 @@ interface WeightPoint {
   y: number;
   weightKg: number;
   label: string;
+  tooltip: string;
 }
 
 @Component({
   selector: 'app-nutrition-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe, MatProgressSpinner],
+  imports: [DecimalPipe, MatProgressSpinner, MatTooltipModule, MatButtonToggleModule],
   templateUrl: './nutrition-dashboard.component.html',
   styleUrl: './nutrition-dashboard.component.css'
 })
@@ -52,6 +59,9 @@ export class NutritionDashboardComponent implements OnInit {
   readonly axisX1 = PAD_L;
   readonly axisX2 = VB_W - PAD_R;
   readonly baselineY = VB_H - PAD_B;
+
+  readonly intakeRanges = INTAKE_RANGES;
+  intakeRangeDays: number = DEFAULT_INTAKE_DAYS;
 
   loading = true;
 
@@ -79,18 +89,24 @@ export class NutritionDashboardComponent implements OnInit {
   private nutritionService = inject(NutritionService);
   private cdr = inject(ChangeDetectorRef);
 
+  private weightEntries: WeightEntry[] = [];
+  private daySummaries: DaySummary[] = [];
+
   ngOnInit(): void {
     const today = new Date();
-    const dates = Array.from({length: INTAKE_DAYS}, (_, i) =>
-      format(subDays(today, INTAKE_DAYS - 1 - i), 'yyyy-MM-dd'));
+    const maxDays = Math.max(...INTAKE_RANGES);
+    const dates = Array.from({length: maxDays}, (_, i) =>
+      format(subDays(today, maxDays - 1 - i), 'yyyy-MM-dd'));
 
     forkJoin({
       weights: this.nutritionService.getWeightEntries().pipe(catchError(() => of([] as WeightEntry[]))),
       days: this.nutritionService.getDaySummaries(dates[0], dates[dates.length - 1])
         .pipe(catchError(() => of([] as DaySummary[])))
     }).subscribe(({weights, days}) => {
+      this.weightEntries = weights;
+      this.daySummaries = days;
       this.buildWeightChart(weights);
-      this.buildIntakeChart(dates, days);
+      this.rebuildIntakeChart();
       this.loading = false;
       this.cdr.markForCheck();
     });
@@ -102,6 +118,28 @@ export class NutritionDashboardComponent implements OnInit {
 
   get hasIntake(): boolean {
     return this.intakeDays.length > 0;
+  }
+
+  get weightChartLabel(): string {
+    return `Gewichtsverlauf der letzten ${this.weightPoints.length} Tage`;
+  }
+
+  get intakeChartLabel(): string {
+    return `Kalorienaufnahme der letzten ${this.intakeRangeDays} Tage`;
+  }
+
+  onIntakeRangeChange(days: number): void {
+    if (days === this.intakeRangeDays) return;
+    this.intakeRangeDays = days;
+    this.rebuildIntakeChart();
+    this.cdr.markForCheck();
+  }
+
+  private rebuildIntakeChart(): void {
+    const today = new Date();
+    const dates = Array.from({length: this.intakeRangeDays}, (_, i) =>
+      format(subDays(today, this.intakeRangeDays - 1 - i), 'yyyy-MM-dd'));
+    this.buildIntakeChart(dates, this.daySummaries);
   }
 
   // ── Weight ─────────────────────────────────────────
@@ -125,7 +163,12 @@ export class NutritionDashboardComponent implements OnInit {
       const x = PAD_L + (sorted.length > 1 ? stepX * i : innerW / 2);
       const t = (e.weightKg - this.weightMin) / (this.weightMax - this.weightMin);
       const y = PAD_T + innerH * (1 - t);
-      return {x, y, weightKg: e.weightKg, label: format(parseISO(e.entryDate), 'dd.MM.')};
+      const label = format(parseISO(e.entryDate), 'dd.MM.');
+      const dateLabel = format(parseISO(e.entryDate), 'dd.MM.yyyy');
+      return {
+        x, y, weightKg: e.weightKg, label,
+        tooltip: `${dateLabel}: ${e.weightKg.toFixed(1)} kg`
+      };
     });
 
     this.weightLine = this.weightPoints.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
@@ -160,6 +203,7 @@ export class NutritionDashboardComponent implements OnInit {
       const h = innerH * (kcal / this.intakeMax);
       const x = PAD_L + slot * i + (slot - this.barWidth) / 2;
       const y = PAD_T + innerH - h;
+      const dateLabel = format(parseISO(date), 'dd.MM.yyyy');
       return {
         date,
         label: format(parseISO(date), 'dd.MM.'),
@@ -168,7 +212,8 @@ export class NutritionDashboardComponent implements OnInit {
         x,
         y,
         h,
-        state: this.targetState(kcal, dayTarget)
+        state: this.targetState(kcal, dayTarget),
+        tooltip: `${dateLabel}: ${Math.round(kcal)} kcal`
       };
     });
 
