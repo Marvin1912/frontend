@@ -1,4 +1,6 @@
-import {AfterViewInit, Component, inject, model, ModelSignal, OnInit, Signal, signal, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, inject, model, ModelSignal, OnDestroy, OnInit, Signal, signal, ViewChild} from '@angular/core';
+import {Subject} from 'rxjs';
+import {debounceTime, takeUntil} from 'rxjs/operators';
 import {VocabularyService} from '../../services/vocabulary.service';
 import {Flashcard} from '../../model/Flashcard';
 import {
@@ -14,7 +16,7 @@ import {
   MatTable,
   MatTableDataSource
 } from '@angular/material/table';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MatSort, MatSortHeader} from '@angular/material/sort';
 import {MatFormField} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
@@ -78,7 +80,7 @@ function applyFilter(flashcard: Flashcard, filter: string, value: string): boole
   templateUrl: './vocabulary-list.component.html',
   styleUrl: './vocabulary-list.component.css'
 })
-export class VocabularyListComponent implements OnInit, AfterViewInit {
+export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSort) sort: MatSort | null = null;
 
@@ -95,8 +97,15 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
   readonly totalCount = signal(0);
   readonly hasActiveFilters = signal(false);
 
+  readonly searchText = signal('');
+  readonly selectedDeckId = signal<number | null>(null);
+
+  private readonly destroyed$ = new Subject<void>();
+  private readonly searchChanged$ = new Subject<string>();
+
   private vocabularyService: VocabularyService = inject(VocabularyService);
   private router: Router = inject(Router);
+  private route: ActivatedRoute = inject(ActivatedRoute);
 
   readonly decks: Signal<Deck[]> = toSignal(this.vocabularyService.getDecks(), {initialValue: []})
 
@@ -104,6 +113,7 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
     this.vocabularyService.getFlashcards().subscribe({
       next: value => {
         this.flashcards.data = value;
+        this.applyStateFromQueryParams();
         this.updateCounts();
       },
       error: err => {
@@ -123,6 +133,62 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
 
       return isFiltered;
     };
+
+    this.searchChanged$
+        .pipe(debounceTime(300), takeUntil(this.destroyed$))
+        .subscribe(value => {
+          void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: {search: value || null},
+            queryParamsHandling: 'merge',
+            replaceUrl: true
+          });
+        });
+  }
+
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
+
+  private applyStateFromQueryParams(): void {
+    const params = this.route.snapshot.queryParams;
+
+    const search: string = params['search'] ?? '';
+    const deckId: string | null = params['deck'] ?? null;
+    const withoutArticle = params['withoutArticle'] === 'true';
+    const markedAsUpdated = params['markedAsUpdated'] === 'true';
+    const withoutDescription = params['withoutDescription'] === 'true';
+
+    this.searchText.set(search);
+    this.selectedDeckId.set(deckId ? Number(deckId) : null);
+    this.withoutArticle.set(withoutArticle);
+    this.markedAsupdated.set(markedAsUpdated);
+    this.withoutDescription.set(withoutDescription);
+
+    this.filters = [];
+
+    if (search) {
+      this.filters.push(`####${search.toLowerCase()}####`);
+    }
+
+    if (deckId) {
+      this.filters.push(`deck#${deckId}`);
+    }
+
+    if (withoutArticle) {
+      this.filters.push('withoutArticle');
+    }
+
+    if (markedAsUpdated) {
+      this.filters.push('markedAsUpdated');
+    }
+
+    if (withoutDescription) {
+      this.filters.push('withoutDescription');
+    }
+
+    this.flashcards.filter = this.filters.join(',') || ' ';
   }
 
   ngAfterViewInit() {
@@ -151,6 +217,7 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
 
     this.flashcards.filter = this.filters.join(',') || ' ';
     this.updateCounts();
+    this.searchChanged$.next(word);
   }
 
   filterDeck(event: MatSelectChange) {
@@ -165,18 +232,37 @@ export class VocabularyListComponent implements OnInit, AfterViewInit {
 
     this.flashcards.filter = this.filters.join(',') || ' ';
     this.updateCounts();
+
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {deck: deckId || null},
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
   }
 
   filterWithoutArticle(value: string): void {
     this.filterFlashcards(value, this.withoutArticle());
+    this.updateQueryParam('withoutArticle', this.withoutArticle());
   }
 
   filterMarkedAsUpdated(value: string): void {
     this.filterFlashcards(value, this.markedAsupdated());
+    this.updateQueryParam('markedAsUpdated', this.markedAsupdated());
   }
 
   filterWithoutDescription(value: string): void {
     this.filterFlashcards(value, this.withoutDescription());
+    this.updateQueryParam('withoutDescription', this.withoutDescription());
+  }
+
+  private updateQueryParam(name: string, isSet: boolean): void {
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {[name]: isSet ? 'true' : null},
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
   }
 
   getDeck(flashcard: Flashcard): string {

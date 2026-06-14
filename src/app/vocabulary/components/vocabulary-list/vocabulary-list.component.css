@@ -64,6 +64,12 @@
   50% { opacity: 0.3; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .table-header__dot {
+    animation: none;
+  }
+}
+
 .table-header__label {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.65rem;
@@ -131,7 +137,7 @@ table {
   font-weight: 700 !important;
   letter-spacing: 0.12em !important;
   text-transform: uppercase !important;
-  color: var(--text-dim) !important;
+  color: var(--text-muted) !important;
   background: var(--raised) !important;
   border-bottom: 1px solid var(--border-mid) !important;
   height: 36px !important;
@@ -147,6 +153,11 @@ table {
   color: var(--text) !important;
   background: transparent !important;
   border-bottom: 1px solid var(--border) !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-word;
+  max-width: 0;
 }
 
 /* Clickable rows */
@@ -161,6 +172,11 @@ table {
 
 .clickable-row:hover ::ng-deep .mat-mdc-cell {
   background-color: transparent !important;
+}
+
+.clickable-row:focus-visible {
+  outline: 2px solid var(--c-v);
+  outline-offset: -2px;
 }
 
 /* Column widths */
