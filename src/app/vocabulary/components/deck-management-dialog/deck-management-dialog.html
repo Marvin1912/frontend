@@ -3,7 +3,7 @@
     <div class="deck-row">
       <span class="deck-row__id">{{ deck.id }}</span>
       <span class="deck-row__name">{{ deck.name }}</span>
-      <button mat-icon-button class="icon-btn icon-btn--yellow" (click)="openDialog(deck)">
+      <button mat-icon-button class="icon-btn icon-btn--yellow" (click)="openDialog(deck)" [attr.aria-label]="'Rename deck ' + deck.name">
         <mat-icon>build</mat-icon>
       </button>
     </div>

@@ -9,6 +9,10 @@
   font-family: 'JetBrains Mono', monospace !important;
 }
 
+::ng-deep .mat-mdc-dialog-content {
+  overscroll-behavior: contain;
+}
+
 .deck-row {
   width: 75%;
   background: var(--raised, #111826);
@@ -30,7 +34,11 @@
 
 .deck-row__name {
   flex: 1 1 0;
+  min-width: 0;
   color: var(--text, #c8d4e8);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .icon-btn--yellow {

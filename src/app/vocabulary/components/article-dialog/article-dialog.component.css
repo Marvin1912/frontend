@@ -9,6 +9,10 @@
   font-family: 'JetBrains Mono', monospace !important;
 }
 
+::ng-deep .mat-mdc-dialog-content {
+  overscroll-behavior: contain;
+}
+
 .article-btn-group {
   display: flex;
   justify-content: center;

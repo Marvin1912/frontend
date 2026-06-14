@@ -9,6 +9,10 @@
   font-family: 'JetBrains Mono', monospace !important;
 }
 
+::ng-deep .mat-mdc-dialog-content {
+  overscroll-behavior: contain;
+}
+
 .rename-dialog {
   display: flex;
   flex-direction: column;
