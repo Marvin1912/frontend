@@ -1,5 +1,7 @@
 <div class="page-header">
-  <button mat-fab routerLink="/" class="home-fab">
+  <h1 class="visually-hidden">Vocabulary</h1>
+
+  <button mat-fab routerLink="/" class="home-fab" aria-label="Home">
     <mat-icon>home</mat-icon>
   </button>
 
@@ -23,14 +25,14 @@
       <span class="navcard__arrow" aria-hidden="true">↗</span>
     </a>
 
-    <div class="navcard navcard--action" (click)="openDialog()">
+    <button type="button" class="navcard navcard--action" (click)="openDialog()">
       <div class="navcard__mark">D</div>
       <div class="navcard__body">
         <h2 class="navcard__title">Manage Decks</h2>
         <p class="navcard__sub">Rename and organise decks</p>
       </div>
       <span class="navcard__arrow" aria-hidden="true">↗</span>
-    </div>
+    </button>
 
   </div>
 </div>
