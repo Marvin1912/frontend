@@ -9,7 +9,7 @@
     <div class="toolbar">
       <div class="date-nav">
         <button mat-icon-button type="button" class="btn-step" matTooltip="Vorheriger Tag"
-                (click)="stepDay(-1)">
+                aria-label="Vorheriger Tag" (click)="stepDay(-1)">
           <mat-icon>chevron_left</mat-icon>
         </button>
 
@@ -21,7 +21,7 @@
         </mat-form-field>
 
         <button mat-icon-button type="button" class="btn-step" matTooltip="Nächster Tag"
-                [disabled]="isToday" (click)="stepDay(1)">
+                aria-label="Nächster Tag" [disabled]="isToday" (click)="stepDay(1)">
           <mat-icon>chevron_right</mat-icon>
         </button>
 
@@ -90,7 +90,7 @@
           <header class="meal__head">
             <span class="meal__title">{{ group.label }}</span>
             <span class="meal__kcal">{{ group.kcal | number:'1.0-0':'de' }} kcal</span>
-            <button mat-icon-button class="btn-meal-add" matTooltip="Hinzufügen" (click)="openAddDialog(group.type)">
+            <button mat-icon-button class="btn-meal-add" matTooltip="Hinzufügen" aria-label="Hinzufügen" (click)="openAddDialog(group.type)">
               <mat-icon>add</mat-icon>
             </button>
           </header>
@@ -112,10 +112,10 @@
                     </span>
                   </div>
                   <div class="entry__actions">
-                    <button mat-icon-button class="btn-edit" matTooltip="Bearbeiten" (click)="openEditDialog(entry)">
+                    <button mat-icon-button class="btn-edit" matTooltip="Bearbeiten" aria-label="Bearbeiten" (click)="openEditDialog(entry)">
                       <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button class="btn-del" matTooltip="Löschen" (click)="openDeleteDialog(entry)">
+                    <button mat-icon-button class="btn-del" matTooltip="Löschen" aria-label="Löschen" (click)="openDeleteDialog(entry)">
                       <mat-icon>delete</mat-icon>
                     </button>
                   </div>

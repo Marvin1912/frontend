@@ -22,7 +22,7 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Geburtsdatum</mat-label>
-          <input matInput formControlName="birthDate" [matDatepicker]="picker" [max]="today" />
+          <input matInput formControlName="birthDate" autocomplete="bday" [matDatepicker]="picker" [max]="today" />
           <mat-datepicker-toggle matIconSuffix [for]="picker" />
           <mat-datepicker #picker startView="multi-year" />
           @if (form.get('birthDate')?.hasError('required')) {
