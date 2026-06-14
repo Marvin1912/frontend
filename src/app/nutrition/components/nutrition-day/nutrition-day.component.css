@@ -17,9 +17,10 @@
   --c-f:    #fb7185;
   --c-warn: #ff5252;
 
-  display: block;
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  overflow-y: auto;
+  overflow: hidden;
   font-family: 'Outfit', sans-serif;
   color: var(--text);
 }
@@ -30,8 +31,22 @@
   gap: 1.5rem;
   padding: 2rem clamp(1rem, 6vw, 4rem);
   max-width: 760px;
+  width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.meals {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 0.25rem;
 }
 
 /* ── Panels ──────────────────────────────────────── */
