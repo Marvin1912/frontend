@@ -7,7 +7,7 @@ import {NoWheelDirective} from '../../directives/no-wheel.directive';
 import {MatSelect} from '@angular/material/select';
 import {MatOption} from '@angular/material/core';
 import {MatIcon} from '@angular/material/icon';
-import {MatMiniFabButton} from '@angular/material/button';
+import {MatButton} from '@angular/material/button';
 import {MealEntry, MealEntryUpdate, MealType} from '../../models/nutrition.model';
 
 const MEAL_TYPES: { value: MealType; label: string }[] = [
@@ -39,7 +39,7 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
     MatSelect,
     MatOption,
     MatIcon,
-    MatMiniFabButton
+    MatButton
   ],
   templateUrl: './entry-edit-dialog.component.html',
   styleUrl: './entry-edit-dialog.component.css'
