@@ -46,7 +46,7 @@ function applyFilter(flashcard: Flashcard, filter: string, value: string): boole
     return !flashcard.description || flashcard.description.trim() === '';
   }
 
-  const wordFilter = /####([a-z]+)####/i.exec(filter);
+  const wordFilter = /####(.+)####/i.exec(filter);
   if (wordFilter) {
     return value.toLowerCase().includes(wordFilter[1]);
   }
