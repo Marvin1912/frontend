@@ -17,10 +17,10 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="center">
-  <button mat-mini-fab class="btn-confirm" [disabled]="form.invalid" (click)="save()">
+  <button mat-mini-fab class="btn-confirm" aria-label="Speichern" [disabled]="form.invalid" (click)="save()">
     <mat-icon>check_circle</mat-icon>
   </button>
-  <button mat-mini-fab mat-dialog-close class="btn-cancel">
+  <button mat-mini-fab mat-dialog-close class="btn-cancel" aria-label="Abbrechen">
     <mat-icon>close</mat-icon>
   </button>
 </mat-dialog-actions>

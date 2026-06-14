@@ -31,7 +31,7 @@
             <polyline class="line line--w" [attr.points]="weightLine" />
             @for (p of weightPoints; track p.label + p.x) {
               <circle class="dot dot--w" [attr.cx]="p.x" [attr.cy]="p.y" r="2.4"
-                      tabindex="0" role="img" [attr.aria-label]="p.tooltip"
+                      role="img" [attr.aria-label]="p.tooltip"
                       [matTooltip]="p.tooltip" />
             }
           </svg>
@@ -76,7 +76,7 @@
             @for (d of intakeDays; track d.date) {
               <rect class="bar bar--{{ d.state }}"
                     [attr.x]="d.x" [attr.y]="d.y" [attr.width]="barWidth" [attr.height]="d.h" rx="1.5"
-                    tabindex="0" role="img" [attr.aria-label]="d.tooltip"
+                    role="img" [attr.aria-label]="d.tooltip"
                     [matTooltip]="d.tooltip" />
             }
             @if (intakeTargetY !== null) {
