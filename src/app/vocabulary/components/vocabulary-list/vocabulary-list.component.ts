@@ -89,7 +89,7 @@ export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy
   filters: string[] = [];
 
   readonly withoutArticle: ModelSignal<boolean> = model(false);
-  readonly markedAsupdated: ModelSignal<boolean> = model(false);
+  readonly markedAsUpdated: ModelSignal<boolean> = model(false);
   readonly withoutDescription: ModelSignal<boolean> = model(false);
 
   // Use signals to track count updates properly
@@ -163,7 +163,7 @@ export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy
     this.searchText.set(search);
     this.selectedDeckId.set(deckId ? Number(deckId) : null);
     this.withoutArticle.set(withoutArticle);
-    this.markedAsupdated.set(markedAsUpdated);
+    this.markedAsUpdated.set(markedAsUpdated);
     this.withoutDescription.set(withoutDescription);
 
     this.filters = [];
@@ -247,8 +247,8 @@ export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   filterMarkedAsUpdated(value: string): void {
-    this.filterFlashcards(value, this.markedAsupdated());
-    this.updateQueryParam('markedAsUpdated', this.markedAsupdated());
+    this.filterFlashcards(value, this.markedAsUpdated());
+    this.updateQueryParam('markedAsUpdated', this.markedAsUpdated());
   }
 
   filterWithoutDescription(value: string): void {
