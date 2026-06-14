@@ -8,7 +8,7 @@
   <div class="filter-panel">
     <mat-form-field appearance="outline">
       <mat-label>Filter</mat-label>
-      <input matInput (keyup)="applyFilter($event)">
+      <input matInput autocomplete="off" [value]="searchText()" (keyup)="applyFilter($event)">
     </mat-form-field>
 
     <mat-checkbox
@@ -29,7 +29,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Deck</mat-label>
-      <mat-select (selectionChange)="filterDeck($event)">
+      <mat-select [value]="selectedDeckId()" (selectionChange)="filterDeck($event)">
         @for (deck of decks(); track deck.id) {
           <mat-option value="{{deck.id}}">{{ deck.name }}</mat-option>
         }
@@ -80,7 +80,12 @@
           mat-row
           class="clickable-row"
           *matRowDef="let word; columns: displayedColumns;"
+          tabindex="0"
+          role="button"
+          [attr.aria-label]="'Open word ' + word.front"
           (click)="navigateToWord(word.id)"
+          (keydown.enter)="navigateToWord(word.id)"
+          (keydown.space)="$event.preventDefault(); navigateToWord(word.id)"
       ></tr>
     </table>
   </div>
