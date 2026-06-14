@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, inject, model, ModelSignal, OnDestroy, OnInit, Signal, signal, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, DestroyRef, inject, model, ModelSignal, OnDestroy, OnInit, Signal, signal, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {VocabularyService} from '../../services/vocabulary.service';
@@ -24,7 +24,7 @@ import {MatLabel, MatOption, MatSelect, MatSelectChange} from '@angular/material
 import {MatCheckbox} from '@angular/material/checkbox';
 import {FormsModule} from '@angular/forms';
 
-import {toSignal} from "@angular/core/rxjs-interop";
+import {takeUntilDestroyed, toSignal} from "@angular/core/rxjs-interop";
 import {Deck} from "../../model/Deck";
 
 function applyFilter(flashcard: Flashcard, filter: string, value: string): boolean {
@@ -106,20 +106,23 @@ export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy
   private vocabularyService: VocabularyService = inject(VocabularyService);
   private router: Router = inject(Router);
   private route: ActivatedRoute = inject(ActivatedRoute);
+  private destroyRef: DestroyRef = inject(DestroyRef);
 
   readonly decks: Signal<Deck[]> = toSignal(this.vocabularyService.getDecks(), {initialValue: []})
 
   ngOnInit(): void {
-    this.vocabularyService.getFlashcards().subscribe({
-      next: value => {
-        this.flashcards.data = value;
-        this.applyStateFromQueryParams();
-        this.updateCounts();
-      },
-      error: err => {
-        console.log(err)
-      }
-    });
+    this.vocabularyService.getFlashcards()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: value => {
+          this.flashcards.data = value;
+          this.applyStateFromQueryParams();
+          this.updateCounts();
+        },
+        error: err => {
+          console.log(err)
+        }
+      });
 
     this.flashcards.filterPredicate = (data: Flashcard, filter) => {
 
