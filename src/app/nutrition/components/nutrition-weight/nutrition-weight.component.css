@@ -14,9 +14,10 @@
   --c-g:  #a3e635;
   --c-e:  #fb7185;
 
-  display: block;
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  overflow-y: auto;
+  overflow: hidden;
   font-family: 'Outfit', sans-serif;
   color: var(--text);
 }
@@ -27,8 +28,19 @@
   gap: 1.5rem;
   padding: 2rem clamp(1rem, 6vw, 4rem);
   max-width: 760px;
+  width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.panel-table {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
 }
 
 /* ── Panels ──────────────────────────────────────── */
@@ -93,7 +105,9 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  overflow: hidden;
+  overflow: auto;
+  min-height: 0;
+  flex: 1;
 }
 
 table {
@@ -116,6 +130,9 @@ table {
 
 ::ng-deep .mat-mdc-header-row {
   background: var(--raised) !important;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 ::ng-deep .mat-mdc-cell {

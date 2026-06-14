@@ -84,50 +84,52 @@
       <p class="empty">Tagesziele nicht verfügbar. Bitte zuerst ein Profil und einen Gewichtseintrag erfassen.</p>
     }
 
-    @for (group of groups; track group.type) {
-      <section class="panel meal">
-        <header class="meal__head">
-          <span class="meal__title">{{ group.label }}</span>
-          <span class="meal__kcal">{{ group.kcal | number:'1.0-0':'de' }} kcal</span>
-          <button mat-icon-button class="btn-meal-add" matTooltip="Hinzufügen" (click)="openAddDialog(group.type)">
-            <mat-icon>add</mat-icon>
-          </button>
-        </header>
+    <div class="meals">
+      @for (group of groups; track group.type) {
+        <section class="panel meal">
+          <header class="meal__head">
+            <span class="meal__title">{{ group.label }}</span>
+            <span class="meal__kcal">{{ group.kcal | number:'1.0-0':'de' }} kcal</span>
+            <button mat-icon-button class="btn-meal-add" matTooltip="Hinzufügen" (click)="openAddDialog(group.type)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </header>
 
-        @if (group.entries.length > 0) {
-          <ul class="entries">
-            @for (entry of group.entries; track entry.id) {
-              <li class="entry">
-                <div class="entry__main">
-                  <span class="entry__name">{{ entryName(entry) }}</span>
-                  <span class="entry__meta">
-                    @if (entry.quantityG !== null) {
-                      {{ entry.quantityG | number:'1.0-0':'de' }} g ·
-                    }
-                    {{ entry.kcal | number:'1.0-0':'de' }} kcal ·
-                    P {{ entry.proteinG | number:'1.0-1':'de' }} ·
-                    KH {{ entry.carbsG | number:'1.0-1':'de' }} ·
-                    F {{ entry.fatG | number:'1.0-1':'de' }}
-                  </span>
-                </div>
-                <div class="entry__actions">
-                  <button mat-icon-button class="btn-edit" matTooltip="Bearbeiten" (click)="openEditDialog(entry)">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button mat-icon-button class="btn-del" matTooltip="Löschen" (click)="openDeleteDialog(entry)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                </div>
-              </li>
-            }
-          </ul>
-        } @else {
-          <button type="button" class="meal__empty" (click)="openAddDialog(group.type)">
-            Noch nichts erfasst – hinzufügen
-          </button>
-        }
-      </section>
-    }
+          @if (group.entries.length > 0) {
+            <ul class="entries">
+              @for (entry of group.entries; track entry.id) {
+                <li class="entry">
+                  <div class="entry__main">
+                    <span class="entry__name">{{ entryName(entry) }}</span>
+                    <span class="entry__meta">
+                      @if (entry.quantityG !== null) {
+                        {{ entry.quantityG | number:'1.0-0':'de' }} g ·
+                      }
+                      {{ entry.kcal | number:'1.0-0':'de' }} kcal ·
+                      P {{ entry.proteinG | number:'1.0-1':'de' }} ·
+                      KH {{ entry.carbsG | number:'1.0-1':'de' }} ·
+                      F {{ entry.fatG | number:'1.0-1':'de' }}
+                    </span>
+                  </div>
+                  <div class="entry__actions">
+                    <button mat-icon-button class="btn-edit" matTooltip="Bearbeiten" (click)="openEditDialog(entry)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button class="btn-del" matTooltip="Löschen" (click)="openDeleteDialog(entry)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </li>
+              }
+            </ul>
+          } @else {
+            <button type="button" class="meal__empty" (click)="openAddDialog(group.type)">
+              Noch nichts erfasst – hinzufügen
+            </button>
+          }
+        </section>
+      }
+    </div>
 
   }
 
