@@ -167,3 +167,30 @@ export interface MealEstimate {
   /** Short note on the assumptions made (portion size, ingredients, …). */
   assumptions: string;
 }
+
+export interface MealTemplateItem {
+  id: string;
+  foodId: string;
+  foodName: string;
+  quantityG: number;
+  kcal: number;
+  proteinG: number;
+  carbsG: number;
+  fatG: number;
+}
+
+export interface MealTemplate {
+  id: string;
+  name: string;
+  items: MealTemplateItem[];
+}
+
+export interface MealTemplateItemInput {
+  foodId: string;
+  quantityG: number;
+}
+
+export interface MealTemplateInput {
+  name: string;
+  items: MealTemplateItemInput[];
+}

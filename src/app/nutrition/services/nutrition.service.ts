@@ -11,6 +11,9 @@ import {
   MealEntryInput,
   MealEntryUpdate,
   MealEstimate,
+  MealTemplate,
+  MealTemplateInput,
+  MealType,
   Profile,
   ProfileInput,
   Targets,
@@ -136,5 +139,28 @@ export class NutritionService {
       body.portionHint = portionHint;
     }
     return this.http.post<MealEstimate>(`${this.host}/estimate`, body);
+  }
+
+  getMealTemplates(): Observable<MealTemplate[]> {
+    return this.http.get<MealTemplate[]>(`${this.host}/meal-templates`);
+  }
+
+  createMealTemplate(template: MealTemplateInput): Observable<MealTemplate> {
+    return this.http.post<MealTemplate>(`${this.host}/meal-templates`, template);
+  }
+
+  updateMealTemplate(id: string, template: MealTemplateInput): Observable<MealTemplate> {
+    return this.http.put<MealTemplate>(`${this.host}/meal-templates/${id}`, template);
+  }
+
+  deleteMealTemplate(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.host}/meal-templates/${id}`);
+  }
+
+  /** Log a meal template into a day's diary as the given meal type. */
+  logMealTemplate(date: string, templateId: string, mealType: MealType): Observable<MealEntry[]> {
+    return this.http.post<MealEntry[]>(
+      `${this.host}/days/${date}/entries/from-template/${templateId}`, {}, {params: {mealType}}
+    );
   }
 }
