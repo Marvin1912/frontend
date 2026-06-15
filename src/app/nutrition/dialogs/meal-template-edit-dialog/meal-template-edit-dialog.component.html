@@ -1,0 +1,106 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+
+<mat-dialog-content>
+  <form class="entry-form" [formGroup]="form">
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+      @if (name.hasError('required')) {
+        <mat-error>Name ist erforderlich</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Lebensmittel</mat-label>
+      @if (searching) {
+        <mat-spinner matSuffix diameter="18" />
+      } @else {
+        <mat-icon matSuffix>search</mat-icon>
+      }
+      <input matInput autocomplete="off" formControlName="foodSearch"
+             [matAutocomplete]="auto" placeholder="Suchen…" />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFood"
+                        (optionSelected)="onFoodSelected($event)">
+        @for (food of results; track food.id) {
+          <mat-option [value]="food">
+            <span class="opt-name">{{ food.name }}</span>
+            @if (food.brand) {
+              <span class="opt-brand">{{ food.brand }}</span>
+            }
+            <span class="opt-kcal">{{ food.kcalPer100 | number:'1.0-0':'de' }} kcal / 100 g</span>
+          </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+
+    @if (searchFailed) {
+      <p class="search-error">Lebensmittel konnten nicht geladen werden.</p>
+    }
+
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Menge</mat-label>
+      <input matInput #quantityInput type="number" step="1" inputmode="numeric" formControlName="quantityG" />
+      <span matSuffix>g</span>
+      @if (quantityG.hasError('required')) {
+        <mat-error>Menge ist erforderlich</mat-error>
+      } @else if (quantityG.hasError('min')) {
+        <mat-error>Muss 0 oder größer sein</mat-error>
+      }
+    </mat-form-field>
+
+    @if (selected) {
+      <div class="macros">
+        <span class="macros__label">Für {{ quantityG.value || 0 }} g</span>
+        <div class="macros__grid">
+          <div class="macro macro--kcal">
+            <span class="macro__v">{{ scaled(selected.kcalPer100) | number:'1.0-0':'de' }}</span>
+            <span class="macro__u">kcal</span>
+          </div>
+          <div class="macro macro--p">
+            <span class="macro__v">{{ scaled(selected.proteinPer100) | number:'1.0-1':'de' }}</span>
+            <span class="macro__u">P</span>
+          </div>
+          <div class="macro macro--c">
+            <span class="macro__v">{{ scaled(selected.carbsPer100) | number:'1.0-1':'de' }}</span>
+            <span class="macro__u">KH</span>
+          </div>
+          <div class="macro macro--f">
+            <span class="macro__v">{{ scaled(selected.fatPer100) | number:'1.0-1':'de' }}</span>
+            <span class="macro__u">F</span>
+          </div>
+        </div>
+      </div>
+
+      <button mat-stroked-button type="button" class="btn-add-staged" [disabled]="!canAdd" (click)="addToStaged()">
+        <mat-icon>playlist_add</mat-icon>
+        Weiteres hinzufügen
+      </button>
+    }
+  </form>
+
+  @if (staged.length > 0) {
+    <div class="staged-list">
+      @for (item of staged; track item; let i = $index) {
+        <div class="staged-item">
+          <span class="staged-item__name">{{ item.foodName }}</span>
+          <span class="staged-item__qty">{{ item.quantityG | number:'1.0-0':'de' }} g</span>
+          <span class="staged-item__kcal">{{ scaledFor(item, item.kcalPer100) | number:'1.0-0':'de' }} kcal</span>
+          <button mat-icon-button type="button" class="staged-item__remove" aria-label="Eintrag entfernen" (click)="removeStaged(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button mat-flat-button type="button" class="btn-confirm" [disabled]="name.invalid" (click)="save()">
+    <mat-icon>check_circle</mat-icon>
+    Speichern
+  </button>
+  <button mat-stroked-button type="button" mat-dialog-close class="btn-cancel">
+    <mat-icon>close</mat-icon>
+    Abbrechen
+  </button>
+</mat-dialog-actions>

@@ -37,6 +37,7 @@ import {NutritionFoodsComponent} from './nutrition/components/nutrition-foods/nu
 import {NutritionDayComponent} from './nutrition/components/nutrition-day/nutrition-day.component';
 import {NutritionCanteenComponent} from './nutrition/components/nutrition-canteen/nutrition-canteen.component';
 import {NutritionDashboardComponent} from './nutrition/components/nutrition-dashboard/nutrition-dashboard.component';
+import {NutritionMealsComponent} from './nutrition/components/nutrition-meals/nutrition-meals.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -116,6 +117,7 @@ export const routes: Routes = [
       {path: 'canteen', component: NutritionCanteenComponent, data: {home: '/nutrition'}},
       {path: 'weight', component: NutritionWeightComponent, data: {home: '/nutrition'}},
       {path: 'foods', component: NutritionFoodsComponent, data: {home: '/nutrition'}},
+      {path: 'meals', component: NutritionMealsComponent, data: {home: '/nutrition'}},
       {path: 'profile', component: NutritionProfileComponent, data: {home: '/nutrition'}}
     ]
   }
