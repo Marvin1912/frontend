@@ -14,6 +14,7 @@
   --c-w:  #a3e635;  --cg-w: rgba(163, 230,  53, 0.18);
   --c-f:  #2dd4bf;  --cg-f: rgba(45,  212, 191, 0.18);
   --c-p:  #c084fc;  --cg-p: rgba(192, 132, 252, 0.18);
+  --c-m:  #fb923c;  --cg-m: rgba(251, 146,  60, 0.18);
 
   display: block;
   height: 100%;
@@ -87,6 +88,7 @@
 .navcard--w { --cc: var(--c-w); --cc-glow: var(--cg-w); }
 .navcard--f { --cc: var(--c-f); --cc-glow: var(--cg-f); }
 .navcard--p { --cc: var(--c-p); --cc-glow: var(--cg-p); }
+.navcard--m { --cc: var(--c-m); --cc-glow: var(--cg-m); }
 
 .navcard__mark {
   width: 36px;
@@ -147,3 +149,4 @@
 .navcard:nth-child(4) { animation-delay: 0.26s; }
 .navcard:nth-child(5) { animation-delay: 0.33s; }
 .navcard:nth-child(6) { animation-delay: 0.40s; }
+.navcard:nth-child(7) { animation-delay: 0.47s; }
