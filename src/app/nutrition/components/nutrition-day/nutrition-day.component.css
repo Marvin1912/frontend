@@ -259,7 +259,8 @@
   color: var(--c-kcal);
 }
 
-.btn-meal-add {
+.btn-meal-add,
+.btn-meal-template {
   flex-shrink: 0;
   width: 36px;
   height: 36px;
@@ -270,6 +271,11 @@
 .btn-meal-add:hover {
   color: var(--c-kcal);
   background: color-mix(in srgb, var(--c-kcal) 12%, transparent);
+}
+
+.btn-meal-template:hover {
+  color: var(--c-p);
+  background: color-mix(in srgb, var(--c-p) 12%, transparent);
 }
 
 .meal__empty {

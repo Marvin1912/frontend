@@ -90,6 +90,9 @@
           <header class="meal__head">
             <span class="meal__title">{{ group.label }}</span>
             <span class="meal__kcal">{{ group.kcal | number:'1.0-0':'de' }} kcal</span>
+            <button mat-icon-button class="btn-meal-template" matTooltip="Mahlzeit-Vorlage loggen" aria-label="Mahlzeit-Vorlage loggen" (click)="openTemplatePickerDialog(group.type)">
+              <mat-icon>restaurant_menu</mat-icon>
+            </button>
             <button mat-icon-button class="btn-meal-add" matTooltip="Hinzufügen" aria-label="Hinzufügen" (click)="openAddDialog(group.type)">
               <mat-icon>add</mat-icon>
             </button>

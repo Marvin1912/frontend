@@ -21,6 +21,7 @@ import {
 } from '../../dialogs/add-day-entry-dialog/add-day-entry-dialog.component';
 import {EntryEditDialogComponent} from '../../dialogs/entry-edit-dialog/entry-edit-dialog.component';
 import {EntryDeleteDialogComponent} from '../../dialogs/entry-delete-dialog/entry-delete-dialog.component';
+import {MealTemplatePickerDialogComponent} from '../../dialogs/meal-template-picker-dialog/meal-template-picker-dialog.component';
 
 interface MealGroup {
   type: MealType;
@@ -203,6 +204,22 @@ export class NutritionDayComponent implements OnInit {
         this.snackBar.open(message, 'OK', {duration: 3000});
       },
       error: () => this.snackBar.open('Eintrag konnte nicht gespeichert werden', 'Schließen', {duration: 5000})
+    });
+  }
+
+  openTemplatePickerDialog(mealType?: MealType): void {
+    const data = {mealType: mealType ?? this.defaultMealType()};
+    const ref = this.dialog.open(MealTemplatePickerDialogComponent, {data});
+    ref.afterClosed().pipe(
+      switchMap(result => result ? this.nutritionService.logMealTemplate(this.isoDate, result.templateId, result.mealType) : EMPTY),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: created => {
+        this.load();
+        const message = created.length === 1 ? '1 Eintrag aus Vorlage hinzugefügt' : `${created.length} Einträge aus Vorlage hinzugefügt`;
+        this.snackBar.open(message, 'OK', {duration: 3000});
+      },
+      error: () => this.snackBar.open('Vorlage konnte nicht geloggt werden', 'Schließen', {duration: 5000})
     });
   }
 
