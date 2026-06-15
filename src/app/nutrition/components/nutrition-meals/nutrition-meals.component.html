@@ -1,0 +1,61 @@
+<div class="meals">
+
+  <section class="panel">
+    <header class="panel__head">
+      <span class="panel__dot"></span>
+      <span class="panel__label">MAHLZEITEN</span>
+    </header>
+
+    <div class="toolbar">
+      <div class="actions">
+        <button mat-flat-button type="button" class="btn-add" (click)="openAddDialog()">
+          <mat-icon>add</mat-icon>
+          Mahlzeit hinzufügen
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel panel-table">
+    @if (templates.length) {
+      <div class="table-container">
+        <table mat-table [dataSource]="templates">
+
+          <ng-container matColumnDef="name">
+            <th *matHeaderCellDef mat-header-cell class="col-header">Name</th>
+            <td *matCellDef="let template" mat-cell>{{ template.name }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="items">
+            <th *matHeaderCellDef mat-header-cell class="col-header col-num">Anzahl</th>
+            <td *matCellDef="let template" mat-cell class="col-num">{{ template.items.length }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="kcal">
+            <th *matHeaderCellDef mat-header-cell class="col-header col-num">kcal</th>
+            <td *matCellDef="let template" mat-cell class="col-num">{{ totalKcal(template) | number:'1.0-0':'de' }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th *matHeaderCellDef mat-header-cell class="col-header"></th>
+            <td *matCellDef="let template" mat-cell class="col-actions">
+              <button mat-icon-button class="btn-edit" matTooltip="Bearbeiten" aria-label="Bearbeiten" (click)="openEditDialog(template)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button class="btn-del" matTooltip="Löschen" aria-label="Löschen" (click)="openDeleteDialog(template)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr *matHeaderRowDef="columnsToDisplay" mat-header-row></tr>
+          <tr *matRowDef="let template; columns: columnsToDisplay;" mat-row></tr>
+
+        </table>
+      </div>
+    } @else {
+      <p class="empty">Noch keine Mahlzeiten. Lege eine an, um sie schnell ins Tagebuch übernehmen zu können.</p>
+    }
+  </section>
+
+</div>
