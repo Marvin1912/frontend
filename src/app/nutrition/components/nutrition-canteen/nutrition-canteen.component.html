@@ -112,6 +112,24 @@
         }
         Eintragen
       </button>
+
+      <div class="save-template-row">
+        <mat-form-field appearance="outline" class="field-full">
+          <mat-label>Als Mahlzeit speichern</mat-label>
+          <input matInput [formControl]="templateName"
+                 placeholder="z. B. Kantine Schnitzel" />
+        </mat-form-field>
+
+        <button mat-stroked-button type="button" class="btn-save-template"
+                [disabled]="templateName.invalid || saving" (click)="saveAsTemplate()">
+          @if (saving) {
+            <mat-spinner diameter="18" />
+          } @else {
+            <mat-icon>bookmark_add</mat-icon>
+          }
+          Speichern
+        </button>
+      </div>
     </section>
   }
 

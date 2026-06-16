@@ -16,6 +16,7 @@ import {
   MealType,
   Profile,
   ProfileInput,
+  SaveEstimateAsTemplateInput,
   Targets,
   WeightEntry,
   WeightEntryInput
@@ -162,5 +163,9 @@ export class NutritionService {
     return this.http.post<MealEntry[]>(
       `${this.host}/days/${date}/entries/from-template/${templateId}`, {}, {params: {mealType}}
     );
+  }
+
+  saveEstimateAsTemplate(input: SaveEstimateAsTemplateInput): Observable<MealTemplate> {
+    return this.http.post<MealTemplate>(`${this.host}/meal-templates/from-estimate`, input);
   }
 }

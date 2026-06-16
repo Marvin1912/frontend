@@ -194,3 +194,11 @@ export interface MealTemplateInput {
   name: string;
   items: MealTemplateItemInput[];
 }
+
+export interface SaveEstimateAsTemplateInput {
+  name: string;
+  kcal: number;
+  proteinG: number;
+  carbsG: number;
+  fatG: number;
+}
