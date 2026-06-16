@@ -133,6 +133,34 @@
 ::ng-deep .btn-estimate mat-spinner circle { stroke: var(--c-b) !important; }
 ::ng-deep .btn-log mat-spinner circle { stroke: var(--c-g) !important; }
 
+.save-template-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.btn-save-template {
+  height: 48px;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  color: var(--c-n) !important;
+  border-color: color-mix(in srgb, var(--c-n) 35%, transparent) !important;
+}
+
+.btn-save-template:hover:not([disabled]) {
+  background: color-mix(in srgb, var(--c-n) 10%, transparent) !important;
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.2) !important;
+}
+
+.btn-save-template[disabled] { opacity: 0.55 !important; }
+
+.btn-save-template mat-spinner { margin-right: 4px; }
+
+::ng-deep .btn-save-template mat-spinner circle { stroke: var(--c-n) !important; }
+
 /* ── Estimate grid ───────────────────────────────── */
 .grid {
   display: grid;

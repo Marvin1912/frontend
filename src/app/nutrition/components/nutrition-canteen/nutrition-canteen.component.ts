@@ -13,7 +13,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {format} from 'date-fns';
 import {Subscription, timeout, TimeoutError} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
-import {AdHocEntryInput, MealEstimate, MealType} from '../../models/nutrition.model';
+import {AdHocEntryInput, MealEstimate, MealType, SaveEstimateAsTemplateInput} from '../../models/nutrition.model';
 
 const ESTIMATE_TIMEOUT_MS = 30000;
 
@@ -55,12 +55,14 @@ export class NutritionCanteenComponent implements OnInit {
   portionHint = new FormControl('', {nonNullable: true});
   mealType = new FormControl<MealType>('LUNCH', {nonNullable: true});
   date = new FormControl<Date>(new Date(), {nonNullable: true});
+  templateName = new FormControl('', {nonNullable: true, validators: Validators.required});
 
   /** Editable macro values; populated once an estimate arrives. */
   valuesForm!: FormGroup;
   assumptions = '';
   estimating = false;
   logging = false;
+  saving = false;
   hasEstimate = false;
 
   private fb = inject(FormBuilder);
@@ -120,6 +122,7 @@ export class NutritionCanteenComponent implements OnInit {
       fatG: estimate.fatG
     });
     this.assumptions = estimate.assumptions;
+    this.templateName.setValue(this.description.value.trim());
   }
 
   log(): void {
@@ -153,11 +156,41 @@ export class NutritionCanteenComponent implements OnInit {
     });
   }
 
+  saveAsTemplate(): void {
+    if (this.templateName.invalid || this.saving) return;
+    this.saving = true;
+    this.cdr.markForCheck();
+
+    const v = this.valuesForm.getRawValue();
+    const payload: SaveEstimateAsTemplateInput = {
+      name: this.templateName.value.trim(),
+      kcal: Number(v.kcal),
+      proteinG: Number(v.proteinG),
+      carbsG: Number(v.carbsG),
+      fatG: Number(v.fatG)
+    };
+
+    this.nutritionService.saveEstimateAsTemplate(payload).subscribe({
+      next: () => {
+        this.saving = false;
+        this.cdr.markForCheck();
+        this.snackBar.open('Als Mahlzeit gespeichert', 'OK', {duration: 3000});
+      },
+      error: () => {
+        this.saving = false;
+        this.cdr.markForCheck();
+        this.snackBar.open('Mahlzeit konnte nicht gespeichert werden', 'Schließen', {duration: 5000});
+      }
+    });
+  }
+
   private reset(): void {
     this.description.reset('');
     this.portionHint.reset('');
     this.assumptions = '';
     this.hasEstimate = false;
+    this.templateName.reset('');
+    this.saving = false;
     this.valuesForm.reset({kcal: 0, proteinG: 0, carbsG: 0, fatG: 0});
   }
 }
