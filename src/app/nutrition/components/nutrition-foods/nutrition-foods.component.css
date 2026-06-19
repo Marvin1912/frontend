@@ -82,6 +82,7 @@
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
@@ -143,6 +144,8 @@
   overflow: auto;
   min-height: 0;
   flex: 1;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 
 table {
@@ -298,4 +301,18 @@ mat-paginator {
 
 ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
   color: var(--c-g) !important;
+}
+
+/* ── Mobile (≤480px) ─────────────────────────────── */
+@media (max-width: 480px) {
+  .field-search,
+  .actions {
+    flex: 1 1 100%;
+  }
+
+  .btn-add,
+  .btn-scan,
+  .btn-barcode {
+    flex: 1 1 auto;
+  }
 }

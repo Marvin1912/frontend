@@ -16,7 +16,7 @@
   border: 1px solid var(--border-mid) !important;
   border-radius: 12px !important;
   color: var(--text) !important;
-  min-width: 340px !important;
+  min-width: min(340px, calc(100vw - 32px)) !important;
 }
 
 ::ng-deep .mat-mdc-dialog-title {
@@ -31,7 +31,7 @@
   color: var(--text-muted) !important;
   font-family: 'Outfit', sans-serif !important;
   font-size: 0.9rem !important;
-  overflow: visible !important;
+  overflow-y: auto !important;
 }
 
 ::ng-deep .mat-mdc-dialog-actions {
