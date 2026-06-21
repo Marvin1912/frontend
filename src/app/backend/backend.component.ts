@@ -28,6 +28,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 export class BackendComponent {
 
   uploadedFile?: File;
+  importFile?: File;
   responseData?: BookingsDTO;
   isLoading = false;
   private readonly http = inject(HttpClient);
@@ -60,6 +61,33 @@ export class BackendComponent {
     });
   }
 
+  importAndSaveFile(): void {
+    if (!this.importFile) {
+      alert('Please select a file first!');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', this.importFile);
+
+    this.isLoading = true;
+    this.cdr.markForCheck();
+
+    this.http.post(`${environment.apiUrl}/camt-entries/import`, formData).subscribe({
+      next: () => {
+        alert('File queued for import.');
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        console.error('Import error:', error);
+        alert('Error importing file.');
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
   backupCostData(): void {
     this.http.post(`${environment.apiUrl}/export/costs`, '').subscribe({
       next: () => {
@@ -75,6 +103,12 @@ export class BackendComponent {
   onFileSelected(event: Event): void {
     const target = event.target as HTMLInputElement;
     this.uploadedFile = target.files?.[0];
+    this.cdr.markForCheck();
+  }
+
+  onImportFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.importFile = target.files?.[0];
     this.cdr.markForCheck();
   }
 }

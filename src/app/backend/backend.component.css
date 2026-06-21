@@ -170,6 +170,16 @@
   background: rgba(77, 166, 255, 0.2) !important;
 }
 
+.action-btn--import.mat-mdc-mini-fab {
+  background: rgba(34, 211, 94, 0.1) !important;
+  color: var(--c-p) !important;
+  border-color: rgba(34, 211, 94, 0.3) !important;
+}
+
+.action-btn--import.mat-mdc-mini-fab:hover {
+  background: rgba(34, 211, 94, 0.2) !important;
+}
+
 .action-btn--backup.mat-mdc-mini-fab {
   background: var(--raised) !important;
   color: var(--text-muted) !important;
