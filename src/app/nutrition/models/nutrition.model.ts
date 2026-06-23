@@ -146,7 +146,7 @@ export type MealEntryUpdate =
   | { mealType?: MealType; description: string; kcal: number; proteinG: number; carbsG: number; fatG: number };
 
 /** Kind of sport activity logged on a day. */
-export type ActivityType = 'RUNNING' | 'SWIMMING' | 'CYCLING' | 'WALKING' | 'STRENGTH_TRAINING' | 'OTHER';
+export type ActivityType = 'RUNNING' | 'SWIMMING' | 'CYCLING' | 'WALKING' | 'STRENGTH_TRAINING' | 'CROSS_TRAINER' | 'OTHER';
 
 /** A logged sport activity burning calories on a given day. */
 export interface SportActivity {

@@ -18,6 +18,7 @@ const ACTIVITY_TYPES: { value: ActivityType; label: string }[] = [
   {value: 'CYCLING', label: 'Radfahren'},
   {value: 'WALKING', label: 'Gehen'},
   {value: 'STRENGTH_TRAINING', label: 'Krafttraining'},
+  {value: 'CROSS_TRAINER', label: 'Crosstrainer'},
   {value: 'OTHER', label: 'Sonstiges'}
 ];
 
