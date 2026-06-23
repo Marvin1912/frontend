@@ -22,11 +22,12 @@ const INTAKE_RANGES = [7, 14, 30] as const;
 /** Default number of days of intake history to load for the trend chart. */
 const DEFAULT_INTAKE_DAYS = 14;
 
-/** A day's consumed kcal against its target, for the intake chart. */
+/** A day's net kcal (consumed minus burned) against its target, for the intake chart. */
 interface IntakeDay {
   date: string;
   label: string;
   consumed: number;
+  burned: number;
   target: number;
   x: number;
   /** Bar top (consumed) and bar height in view-box units. */
@@ -187,8 +188,11 @@ export class NutritionDashboardComponent implements OnInit {
     const target = days.find(d => d.targets)?.targets?.targetKcal ?? null;
     this.intakeTargetKcal = target;
 
-    const consumed = dates.map(date => byDate.get(date)?.totals.kcal ?? 0);
-    const maxConsumed = Math.max(0, ...consumed);
+    const netKcal = dates.map(date => {
+      const summary = byDate.get(date);
+      return (summary?.totals.kcal ?? 0) - (summary?.totalKcalBurned ?? 0);
+    });
+    const maxConsumed = Math.max(0, ...netKcal);
     this.intakeMax = Math.max(maxConsumed, (target ?? 0) * 1.1, 1);
 
     const innerW = VB_W - PAD_L - PAD_R;
@@ -198,22 +202,28 @@ export class NutritionDashboardComponent implements OnInit {
 
     this.intakeDays = dates.map((date, i) => {
       const summary = byDate.get(date);
-      const kcal = summary?.totals.kcal ?? 0;
+      const eaten = summary?.totals.kcal ?? 0;
+      const burned = summary?.totalKcalBurned ?? 0;
+      const kcal = eaten - burned;
       const dayTarget = summary?.targets?.targetKcal ?? target ?? 0;
-      const h = innerH * (kcal / this.intakeMax);
+      const h = innerH * (Math.max(kcal, 0) / this.intakeMax);
       const x = PAD_L + slot * i + (slot - this.barWidth) / 2;
       const y = PAD_T + innerH - h;
       const dateLabel = format(parseISO(date), 'dd.MM.yyyy');
+      const tooltip = burned > 0
+        ? `${dateLabel}: ${Math.round(eaten)} kcal − ${Math.round(burned)} verbrannt = ${Math.round(kcal)} kcal`
+        : `${dateLabel}: ${Math.round(kcal)} kcal`;
       return {
         date,
         label: format(parseISO(date), 'dd.MM.'),
         consumed: kcal,
+        burned,
         target: dayTarget,
         x,
         y,
         h,
         state: this.targetState(kcal, dayTarget),
-        tooltip: `${dateLabel}: ${Math.round(kcal)} kcal`
+        tooltip
       };
     });
 
