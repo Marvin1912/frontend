@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+
+<mat-dialog-content>
+  <form class="edit-form" [formGroup]="form">
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Aktivität</mat-label>
+      <mat-select formControlName="activityType">
+        @for (a of activityTypes; track a.value) {
+          <mat-option [value]="a.value">{{ a.label }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Beschreibung</mat-label>
+      <input matInput formControlName="description" />
+      @if (form.get('description')?.hasError('required')) {
+        <mat-error>Beschreibung ist bei "Sonstiges" erforderlich</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Verbrannte kcal</mat-label>
+      <input matInput type="number" step="1" inputmode="numeric" formControlName="kcalBurned" />
+      @if (form.get('kcalBurned')?.hasError('required')) {
+        <mat-error>Erforderlich</mat-error>
+      } @else if (form.get('kcalBurned')?.hasError('min')) {
+        <mat-error>Muss 0 oder größer sein</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button mat-flat-button type="button" class="btn-confirm" [disabled]="form.invalid" (click)="save()">
+    <mat-icon>check_circle</mat-icon>
+    Speichern
+  </button>
+  <button mat-stroked-button type="button" mat-dialog-close class="btn-cancel">
+    <mat-icon>close</mat-icon>
+    Abbrechen
+  </button>
+</mat-dialog-actions>
