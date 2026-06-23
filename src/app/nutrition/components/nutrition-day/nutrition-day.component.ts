@@ -14,7 +14,17 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {EMPTY, switchMap} from 'rxjs';
 import {addDays, differenceInCalendarDays, format, isSameDay, startOfDay} from 'date-fns';
 import {NutritionService} from '../../services/nutrition.service';
-import {DaySummary, FoodEntryInput, MealEntry, MealEntryUpdate, MealType} from '../../models/nutrition.model';
+import {
+  ActivityType,
+  DaySummary,
+  FoodEntryInput,
+  MealEntry,
+  MealEntryUpdate,
+  MealType,
+  SportActivity,
+  SportActivityInput,
+  SportActivityUpdate
+} from '../../models/nutrition.model';
 import {
   AddDayEntryDialogComponent,
   AddDayEntryDialogData
@@ -22,6 +32,7 @@ import {
 import {EntryEditDialogComponent} from '../../dialogs/entry-edit-dialog/entry-edit-dialog.component';
 import {EntryDeleteDialogComponent} from '../../dialogs/entry-delete-dialog/entry-delete-dialog.component';
 import {MealTemplatePickerDialogComponent} from '../../dialogs/meal-template-picker-dialog/meal-template-picker-dialog.component';
+import {ActivityEditDialogComponent} from '../../dialogs/activity-edit-dialog/activity-edit-dialog.component';
 
 interface MealGroup {
   type: MealType;
@@ -47,6 +58,20 @@ const MEAL_GROUPS: { type: MealType; label: string }[] = [
   {type: 'DINNER', label: 'Abendessen'},
   {type: 'SNACK', label: 'Snack'}
 ];
+
+const ACTIVITY_TYPES: { type: ActivityType; label: string }[] = [
+  {type: 'RUNNING', label: 'Laufen'},
+  {type: 'SWIMMING', label: 'Schwimmen'},
+  {type: 'CYCLING', label: 'Radfahren'},
+  {type: 'WALKING', label: 'Gehen'},
+  {type: 'STRENGTH_TRAINING', label: 'Krafttraining'},
+  {type: 'OTHER', label: 'Sonstiges'}
+];
+
+const ACTIVITY_TYPE_LABELS: Record<ActivityType, string> = ACTIVITY_TYPES.reduce(
+  (acc, a) => ({...acc, [a.type]: a.label}),
+  {} as Record<ActivityType, string>
+);
 
 @Component({
   selector: 'app-nutrition-day',
@@ -191,6 +216,10 @@ export class NutritionDayComponent implements OnInit {
     return entry.description ?? entry.foodName ?? 'Eintrag';
   }
 
+  activityLabel(activity: SportActivity): string {
+    return activity.description ?? ACTIVITY_TYPE_LABELS[activity.activityType];
+  }
+
   openAddDialog(mealType?: MealType): void {
     const data: AddDayEntryDialogData = {mealType: mealType ?? this.defaultMealType()};
     const ref = this.dialog.open(AddDayEntryDialogComponent, {data});
@@ -249,6 +278,51 @@ export class NutritionDayComponent implements OnInit {
       },
       error: err => {
         const msg = err.status === 404 ? 'Eintrag nicht gefunden' : 'Eintrag konnte nicht gelöscht werden';
+        this.snackBar.open(msg, 'Schließen', {duration: 5000});
+      }
+    });
+  }
+
+  openAddActivityDialog(): void {
+    const ref = this.dialog.open(ActivityEditDialogComponent, {data: null});
+    ref.afterClosed().pipe(
+      switchMap((result: SportActivityInput | undefined) => result ? this.nutritionService.addSportActivity(this.isoDate, result) : EMPTY),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => {
+        this.load();
+        this.snackBar.open('Aktivität hinzugefügt', 'OK', {duration: 3000});
+      },
+      error: () => this.snackBar.open('Aktivität konnte nicht gespeichert werden', 'Schließen', {duration: 5000})
+    });
+  }
+
+  openEditActivityDialog(activity: SportActivity): void {
+    const ref = this.dialog.open(ActivityEditDialogComponent, {data: activity});
+    ref.afterClosed().pipe(
+      switchMap((update: SportActivityUpdate | undefined) => update ? this.nutritionService.updateSportActivity(activity.id, update) : EMPTY),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => {
+        this.load();
+        this.snackBar.open('Aktivität aktualisiert', 'OK', {duration: 3000});
+      },
+      error: () => this.snackBar.open('Aktivität konnte nicht aktualisiert werden', 'Schließen', {duration: 5000})
+    });
+  }
+
+  openDeleteActivityDialog(activity: SportActivity): void {
+    const ref = this.dialog.open(EntryDeleteDialogComponent, {data: {label: this.activityLabel(activity)}});
+    ref.afterClosed().pipe(
+      switchMap(result => result === 'confirmed' ? this.nutritionService.deleteSportActivity(activity.id) : EMPTY),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => {
+        this.load();
+        this.snackBar.open('Aktivität gelöscht', 'OK', {duration: 3000});
+      },
+      error: err => {
+        const msg = err.status === 404 ? 'Aktivität nicht gefunden' : 'Aktivität konnte nicht gelöscht werden';
         this.snackBar.open(msg, 'Schließen', {duration: 5000});
       }
     });
