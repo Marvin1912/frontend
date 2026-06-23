@@ -141,15 +141,15 @@
     <section class="panel meal activities">
       <header class="meal__head">
         <span class="meal__title">AKTIVITÄTEN</span>
-        <span class="meal__kcal">{{ summary.totalKcalBurned | number:'1.0-0':'de' }} kcal</span>
+        <span class="meal__kcal">{{ totalKcalBurned | number:'1.0-0':'de' }} kcal</span>
         <button mat-icon-button class="btn-meal-add" matTooltip="Hinzufügen" aria-label="Hinzufügen" (click)="openAddActivityDialog()">
           <mat-icon>add</mat-icon>
         </button>
       </header>
 
-      @if (summary.activities.length > 0) {
+      @if (activities.length > 0) {
         <ul class="entries">
-          @for (activity of summary.activities; track activity.id) {
+          @for (activity of activities; track activity.id) {
             <li class="entry">
               <div class="entry__main">
                 <span class="entry__name">{{ activityLabel(activity) }}</span>

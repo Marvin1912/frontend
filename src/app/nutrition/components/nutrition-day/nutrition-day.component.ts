@@ -170,6 +170,14 @@ export class NutritionDayComponent implements OnInit {
     });
   }
 
+  get activities(): SportActivity[] {
+    return this.summary?.activities ?? [];
+  }
+
+  get totalKcalBurned(): number {
+    return this.summary?.totalKcalBurned ?? 0;
+  }
+
   get groups(): MealGroup[] {
     const entries = this.summary?.entries ?? [];
     return MEAL_GROUPS.map(g => {
