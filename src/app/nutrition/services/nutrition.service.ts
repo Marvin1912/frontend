@@ -17,6 +17,9 @@ import {
   Profile,
   ProfileInput,
   SaveEstimateAsTemplateInput,
+  SportActivity,
+  SportActivityInput,
+  SportActivityUpdate,
   Targets,
   WeightEntry,
   WeightEntryInput
@@ -167,5 +170,18 @@ export class NutritionService {
 
   saveEstimateAsTemplate(input: SaveEstimateAsTemplateInput): Observable<MealTemplate> {
     return this.http.post<MealTemplate>(`${this.host}/meal-templates/from-estimate`, input);
+  }
+
+  /** Log a sport activity on a day. */
+  addSportActivity(date: string, input: SportActivityInput): Observable<SportActivity> {
+    return this.http.post<SportActivity>(`${this.host}/days/${date}/activities`, input);
+  }
+
+  updateSportActivity(id: string, update: SportActivityUpdate): Observable<SportActivity> {
+    return this.http.put<SportActivity>(`${this.host}/activities/${id}`, update);
+  }
+
+  deleteSportActivity(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.host}/activities/${id}`);
   }
 }

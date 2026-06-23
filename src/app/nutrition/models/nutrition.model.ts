@@ -145,6 +145,29 @@ export type MealEntryUpdate =
   | { mealType?: MealType; quantityG: number }
   | { mealType?: MealType; description: string; kcal: number; proteinG: number; carbsG: number; fatG: number };
 
+/** Kind of sport activity logged on a day. */
+export type ActivityType = 'RUNNING' | 'SWIMMING' | 'CYCLING' | 'WALKING' | 'STRENGTH_TRAINING' | 'OTHER';
+
+/** A logged sport activity burning calories on a given day. */
+export interface SportActivity {
+  id: string;
+  entryDate: string;
+  activityType: ActivityType;
+  /** Free-text label; required by the UI when `activityType` is `OTHER`. */
+  description: string | null;
+  kcalBurned: number;
+}
+
+/** Create payload for POST /days/{date}/activities. */
+export interface SportActivityInput {
+  activityType: ActivityType;
+  description: string | null;
+  kcalBurned: number;
+}
+
+/** Edit payload for PUT /activities/{id}. */
+export type SportActivityUpdate = SportActivityInput;
+
 export interface DaySummary {
   date: string;
   entries: MealEntry[];
@@ -153,6 +176,8 @@ export interface DaySummary {
   targets: Targets | null;
   /** Null when no profile/weight exists yet (backend returns 200 with null). */
   remaining: Macros | null;
+  activities: SportActivity[];
+  totalKcalBurned: number;
 }
 
 /**
