@@ -267,6 +267,8 @@
   color: var(--c-kcal);
 }
 
+.activities .meal__kcal { color: var(--c-f); }
+
 .btn-meal-add,
 .btn-meal-template {
   flex-shrink: 0;

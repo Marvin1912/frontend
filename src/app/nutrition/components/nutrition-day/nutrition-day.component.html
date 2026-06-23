@@ -138,6 +138,43 @@
       }
     </div>
 
+    <section class="panel meal activities">
+      <header class="meal__head">
+        <span class="meal__title">AKTIVITÄTEN</span>
+        <span class="meal__kcal">{{ summary.totalKcalBurned | number:'1.0-0':'de' }} kcal</span>
+        <button mat-icon-button class="btn-meal-add" matTooltip="Hinzufügen" aria-label="Hinzufügen" (click)="openAddActivityDialog()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </header>
+
+      @if (summary.activities.length > 0) {
+        <ul class="entries">
+          @for (activity of summary.activities; track activity.id) {
+            <li class="entry">
+              <div class="entry__main">
+                <span class="entry__name">{{ activityLabel(activity) }}</span>
+                <span class="entry__meta">
+                  {{ activity.kcalBurned | number:'1.0-0':'de' }} kcal
+                </span>
+              </div>
+              <div class="entry__actions">
+                <button mat-icon-button class="btn-edit" matTooltip="Bearbeiten" aria-label="Bearbeiten" (click)="openEditActivityDialog(activity)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button class="btn-del" matTooltip="Löschen" aria-label="Löschen" (click)="openDeleteActivityDialog(activity)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      } @else {
+        <button type="button" class="meal__empty" (click)="openAddActivityDialog()">
+          Noch nichts erfasst – hinzufügen
+        </button>
+      }
+    </section>
+
   }
 
 </div>
