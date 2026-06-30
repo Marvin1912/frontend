@@ -184,4 +184,11 @@ export class NutritionService {
   deleteSportActivity(id: string): Observable<void> {
     return this.http.delete<void>(`${this.host}/activities/${id}`);
   }
+
+  exportPdf(from: string, to: string): Observable<Blob> {
+    return this.http.get(`${this.host}/export/pdf`, {
+      params: {from, to},
+      responseType: 'blob'
+    });
+  }
 }
