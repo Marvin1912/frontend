@@ -5,6 +5,8 @@ import {MatIcon} from '@angular/material/icon';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {filter} from 'rxjs';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {MatDialog} from '@angular/material/dialog';
+import {ExportDialogComponent} from '../../dialogs/export-dialog/export-dialog.component';
 
 @Component({
   selector: 'app-nutrition-layout',
@@ -25,8 +27,13 @@ export class NutritionLayoutComponent implements OnInit {
   homeLink = '/';
 
   private destroyRef = inject(DestroyRef);
+  private dialog = inject(MatDialog);
 
   constructor(private router: Router, private route: ActivatedRoute) {
+  }
+
+  openExportDialog(): void {
+    this.dialog.open(ExportDialogComponent);
   }
 
   ngOnInit(): void {
