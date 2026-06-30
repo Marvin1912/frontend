@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>PDF exportieren</h2>
+
+<mat-dialog-content>
+  <form class="export-form" [formGroup]="form">
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Von</mat-label>
+      <input matInput formControlName="from" [matDatepicker]="pickerFrom" [max]="today" />
+      <mat-datepicker-toggle matIconSuffix [for]="pickerFrom" />
+      <mat-datepicker #pickerFrom />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="field-full">
+      <mat-label>Bis</mat-label>
+      <input matInput formControlName="to" [matDatepicker]="pickerTo" [max]="today" />
+      <mat-datepicker-toggle matIconSuffix [for]="pickerTo" />
+      <mat-datepicker #pickerTo />
+    </mat-form-field>
+
+    @if (rangeError) {
+      <p class="range-error">„Von" muss vor „Bis" liegen.</p>
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  @if (exporting()) {
+    <mat-progress-spinner mode="indeterminate" diameter="32" />
+  } @else {
+    <button mat-flat-button type="button" class="btn-confirm" [disabled]="form.invalid" (click)="export()">
+      <mat-icon>file_download</mat-icon>
+      Exportieren
+    </button>
+    <button mat-stroked-button type="button" mat-dialog-close class="btn-cancel">
+      <mat-icon>close</mat-icon>
+      Abbrechen
+    </button>
+  }
+</mat-dialog-actions>
