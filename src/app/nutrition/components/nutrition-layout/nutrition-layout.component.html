@@ -40,7 +40,12 @@
       <span class="topbar__name">NUTRITION</span>
     </div>
 
-    <div class="topbar__right"></div>
+    <div class="topbar__right">
+      <button mat-icon-button class="nav-btn" aria-label="PDF exportieren"
+              (click)="openExportDialog()">
+        <mat-icon>file_download</mat-icon>
+      </button>
+    </div>
   </header>
 
   <main class="content">
