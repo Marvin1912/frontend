@@ -227,3 +227,87 @@ export interface SaveEstimateAsTemplateInput {
   carbsG: number;
   fatG: number;
 }
+
+/** A single stat tile on the meal-plan page (e.g. daily kcal/protein/carbs/fat budget). */
+export interface MealPlanStat {
+  label: string;
+  value: string;
+}
+
+/** One "what changed" entry in the meal plan's changelog callout. */
+export interface MealPlanChangelogEntry {
+  tag: string;
+  /** Previous value, shown struck through; null when there's nothing to compare against. */
+  was: string | null;
+  text: string;
+}
+
+/** A single meal row in a meal-plan table (display strings, not numeric — some cells are placeholders like "—"). */
+export interface MealPlanRow {
+  meal: string;
+  details: string;
+  qty: string;
+  kcal: string;
+  protein: string;
+}
+
+/** Totals row shown in a meal-plan table's footer. */
+export interface MealPlanTotals {
+  label: string;
+  kcal: string;
+  protein: string;
+}
+
+/** One day-structure table on the meal-plan page (daily structure / weekdays / weekend). */
+export interface MealPlanSection {
+  title: string;
+  note: string;
+  rows: MealPlanRow[];
+  totals: MealPlanTotals | null;
+  callout: string | null;
+}
+
+/** Visual emphasis for a shopping-list item, e.g. flagging a supply shortfall. */
+export type MealPlanShoppingBadge = 'ok' | 'warn';
+
+export interface MealPlanShoppingItem {
+  name: string;
+  brand: string | null;
+  badge: MealPlanShoppingBadge | null;
+  badgeText: string | null;
+  qty: string;
+}
+
+export interface MealPlanShoppingCategory {
+  title: string;
+  items: MealPlanShoppingItem[];
+}
+
+export interface MealPlanShoppingList {
+  title: string;
+  note: string;
+  categories: MealPlanShoppingCategory[];
+  callout: string | null;
+}
+
+export interface MealPlanSource {
+  label: string;
+  url: string;
+}
+
+export interface MealPlanFooter {
+  note: string;
+  sources: MealPlanSource[];
+}
+
+/** The full weekly meal-plan reference document (GET /nutrition/meal-plan). */
+export interface MealPlan {
+  eyebrow: string;
+  title: string;
+  description: string;
+  stats: MealPlanStat[];
+  changelog: MealPlanChangelogEntry[];
+  sections: MealPlanSection[];
+  shoppingList: MealPlanShoppingList;
+  footer: MealPlanFooter;
+}

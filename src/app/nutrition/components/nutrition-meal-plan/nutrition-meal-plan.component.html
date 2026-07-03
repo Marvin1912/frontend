@@ -1,0 +1,145 @@
+<div class="plan">
+
+  @if (loading) {
+    <div class="state">
+      <mat-spinner diameter="32" />
+    </div>
+  } @else if (unavailable || !plan) {
+    <p class="empty">Essensplan konnte nicht geladen werden.</p>
+  } @else {
+
+    <header class="masthead">
+      <span class="eyebrow">{{ plan.eyebrow }}</span>
+      <h1>{{ plan.title }}</h1>
+      <p>{{ plan.description }}</p>
+    </header>
+
+    <div class="stats">
+      @for (stat of plan.stats; track stat.label) {
+        <div class="stat">
+          <span class="stat__v">{{ stat.value }}</span>
+          <span class="stat__u">{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+
+    <section class="panel">
+      <header class="panel__head">
+        <span class="panel__dot panel__dot--a"></span>
+        <span class="panel__label">Änderungen zum alten Plan</span>
+      </header>
+      <ul class="changelog">
+        @for (entry of plan.changelog; track entry.tag + entry.text) {
+          <li>
+            <span class="changelog__tag">{{ entry.tag }}</span>
+            <span class="changelog__text">
+              @if (entry.was) {
+                <span class="changelog__was">{{ entry.was }}</span>
+              }
+              {{ entry.text }}
+            </span>
+          </li>
+        }
+      </ul>
+    </section>
+
+    @for (section of plan.sections; track section.title) {
+      <section class="panel panel-table">
+        <header class="panel__head">
+          <span class="panel__dot panel__dot--g"></span>
+          <span class="panel__label">{{ section.title }}</span>
+          <span class="panel__note">{{ section.note }}</span>
+        </header>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th class="col-header">Mahlzeit</th>
+                <th class="col-header">Lebensmittel / Details</th>
+                <th class="col-header col-num">Menge</th>
+                <th class="col-header col-num">Kcal</th>
+                <th class="col-header col-num">Protein</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of section.rows; track row.meal + row.qty) {
+                <tr>
+                  <td>{{ row.meal }}</td>
+                  <td>{{ row.details }}</td>
+                  <td class="col-num col-qty">{{ row.qty }}</td>
+                  <td class="col-num">{{ row.kcal }}</td>
+                  <td class="col-num">{{ row.protein }}</td>
+                </tr>
+              }
+            </tbody>
+            @if (section.totals) {
+              <tfoot>
+                <tr>
+                  <td class="totals-label">{{ section.totals.label }}</td>
+                  <td></td>
+                  <td></td>
+                  <td class="col-num">{{ section.totals.kcal }}</td>
+                  <td class="col-num">{{ section.totals.protein }}</td>
+                </tr>
+              </tfoot>
+            }
+          </table>
+        </div>
+        @if (section.callout) {
+          <p class="callout">{{ section.callout }}</p>
+        }
+      </section>
+    }
+
+    <section class="panel panel-shopping">
+      <header class="panel__head">
+        <span class="panel__dot panel__dot--v"></span>
+        <span class="panel__label">{{ plan.shoppingList.title }}</span>
+        <span class="panel__note">{{ plan.shoppingList.note }}</span>
+      </header>
+      <div class="shop-grid">
+        @for (category of plan.shoppingList.categories; track category.title) {
+          <div class="shop-card">
+            <h3>{{ category.title }}</h3>
+            <ul>
+              @for (item of category.items; track item.name) {
+                <li>
+                  <span class="item-name">
+                    {{ item.name }}
+                    @if (item.brand) {
+                      <span class="item-brand">
+                        {{ item.brand }}
+                        @if (item.badge) {
+                          <span class="badge" [class.badge--warn]="item.badge === 'warn'" [class.badge--ok]="item.badge === 'ok'">
+                            {{ item.badgeText }}
+                          </span>
+                        }
+                      </span>
+                    }
+                  </span>
+                  <span class="item-qty">{{ item.qty }}</span>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+      @if (plan.shoppingList.callout) {
+        <p class="callout">{{ plan.shoppingList.callout }}</p>
+      }
+    </section>
+
+    <footer class="plan-footer">
+      <span>{{ plan.footer.note }}</span>
+      <span class="sources">
+        @for (source of plan.footer.sources; track source.url; let last = $last) {
+          <a target="_blank" rel="noopener" [href]="source.url">{{ source.label }}</a>@if (!last) {
+            <span class="dot-sep">·</span>
+          }
+        }
+      </span>
+    </footer>
+
+  }
+
+</div>

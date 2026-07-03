@@ -11,6 +11,7 @@ import {
   MealEntryInput,
   MealEntryUpdate,
   MealEstimate,
+  MealPlan,
   MealTemplate,
   MealTemplateInput,
   MealType,
@@ -183,6 +184,10 @@ export class NutritionService {
 
   deleteSportActivity(id: string): Observable<void> {
     return this.http.delete<void>(`${this.host}/activities/${id}`);
+  }
+
+  getMealPlan(): Observable<MealPlan> {
+    return this.http.get<MealPlan>(`${this.host}/meal-plan`);
   }
 
   exportPdf(from: string, to: string): Observable<Blob> {
