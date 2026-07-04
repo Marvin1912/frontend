@@ -254,8 +254,10 @@ export class AddWordComponent implements OnInit {
     const match = WORD_PATTERN.exec(flashcard.front!);
     if (match) {
       this.wordToShow = match[2].replace(SPECIAL_CHAR_PATTERN, '').toLowerCase();
-      this.loadWordEntries(this.wordToShow);
+    } else {
+      this.wordToShow = flashcard.front!;
     }
+    this.loadWordEntries(this.wordToShow);
   }
 
   private loadWordEntries(word: string): void {
