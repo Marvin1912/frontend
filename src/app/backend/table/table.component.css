@@ -127,6 +127,13 @@
   background: var(--raised) !important;
 }
 
+/* Material's mdc-data-table cells default to overflow: hidden for text
+   truncation, which clips the absolutely-positioned IBAN popup entirely.
+   Allow this column's cell to overflow so the popup can render. */
+.mat-column-creditName.mat-mdc-cell {
+  overflow: visible !important;
+}
+
 /* ── Sort / Action Buttons ───────────────────────── */
 .tbl__sort-btn.mat-mdc-mini-fab {
   background: var(--surface) !important;
