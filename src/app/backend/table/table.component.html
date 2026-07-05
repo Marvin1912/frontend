@@ -20,16 +20,16 @@
         <th mat-header-cell *matHeaderCellDef>An</th>
         <td mat-cell *matCellDef="let element">
           <div class="tbl__iban-cell">
-            {{ element.creditName }}
-            @if (element.creditIban) {
+            {{ getPartyName(element) }}
+            @if (getPartyIban(element)) {
               <div class="tbl__iban-popup">
-                <span class="tbl__iban-text">{{ element.creditIban }}</span>
+                <span class="tbl__iban-text">{{ getPartyIban(element) }}</span>
                 <button mat-icon-button
                         class="tbl__iban-copy-btn"
-                        [cdkCopyToClipboard]="element.creditIban"
-                        (cdkCopyToClipboardCopied)="onIbanCopied(element.creditIban)"
+                        [cdkCopyToClipboard]="getPartyIban(element)"
+                        (cdkCopyToClipboardCopied)="onIbanCopied(getPartyIban(element))"
                         matTooltip="IBAN kopieren">
-                  <mat-icon>{{ copiedIban === element.creditIban ? 'check' : 'content_copy' }}</mat-icon>
+                  <mat-icon>{{ copiedIban === getPartyIban(element) ? 'check' : 'content_copy' }}</mat-icon>
                 </button>
               </div>
             }
