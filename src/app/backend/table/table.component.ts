@@ -14,6 +14,7 @@ import {
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonModule} from '@angular/material/button';
+import {ClipboardModule} from '@angular/cdk/clipboard';
 import {BookingEntryDTO} from '../model/BookingEntryDTO';
 import {DecimalPipe} from '@angular/common';
 
@@ -34,6 +35,7 @@ import {DecimalPipe} from '@angular/common';
     MatIconModule,
     MatTooltipModule,
     MatButtonModule,
+    ClipboardModule,
     DecimalPipe
   ],
   templateUrl: './table.component.html',
@@ -48,6 +50,7 @@ export class TableComponent {
 
   displayedColumns: string[] = ['creditName', 'additionalInfo', 'amount', 'actions'];
   sortDirection: 'asc' | 'desc' = 'desc';
+  copiedIban: string | null = null;
 
   getSortedBookings() {
     if (!this.bookings) return [];
@@ -63,6 +66,13 @@ export class TableComponent {
 
   toggleSort() {
     this.sortDirection = this.sortDirection === 'desc' ? 'asc' : 'desc';
+  }
+
+  onIbanCopied(iban: string) {
+    this.copiedIban = iban;
+    setTimeout(() => {
+      if (this.copiedIban === iban) this.copiedIban = null;
+    }, 1500);
   }
 
   removeItem(booking: BookingEntryDTO) {

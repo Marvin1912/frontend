@@ -18,7 +18,23 @@
 
       <ng-container matColumnDef="creditName">
         <th mat-header-cell *matHeaderCellDef>An</th>
-        <td mat-cell *matCellDef="let element">{{ element.creditName }}</td>
+        <td mat-cell *matCellDef="let element">
+          <div class="tbl__iban-cell">
+            {{ element.creditName }}
+            @if (element.creditIban) {
+              <div class="tbl__iban-popup">
+                <span class="tbl__iban-text">{{ element.creditIban }}</span>
+                <button mat-icon-button
+                        class="tbl__iban-copy-btn"
+                        [cdkCopyToClipboard]="element.creditIban"
+                        (cdkCopyToClipboardCopied)="onIbanCopied(element.creditIban)"
+                        matTooltip="IBAN kopieren">
+                  <mat-icon>{{ copiedIban === element.creditIban ? 'check' : 'content_copy' }}</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="additionalInfo">
