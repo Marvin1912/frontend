@@ -115,16 +115,21 @@ export class NutritionMealPlanComponent implements OnInit {
     }), {kcal: 0, proteinG: 0, carbsG: 0, fatG: 0});
   }
 
-  /** Shopping list derived client-side: quantityG summed by foodId across all sections, flat + alphabetical. */
+  /**
+   * Shopping list derived client-side: quantityG summed by foodId across all sections, flat + alphabetical.
+   * Each row's quantity is scaled by its section's dayCount, since a section like "Wochentage
+   * (Montag – Donnerstag)" represents multiple calendar days, not one.
+   */
   shoppingList(plan: MealPlan): MealPlanShoppingItem[] {
     const byFood = new Map<string, MealPlanShoppingItem>();
     for (const section of plan.sections) {
       for (const row of section.rows) {
+        const quantityG = row.quantityG * section.dayCount;
         const existing = byFood.get(row.foodId);
         if (existing) {
-          existing.totalQuantityG += row.quantityG;
+          existing.totalQuantityG += quantityG;
         } else {
-          byFood.set(row.foodId, {foodId: row.foodId, foodName: row.foodName, brand: null, totalQuantityG: row.quantityG});
+          byFood.set(row.foodId, {foodId: row.foodId, foodName: row.foodName, brand: null, totalQuantityG: quantityG});
         }
       }
     }

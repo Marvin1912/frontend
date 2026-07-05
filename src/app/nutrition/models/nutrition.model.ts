@@ -259,6 +259,8 @@ export interface MealPlanSection {
   note: string;
   rows: MealPlanRow[];
   callout: string | null;
+  /** Number of calendar days per week this section applies to, e.g. 4 for a Monday-Thursday block. */
+  dayCount: number;
 }
 
 export interface MealPlanSource {
