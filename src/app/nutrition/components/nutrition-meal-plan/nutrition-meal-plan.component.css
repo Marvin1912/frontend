@@ -15,6 +15,11 @@
   --c-v:  #4da6ff;
   --c-e:  #fb7185;
 
+  --c-breakfast: #fbbf24;
+  --c-lunch:     #a3e635;
+  --c-dinner:    #4da6ff;
+  --c-snack:     #fb7185;
+
   display: block;
   height: 100%;
   overflow-y: auto;
@@ -107,6 +112,80 @@
   margin-left: auto;
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+/* ── Meal-type groups ────────────────────────────── */
+.meal-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--border);
+}
+
+.meal-group:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}
+
+.meal-group__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.meal-group__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.meal-group__dot--breakfast { background: var(--c-breakfast); box-shadow: 0 0 6px var(--c-breakfast); }
+.meal-group__dot--lunch     { background: var(--c-lunch);     box-shadow: 0 0 6px var(--c-lunch); }
+.meal-group__dot--dinner    { background: var(--c-dinner);    box-shadow: 0 0 6px var(--c-dinner); }
+.meal-group__dot--snack     { background: var(--c-snack);     box-shadow: 0 0 6px var(--c-snack); }
+
+.meal-group__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.table-meal-group {
+  min-width: 560px;
+}
+
+/* ── Section total ───────────────────────────────── */
+.section-total {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  background: var(--raised);
+  border: 1px solid var(--border-mid);
+  border-radius: 8px;
+}
+
+.section-total__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-g);
+  margin-right: auto;
+}
+
+.section-total__value {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
 }
 
 /* ── Tables ──────────────────────────────────────── */

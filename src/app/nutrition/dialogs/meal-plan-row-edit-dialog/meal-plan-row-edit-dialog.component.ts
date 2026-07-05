@@ -20,6 +20,8 @@ import {FoodEditDialogComponent} from '../food-edit-dialog/food-edit-dialog.comp
 export interface MealPlanRowEditDialogData {
   sectionId: string;
   row: MealPlanRow | null;
+  /** Meal type to preselect when adding a new row (ignored when editing an existing row). */
+  defaultMealType?: MealType;
 }
 
 /** The currently chosen food for this row, with per-100 g macros for the live preview. */
@@ -81,7 +83,7 @@ export class MealPlanRowEditDialogComponent implements OnInit {
   readonly mealTypes = MEAL_TYPES;
   title = this.data.row ? 'Eintrag bearbeiten' : 'Eintrag hinzufügen';
 
-  mealType = new FormControl<MealType>(this.data.row?.mealType ?? 'BREAKFAST', {nonNullable: true});
+  mealType = new FormControl<MealType>(this.data.row?.mealType ?? this.data.defaultMealType ?? 'BREAKFAST', {nonNullable: true});
   foodSearch = new FormControl<string | Food>(this.data.row?.foodName ?? '', {nonNullable: true});
   quantityG = new FormControl<number | null>(this.data.row?.quantityG ?? null, [Validators.required, Validators.min(0)]);
   form = new FormGroup({mealType: this.mealType, foodSearch: this.foodSearch, quantityG: this.quantityG});
