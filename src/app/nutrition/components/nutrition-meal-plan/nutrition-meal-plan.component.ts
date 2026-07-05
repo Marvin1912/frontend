@@ -8,7 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {EMPTY, switchMap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
-import {Macros, MealPlan, MealPlanRow, MealPlanRowInput, MealPlanShoppingItem, MealType} from '../../models/nutrition.model';
+import {Macros, MealPlan, MealPlanRow, MealPlanRowInput, MealPlanSection, MealPlanShoppingItem, MealType} from '../../models/nutrition.model';
 import {
   MealPlanRowEditDialogComponent,
   MealPlanRowEditDialogData
@@ -21,6 +21,23 @@ const MEAL_TYPE_LABELS: Record<MealType, string> = {
   DINNER: 'Abendessen',
   SNACK: 'Snack'
 };
+
+const MEAL_TYPE_ORDER: MealType[] = ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK'];
+
+const MEAL_TYPE_DOT: Record<MealType, string> = {
+  BREAKFAST: 'breakfast',
+  LUNCH: 'lunch',
+  DINNER: 'dinner',
+  SNACK: 'snack'
+};
+
+/** A section's rows split by meal type, so each meal renders as its own visually distinct group. */
+interface MealRowGroup {
+  type: MealType;
+  label: string;
+  dotClass: string;
+  rows: MealPlanRow[];
+}
 
 @Component({
   selector: 'app-nutrition-meal-plan',
@@ -74,6 +91,16 @@ export class NutritionMealPlanComponent implements OnInit {
     return MEAL_TYPE_LABELS[mealType];
   }
 
+  /** Splits a section's rows into one group per meal type, in a fixed display order. */
+  mealGroups(section: MealPlanSection): MealRowGroup[] {
+    return MEAL_TYPE_ORDER.map(type => ({
+      type,
+      label: this.mealTypeLabel(type),
+      dotClass: MEAL_TYPE_DOT[type],
+      rows: section.rows.filter(row => row.mealType === type)
+    }));
+  }
+
   rowLabel(row: MealPlanRow): string {
     return `${row.foodName} (${row.quantityG} g)`;
   }
@@ -104,8 +131,8 @@ export class NutritionMealPlanComponent implements OnInit {
     return [...byFood.values()].sort((a, b) => a.foodName.localeCompare(b.foodName, 'de'));
   }
 
-  openAddRowDialog(sectionId: string): void {
-    const data: MealPlanRowEditDialogData = {sectionId, row: null};
+  openAddRowDialog(sectionId: string, mealType?: MealType): void {
+    const data: MealPlanRowEditDialogData = {sectionId, row: null, defaultMealType: mealType};
     const ref = this.dialog.open(MealPlanRowEditDialogComponent, {data});
     ref.afterClosed().pipe(
       switchMap((result: MealPlanRowInput | undefined) => result ? this.nutritionService.addMealPlanRow(sectionId, result) : EMPTY),

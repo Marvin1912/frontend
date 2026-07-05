@@ -21,60 +21,79 @@
           <span class="panel__label">{{ section.title }}</span>
           <span class="panel__note">{{ section.note }}</span>
         </header>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th class="col-header">Mahlzeit</th>
-                <th class="col-header">Lebensmittel</th>
-                <th class="col-header col-num">Menge</th>
-                <th class="col-header col-num">Kcal</th>
-                <th class="col-header col-num">Protein</th>
-                <th class="col-header col-num">KH</th>
-                <th class="col-header col-num">Fett</th>
-                <th class="col-header col-actions"></th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (row of section.rows; track row.id) {
-                <tr>
-                  <td>{{ mealTypeLabel(row.mealType) }}</td>
-                  <td>{{ row.foodName }}</td>
-                  <td class="col-num col-qty">{{ row.quantityG | number:'1.0-0':'de' }} g</td>
-                  <td class="col-num">{{ row.kcal | number:'1.0-0':'de' }}</td>
-                  <td class="col-num">{{ row.proteinG | number:'1.0-1':'de' }}</td>
-                  <td class="col-num">{{ row.carbsG | number:'1.0-1':'de' }}</td>
-                  <td class="col-num">{{ row.fatG | number:'1.0-1':'de' }}</td>
-                  <td class="col-actions">
-                    <button mat-icon-button aria-label="Eintrag bearbeiten" (click)="openEditRowDialog(section.id, row)">
-                      <mat-icon>edit</mat-icon>
-                    </button>
-                    <button mat-icon-button aria-label="Eintrag löschen" (click)="openDeleteRowDialog(row)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </td>
-                </tr>
-              }
-            </tbody>
-            <tfoot>
-              @let totals = sectionTotals(section.rows);
-              <tr>
-                <td class="totals-label">Summe</td>
-                <td></td>
-                <td></td>
-                <td class="col-num">{{ totals.kcal | number:'1.0-0':'de' }}</td>
-                <td class="col-num">{{ totals.proteinG | number:'1.0-1':'de' }}</td>
-                <td class="col-num">{{ totals.carbsG | number:'1.0-1':'de' }}</td>
-                <td class="col-num">{{ totals.fatG | number:'1.0-1':'de' }}</td>
-                <td></td>
-              </tr>
-            </tfoot>
-          </table>
+
+        @let groups = mealGroups(section);
+        @for (group of groups; track group.type) {
+          <div class="meal-group">
+            <header class="meal-group__head">
+              <span class="meal-group__dot meal-group__dot--{{ group.dotClass }}"></span>
+              <span class="meal-group__label">{{ group.label }}</span>
+            </header>
+            @if (group.rows.length > 0) {
+              <div class="table-container">
+                <table class="table-meal-group">
+                  <thead>
+                    <tr>
+                      <th class="col-header">Lebensmittel</th>
+                      <th class="col-header col-num">Menge</th>
+                      <th class="col-header col-num">Kcal</th>
+                      <th class="col-header col-num">Protein</th>
+                      <th class="col-header col-num">KH</th>
+                      <th class="col-header col-num">Fett</th>
+                      <th class="col-header col-actions"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (row of group.rows; track row.id) {
+                      <tr>
+                        <td>{{ row.foodName }}</td>
+                        <td class="col-num col-qty">{{ row.quantityG | number:'1.0-0':'de' }} g</td>
+                        <td class="col-num">{{ row.kcal | number:'1.0-0':'de' }}</td>
+                        <td class="col-num">{{ row.proteinG | number:'1.0-1':'de' }}</td>
+                        <td class="col-num">{{ row.carbsG | number:'1.0-1':'de' }}</td>
+                        <td class="col-num">{{ row.fatG | number:'1.0-1':'de' }}</td>
+                        <td class="col-actions">
+                          <button mat-icon-button aria-label="Eintrag bearbeiten" (click)="openEditRowDialog(section.id, row)">
+                            <mat-icon>edit</mat-icon>
+                          </button>
+                          <button mat-icon-button aria-label="Eintrag löschen" (click)="openDeleteRowDialog(row)">
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                  <tfoot>
+                    @let subtotal = sectionTotals(group.rows);
+                    <tr>
+                      <td class="totals-label">Summe</td>
+                      <td></td>
+                      <td class="col-num">{{ subtotal.kcal | number:'1.0-0':'de' }}</td>
+                      <td class="col-num">{{ subtotal.proteinG | number:'1.0-1':'de' }}</td>
+                      <td class="col-num">{{ subtotal.carbsG | number:'1.0-1':'de' }}</td>
+                      <td class="col-num">{{ subtotal.fatG | number:'1.0-1':'de' }}</td>
+                      <td></td>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            }
+            <button mat-stroked-button type="button" class="btn-add-row" (click)="openAddRowDialog(section.id, group.type)">
+              <mat-icon>add_circle</mat-icon>
+              Eintrag hinzufügen
+            </button>
+          </div>
+        }
+
+        @let sectionSum = sectionTotals(section.rows);
+        <div class="section-total">
+          <span class="section-total__label">Gesamt</span>
+          <span class="section-total__value">{{ sectionSum.kcal | number:'1.0-0':'de' }} kcal</span>
+          <span class="section-total__value">P {{ sectionSum.proteinG | number:'1.0-1':'de' }}</span>
+          <span class="section-total__value">KH {{ sectionSum.carbsG | number:'1.0-1':'de' }}</span>
+          <span class="section-total__value">F {{ sectionSum.fatG | number:'1.0-1':'de' }}</span>
         </div>
-        <button mat-stroked-button type="button" class="btn-add-row" (click)="openAddRowDialog(section.id)">
-          <mat-icon>add_circle</mat-icon>
-          Eintrag hinzufügen
-        </button>
+
         @if (section.callout) {
           <p class="callout">{{ section.callout }}</p>
         }
