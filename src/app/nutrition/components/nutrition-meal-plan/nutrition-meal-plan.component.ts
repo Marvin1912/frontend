@@ -54,7 +54,9 @@ export class NutritionMealPlanComponent implements OnInit {
       next: plan => {
         this.plan = {
           ...plan,
-          sections: plan.sections.map(section => ({...section, rows: section.rows ?? []}))
+          sections: plan.sections
+            .filter(section => !section.title.includes('Tagesstruktur'))
+            .map(section => ({...section, rows: section.rows ?? []}))
         };
         this.loading = false;
         this.cdr.markForCheck();
