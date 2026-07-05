@@ -228,69 +228,41 @@ export interface SaveEstimateAsTemplateInput {
   fatG: number;
 }
 
-/** A single stat tile on the meal-plan page (e.g. daily kcal/protein/carbs/fat budget). */
-export interface MealPlanStat {
-  label: string;
-  value: string;
-}
-
-/** One "what changed" entry in the meal plan's changelog callout. */
-export interface MealPlanChangelogEntry {
-  tag: string;
-  /** Previous value, shown struck through; null when there's nothing to compare against. */
-  was: string | null;
-  text: string;
-}
-
-/** A single meal row in a meal-plan table (display strings, not numeric — some cells are placeholders like "—"). */
+/**
+ * A single food-backed row in a meal-plan section. Always references a real
+ * `Food.id` — no ad-hoc/free-text rows. Macro values are server-derived
+ * snapshots for the row's `quantityG`, mirroring `MealEntry`.
+ */
 export interface MealPlanRow {
-  meal: string;
-  details: string;
-  qty: string;
-  kcal: string;
-  protein: string;
+  id: string;
+  mealType: MealType;
+  foodId: string;
+  foodName: string;
+  quantityG: number;
+  kcal: number;
+  proteinG: number;
+  carbsG: number;
+  fatG: number;
 }
 
-/** Totals row shown in a meal-plan table's footer. */
-export interface MealPlanTotals {
-  label: string;
-  kcal: string;
-  protein: string;
+/** Create/update payload for a meal-plan row; macros are always server-derived. */
+export interface MealPlanRowInput {
+  mealType: MealType;
+  foodId: string;
+  quantityG: number;
 }
 
-/** One day-structure table on the meal-plan page (daily structure / weekdays / weekend). */
+/** One day-structure table on the meal-plan page (daily structure / weekdays / weekend). Sections themselves are fixed/seeded; only rows are user-editable. */
 export interface MealPlanSection {
+  id: string;
   title: string;
   note: string;
   rows: MealPlanRow[];
-  totals: MealPlanTotals | null;
-  callout: string | null;
-}
-
-/** Visual emphasis for a shopping-list item, e.g. flagging a supply shortfall. */
-export type MealPlanShoppingBadge = 'ok' | 'warn';
-
-export interface MealPlanShoppingItem {
-  name: string;
-  brand: string | null;
-  badge: MealPlanShoppingBadge | null;
-  badgeText: string | null;
-  qty: string;
-}
-
-export interface MealPlanShoppingCategory {
-  title: string;
-  items: MealPlanShoppingItem[];
-}
-
-export interface MealPlanShoppingList {
-  title: string;
-  note: string;
-  categories: MealPlanShoppingCategory[];
   callout: string | null;
 }
 
 export interface MealPlanSource {
+  id: string;
   label: string;
   url: string;
 }
@@ -305,9 +277,17 @@ export interface MealPlan {
   eyebrow: string;
   title: string;
   description: string;
-  stats: MealPlanStat[];
-  changelog: MealPlanChangelogEntry[];
   sections: MealPlanSection[];
-  shoppingList: MealPlanShoppingList;
   footer: MealPlanFooter;
+}
+
+/**
+ * A shopping-list line, derived client-side by aggregating `quantityG` for a
+ * given `foodId` across every section's rows. Never sent over the wire.
+ */
+export interface MealPlanShoppingItem {
+  foodId: string;
+  foodName: string;
+  brand: string | null;
+  totalQuantityG: number;
 }

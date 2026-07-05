@@ -65,40 +65,6 @@
   color: var(--text-muted);
 }
 
-/* ── Stat tiles ──────────────────────────────────── */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 0.75rem;
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.9rem 0.5rem;
-  background: var(--raised);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-
-.stat__v {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--c-g);
-  font-variant-numeric: tabular-nums;
-}
-
-.stat__u {
-  font-size: 0.62rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-  text-align: center;
-}
-
 /* ── Panels ──────────────────────────────────────── */
 .panel {
   background: var(--surface);
@@ -143,43 +109,6 @@
   color: var(--text-muted);
 }
 
-/* ── Changelog ───────────────────────────────────── */
-.changelog {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-}
-
-.changelog li {
-  display: grid;
-  grid-template-columns: 8rem 1fr;
-  gap: 0.9rem;
-  font-size: 0.85rem;
-  align-items: baseline;
-}
-
-.changelog__tag {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--c-a);
-  font-weight: 700;
-}
-
-.changelog__text {
-  color: var(--text);
-}
-
-.changelog__was {
-  color: var(--text-dim);
-  text-decoration: line-through;
-  margin-right: 0.35rem;
-}
-
 /* ── Tables ──────────────────────────────────────── */
 .table-container {
   background: var(--surface);
@@ -193,7 +122,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
-  min-width: 560px;
+  min-width: 720px;
 }
 
 .col-header {
@@ -227,6 +156,15 @@ td {
   white-space: nowrap;
 }
 
+.col-actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.col-actions button {
+  color: var(--text-muted) !important;
+}
+
 tfoot td {
   padding: 0.65rem 0.75rem;
   border-top: 2px solid var(--c-g);
@@ -237,6 +175,19 @@ tfoot td {
 
 .totals-label {
   font-family: 'Outfit', sans-serif;
+}
+
+.btn-add-row {
+  align-self: flex-start;
+  border-color: var(--border-mid) !important;
+  color: var(--c-g) !important;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+}
+
+.btn-add-row mat-icon {
+  margin-right: 0.25rem;
+  color: var(--c-g) !important;
 }
 
 .callout {
@@ -251,29 +202,7 @@ tfoot td {
 }
 
 /* ── Shopping list ───────────────────────────────── */
-.shop-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-}
-
-.shop-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  padding: 0.9rem 1rem;
-  background: var(--raised);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-
-.shop-card h3 {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--c-v);
-}
-
-.shop-card ul {
+.shop-list {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -282,24 +211,26 @@ tfoot td {
   gap: 0.5rem;
 }
 
-.shop-card li {
+.shop-list li {
   display: flex;
   justify-content: space-between;
   gap: 0.75rem;
-  font-size: 0.8rem;
-  border-bottom: 1px dashed var(--border);
-  padding-bottom: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.85rem;
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 8px;
 }
 
-.shop-card li:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+.shop-empty {
+  justify-content: center;
+  color: var(--text-muted);
 }
 
 .item-name {
   display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+  align-items: baseline;
+  gap: 0.4rem;
   color: var(--text);
 }
 
@@ -314,28 +245,6 @@ tfoot td {
   white-space: nowrap;
   font-weight: 600;
   color: var(--text);
-}
-
-.badge {
-  display: inline-block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  padding: 0.1rem 0.35rem;
-  border-radius: 4px;
-  margin-left: 0.35rem;
-}
-
-.badge--ok {
-  background: color-mix(in srgb, var(--c-g) 18%, transparent);
-  color: var(--c-g);
-}
-
-.badge--warn {
-  background: color-mix(in srgb, var(--c-e) 18%, transparent);
-  color: var(--c-e);
-  border: 1px solid color-mix(in srgb, var(--c-e) 40%, transparent);
 }
 
 /* ── Footer ──────────────────────────────────────── */
