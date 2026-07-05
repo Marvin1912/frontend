@@ -68,6 +68,14 @@ export class TableComponent {
     this.sortDirection = this.sortDirection === 'desc' ? 'asc' : 'desc';
   }
 
+  getPartyName(element: BookingEntryDTO): string {
+    return this.getCategoryFromTitle() === 'incomes' ? element.debitName : element.creditName;
+  }
+
+  getPartyIban(element: BookingEntryDTO): string {
+    return this.getCategoryFromTitle() === 'incomes' ? element.debitIban : element.creditIban;
+  }
+
   onIbanCopied(iban: string) {
     this.copiedIban = iban;
     setTimeout(() => {
