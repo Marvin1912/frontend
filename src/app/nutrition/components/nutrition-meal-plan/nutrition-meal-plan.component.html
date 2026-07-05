@@ -14,36 +14,7 @@
       <p>{{ plan.description }}</p>
     </header>
 
-    <div class="stats">
-      @for (stat of plan.stats; track stat.label) {
-        <div class="stat">
-          <span class="stat__v">{{ stat.value }}</span>
-          <span class="stat__u">{{ stat.label }}</span>
-        </div>
-      }
-    </div>
-
-    <section class="panel">
-      <header class="panel__head">
-        <span class="panel__dot panel__dot--a"></span>
-        <span class="panel__label">Änderungen zum alten Plan</span>
-      </header>
-      <ul class="changelog">
-        @for (entry of plan.changelog; track entry.tag + entry.text) {
-          <li>
-            <span class="changelog__tag">{{ entry.tag }}</span>
-            <span class="changelog__text">
-              @if (entry.was) {
-                <span class="changelog__was">{{ entry.was }}</span>
-              }
-              {{ entry.text }}
-            </span>
-          </li>
-        }
-      </ul>
-    </section>
-
-    @for (section of plan.sections; track section.title) {
+    @for (section of plan.sections; track section.id) {
       <section class="panel panel-table">
         <header class="panel__head">
           <span class="panel__dot panel__dot--g"></span>
@@ -55,36 +26,55 @@
             <thead>
               <tr>
                 <th class="col-header">Mahlzeit</th>
-                <th class="col-header">Lebensmittel / Details</th>
+                <th class="col-header">Lebensmittel</th>
                 <th class="col-header col-num">Menge</th>
                 <th class="col-header col-num">Kcal</th>
                 <th class="col-header col-num">Protein</th>
+                <th class="col-header col-num">KH</th>
+                <th class="col-header col-num">Fett</th>
+                <th class="col-header col-actions"></th>
               </tr>
             </thead>
             <tbody>
-              @for (row of section.rows; track row.meal + row.qty) {
+              @for (row of section.rows; track row.id) {
                 <tr>
-                  <td>{{ row.meal }}</td>
-                  <td>{{ row.details }}</td>
-                  <td class="col-num col-qty">{{ row.qty }}</td>
-                  <td class="col-num">{{ row.kcal }}</td>
-                  <td class="col-num">{{ row.protein }}</td>
+                  <td>{{ mealTypeLabel(row.mealType) }}</td>
+                  <td>{{ row.foodName }}</td>
+                  <td class="col-num col-qty">{{ row.quantityG | number:'1.0-0':'de' }} g</td>
+                  <td class="col-num">{{ row.kcal | number:'1.0-0':'de' }}</td>
+                  <td class="col-num">{{ row.proteinG | number:'1.0-1':'de' }}</td>
+                  <td class="col-num">{{ row.carbsG | number:'1.0-1':'de' }}</td>
+                  <td class="col-num">{{ row.fatG | number:'1.0-1':'de' }}</td>
+                  <td class="col-actions">
+                    <button mat-icon-button aria-label="Eintrag bearbeiten" (click)="openEditRowDialog(section.id, row)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button aria-label="Eintrag löschen" (click)="openDeleteRowDialog(row)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
                 </tr>
               }
             </tbody>
-            @if (section.totals) {
-              <tfoot>
-                <tr>
-                  <td class="totals-label">{{ section.totals.label }}</td>
-                  <td></td>
-                  <td></td>
-                  <td class="col-num">{{ section.totals.kcal }}</td>
-                  <td class="col-num">{{ section.totals.protein }}</td>
-                </tr>
-              </tfoot>
-            }
+            <tfoot>
+              @let totals = sectionTotals(section.rows);
+              <tr>
+                <td class="totals-label">Summe</td>
+                <td></td>
+                <td></td>
+                <td class="col-num">{{ totals.kcal | number:'1.0-0':'de' }}</td>
+                <td class="col-num">{{ totals.proteinG | number:'1.0-1':'de' }}</td>
+                <td class="col-num">{{ totals.carbsG | number:'1.0-1':'de' }}</td>
+                <td class="col-num">{{ totals.fatG | number:'1.0-1':'de' }}</td>
+                <td></td>
+              </tr>
+            </tfoot>
           </table>
         </div>
+        <button mat-stroked-button type="button" class="btn-add-row" (click)="openAddRowDialog(section.id)">
+          <mat-icon>add_circle</mat-icon>
+          Eintrag hinzufügen
+        </button>
         @if (section.callout) {
           <p class="callout">{{ section.callout }}</p>
         }
@@ -94,45 +84,29 @@
     <section class="panel panel-shopping">
       <header class="panel__head">
         <span class="panel__dot panel__dot--v"></span>
-        <span class="panel__label">{{ plan.shoppingList.title }}</span>
-        <span class="panel__note">{{ plan.shoppingList.note }}</span>
+        <span class="panel__label">Einkaufsliste</span>
       </header>
-      <div class="shop-grid">
-        @for (category of plan.shoppingList.categories; track category.title) {
-          <div class="shop-card">
-            <h3>{{ category.title }}</h3>
-            <ul>
-              @for (item of category.items; track item.name) {
-                <li>
-                  <span class="item-name">
-                    {{ item.name }}
-                    @if (item.brand) {
-                      <span class="item-brand">
-                        {{ item.brand }}
-                        @if (item.badge) {
-                          <span class="badge" [class.badge--warn]="item.badge === 'warn'" [class.badge--ok]="item.badge === 'ok'">
-                            {{ item.badgeText }}
-                          </span>
-                        }
-                      </span>
-                    }
-                  </span>
-                  <span class="item-qty">{{ item.qty }}</span>
-                </li>
+      <ul class="shop-list">
+        @for (item of shoppingList(plan); track item.foodId) {
+          <li>
+            <span class="item-name">
+              {{ item.foodName }}
+              @if (item.brand) {
+                <span class="item-brand">{{ item.brand }}</span>
               }
-            </ul>
-          </div>
+            </span>
+            <span class="item-qty">{{ item.totalQuantityG | number:'1.0-0':'de' }} g</span>
+          </li>
+        } @empty {
+          <li class="shop-empty">Keine Einträge im Plan.</li>
         }
-      </div>
-      @if (plan.shoppingList.callout) {
-        <p class="callout">{{ plan.shoppingList.callout }}</p>
-      }
+      </ul>
     </section>
 
     <footer class="plan-footer">
       <span>{{ plan.footer.note }}</span>
       <span class="sources">
-        @for (source of plan.footer.sources; track source.url; let last = $last) {
+        @for (source of plan.footer.sources; track source.id; let last = $last) {
           <a target="_blank" rel="noopener" [href]="source.url">{{ source.label }}</a>@if (!last) {
             <span class="dot-sep">·</span>
           }

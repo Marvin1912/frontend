@@ -12,6 +12,8 @@ import {
   MealEntryUpdate,
   MealEstimate,
   MealPlan,
+  MealPlanRow,
+  MealPlanRowInput,
   MealTemplate,
   MealTemplateInput,
   MealType,
@@ -188,6 +190,22 @@ export class NutritionService {
 
   getMealPlan(): Observable<MealPlan> {
     return this.http.get<MealPlan>(`${this.host}/meal-plan`);
+  }
+
+  addMealPlanRow(sectionId: string, row: MealPlanRowInput): Observable<MealPlanRow> {
+    return this.http.post<MealPlanRow>(`${this.host}/meal-plan/sections/${sectionId}/rows`, row);
+  }
+
+  addMealPlanRows(sectionId: string, rows: MealPlanRowInput[]): Observable<MealPlanRow[]> {
+    return this.http.post<MealPlanRow[]>(`${this.host}/meal-plan/sections/${sectionId}/rows/batch`, {rows});
+  }
+
+  updateMealPlanRow(id: string, row: MealPlanRowInput): Observable<MealPlanRow> {
+    return this.http.put<MealPlanRow>(`${this.host}/meal-plan/rows/${id}`, row);
+  }
+
+  deleteMealPlanRow(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.host}/meal-plan/rows/${id}`);
   }
 
   exportPdf(from: string, to: string): Observable<Blob> {

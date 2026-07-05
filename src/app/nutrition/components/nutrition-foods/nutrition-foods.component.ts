@@ -143,10 +143,23 @@ export class NutritionFoodsComponent implements OnInit, AfterViewInit {
         this.snackBar.open('Lebensmittel gelöscht', 'OK', {duration: 3000});
       },
       error: err => {
-        const msg = err.status === 404 ? 'Lebensmittel nicht gefunden' : 'Lebensmittel konnte nicht gelöscht werden';
-        this.snackBar.open(msg, 'Schließen', {duration: 5000});
+        this.snackBar.open(this.deleteErrorMessage(err), 'Schließen', {duration: 5000});
       }
     });
+  }
+
+  /** Message for a failed food deletion, including the 409 case where the food is still referenced. */
+  private deleteErrorMessage(err: {status?: number; error?: {referencedBy?: {mealPlanRows?: number; mealTemplateItems?: number}}}): string {
+    if (err.status === 404) return 'Lebensmittel nicht gefunden';
+    if (err.status === 409) {
+      const refs = err.error?.referencedBy;
+      const parts: string[] = [];
+      if (refs?.mealPlanRows) parts.push(`${refs.mealPlanRows}× im Essensplan`);
+      if (refs?.mealTemplateItems) parts.push(`${refs.mealTemplateItems}× in Vorlagen`);
+      const detail = parts.length ? ` (${parts.join(', ')})` : '';
+      return `Lebensmittel wird noch verwendet${detail}`;
+    }
+    return 'Lebensmittel konnte nicht gelöscht werden';
   }
 
   openBarcodeDialog(): void {
