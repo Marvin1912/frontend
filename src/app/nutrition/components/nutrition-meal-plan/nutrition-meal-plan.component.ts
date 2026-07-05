@@ -52,7 +52,10 @@ export class NutritionMealPlanComponent implements OnInit {
 
     this.nutritionService.getMealPlan().subscribe({
       next: plan => {
-        this.plan = plan;
+        this.plan = {
+          ...plan,
+          sections: plan.sections.map(section => ({...section, rows: section.rows ?? []}))
+        };
         this.loading = false;
         this.cdr.markForCheck();
       },
