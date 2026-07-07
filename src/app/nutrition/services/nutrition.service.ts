@@ -148,6 +148,20 @@ export class NutritionService {
     return this.http.post<MealEstimate>(`${this.host}/estimate`, body);
   }
 
+  /**
+   * Estimate macros for a meal photo via Claude. An optional portion hint
+   * (e.g. "großer Teller", "ca. 350 g") improves accuracy. Response shape
+   * matches the text-estimate flow.
+   */
+  estimateMealFromPhoto(file: File, portionHint?: string): Observable<MealEstimate> {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (portionHint) {
+      formData.append('portionHint', portionHint);
+    }
+    return this.http.post<MealEstimate>(`${this.host}/estimate/photo`, formData);
+  }
+
   getMealTemplates(): Observable<MealTemplate[]> {
     return this.http.get<MealTemplate[]>(`${this.host}/meal-templates`);
   }

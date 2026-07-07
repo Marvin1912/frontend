@@ -75,12 +75,14 @@
   margin-top: 0.5rem;
 }
 
-.estimate-row .btn-estimate {
+.estimate-row .btn-estimate,
+.estimate-row .btn-photo {
   flex: 1 1 auto;
   margin-top: 0;
 }
 
 .btn-estimate,
+.btn-photo,
 .btn-log {
   height: 48px;
   border-radius: 8px !important;
@@ -124,13 +126,27 @@
   box-shadow: 0 0 12px rgba(163, 230, 53, 0.25) !important;
 }
 
+.btn-photo {
+  background: color-mix(in srgb, var(--c-n) 14%, transparent) !important;
+  border: 1px solid color-mix(in srgb, var(--c-n) 35%, transparent) !important;
+  color: var(--c-n) !important;
+}
+
+.btn-photo:hover:not([disabled]) {
+  background: color-mix(in srgb, var(--c-n) 22%, transparent) !important;
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.25) !important;
+}
+
 .btn-estimate[disabled],
+.btn-photo[disabled],
 .btn-log[disabled] { opacity: 0.55 !important; }
 
 .btn-estimate mat-spinner,
+.btn-photo mat-spinner,
 .btn-log mat-spinner { margin-right: 4px; }
 
 ::ng-deep .btn-estimate mat-spinner circle { stroke: var(--c-b) !important; }
+::ng-deep .btn-photo mat-spinner circle { stroke: var(--c-n) !important; }
 ::ng-deep .btn-log mat-spinner circle { stroke: var(--c-g) !important; }
 
 .save-template-row {
