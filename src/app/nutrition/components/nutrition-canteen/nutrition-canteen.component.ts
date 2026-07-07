@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatFormField, MatHint, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
@@ -48,6 +48,8 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
 })
 export class NutritionCanteenComponent implements OnInit {
 
+  @ViewChild('photoInput') photoInput!: { nativeElement: HTMLInputElement };
+
   readonly mealTypes = MEAL_TYPES;
 
   description = new FormControl('', {nonNullable: true, validators: Validators.required});
@@ -61,6 +63,7 @@ export class NutritionCanteenComponent implements OnInit {
   valuesForm!: FormGroup;
   assumptions = '';
   estimating = false;
+  estimatingPhoto = false;
   logging = false;
   saving = false;
   hasEstimate = false;
@@ -81,7 +84,7 @@ export class NutritionCanteenComponent implements OnInit {
   }
 
   estimate(): void {
-    if (this.description.invalid || this.estimating) return;
+    if (this.description.invalid || this.estimating || this.estimatingPhoto) return;
     this.estimating = true;
     this.cdr.markForCheck();
 
@@ -112,6 +115,45 @@ export class NutritionCanteenComponent implements OnInit {
     this.estimateSubscription?.unsubscribe();
     this.estimating = false;
     this.cdr.markForCheck();
+  }
+
+  triggerPhoto(): void {
+    this.photoInput.nativeElement.click();
+  }
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    // Reset so re-selecting the same file fires the change event again.
+    input.value = '';
+    if (!file || this.estimating || this.estimatingPhoto) return;
+
+    this.estimatingPhoto = true;
+    this.cdr.markForCheck();
+
+    const hint = this.portionHint.value.trim();
+    this.nutritionService.estimateMealFromPhoto(file, hint || undefined)
+      .pipe(timeout(ESTIMATE_TIMEOUT_MS))
+      .subscribe({
+        next: (estimate: MealEstimate) => {
+          if (!this.description.value.trim()) {
+            this.description.setValue('Kantine (Foto)');
+          }
+          this.applyEstimate(estimate);
+          this.estimatingPhoto = false;
+          this.hasEstimate = true;
+          this.cdr.markForCheck();
+        },
+        error: (err: unknown) => {
+          this.estimatingPhoto = false;
+          this.cdr.markForCheck();
+          if (err instanceof TimeoutError) {
+            this.snackBar.open('Schätzung dauert zu lange – bitte erneut versuchen.', 'Schließen', {duration: 5000});
+          } else {
+            this.snackBar.open('Schätzung fehlgeschlagen', 'Schließen', {duration: 5000});
+          }
+        }
+      });
   }
 
   private applyEstimate(estimate: MealEstimate): void {
