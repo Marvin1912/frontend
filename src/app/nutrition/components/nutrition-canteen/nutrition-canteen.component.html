@@ -47,6 +47,18 @@
       <input #photoInput type="file" accept="image/*" capture="environment" hidden
              (change)="onPhotoSelected($event)" />
 
+      <button mat-flat-button type="button" class="btn-gallery"
+              [disabled]="estimating || estimatingPhoto" (click)="triggerGallery()">
+        @if (estimatingPhoto) {
+          <mat-spinner diameter="18" />
+        } @else {
+          <mat-icon>photo_library</mat-icon>
+        }
+        Galerie
+      </button>
+      <input #galleryInput type="file" accept="image/*" hidden
+             (change)="onPhotoSelected($event)" />
+
       @if (estimating) {
         <button mat-stroked-button type="button" class="btn-cancel" (click)="cancelEstimate()">
           <mat-icon>close</mat-icon>

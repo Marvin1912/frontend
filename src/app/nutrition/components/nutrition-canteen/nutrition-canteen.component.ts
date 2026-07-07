@@ -49,6 +49,7 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
 export class NutritionCanteenComponent implements OnInit {
 
   @ViewChild('photoInput') photoInput!: { nativeElement: HTMLInputElement };
+  @ViewChild('galleryInput') galleryInput!: { nativeElement: HTMLInputElement };
 
   readonly mealTypes = MEAL_TYPES;
 
@@ -119,6 +120,10 @@ export class NutritionCanteenComponent implements OnInit {
 
   triggerPhoto(): void {
     this.photoInput.nativeElement.click();
+  }
+
+  triggerGallery(): void {
+    this.galleryInput.nativeElement.click();
   }
 
   onPhotoSelected(event: Event): void {
