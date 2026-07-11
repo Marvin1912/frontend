@@ -9,6 +9,7 @@ import {provideDateFnsAdapter} from '@angular/material-date-fns-adapter';
 import {de} from 'date-fns/locale';
 import {registerLocaleData} from '@angular/common';
 import localeDe from '@angular/common/locales/de';
+import {provideCharts, withDefaultRegisterables} from 'ng2-charts';
 
 registerLocaleData(localeDe);
 
@@ -19,6 +20,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideAnimationsAsync(),
     provideDateFnsAdapter(),
+    provideCharts(withDefaultRegisterables()),
     {
       provide: MAT_DATE_LOCALE,
       useValue: de

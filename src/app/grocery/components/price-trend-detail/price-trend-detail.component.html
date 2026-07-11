@@ -1,0 +1,24 @@
+<div class="detail">
+
+  <header class="detail__head">
+    <a mat-icon-button routerLink="/grocery/price-trends" aria-label="Zurück zur Übersicht">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+    <h1 class="detail__title">{{ productName }}</h1>
+  </header>
+
+  @if (loading) {
+    <div class="state">
+      <mat-spinner diameter="32" />
+    </div>
+  } @else if (hasHistory) {
+    <section class="panel">
+      <div class="chart">
+        <canvas baseChart type="line" [data]="chartData" [options]="chartOptions"></canvas>
+      </div>
+    </section>
+  } @else {
+    <p class="empty">Für dieses Produkt liegt noch kein Preisverlauf vor.</p>
+  }
+
+</div>
