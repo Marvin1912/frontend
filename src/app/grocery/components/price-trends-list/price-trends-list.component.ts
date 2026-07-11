@@ -81,10 +81,13 @@ export class PriceTrendsListComponent implements OnInit {
     this.receiptService.getProductPriceSummaries()
       .pipe(catchError(() => of([] as ProductPriceSummary[])))
       .subscribe(summaries => {
-        this.products.data = summaries.map(summary => ({
-          ...summary,
-          sparklineData: this.buildSparklineData(summary)
-        }));
+        this.products.data = summaries.map(summary => {
+          const normalized = {...summary, history: summary.history ?? []};
+          return {
+            ...normalized,
+            sparklineData: this.buildSparklineData(normalized)
+          };
+        });
         this.loading = false;
         this.cdr.markForCheck();
       });
@@ -101,13 +104,12 @@ export class PriceTrendsListComponent implements OnInit {
   }
 
   private buildSparklineData(summary: ProductPriceSummary): ChartConfiguration<'line'>['data'] {
-    const history = summary.history ?? [];
     const up = summary.percentChange > 0;
     const color = up ? '#fb7185' : '#2dd4bf';
     return {
-      labels: history.map((_, i) => `${i}`),
+      labels: summary.history.map((_, i) => `${i}`),
       datasets: [{
-        data: history,
+        data: summary.history,
         borderColor: color,
         backgroundColor: color,
         fill: false
