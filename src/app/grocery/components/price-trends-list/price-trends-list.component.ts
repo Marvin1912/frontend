@@ -101,12 +101,13 @@ export class PriceTrendsListComponent implements OnInit {
   }
 
   private buildSparklineData(summary: ProductPriceSummary): ChartConfiguration<'line'>['data'] {
+    const history = summary.history ?? [];
     const up = summary.percentChange > 0;
     const color = up ? '#fb7185' : '#2dd4bf';
     return {
-      labels: summary.history.map((_, i) => `${i}`),
+      labels: history.map((_, i) => `${i}`),
       datasets: [{
-        data: summary.history,
+        data: history,
         borderColor: color,
         backgroundColor: color,
         fill: false
