@@ -1,0 +1,67 @@
+<div class="price-trends">
+  <header class="table-header">
+    <span class="table-header__dot"></span>
+    <span class="table-header__label">PREISVERLAUF</span>
+  </header>
+
+  @if (loading) {
+    <div class="state">
+      <mat-spinner diameter="32" />
+    </div>
+  } @else if (hasProducts) {
+    <div class="table-container">
+      <table mat-table [dataSource]="products">
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef class="col-header">Produkt</th>
+          <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="firstPrice">
+          <th mat-header-cell *matHeaderCellDef class="col-header">Erster Preis</th>
+          <td mat-cell *matCellDef="let product">
+            {{ product.firstPrice | currency:'EUR':'symbol':'1.2-2':'de' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="latestPrice">
+          <th mat-header-cell *matHeaderCellDef class="col-header">Aktueller Preis</th>
+          <td mat-cell *matCellDef="let product">
+            {{ product.latestPrice | currency:'EUR':'symbol':'1.2-2':'de' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="percentChange">
+          <th mat-header-cell *matHeaderCellDef class="col-header">Änderung</th>
+          <td mat-cell *matCellDef="let product">
+            <span class="delta" [class.delta--up]="product.percentChange > 0" [class.delta--down]="product.percentChange < 0">
+              {{ product.percentChange > 0 ? '+' : '' }}{{ product.percentChange | number:'1.1-1':'de' }}%
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sparkline">
+          <th mat-header-cell *matHeaderCellDef class="col-header"></th>
+          <td mat-cell *matCellDef="let product" class="col-sparkline">
+            @if (product.history.length > 1) {
+              <div class="sparkline">
+                <canvas baseChart type="line" [data]="product.sparklineData" [options]="sparklineOptions"></canvas>
+              </div>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+        <tr
+          mat-row
+          *matRowDef="let product; columns: columnsToDisplay;"
+          class="clickable-row"
+          (click)="navigateToDetail(product)">
+        </tr>
+
+      </table>
+    </div>
+  } @else {
+    <p class="empty">Noch keine Preisdaten erfasst.</p>
+  }
+</div>

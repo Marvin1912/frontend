@@ -3,6 +3,7 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {Receipt, ReceiptItem, Supermarket} from '../models/receipt.model';
+import {PriceHistoryPoint, ProductPriceSummary} from '../models/price-trend.model';
 
 @Injectable({
   providedIn: 'root'
@@ -44,5 +45,15 @@ export class ReceiptService {
 
   updateSupermarket(id: string, supermarket: Supermarket): Observable<Receipt> {
     return this.http.patch<Receipt>(`${this.host}/receipts/${id}/supermarket`, {supermarket});
+  }
+
+  getProductPriceSummaries(): Observable<ProductPriceSummary[]> {
+    return this.http.get<ProductPriceSummary[]>(`${this.host}/receipts/products`);
+  }
+
+  getProductPriceHistory(name: string): Observable<PriceHistoryPoint[]> {
+    return this.http.get<PriceHistoryPoint[]>(`${this.host}/receipts/products/history`, {
+      params: {name}
+    });
   }
 }
