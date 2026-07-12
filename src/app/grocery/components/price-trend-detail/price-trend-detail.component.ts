@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {ActivatedRoute, RouterLink} from '@angular/router';
+import {CurrencyPipe} from '@angular/common';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
@@ -10,10 +11,28 @@ import {catchError, of} from 'rxjs';
 import {ReceiptService} from '../../services/receipt.service';
 import {PriceHistoryPoint} from '../../models/price-trend.model';
 
+const SUPERMARKET_COLORS: Record<string, string> = {
+  REWE: '#f97316',
+  EDEKA: '#4da6ff',
+  LIDL: '#2dd4bf'
+};
+const FALLBACK_COLOR = '#c8d4e8';
+
+function colorForSupermarket(supermarket: string): string {
+  return SUPERMARKET_COLORS[supermarket] ?? FALLBACK_COLOR;
+}
+
+interface SupermarketLatestPrice {
+  supermarket: string;
+  price: number;
+  articleName: string;
+  date: string;
+}
+
 @Component({
   selector: 'app-price-trend-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, MatIconButton, MatIcon, MatProgressSpinner, BaseChartDirective],
+  imports: [RouterLink, MatIconButton, MatIcon, MatProgressSpinner, BaseChartDirective, CurrencyPipe],
   templateUrl: './price-trend-detail.component.html',
   styleUrl: './price-trend-detail.component.css'
 })
@@ -22,6 +41,7 @@ export class PriceTrendDetailComponent implements OnInit {
   loading = true;
   productName = '';
   priceHistory: PriceHistoryPoint[] = [];
+  latestBySupermarket: SupermarketLatestPrice[] = [];
 
   chartData: ChartConfiguration<'line'>['data'] = {labels: [], datasets: []};
   chartOptions: ChartConfiguration<'line'>['options'] = {};
@@ -40,6 +60,7 @@ export class PriceTrendDetailComponent implements OnInit {
       .subscribe(points => {
         this.priceHistory = points;
         this.buildChart(points);
+        this.latestBySupermarket = this.buildLatestBySupermarket(points);
         this.loading = false;
         this.cdr.markForCheck();
       });
@@ -49,21 +70,27 @@ export class PriceTrendDetailComponent implements OnInit {
     return this.priceHistory.length > 0;
   }
 
+  colorFor(supermarket: string): string {
+    return colorForSupermarket(supermarket);
+  }
+
   private buildChart(history: PriceHistoryPoint[]): void {
     const labels = history.map(p => format(parseISO(p.date), 'dd.MM.yyyy'));
-    const supermarkets = history.map(p => p.supermarket);
+    const supermarkets = Array.from(new Set(history.map(p => p.supermarket)));
 
     this.chartData = {
       labels,
-      datasets: [{
-        data: history.map(p => p.price),
-        borderColor: '#f97316',
-        backgroundColor: 'rgba(249, 115, 22, 0.12)',
-        fill: true,
+      datasets: supermarkets.map(supermarket => ({
+        label: supermarket,
+        data: history.map(p => p.supermarket === supermarket ? p.price : null),
+        borderColor: colorForSupermarket(supermarket),
+        backgroundColor: colorForSupermarket(supermarket),
+        fill: false,
         tension: 0.2,
-        pointRadius: 3,
-        pointBackgroundColor: '#f97316'
-      }]
+        spanGaps: false,
+        pointRadius: 4,
+        pointBackgroundColor: colorForSupermarket(supermarket)
+      }))
     };
 
     this.chartOptions = {
@@ -80,16 +107,38 @@ export class PriceTrendDetailComponent implements OnInit {
         }
       },
       plugins: {
-        legend: {display: false},
+        legend: {
+          display: supermarkets.length > 1,
+          labels: {color: '#7a93b0', font: {family: 'JetBrains Mono', size: 10}}
+        },
         tooltip: {
           callbacks: {
             label: (item: TooltipItem<'line'>) => {
-              const supermarket = supermarkets[item.dataIndex];
-              return `${item.formattedValue} € · ${supermarket}`;
+              const point = history[item.dataIndex];
+              return `${item.formattedValue} € · ${point.supermarket} · ${point.articleName}`;
             }
           }
         }
       }
     };
+  }
+
+  private buildLatestBySupermarket(history: PriceHistoryPoint[]): SupermarketLatestPrice[] {
+    const latest = new Map<string, PriceHistoryPoint>();
+    for (const point of history) {
+      const current = latest.get(point.supermarket);
+      if (!current || point.date > current.date) {
+        latest.set(point.supermarket, point);
+      }
+    }
+
+    return Array.from(latest.values())
+      .map(p => ({
+        supermarket: p.supermarket,
+        price: p.price,
+        articleName: p.articleName,
+        date: format(parseISO(p.date), 'dd.MM.yyyy')
+      }))
+      .sort((a, b) => a.price - b.price);
   }
 }

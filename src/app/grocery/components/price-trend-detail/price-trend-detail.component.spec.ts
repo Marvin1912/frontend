@@ -14,8 +14,8 @@ describe('PriceTrendDetailComponent', () => {
   let httpMock: HttpTestingController;
 
   const history: PriceHistoryPoint[] = [
-    {date: '2026-01-01', price: 1.19, supermarket: 'REWE'},
-    {date: '2026-02-01', price: 1.39, supermarket: 'EDEKA'}
+    {date: '2026-01-01', price: 1.19, supermarket: 'REWE', articleName: 'Milch 1,5%'},
+    {date: '2026-02-01', price: 1.39, supermarket: 'EDEKA', articleName: 'Milch 1,5% Bio'}
   ];
 
   beforeEach(async () => {
@@ -59,5 +59,19 @@ describe('PriceTrendDetailComponent', () => {
     httpMock.expectOne(`${environment.apiUrl}/receipts/products/history?name=Milch`).flush([]);
 
     expect(component.hasHistory).toBeFalse();
+  });
+
+  it('should build a chart series per supermarket', () => {
+    httpMock.expectOne(`${environment.apiUrl}/receipts/products/history?name=Milch`).flush(history);
+
+    expect(component.chartData.datasets.length).toBe(2);
+    expect(component.chartData.datasets.map(d => d.label)).toEqual(['REWE', 'EDEKA']);
+  });
+
+  it('should compute the cheapest current price per supermarket, sorted ascending', () => {
+    httpMock.expectOne(`${environment.apiUrl}/receipts/products/history?name=Milch`).flush(history);
+
+    expect(component.latestBySupermarket.map(r => r.supermarket)).toEqual(['REWE', 'EDEKA']);
+    expect(component.latestBySupermarket[0].articleName).toBe('Milch 1,5%');
   });
 });

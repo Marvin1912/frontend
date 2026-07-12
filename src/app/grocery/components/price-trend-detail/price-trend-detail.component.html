@@ -17,6 +17,33 @@
         <canvas baseChart type="line" [data]="chartData" [options]="chartOptions"></canvas>
       </div>
     </section>
+
+    <section class="panel">
+      <h2 class="panel__title">Günstigster aktueller Preis je Supermarkt</h2>
+      <table class="supermarket-table">
+        <thead>
+          <tr>
+            <th>Supermarkt</th>
+            <th>Preis</th>
+            <th>Artikel</th>
+            <th>Datum</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of latestBySupermarket; track row.supermarket) {
+            <tr>
+              <td>
+                <span class="dot" [style.background]="colorFor(row.supermarket)"></span>
+                {{ row.supermarket }}
+              </td>
+              <td>{{ row.price | currency:'EUR':'symbol':'1.2-2':'de' }}</td>
+              <td>{{ row.articleName }}</td>
+              <td>{{ row.date }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
   } @else {
     <p class="empty">Für dieses Produkt liegt noch kein Preisverlauf vor.</p>
   }
