@@ -110,7 +110,7 @@ export const routes: Routes = [
       {path: 'receipts', component: ReceiptListComponent, data: {home: '/grocery'}},
       {path: 'receipts/:id/items', component: ReceiptItemsComponent, data: {home: '/grocery/receipts'}},
       {path: 'price-trends', component: PriceTrendsListComponent, data: {home: '/grocery'}},
-      {path: 'price-trends/:name', component: PriceTrendDetailComponent, data: {home: '/grocery/price-trends'}},
+      {path: 'price-trends/:groupId', component: PriceTrendDetailComponent, data: {home: '/grocery/price-trends'}},
       {path: 'articles', component: ArticleGroupManagementComponent, data: {home: '/grocery'}}
     ]
   },
