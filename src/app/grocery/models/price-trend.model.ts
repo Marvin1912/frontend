@@ -1,9 +1,10 @@
 export interface ProductPriceSummary {
-  name: string;
+  groupId: number;
+  groupName: string;
   firstPrice: number;
   latestPrice: number;
   percentChange: number;
-  history: number[];
+  sparklinePrices: number[];
 }
 
 export interface PriceHistoryPoint {
