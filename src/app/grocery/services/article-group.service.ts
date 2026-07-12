@@ -21,19 +21,19 @@ export class ArticleGroupService {
     return this.http.post<ArticleGroup>(`${this.host}/article-groups`, {name});
   }
 
-  renameGroup(id: string, name: string): Observable<ArticleGroup> {
+  renameGroup(id: number, name: string): Observable<ArticleGroup> {
     return this.http.put<ArticleGroup>(`${this.host}/article-groups/${id}`, {name});
   }
 
-  deleteGroup(id: string): Observable<void> {
+  deleteGroup(id: number): Observable<void> {
     return this.http.delete<void>(`${this.host}/article-groups/${id}`);
   }
 
-  assignArticleToGroup(articleId: string, groupId: string): Observable<Article> {
+  assignArticleToGroup(articleId: number, groupId: number): Observable<Article> {
     return this.http.patch<Article>(`${this.host}/articles/${articleId}/group`, {groupId});
   }
 
-  unassignArticle(articleId: string): Observable<Article> {
+  unassignArticle(articleId: number): Observable<Article> {
     return this.http.patch<Article>(`${this.host}/articles/${articleId}/group`, {groupId: null});
   }
 }

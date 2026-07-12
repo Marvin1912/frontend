@@ -31,6 +31,7 @@ import {ReceiptListComponent} from './grocery/components/receipt-list/receipt-li
 import {ReceiptItemsComponent} from './grocery/components/receipt-items/receipt-items.component';
 import {PriceTrendsListComponent} from './grocery/components/price-trends-list/price-trends-list.component';
 import {PriceTrendDetailComponent} from './grocery/components/price-trend-detail/price-trend-detail.component';
+import {ArticleGroupManagementComponent} from './grocery/components/article-group-management/article-group-management.component';
 import {NutritionLayoutComponent} from './nutrition/components/nutrition-layout/nutrition-layout.component';
 import {NutritionHomeComponent} from './nutrition/components/nutrition-home/nutrition-home.component';
 import {NutritionWeightComponent} from './nutrition/components/nutrition-weight/nutrition-weight.component';
@@ -109,7 +110,8 @@ export const routes: Routes = [
       {path: 'receipts', component: ReceiptListComponent, data: {home: '/grocery'}},
       {path: 'receipts/:id/items', component: ReceiptItemsComponent, data: {home: '/grocery/receipts'}},
       {path: 'price-trends', component: PriceTrendsListComponent, data: {home: '/grocery'}},
-      {path: 'price-trends/:name', component: PriceTrendDetailComponent, data: {home: '/grocery/price-trends'}}
+      {path: 'price-trends/:name', component: PriceTrendDetailComponent, data: {home: '/grocery/price-trends'}},
+      {path: 'articles', component: ArticleGroupManagementComponent, data: {home: '/grocery'}}
     ]
   },
   {

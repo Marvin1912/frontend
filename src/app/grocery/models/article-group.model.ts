@@ -1,13 +1,13 @@
 export interface Article {
-  id: string;
+  id: number;
   name: string;
   normalizedName: string;
-  groupId: string | null;
+  groupId: number | null;
   groupName: string | null;
   purchaseCount: number;
 }
 
 export interface ArticleGroup {
-  id: string;
+  id: number;
   name: string;
 }
