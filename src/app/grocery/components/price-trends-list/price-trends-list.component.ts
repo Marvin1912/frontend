@@ -13,7 +13,7 @@ import {
   MatTableDataSource
 } from '@angular/material/table';
 import {CurrencyPipe, DecimalPipe} from '@angular/common';
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {ChartConfiguration} from 'chart.js';
 import {BaseChartDirective} from 'ng2-charts';
@@ -60,7 +60,8 @@ interface PriceTrendRow extends ProductPriceSummary {
     CurrencyPipe,
     DecimalPipe,
     MatProgressSpinner,
-    BaseChartDirective
+    BaseChartDirective,
+    RouterLink
   ],
   templateUrl: './price-trends-list.component.html',
   styleUrl: './price-trends-list.component.css'
@@ -71,23 +72,20 @@ export class PriceTrendsListComponent implements OnInit {
 
   loading = true;
   products = new MatTableDataSource<PriceTrendRow>();
-  columnsToDisplay = ['name', 'firstPrice', 'latestPrice', 'percentChange', 'sparkline'];
+  columnsToDisplay = ['groupName', 'firstPrice', 'latestPrice', 'percentChange', 'sparkline'];
 
   private receiptService = inject(ReceiptService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
-    this.receiptService.getProductPriceSummaries()
+    this.receiptService.getArticleGroupPriceSummaries()
       .pipe(catchError(() => of([] as ProductPriceSummary[])))
       .subscribe(summaries => {
-        this.products.data = summaries.map(summary => {
-          const normalized = {...summary, history: summary.history ?? []};
-          return {
-            ...normalized,
-            sparklineData: this.buildSparklineData(normalized)
-          };
-        });
+        this.products.data = summaries.map(summary => ({
+          ...summary,
+          sparklineData: this.buildSparklineData(summary)
+        }));
         this.loading = false;
         this.cdr.markForCheck();
       });
@@ -98,8 +96,8 @@ export class PriceTrendsListComponent implements OnInit {
   }
 
   navigateToDetail(product: ProductPriceSummary): void {
-    void this.router.navigate(['/grocery/price-trends', product.name], {
-      state: {displayName: product.name}
+    void this.router.navigate(['/grocery/price-trends', product.groupId], {
+      state: {displayName: product.groupName}
     });
   }
 
@@ -107,9 +105,9 @@ export class PriceTrendsListComponent implements OnInit {
     const up = summary.percentChange > 0;
     const color = up ? '#fb7185' : '#2dd4bf';
     return {
-      labels: summary.history.map((_, i) => `${i}`),
+      labels: summary.sparklinePrices.map((_, i) => `${i}`),
       datasets: [{
-        data: summary.history,
+        data: summary.sparklinePrices,
         borderColor: color,
         backgroundColor: color,
         fill: false

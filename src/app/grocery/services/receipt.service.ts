@@ -47,8 +47,8 @@ export class ReceiptService {
     return this.http.patch<Receipt>(`${this.host}/receipts/${id}/supermarket`, {supermarket});
   }
 
-  getProductPriceSummaries(): Observable<ProductPriceSummary[]> {
-    return this.http.get<ProductPriceSummary[]>(`${this.host}/receipts/products`);
+  getArticleGroupPriceSummaries(): Observable<ProductPriceSummary[]> {
+    return this.http.get<ProductPriceSummary[]>(`${this.host}/receipts/groups`);
   }
 
   getProductPriceHistory(name: string): Observable<PriceHistoryPoint[]> {

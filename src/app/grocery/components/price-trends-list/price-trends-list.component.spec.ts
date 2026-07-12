@@ -18,7 +18,7 @@ describe('PriceTrendsListComponent', () => {
   let httpMock: HttpTestingController;
 
   const summaries: ProductPriceSummary[] = [
-    {name: 'Milch', firstPrice: 1.19, latestPrice: 1.39, percentChange: 16.8, history: [1.19, 1.29, 1.39]}
+    {groupId: 7, groupName: 'Milch', firstPrice: 1.19, latestPrice: 1.39, percentChange: 16.8, sparklinePrices: [1.19, 1.29, 1.39]}
   ];
 
   beforeEach(async () => {
@@ -43,21 +43,21 @@ describe('PriceTrendsListComponent', () => {
   });
 
   it('should create', () => {
-    httpMock.expectOne(`${environment.apiUrl}/receipts/products`).flush([]);
+    httpMock.expectOne(`${environment.apiUrl}/receipts/groups`).flush([]);
     expect(component).toBeTruthy();
   });
 
   it('should load product price summaries and stop loading', () => {
-    httpMock.expectOne(`${environment.apiUrl}/receipts/products`).flush(summaries);
+    httpMock.expectOne(`${environment.apiUrl}/receipts/groups`).flush(summaries);
 
     expect(component.loading).toBeFalse();
     expect(component.products.data.length).toBe(1);
-    expect(component.products.data[0].name).toBe('Milch');
+    expect(component.products.data[0].groupName).toBe('Milch');
     expect(component.hasProducts).toBeTrue();
   });
 
   it('should report no products for an empty summary list', () => {
-    httpMock.expectOne(`${environment.apiUrl}/receipts/products`).flush([]);
+    httpMock.expectOne(`${environment.apiUrl}/receipts/groups`).flush([]);
 
     expect(component.hasProducts).toBeFalse();
   });
