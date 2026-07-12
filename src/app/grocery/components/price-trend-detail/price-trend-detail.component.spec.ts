@@ -27,7 +27,7 @@ describe('PriceTrendDetailComponent', () => {
         provideCharts(withDefaultRegisterables()),
         {
           provide: ActivatedRoute,
-          useValue: {snapshot: {paramMap: convertToParamMap({name: 'Milch'})}}
+          useValue: {snapshot: {paramMap: convertToParamMap({groupId: '4'})}}
         }
       ]
     }).compileComponents();
@@ -43,12 +43,12 @@ describe('PriceTrendDetailComponent', () => {
   });
 
   it('should create', () => {
-    httpMock.expectOne(`${environment.apiUrl}/receipts/products/history?name=Milch`).flush([]);
+    httpMock.expectOne(`${environment.apiUrl}/receipts/groups/4/history`).flush([]);
     expect(component).toBeTruthy();
   });
 
   it('should load price history for the routed product name', () => {
-    httpMock.expectOne(`${environment.apiUrl}/receipts/products/history?name=Milch`).flush(history);
+    httpMock.expectOne(`${environment.apiUrl}/receipts/groups/4/history`).flush(history);
 
     expect(component.loading).toBeFalse();
     expect(component.priceHistory.length).toBe(2);
@@ -56,20 +56,20 @@ describe('PriceTrendDetailComponent', () => {
   });
 
   it('should report no history for a product without price data', () => {
-    httpMock.expectOne(`${environment.apiUrl}/receipts/products/history?name=Milch`).flush([]);
+    httpMock.expectOne(`${environment.apiUrl}/receipts/groups/4/history`).flush([]);
 
     expect(component.hasHistory).toBeFalse();
   });
 
   it('should build a chart series per supermarket', () => {
-    httpMock.expectOne(`${environment.apiUrl}/receipts/products/history?name=Milch`).flush(history);
+    httpMock.expectOne(`${environment.apiUrl}/receipts/groups/4/history`).flush(history);
 
     expect(component.chartData.datasets.length).toBe(2);
     expect(component.chartData.datasets.map(d => d.label)).toEqual(['REWE', 'EDEKA']);
   });
 
   it('should compute the cheapest current price per supermarket, sorted ascending', () => {
-    httpMock.expectOne(`${environment.apiUrl}/receipts/products/history?name=Milch`).flush(history);
+    httpMock.expectOne(`${environment.apiUrl}/receipts/groups/4/history`).flush(history);
 
     expect(component.latestBySupermarket.map(r => r.supermarket)).toEqual(['REWE', 'EDEKA']);
     expect(component.latestBySupermarket[0].articleName).toBe('Milch 1,5%');

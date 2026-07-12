@@ -51,9 +51,7 @@ export class ReceiptService {
     return this.http.get<ProductPriceSummary[]>(`${this.host}/receipts/groups`);
   }
 
-  getProductPriceHistory(name: string): Observable<PriceHistoryPoint[]> {
-    return this.http.get<PriceHistoryPoint[]>(`${this.host}/receipts/products/history`, {
-      params: {name}
-    });
+  getArticleGroupPriceHistory(groupId: string): Observable<PriceHistoryPoint[]> {
+    return this.http.get<PriceHistoryPoint[]>(`${this.host}/receipts/groups/${groupId}/history`);
   }
 }

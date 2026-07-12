@@ -51,11 +51,11 @@ export class PriceTrendDetailComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
-    const name = this.route.snapshot.paramMap.get('name') ?? '';
+    const groupId = this.route.snapshot.paramMap.get('groupId') ?? '';
     const navigationState = window.history.state as {displayName?: string} | undefined;
-    this.productName = navigationState?.displayName ?? name;
+    this.productName = navigationState?.displayName ?? groupId;
 
-    this.receiptService.getProductPriceHistory(name)
+    this.receiptService.getArticleGroupPriceHistory(groupId)
       .pipe(catchError(() => of([] as PriceHistoryPoint[])))
       .subscribe(points => {
         this.priceHistory = points;
