@@ -11,4 +11,5 @@ export interface PriceHistoryPoint {
   date: string;
   price: number;
   supermarket: string;
+  articleName: string;
 }
