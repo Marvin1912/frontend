@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatSelect} from '@angular/material/select';
 import {MatOption} from '@angular/material/core';
@@ -29,6 +29,7 @@ export class SupermarketSelectDialogComponent implements OnInit {
 
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<SupermarketSelectDialogComponent>);
+  private data = inject<{supermarket?: Supermarket | null} | undefined>(MAT_DIALOG_DATA, {optional: true});
 
   readonly supermarkets: {value: Supermarket; label: string}[] = [
     {value: 'LIDL', label: 'Lidl'},
@@ -40,7 +41,7 @@ export class SupermarketSelectDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      supermarket: ['LIDL', Validators.required]
+      supermarket: [this.data?.supermarket ?? 'LIDL', Validators.required]
     });
   }
 
