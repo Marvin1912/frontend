@@ -32,6 +32,19 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="supermarket">
+        <th mat-header-cell *matHeaderCellDef class="col-header">Supermarkt</th>
+        <td mat-cell *matCellDef="let receipt">
+          <button
+            class="supermarket-chip"
+            [class.supermarket-chip--empty]="!receipt.supermarket"
+            (click)="openSupermarketDialog($event, receipt)"
+            title="Supermarkt bearbeiten">
+            {{ supermarketLabel(receipt.supermarket) }}
+          </button>
+        </td>
+      </ng-container>
+
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef class="col-header"></th>
         <td mat-cell *matCellDef="let receipt" class="col-actions">

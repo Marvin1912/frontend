@@ -141,6 +141,37 @@ table {
   text-align: right;
 }
 
+.supermarket-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: rgba(249, 115, 22, 0.08);
+  border: 1px solid rgba(249, 115, 22, 0.25);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.supermarket-chip:hover {
+  background: rgba(249, 115, 22, 0.16);
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.2);
+}
+
+.supermarket-chip--empty {
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px dashed var(--border-mid);
+}
+
+.supermarket-chip--empty:hover {
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+}
+
 .btn-delete {
   color: rgba(251, 113, 133, 0.5) !important;
   transition: color 0.2s;

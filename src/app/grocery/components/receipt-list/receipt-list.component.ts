@@ -19,9 +19,10 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatSort, MatSortModule} from '@angular/material/sort';
-import {Receipt} from '../../models/receipt.model';
+import {Receipt, Supermarket} from '../../models/receipt.model';
 import {ReceiptService} from '../../services/receipt.service';
 import {ReceiptDeleteDialogComponent} from '../../dialogs/receipt-delete-dialog/receipt-delete-dialog.component';
+import {SupermarketSelectDialogComponent} from '../../dialogs/supermarket-select-dialog/supermarket-select-dialog.component';
 
 @Component({
   selector: 'app-receipt-list',
@@ -53,7 +54,13 @@ export class ReceiptListComponent implements OnInit {
   }
 
   receipts = new MatTableDataSource<Receipt>();
-  columnsToDisplay = ['receiptDate', 'creationDate', 'totalAmount', 'actions'];
+  columnsToDisplay = ['receiptDate', 'creationDate', 'totalAmount', 'supermarket', 'actions'];
+
+  private readonly supermarketLabels: Record<Supermarket, string> = {
+    LIDL: 'Lidl',
+    EDEKA: 'Edeka',
+    REWE: 'Rewe'
+  };
 
   constructor(
     private receiptService: ReceiptService,
@@ -79,6 +86,29 @@ export class ReceiptListComponent implements OnInit {
 
   navigateToItems(id: string): void {
     void this.router.navigate(['/grocery/receipts', id, 'items']);
+  }
+
+  supermarketLabel(supermarket: Supermarket | null): string {
+    return supermarket ? this.supermarketLabels[supermarket] : '—';
+  }
+
+  openSupermarketDialog(event: MouseEvent, receipt: Receipt): void {
+    event.stopPropagation();
+    const ref = this.dialog.open(SupermarketSelectDialogComponent, {
+      data: {supermarket: receipt.supermarket}
+    });
+    ref.afterClosed().subscribe((supermarket: Supermarket | undefined) => {
+      if (!supermarket) return;
+      this.receiptService.updateSupermarket(receipt.id, supermarket).subscribe({
+        next: updated => {
+          this.receipts.data = this.receipts.data.map(r => r.id === receipt.id ? updated : r);
+          this.cdr.markForCheck();
+        },
+        error: () => {
+          this.snackBar.open('Supermarkt konnte nicht gespeichert werden', 'Schließen', {duration: 5000});
+        }
+      });
+    });
   }
 
   openDeleteDialog(event: MouseEvent, receipt: Receipt): void {
