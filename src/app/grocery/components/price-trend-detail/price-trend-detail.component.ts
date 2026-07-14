@@ -17,6 +17,7 @@ const SUPERMARKET_COLORS: Record<string, string> = {
   LIDL: '#2dd4bf'
 };
 const FALLBACK_COLOR = '#c8d4e8';
+const UNKNOWN_SUPERMARKET = 'Unbekannt';
 
 function colorForSupermarket(supermarket: string): string {
   return SUPERMARKET_COLORS[supermarket] ?? FALLBACK_COLOR;
@@ -76,13 +77,13 @@ export class PriceTrendDetailComponent implements OnInit {
 
   private buildChart(history: PriceHistoryPoint[]): void {
     const labels = history.map(p => format(parseISO(p.date), 'dd.MM.yyyy'));
-    const supermarkets = Array.from(new Set(history.map(p => p.supermarket)));
+    const supermarkets = Array.from(new Set(history.map(p => p.supermarket ?? UNKNOWN_SUPERMARKET)));
 
     this.chartData = {
       labels,
       datasets: supermarkets.map(supermarket => ({
         label: supermarket,
-        data: history.map(p => p.supermarket === supermarket ? p.price : null),
+        data: history.map(p => (p.supermarket ?? UNKNOWN_SUPERMARKET) === supermarket ? p.singlePrice : null),
         borderColor: colorForSupermarket(supermarket),
         backgroundColor: colorForSupermarket(supermarket),
         fill: false,
@@ -115,7 +116,7 @@ export class PriceTrendDetailComponent implements OnInit {
           callbacks: {
             label: (item: TooltipItem<'line'>) => {
               const point = history[item.dataIndex];
-              return `${item.formattedValue} € · ${point.supermarket} · ${point.articleName}`;
+              return `${item.formattedValue} € · ${point.supermarket ?? UNKNOWN_SUPERMARKET} · ${point.articleName}`;
             }
           }
         }
@@ -126,16 +127,17 @@ export class PriceTrendDetailComponent implements OnInit {
   private buildLatestBySupermarket(history: PriceHistoryPoint[]): SupermarketLatestPrice[] {
     const latest = new Map<string, PriceHistoryPoint>();
     for (const point of history) {
-      const current = latest.get(point.supermarket);
+      const supermarket = point.supermarket ?? UNKNOWN_SUPERMARKET;
+      const current = latest.get(supermarket);
       if (!current || point.date > current.date) {
-        latest.set(point.supermarket, point);
+        latest.set(supermarket, point);
       }
     }
 
-    return Array.from(latest.values())
-      .map(p => ({
-        supermarket: p.supermarket,
-        price: p.price,
+    return Array.from(latest.entries())
+      .map(([supermarket, p]) => ({
+        supermarket,
+        price: p.singlePrice,
         articleName: p.articleName,
         date: format(parseISO(p.date), 'dd.MM.yyyy')
       }))
