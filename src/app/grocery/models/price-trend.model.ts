@@ -9,7 +9,7 @@ export interface ProductPriceSummary {
 
 export interface PriceHistoryPoint {
   date: string;
-  price: number;
-  supermarket: string;
+  singlePrice: number;
+  supermarket?: string;
   articleName: string;
 }
