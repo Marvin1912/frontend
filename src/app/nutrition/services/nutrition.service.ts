@@ -25,7 +25,8 @@ import {
   SportActivityUpdate,
   Targets,
   WeightEntry,
-  WeightEntryInput
+  WeightEntryInput,
+  WeightRatioDay
 } from '../models/nutrition.model';
 
 /**
@@ -70,6 +71,11 @@ export class NutritionService {
 
   deleteWeightEntry(id: number): Observable<void> {
     return this.http.delete<void>(`${this.host}/weight/${id}`);
+  }
+
+  /** Weight-vs-nutrient ratios for every date in [from, to] (inclusive), in a single request. */
+  getWeightRatios(from: string, to: string): Observable<WeightRatioDay[]> {
+    return this.http.get<WeightRatioDay[]>(`${this.host}/weight/ratios`, {params: {from, to}});
   }
 
   searchFoods(query: string): Observable<Food[]> {

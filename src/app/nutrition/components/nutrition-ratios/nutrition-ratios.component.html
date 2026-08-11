@@ -1,0 +1,94 @@
+<div class="ratios">
+
+  @if (loading) {
+    <div class="state">
+      <mat-spinner diameter="32" />
+    </div>
+  } @else if (hasData) {
+
+    <!-- ── Range toggle ────────────────────────────── -->
+    <section class="panel">
+      <header class="panel__head">
+        <span class="panel__dot panel__dot--kcal"></span>
+        <span class="panel__label">ZEITRAUM</span>
+      </header>
+
+      <mat-button-toggle-group class="range-toggle" name="ratioRange" aria-label="Zeitraum"
+                                [value]="ratioRangeDays"
+                                (change)="onRangeChange($event.value)">
+        @for (range of ratioRanges; track range) {
+          <mat-button-toggle [value]="range">{{ range }} Tage</mat-button-toggle>
+        }
+      </mat-button-toggle-group>
+    </section>
+
+    <!-- ── Macro ratios (g/kg) ─────────────────────── -->
+    <section class="panel">
+      <header class="panel__head">
+        <span class="panel__dot panel__dot--protein"></span>
+        <span class="panel__label">NÄHRSTOFFE PRO KG KÖRPERGEWICHT</span>
+      </header>
+      <div class="chart">
+        <canvas baseChart type="line" [data]="macroChartData" [options]="macroChartOptions"></canvas>
+      </div>
+    </section>
+
+    <!-- ── Kcal ratio ───────────────────────────────── -->
+    <section class="panel">
+      <header class="panel__head">
+        <span class="panel__dot panel__dot--kcal"></span>
+        <span class="panel__label">KALORIEN PRO KG KÖRPERGEWICHT</span>
+      </header>
+      <div class="chart chart--small">
+        <canvas baseChart type="line" [data]="kcalChartData" [options]="kcalChartOptions"></canvas>
+      </div>
+    </section>
+
+    <!-- ── History table ────────────────────────────── -->
+    <section class="panel panel-table">
+      <header class="panel__head">
+        <span class="panel__dot panel__dot--protein"></span>
+        <span class="panel__label">VERLAUF</span>
+      </header>
+
+      <div class="table-container">
+        <table class="ratio-table">
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Gewicht</th>
+              <th>kcal</th>
+              <th>Protein</th>
+              <th>Kohlenhydrate</th>
+              <th>Fett</th>
+              <th>kcal/kg</th>
+              <th>Protein/kg</th>
+              <th>Kohlenhydrate/kg</th>
+              <th>Fett/kg</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (day of days; track day.date) {
+              <tr>
+                <td>{{ day.date | date:'dd.MM.yyyy':'':'de' }}</td>
+                <td>{{ day.weightKg !== null ? (day.weightKg | number:'1.1-1':'de') + ' kg' : '–' }}</td>
+                <td>{{ day.kcal | number:'1.0-0':'de' }}</td>
+                <td>{{ day.proteinG | number:'1.0-0':'de' }} g</td>
+                <td>{{ day.carbsG | number:'1.0-0':'de' }} g</td>
+                <td>{{ day.fatG | number:'1.0-0':'de' }} g</td>
+                <td>{{ day.kcalPerKg !== null ? (day.kcalPerKg | number:'1.1-1':'de') : '–' }}</td>
+                <td>{{ day.proteinPerKg !== null ? (day.proteinPerKg | number:'1.1-1':'de') : '–' }}</td>
+                <td>{{ day.carbsPerKg !== null ? (day.carbsPerKg | number:'1.1-1':'de') : '–' }}</td>
+                <td>{{ day.fatPerKg !== null ? (day.fatPerKg | number:'1.1-1':'de') : '–' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  } @else {
+    <p class="empty">Für diesen Zeitraum liegen noch keine Gewichts- oder Nährwertdaten vor.</p>
+  }
+
+</div>

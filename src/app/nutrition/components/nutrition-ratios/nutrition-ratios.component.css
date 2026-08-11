@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:host {
+  --bg:          #06080e;
+  --surface:     #0c1018;
+  --raised:      #111826;
+  --border:      rgba(255, 255, 255, 0.07);
+  --border-mid:  rgba(255, 255, 255, 0.13);
+
+  --text:        #c8d4e8;
+  --text-muted:  #7a93b0;
+  --text-dim:    #3d5470;
+
+  --c-protein: #4da6ff;
+  --c-carbs:   #a3e635;
+  --c-fat:     #fbbf24;
+  --c-kcal:    #fb7185;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+}
+
+.ratios {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem clamp(1rem, 6vw, 4rem);
+  max-width: 900px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ── Panels ──────────────────────────────────────── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.panel-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+.panel__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.panel__dot--protein { background: var(--c-protein); box-shadow: 0 0 6px var(--c-protein); }
+.panel__dot--kcal { background: var(--c-kcal); box-shadow: 0 0 6px var(--c-kcal); }
+
+.panel__label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* ── Range toggle ────────────────────────────────── */
+.range-toggle {
+  display: flex;
+}
+
+::ng-deep .range-toggle .mat-button-toggle {
+  background: var(--raised);
+  color: var(--text-muted);
+}
+
+::ng-deep .range-toggle .mat-button-toggle-label-content {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  line-height: 32px;
+  padding: 0 0.75rem;
+}
+
+::ng-deep .range-toggle .mat-button-toggle-checked {
+  background: color-mix(in srgb, var(--c-protein) 18%, transparent);
+  color: var(--c-protein);
+}
+
+::ng-deep .range-toggle.mat-button-toggle-group {
+  border-color: var(--border-mid);
+}
+
+::ng-deep .range-toggle .mat-button-toggle + .mat-button-toggle {
+  border-left: 1px solid var(--border-mid);
+}
+
+/* ── Charts ──────────────────────────────────────── */
+.chart {
+  position: relative;
+  width: 100%;
+  height: 320px;
+}
+
+.chart--small {
+  height: 200px;
+}
+
+/* ── Table ───────────────────────────────────────── */
+.table-container {
+  background: var(--surface);
+  border-radius: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.ratio-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.ratio-table th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  background: var(--raised);
+  border-bottom: 1px solid var(--border-mid);
+}
+
+.ratio-table td {
+  padding: 0.5rem 0.75rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.ratio-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── States ──────────────────────────────────────── */
+.state {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+::ng-deep .state mat-spinner circle { stroke: var(--c-protein) !important; }
+
+.empty {
+  margin: 0;
+  padding: 1.25rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--raised);
+  border: 1px dashed var(--border-mid);
+  border-radius: 10px;
+}

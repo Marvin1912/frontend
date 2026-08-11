@@ -46,6 +46,21 @@ export interface WeightEntryInput {
   weightKg: number;
 }
 
+/** One day's nutrient intake paired with the applicable historical body weight and the resulting per-kg ratios (GET /nutrition/weight/ratios). */
+export interface WeightRatioDay {
+  date: string;
+  /** Null only if there is no weight entry at all in the whole system. */
+  weightKg: number | null;
+  kcal: number;
+  proteinG: number;
+  carbsG: number;
+  fatG: number;
+  kcalPerKg: number | null;
+  proteinPerKg: number | null;
+  carbsPerKg: number | null;
+  fatPerKg: number | null;
+}
+
 export interface Targets {
   bmr: number;
   maintenanceKcal: number;
