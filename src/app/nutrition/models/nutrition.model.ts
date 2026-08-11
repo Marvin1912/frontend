@@ -61,6 +61,22 @@ export interface WeightRatioDay {
   fatPerKg: number | null;
 }
 
+/** One period's averaged weight/nutrient ratios (GET /nutrition/weight/ratios/summary). */
+export interface WeightNutrientRatioSummary {
+  from: string | null;
+  to: string | null;
+  totalDays: number;
+  trackedDays: number;
+  avgProteinPerKg: number | null;
+  avgCarbsPerKg: number | null;
+  avgFatPerKg: number | null;
+}
+
+export interface WeightNutrientRatioSummaryResponse {
+  last30Days: WeightNutrientRatioSummary;
+  totalPeriod: WeightNutrientRatioSummary;
+}
+
 export interface Targets {
   bmr: number;
   maintenanceKcal: number;
