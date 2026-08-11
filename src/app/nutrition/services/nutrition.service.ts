@@ -26,6 +26,7 @@ import {
   Targets,
   WeightEntry,
   WeightEntryInput,
+  WeightNutrientRatioSummaryResponse,
   WeightRatioDay
 } from '../models/nutrition.model';
 
@@ -76,6 +77,11 @@ export class NutritionService {
   /** Weight-vs-nutrient ratios for every date in [from, to] (inclusive), in a single request. */
   getWeightRatios(from: string, to: string): Observable<WeightRatioDay[]> {
     return this.http.get<WeightRatioDay[]>(`${this.host}/weight/ratios`, {params: {from, to}});
+  }
+
+  /** Averaged weight/nutrient ratios for the last 30 days and the total tracked period. */
+  getWeightRatioSummary(): Observable<WeightNutrientRatioSummaryResponse> {
+    return this.http.get<WeightNutrientRatioSummaryResponse>(`${this.host}/weight/ratios/summary`);
   }
 
   searchFoods(query: string): Observable<Food[]> {

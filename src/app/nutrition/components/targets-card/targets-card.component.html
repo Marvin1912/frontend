@@ -54,5 +54,65 @@
           : 'BMR aus Mifflin–St-Jeor-Formel' }}
       </span>
     </div>
+
+    @if (ratioLoading) {
+      <div class="ratio-period card__state">
+        <mat-progress-spinner mode="indeterminate" diameter="20" />
+      </div>
+    } @else if (ratioUnavailable) {
+      <div class="ratio-period card__state card__state--empty">
+        <p>{{ ratioUnavailable }}</p>
+      </div>
+    } @else if (ratioSummary) {
+      <div class="ratio-period">
+        <span class="ratio-period__label">Letzte 30 Tage</span>
+        @if (ratioSummary.last30Days.trackedDays === 0) {
+          <p class="ratio-period__empty">Keine Einträge in diesem Zeitraum.</p>
+        } @else {
+          <div class="macros macros--ratio">
+            <div class="macro macro--p">
+              <span class="macro__value">{{ ratioSummary.last30Days.avgProteinPerKg | number:'1.2-2':'de' }}&nbsp;<span class="macro__unit">g/kg</span></span>
+              <span class="macro__label">Protein</span>
+            </div>
+            <div class="macro macro--c">
+              <span class="macro__value">{{ ratioSummary.last30Days.avgCarbsPerKg | number:'1.2-2':'de' }}&nbsp;<span class="macro__unit">g/kg</span></span>
+              <span class="macro__label">Kohlenhydrate</span>
+            </div>
+            <div class="macro macro--f">
+              <span class="macro__value">{{ ratioSummary.last30Days.avgFatPerKg | number:'1.2-2':'de' }}&nbsp;<span class="macro__unit">g/kg</span></span>
+              <span class="macro__label">Fett</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="ratio-period">
+        @if (ratioSummary.totalPeriod.from) {
+          <span class="ratio-period__label">Gesamter Zeitraum, seit {{ ratioSummary.totalPeriod.from | date:'dd.MM.yyyy':'':'de' }}</span>
+        } @else {
+          <span class="ratio-period__label">Gesamter Zeitraum</span>
+        }
+        @if (!ratioSummary.totalPeriod.from) {
+          <p class="ratio-period__empty">Noch keine Mahlzeiten erfasst.</p>
+        } @else if (ratioSummary.totalPeriod.trackedDays === 0) {
+          <p class="ratio-period__empty">Keine Einträge in diesem Zeitraum.</p>
+        } @else {
+          <div class="macros macros--ratio">
+            <div class="macro macro--p">
+              <span class="macro__value">{{ ratioSummary.totalPeriod.avgProteinPerKg | number:'1.2-2':'de' }}&nbsp;<span class="macro__unit">g/kg</span></span>
+              <span class="macro__label">Protein</span>
+            </div>
+            <div class="macro macro--c">
+              <span class="macro__value">{{ ratioSummary.totalPeriod.avgCarbsPerKg | number:'1.2-2':'de' }}&nbsp;<span class="macro__unit">g/kg</span></span>
+              <span class="macro__label">Kohlenhydrate</span>
+            </div>
+            <div class="macro macro--f">
+              <span class="macro__value">{{ ratioSummary.totalPeriod.avgFatPerKg | number:'1.2-2':'de' }}&nbsp;<span class="macro__unit">g/kg</span></span>
+              <span class="macro__label">Fett</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
   }
 </section>

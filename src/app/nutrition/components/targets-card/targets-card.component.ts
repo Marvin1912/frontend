@@ -1,10 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
-import {DecimalPipe} from '@angular/common';
+import {DatePipe, DecimalPipe} from '@angular/common';
 import {HttpErrorResponse} from '@angular/common/http';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {NutritionService} from '../../services/nutrition.service';
-import {Targets} from '../../models/nutrition.model';
+import {Targets, WeightNutrientRatioSummaryResponse} from '../../models/nutrition.model';
 
 /**
  * Reusable card that shows the computed daily targets from
@@ -14,7 +14,7 @@ import {Targets} from '../../models/nutrition.model';
 @Component({
   selector: 'app-targets-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe, MatIcon, MatProgressSpinner],
+  imports: [DatePipe, DecimalPipe, MatIcon, MatProgressSpinner],
   templateUrl: './targets-card.component.html',
   styleUrl: './targets-card.component.css'
 })
@@ -24,6 +24,11 @@ export class TargetsCardComponent implements OnInit {
   loading = false;
   /** Set when targets cannot be computed (e.g. no profile / no weight yet). */
   unavailable: string | null = null;
+
+  ratioSummary: WeightNutrientRatioSummaryResponse | null = null;
+  ratioLoading = false;
+  /** Set when the ratio summary cannot be shown; kept separate so it never blocks the targets above. */
+  ratioUnavailable: string | null = null;
 
   private nutritionService = inject(NutritionService);
   private cdr = inject(ChangeDetectorRef);
@@ -49,6 +54,24 @@ export class TargetsCardComponent implements OnInit {
         this.unavailable = err.status >= 400 && err.status < 500
           ? 'Noch keine Ziele berechenbar. Bitte zuerst ein Profil und mindestens einen Gewichtseintrag erfassen.'
           : 'Ziele konnten nicht geladen werden.';
+        this.cdr.markForCheck();
+      }
+    });
+
+    this.ratioLoading = true;
+    this.ratioUnavailable = null;
+    this.cdr.markForCheck();
+
+    this.nutritionService.getWeightRatioSummary().subscribe({
+      next: ratioSummary => {
+        this.ratioSummary = ratioSummary;
+        this.ratioLoading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.ratioSummary = null;
+        this.ratioLoading = false;
+        this.ratioUnavailable = 'Verhältnis Makros/Körpergewicht konnte nicht geladen werden.';
         this.cdr.markForCheck();
       }
     });

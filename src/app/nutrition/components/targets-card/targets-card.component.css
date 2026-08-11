@@ -200,6 +200,34 @@
 
 .basis--manual mat-icon { color: var(--c-g); }
 
+/* ── Weight/nutrient ratio periods ──────────────────── */
+.ratio-period {
+  margin-top: 1.1rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--border);
+}
+
+.ratio-period__label {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-bottom: 0.6rem;
+}
+
+.ratio-period__empty {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.ratio-period.card__state {
+  min-height: 48px;
+}
+
+.macros--ratio {
+  margin-top: 0;
+}
+
 /* ── Animations ──────────────────────────────────── */
 @keyframes blink {
   0%, 100% { opacity: 1; }
