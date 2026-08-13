@@ -1,0 +1,15 @@
+node_modules
+dist
+.angular
+.git
+.idea
+.vscode
+reports
+coverage
+*.log
+.claude
+plans
+README.md
+BANKING_MODULE.md
+PLANTS_MODULE.md
+docs
