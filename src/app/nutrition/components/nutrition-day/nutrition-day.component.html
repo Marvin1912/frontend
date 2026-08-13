@@ -66,7 +66,10 @@
           <div class="bar bar--{{ b.cls }}">
             <div class="bar__top">
               <span class="bar__name">{{ b.label }}</span>
-              <span class="bar__nums">
+              <span class="bar__nums"
+                    [matTooltip]="b.cls === 'kcal' && totalKcalBurned > 0
+                      ? (summary!.totals.kcal | number:'1.0-0':'de') + ' kcal gegessen − ' + (totalKcalBurned | number:'1.0-0':'de') + ' kcal Sport = ' + (b.consumed | number:'1.0-0':'de') + ' kcal netto'
+                      : ''">
                 {{ b.consumed | number:'1.0-0':'de' }} / {{ b.target | number:'1.0-0':'de' }} {{ b.unit }}
               </span>
             </div>

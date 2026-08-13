@@ -208,8 +208,9 @@ export class NutritionDayComponent implements OnInit {
   get bars(): MacroBar[] {
     if (!this.summary?.targets || !this.summary?.remaining) return [];
     const {totals, targets, remaining} = this.summary;
+    const netKcal = totals.kcal - this.totalKcalBurned;
     return [
-      this.bar('Kalorien', 'kcal', totals.kcal, targets.targetKcal, remaining.kcal, 'kcal'),
+      this.bar('Kalorien', 'kcal', netKcal, targets.targetKcal, remaining.kcal, 'kcal'),
       this.bar('Protein', 'g', totals.proteinG, targets.proteinG, remaining.proteinG, 'p'),
       this.bar('Kohlenhydrate', 'g', totals.carbsG, targets.carbsG, remaining.carbsG, 'c'),
       this.bar('Fett', 'g', totals.fatG, targets.fatG, remaining.fatG, 'f')
