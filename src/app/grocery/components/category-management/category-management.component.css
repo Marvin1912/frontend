@@ -130,7 +130,7 @@ table {
 
 /* Actions */
 .col-actions {
-  width: 48px;
+  width: 88px;
   padding: 0 8px !important;
 }
 
@@ -141,6 +141,15 @@ table {
 
 .action-btn:hover {
   color: var(--c-e) !important;
+}
+
+.edit-btn {
+  color: var(--text-dim) !important;
+  transition: color 0.2s;
+}
+
+.edit-btn:hover {
+  color: var(--c-m) !important;
 }
 
 /* Expanded detail row */
