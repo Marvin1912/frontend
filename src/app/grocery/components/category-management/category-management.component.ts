@@ -25,6 +25,7 @@ import {ReceiptService} from '../../services/receipt.service';
 import {Article} from '../../models/article-group.model';
 import {PriceHistoryPoint} from '../../models/price-trend.model';
 import {CategoryDeleteDialogComponent} from '../../dialogs/category-delete-dialog/category-delete-dialog.component';
+import {CategoryRenameDialogComponent} from '../../dialogs/category-rename-dialog/category-rename-dialog.component';
 
 interface CategoryRow {
   id: number;
@@ -140,6 +141,27 @@ export class CategoryManagementComponent implements OnInit {
     });
   }
 
+  openRenameDialog(category: CategoryRow): void {
+    const ref = this.dialog.open(CategoryRenameDialogComponent, {data: {name: category.name}});
+    ref.afterClosed().pipe(
+      switchMap((result: string | undefined) => result && result !== category.name
+        ? this.articleGroupService.renameGroup(category.id, result)
+        : EMPTY),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: renamed => {
+        this.categories.update(list => list
+          .map(c => c.id === category.id ? {...c, name: renamed.name} : c)
+          .sort((a, b) => a.name.localeCompare(b.name, 'de')));
+        this.cdr.markForCheck();
+        this.snackBar.open('Kategorie umbenannt', 'Schließen', {duration: 3000});
+      },
+      error: err => {
+        this.snackBar.open(this.renameErrorMessage(err), 'Schließen', {duration: 5000});
+      }
+    });
+  }
+
   openDeleteDialog(category: CategoryRow): void {
     const ref = this.dialog.open(CategoryDeleteDialogComponent, {data: {name: category.name}});
     ref.afterClosed().pipe(
@@ -180,5 +202,11 @@ export class CategoryManagementComponent implements OnInit {
     if (err.status === 404) return 'Kategorie nicht gefunden';
     if (err.status === 409) return 'Kategorie wird noch verwendet';
     return 'Kategorie konnte nicht gelöscht werden';
+  }
+
+  private renameErrorMessage(err: {status?: number}): string {
+    if (err.status === 404) return 'Kategorie nicht gefunden';
+    if (err.status === 409) return 'Name bereits vergeben';
+    return 'Kategorie konnte nicht umbenannt werden';
   }
 }
