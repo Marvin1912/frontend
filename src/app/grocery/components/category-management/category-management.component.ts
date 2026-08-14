@@ -116,6 +116,30 @@ export class CategoryManagementComponent implements OnInit {
     return format(parseISO(date), 'dd.MM.yyyy');
   }
 
+  removeArticleFromCategory(category: CategoryRow, point: PriceHistoryPoint): void {
+    this.articleGroupService.unassignArticle(point.articleId).pipe(
+      catchError(() => {
+        this.snackBar.open('Artikel konnte nicht entfernt werden', 'Schließen', {duration: 5000});
+        return of(null);
+      })
+    ).subscribe(result => {
+      if (!result) {
+        return;
+      }
+      this.historyByCategory.update(map => {
+        const updated = new Map(map);
+        const remaining = (updated.get(category.id) ?? []).filter(p => p.articleId !== point.articleId);
+        updated.set(category.id, remaining);
+        return updated;
+      });
+      this.categories.update(list => list.map(c => c.id === category.id
+        ? {...c, articleCount: Math.max(0, c.articleCount - 1)}
+        : c));
+      this.cdr.markForCheck();
+      this.snackBar.open(`"${point.articleName}" aus Kategorie entfernt`, 'Schließen', {duration: 3000});
+    });
+  }
+
   openDeleteDialog(category: CategoryRow): void {
     const ref = this.dialog.open(CategoryDeleteDialogComponent, {data: {name: category.name}});
     ref.afterClosed().pipe(

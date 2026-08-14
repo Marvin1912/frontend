@@ -199,6 +199,29 @@ table {
   border-bottom: none;
 }
 
+.detail-actions {
+  width: 40px;
+  text-align: right;
+}
+
+.detail-action-btn {
+  color: var(--text-dim) !important;
+  transition: color 0.2s;
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+}
+
+.detail-action-btn:hover {
+  color: var(--c-e) !important;
+}
+
+.detail-action-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
 .empty-inline {
   margin: 0;
   padding: 0.75rem;

@@ -14,8 +14,8 @@ describe('PriceTrendDetailComponent', () => {
   let httpMock: HttpTestingController;
 
   const history: PriceHistoryPoint[] = [
-    {date: '2026-01-01', singlePrice: 1.19, supermarket: 'REWE', articleName: 'Milch 1,5%'},
-    {date: '2026-02-01', singlePrice: 1.39, supermarket: 'EDEKA', articleName: 'Milch 1,5% Bio'}
+    {date: '2026-01-01', singlePrice: 1.19, supermarket: 'REWE', articleName: 'Milch 1,5%', articleId: 1},
+    {date: '2026-02-01', singlePrice: 1.39, supermarket: 'EDEKA', articleName: 'Milch 1,5% Bio', articleId: 2}
   ];
 
   beforeEach(async () => {
@@ -77,7 +77,7 @@ describe('PriceTrendDetailComponent', () => {
 
   it('should still plot points that have no supermarket field', () => {
     const historyWithoutSupermarket: PriceHistoryPoint[] = [
-      {date: '2026-01-01', singlePrice: 1.19, articleName: 'Milch 1,5%'}
+      {date: '2026-01-01', singlePrice: 1.19, articleName: 'Milch 1,5%', articleId: 1}
     ];
     httpMock.expectOne(`${environment.apiUrl}/receipts/groups/4/history`).flush(historyWithoutSupermarket);
 
