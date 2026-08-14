@@ -113,6 +113,21 @@ table {
   border-bottom: 1px solid var(--border) !important;
 }
 
+/* Expand */
+.col-expand {
+  width: 40px;
+  padding: 0 4px !important;
+}
+
+.expand-btn {
+  color: var(--text-dim) !important;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.expand-btn:hover {
+  color: var(--c-m) !important;
+}
+
 /* Actions */
 .col-actions {
   width: 48px;
@@ -126,6 +141,69 @@ table {
 
 .action-btn:hover {
   color: var(--c-e) !important;
+}
+
+/* Expanded detail row */
+.col-detail {
+  padding: 0 !important;
+}
+
+.detail {
+  padding: 0.75rem 1rem 1rem 3.5rem;
+  background: var(--raised);
+}
+
+.detail-state {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+::ng-deep .detail-state mat-spinner circle { stroke: var(--c-m) !important; }
+
+.detail-table-container {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.detail-table th {
+  position: sticky;
+  top: 0;
+  text-align: left;
+  padding: 0.4rem 0.75rem;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border-mid);
+}
+
+.detail-table td {
+  padding: 0.4rem 0.75rem;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-table tr:last-child td {
+  border-bottom: none;
+}
+
+.empty-inline {
+  margin: 0;
+  padding: 0.75rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
 }
 
 /* States */

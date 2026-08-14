@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {CurrencyPipe} from '@angular/common';
 import {
   MatCell,
   MatCellDef,
@@ -17,9 +18,12 @@ import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDialog} from '@angular/material/dialog';
+import {format, parseISO} from 'date-fns';
 import {catchError, EMPTY, of, switchMap} from 'rxjs';
 import {ArticleGroupService} from '../../services/article-group.service';
+import {ReceiptService} from '../../services/receipt.service';
 import {Article} from '../../models/article-group.model';
+import {PriceHistoryPoint} from '../../models/price-trend.model';
 import {CategoryDeleteDialogComponent} from '../../dialogs/category-delete-dialog/category-delete-dialog.component';
 
 interface CategoryRow {
@@ -44,7 +48,8 @@ interface CategoryRow {
     MatRowDef,
     MatIconButton,
     MatIcon,
-    MatProgressSpinner
+    MatProgressSpinner,
+    CurrencyPipe
   ],
   templateUrl: './category-management.component.html',
   styleUrl: './category-management.component.css'
@@ -52,6 +57,7 @@ interface CategoryRow {
 export class CategoryManagementComponent implements OnInit {
 
   private articleGroupService = inject(ArticleGroupService);
+  private receiptService = inject(ReceiptService);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
   private cdr = inject(ChangeDetectorRef);
@@ -59,7 +65,11 @@ export class CategoryManagementComponent implements OnInit {
 
   loading = signal(false);
   categories = signal<CategoryRow[]>([]);
-  displayedColumns = ['name', 'articleCount', 'actions'];
+  displayedColumns = ['expand', 'name', 'articleCount', 'actions'];
+
+  expandedCategoryId = signal<number | null>(null);
+  historyLoading = signal<number | null>(null);
+  historyByCategory = signal<Map<number, PriceHistoryPoint[]>>(new Map());
 
   ngOnInit(): void {
     this.load();
@@ -79,6 +89,33 @@ export class CategoryManagementComponent implements OnInit {
     });
   }
 
+  toggleExpand(category: CategoryRow): void {
+    if (this.expandedCategoryId() === category.id) {
+      this.expandedCategoryId.set(null);
+      return;
+    }
+    this.expandedCategoryId.set(category.id);
+    if (this.historyByCategory().has(category.id)) {
+      return;
+    }
+    this.historyLoading.set(category.id);
+    this.receiptService.getArticleGroupPriceHistory(category.id.toString()).pipe(
+      catchError(() => {
+        this.snackBar.open('Kaufhistorie konnte nicht geladen werden', 'Schließen', {duration: 5000});
+        return of([] as PriceHistoryPoint[]);
+      })
+    ).subscribe(points => {
+      const sorted = [...points].sort((a, b) => b.date.localeCompare(a.date));
+      this.historyByCategory.update(map => new Map(map).set(category.id, sorted));
+      this.historyLoading.set(null);
+      this.cdr.markForCheck();
+    });
+  }
+
+  formatDate(date: string): string {
+    return format(parseISO(date), 'dd.MM.yyyy');
+  }
+
   openDeleteDialog(category: CategoryRow): void {
     const ref = this.dialog.open(CategoryDeleteDialogComponent, {data: {name: category.name}});
     ref.afterClosed().pipe(
@@ -87,6 +124,9 @@ export class CategoryManagementComponent implements OnInit {
     ).subscribe({
       next: () => {
         this.categories.update(list => list.filter(c => c.id !== category.id));
+        if (this.expandedCategoryId() === category.id) {
+          this.expandedCategoryId.set(null);
+        }
         this.cdr.markForCheck();
         this.snackBar.open('Kategorie gelöscht', 'Schließen', {duration: 3000});
       },
