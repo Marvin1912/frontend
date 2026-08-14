@@ -12,4 +12,5 @@ export interface PriceHistoryPoint {
   singlePrice: number;
   supermarket?: string;
   articleName: string;
+  articleId: number;
 }

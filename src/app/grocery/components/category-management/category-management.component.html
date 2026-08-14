@@ -61,15 +61,24 @@
                             <th>Artikel</th>
                             <th>Preis</th>
                             <th>Supermarkt</th>
+                            <th></th>
                           </tr>
                         </thead>
                         <tbody>
-                          @for (point of historyByCategory().get(category.id); track point.date + point.articleName + point.singlePrice) {
+                          @for (point of historyByCategory().get(category.id); track point.date + point.articleId + point.singlePrice) {
                             <tr>
                               <td>{{ formatDate(point.date) }}</td>
                               <td>{{ point.articleName }}</td>
                               <td>{{ point.singlePrice | currency:'EUR':'symbol':'1.2-2':'de' }}</td>
                               <td>{{ point.supermarket ?? 'Unbekannt' }}</td>
+                              <td class="detail-actions">
+                                <button mat-icon-button
+                                        (click)="removeArticleFromCategory(category, point)"
+                                        class="detail-action-btn"
+                                        aria-label="Artikel aus Kategorie entfernen">
+                                  <mat-icon>link_off</mat-icon>
+                                </button>
+                              </td>
                             </tr>
                           }
                         </tbody>
