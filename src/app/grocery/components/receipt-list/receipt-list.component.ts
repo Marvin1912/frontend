@@ -1,60 +1,38 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow,
-  MatRowDef,
-  MatTable,
-  MatTableDataSource
-} from '@angular/material/table';
+import {Component, inject} from '@angular/core';
 import {CurrencyPipe, DatePipe} from '@angular/common';
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
-import {MatSort, MatSortModule} from '@angular/material/sort';
 import {Receipt, Supermarket} from '../../models/receipt.model';
 import {ReceiptService} from '../../services/receipt.service';
-import {ReceiptDeleteDialogComponent} from '../../dialogs/receipt-delete-dialog/receipt-delete-dialog.component';
 import {SupermarketSelectDialogComponent} from '../../dialogs/supermarket-select-dialog/supermarket-select-dialog.component';
+import {SwipeRevealDirective} from '../../directives/swipe-reveal.directive';
+
+const UNDO_DURATION_MS = 5000;
+const PULL_TRIGGER_DISTANCE = 56;
+const PULL_MAX_DISTANCE = 80;
+
+function receiptDate(receipt: Receipt): Date {
+  return new Date(receipt.receiptDate ?? receipt.creationDate);
+}
+
+function sortByDateDesc(receipts: Receipt[]): Receipt[] {
+  return [...receipts].sort((a, b) => receiptDate(b).getTime() - receiptDate(a).getTime());
+}
 
 @Component({
   selector: 'app-receipt-list',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    MatTable,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
-    DatePipe,
-    CurrencyPipe,
-    MatIconButton,
-    MatIcon,
-    MatSortModule
-  ],
+  imports: [CurrencyPipe, DatePipe, MatIcon, SwipeRevealDirective],
   templateUrl: './receipt-list.component.html',
   styleUrl: './receipt-list.component.css'
 })
-export class ReceiptListComponent implements OnInit {
+export class ReceiptListComponent {
 
-  @ViewChild(MatSort) set sort(sort: MatSort) {
-    this.receipts.sort = sort;
-  }
-
-  receipts = new MatTableDataSource<Receipt>();
-  columnsToDisplay = ['receiptDate', 'creationDate', 'totalAmount', 'supermarket', 'actions'];
+  receipts: Receipt[] = [];
+  loading = true;
+  refreshing = false;
+  pullDistance = 0;
 
   private readonly supermarketLabels: Record<Supermarket, string> = {
     LIDL: 'Lidl',
@@ -62,25 +40,17 @@ export class ReceiptListComponent implements OnInit {
     REWE: 'Rewe'
   };
 
-  constructor(
-    private receiptService: ReceiptService,
-    private router: Router,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef
-  ) {
-    this.receipts.sortingDataAccessor = (receipt, column) => {
-      if (column === 'receiptDate') {
-        return new Date(receipt.receiptDate ?? receipt.creationDate).getTime();
-      }
-      return '';
-    };
-  }
+  private pullStartY: number | null = null;
 
-  ngOnInit(): void {
+  private receiptService = inject(ReceiptService);
+  private router = inject(Router);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
+
+  constructor() {
     this.receiptService.getReceipts().subscribe(receipts => {
-      this.receipts.data = receipts;
-      this.cdr.markForCheck();
+      this.receipts = sortByDateDesc(receipts);
+      this.loading = false;
     });
   }
 
@@ -101,8 +71,7 @@ export class ReceiptListComponent implements OnInit {
       if (!supermarket) return;
       this.receiptService.updateSupermarket(receipt.id, supermarket).subscribe({
         next: updated => {
-          this.receipts.data = this.receipts.data.map(r => r.id === receipt.id ? updated : r);
-          this.cdr.markForCheck();
+          this.receipts = this.receipts.map(r => r.id === updated.id ? updated : r);
         },
         error: () => {
           this.snackBar.open('Supermarkt konnte nicht gespeichert werden', 'Schließen', {duration: 5000});
@@ -111,22 +80,59 @@ export class ReceiptListComponent implements OnInit {
     });
   }
 
-  openDeleteDialog(event: MouseEvent, receipt: Receipt): void {
+  requestDelete(event: MouseEvent, receipt: Receipt, swipe: SwipeRevealDirective): void {
     event.stopPropagation();
-    const ref = this.dialog.open(ReceiptDeleteDialogComponent);
-    ref.afterClosed().subscribe(result => {
-      if (result === 'confirmed') {
-        this.receiptService.deleteReceipt(receipt.id).subscribe({
-          next: () => {
-            this.receipts.data = this.receipts.data.filter(r => r.id !== receipt.id);
-            this.cdr.markForCheck();
-          },
-          error: (err) => {
-            const msg = err.status === 404 ? 'Bon nicht gefunden' : 'Bon konnte nicht gelöscht werden';
-            this.snackBar.open(msg, 'Schließen', {duration: 5000});
-          }
-        });
-      }
+    swipe.close();
+    this.receipts = this.receipts.filter(r => r.id !== receipt.id);
+
+    let undone = false;
+    const ref = this.snackBar.open('Bon gelöscht', 'Rückgängig', {duration: UNDO_DURATION_MS});
+    ref.onAction().subscribe(() => {
+      undone = true;
+      this.receipts = sortByDateDesc([...this.receipts, receipt]);
+    });
+    ref.afterDismissed().subscribe(() => {
+      if (undone) return;
+      this.receiptService.deleteReceipt(receipt.id).subscribe({
+        error: () => {
+          this.snackBar.open('Bon konnte nicht gelöscht werden', 'Schließen', {duration: 5000});
+          this.receipts = sortByDateDesc([...this.receipts, receipt]);
+        }
+      });
+    });
+  }
+
+  onPullStart(event: PointerEvent, scrollEl: HTMLElement): void {
+    this.pullStartY = scrollEl.scrollTop <= 0 ? event.clientY : null;
+  }
+
+  onPullMove(event: PointerEvent, scrollEl: HTMLElement): void {
+    if (this.pullStartY === null) return;
+    const delta = event.clientY - this.pullStartY;
+    if (delta <= 0 || scrollEl.scrollTop > 0) {
+      this.pullStartY = null;
+      this.pullDistance = 0;
+      return;
+    }
+    this.pullDistance = Math.min(PULL_MAX_DISTANCE, delta * 0.5);
+  }
+
+  onPullEnd(): void {
+    if (this.pullDistance >= PULL_TRIGGER_DISTANCE) {
+      this.refresh();
+    }
+    this.pullStartY = null;
+    this.pullDistance = 0;
+  }
+
+  private refresh(): void {
+    this.refreshing = true;
+    this.receiptService.getReceipts().subscribe({
+      next: receipts => {
+        this.receipts = sortByDateDesc(receipts);
+        this.refreshing = false;
+      },
+      error: () => { this.refreshing = false; }
     });
   }
 }

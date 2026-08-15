@@ -1,51 +1,56 @@
 <div class="receipt-items">
-  <header class="table-header">
-    <span class="table-header__dot"></span>
-    <span class="table-header__label">ARTIKEL</span>
-    <button mat-icon-button class="btn-add" (click)="openAddDialog()">
+
+  <header class="detail-header">
+    <span class="detail-header__date">
+      @if (receipt) {
+        {{ (receipt.receiptDate ?? receipt.creationDate) | date:'dd.MM.yyyy' }}
+      }
+    </span>
+    <button type="button" class="supermarket-chip" [class.supermarket-chip--empty]="!receipt?.supermarket"
+            (click)="changeSupermarket()">
+      {{ supermarketLabel(receipt?.supermarket) }}
+    </button>
+    <button mat-icon-button class="detail-header__add" aria-label="Artikel hinzufügen" (click)="openAddDialog()">
       <mat-icon>add</mat-icon>
     </button>
   </header>
 
-  <div class="table-container">
-    <table mat-table [dataSource]="items">
+  <div class="receipt-items__scroll">
+    @if (!loading && items.length === 0) {
+      <p class="grocery-text-muted receipt-items__empty">Noch keine Positionen erfasst.</p>
+    }
 
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef class="col-header">Artikel</th>
-        <td mat-cell *matCellDef="let item">{{ item.name }}</td>
-      </ng-container>
+    <div class="item-cards">
+      @for (item of items; track item.id) {
+        <div class="swipe-row">
+          <div class="swipe-row__actions">
+            <button type="button" class="swipe-action swipe-action--edit"
+                    aria-label="Artikel bearbeiten" (click)="openEditDialog(item, swipe)">
+              <mat-icon>edit</mat-icon>
+            </button>
+          </div>
 
-      <ng-container matColumnDef="quantity">
-        <th mat-header-cell *matHeaderCellDef class="col-header">Menge</th>
-        <td mat-cell *matCellDef="let item">{{ item.quantity }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="singlePrice">
-        <th mat-header-cell *matHeaderCellDef class="col-header">Einzelpreis</th>
-        <td mat-cell *matCellDef="let item">
-          {{ item.singlePrice | currency:'EUR':'symbol':'1.2-2':'de' }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="price">
-        <th mat-header-cell *matHeaderCellDef class="col-header">Preis</th>
-        <td mat-cell *matCellDef="let item">
-          {{ item.price | currency:'EUR':'symbol':'1.2-2':'de' }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="col-header"></th>
-        <td mat-cell *matCellDef="let item" class="col-actions">
-          <button mat-icon-button class="btn-edit" (click)="openEditDialog(item)">
-            <mat-icon>edit</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr mat-row *matRowDef="let item; columns: columnsToDisplay;"></tr>
-
-    </table>
+          <div #swipe="appSwipeReveal" class="grocery-card swipe-row__content" appSwipeReveal [revealWidth]="72">
+            <span class="item-card__name">{{ item.name }}</span>
+            <div class="item-card__math">
+              <span class="grocery-text-muted item-card__breakdown">
+                {{ item.quantity }} × {{ item.singlePrice | currency:'EUR':'symbol':'1.2-2':'de' }}
+              </span>
+              <span class="grocery-amount item-card__total">
+                {{ item.price | currency:'EUR':'symbol':'1.2-2':'de' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
   </div>
+
+  <footer class="receipt-items__footer">
+    <span class="grocery-text-muted">Summe</span>
+    <span class="grocery-amount receipt-items__total">
+      {{ total | currency:'EUR':'symbol':'1.2-2':'de' }}
+    </span>
+  </footer>
+
 </div>
