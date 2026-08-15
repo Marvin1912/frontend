@@ -44,7 +44,7 @@
     @if (priceHighlights.length > 0) {
       <div class="price-highlights">
         @for (summary of priceHighlights; track summary.groupId) {
-          <button type="button" class="grocery-card price-highlights__item" (click)="navigateToPriceTrend(summary)">
+          <button type="button" class="grocery-card price-highlights__item" (click)="openPriceTrend(summary)">
             <span class="price-highlights__name">{{ summary.groupName }}</span>
             <span class="grocery-amount price-highlights__price">
               {{ summary.latestPrice | currency:'EUR':'symbol':'1.2-2':'de' }}
