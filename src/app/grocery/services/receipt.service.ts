@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {map, Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {Receipt, ReceiptItem, Supermarket} from '../models/receipt.model';
 import {PriceHistoryPoint, ProductPriceSummary} from '../models/price-trend.model';
@@ -22,6 +22,10 @@ export class ReceiptService {
 
   getReceipts(): Observable<Receipt[]> {
     return this.http.get<Receipt[]>(`${this.host}/receipts`);
+  }
+
+  getReceipt(id: string): Observable<Receipt | undefined> {
+    return this.getReceipts().pipe(map(receipts => receipts.find(r => r.id === id)));
   }
 
   getReceiptItems(id: string): Observable<ReceiptItem[]> {

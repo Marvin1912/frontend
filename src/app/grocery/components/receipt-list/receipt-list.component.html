@@ -1,67 +1,55 @@
 <div class="receipt-list">
-  <header class="table-header">
-    <span class="table-header__dot"></span>
-    <span class="table-header__label">VERLAUF</span>
+  <header class="list-header">
+    <span class="list-header__label">Verlauf</span>
   </header>
 
-  <div class="table-container">
-    <table mat-table [dataSource]="receipts" matSort matSortActive="receiptDate" matSortDirection="desc">
+  <div #scrollEl class="receipt-list__scroll"
+       (pointerdown)="onPullStart($event, scrollEl)"
+       (pointermove)="onPullMove($event, scrollEl)"
+       (pointerup)="onPullEnd()"
+       (pointercancel)="onPullEnd()">
 
-      <ng-container matColumnDef="receiptDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header class="col-header">Bon-Datum</th>
-        <td mat-cell *matCellDef="let receipt">
-          {{ (receipt.receiptDate ?? receipt.creationDate) | date:'dd.MM.yyyy' }}
-        </td>
-      </ng-container>
+    @if (refreshing || pullDistance > 0) {
+      <div class="pull-indicator" [style.height.px]="refreshing ? 48 : pullDistance">
+        <mat-icon [class.pull-indicator__spin]="refreshing">autorenew</mat-icon>
+      </div>
+    }
 
-      <ng-container matColumnDef="creationDate">
-        <th mat-header-cell *matHeaderCellDef class="col-header">Hochgeladen</th>
-        <td mat-cell *matCellDef="let receipt">
-          {{ receipt.creationDate | date:'dd.MM.yyyy HH:mm' }}
-        </td>
-      </ng-container>
+    @if (!loading && receipts.length === 0) {
+      <p class="grocery-text-muted receipt-list__empty">Noch keine Bons hochgeladen.</p>
+    }
 
-      <ng-container matColumnDef="totalAmount">
-        <th mat-header-cell *matHeaderCellDef class="col-header">Gesamt</th>
-        <td mat-cell *matCellDef="let receipt">
-          @if (receipt.totalAmount !== null) {
-            {{ receipt.totalAmount | currency:'EUR':'symbol':'1.2-2':'de' }}
-          } @else {
-            —
-          }
-        </td>
-      </ng-container>
+    <div class="receipt-cards">
+      @for (receipt of receipts; track receipt.id) {
+        <div class="swipe-row">
+          <div class="swipe-row__actions">
+            <button type="button" class="swipe-action swipe-action--delete"
+                    aria-label="Bon löschen" (click)="requestDelete($event, receipt, swipe)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
 
-      <ng-container matColumnDef="supermarket">
-        <th mat-header-cell *matHeaderCellDef class="col-header">Supermarkt</th>
-        <td mat-cell *matCellDef="let receipt">
-          <button
-            class="supermarket-chip"
-            [class.supermarket-chip--empty]="!receipt.supermarket"
-            (click)="openSupermarketDialog($event, receipt)"
-            title="Supermarkt bearbeiten">
-            {{ supermarketLabel(receipt.supermarket) }}
-          </button>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef class="col-header"></th>
-        <td mat-cell *matCellDef="let receipt" class="col-actions">
-          <button mat-icon-button class="btn-delete" (click)="openDeleteDialog($event, receipt)" title="Bon löschen">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-      <tr
-        mat-row
-        *matRowDef="let receipt; columns: columnsToDisplay;"
-        class="clickable-row"
-        (click)="navigateToItems(receipt.id)">
-      </tr>
-
-    </table>
+          <div #swipe="appSwipeReveal" class="grocery-card swipe-row__content" appSwipeReveal [revealWidth]="72"
+               (click)="navigateToItems(receipt.id)">
+            <div class="receipt-card__main">
+              <span class="receipt-card__date">
+                {{ (receipt.receiptDate ?? receipt.creationDate) | date:'dd.MM.yyyy' }}
+              </span>
+              <button type="button" class="supermarket-chip" [class.supermarket-chip--empty]="!receipt.supermarket"
+                      (click)="openSupermarketDialog($event, receipt)">
+                {{ supermarketLabel(receipt.supermarket) }}
+              </button>
+            </div>
+            <span class="grocery-amount receipt-card__amount">
+              @if (receipt.totalAmount !== null) {
+                {{ receipt.totalAmount | currency:'EUR':'symbol':'1.2-2':'de' }}
+              } @else {
+                —
+              }
+            </span>
+          </div>
+        </div>
+      }
+    </div>
   </div>
 </div>
