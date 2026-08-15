@@ -1,43 +1,34 @@
 <div class="grocery-layout">
-  <header class="topbar">
-    <div class="topbar__left">
-      <button mat-icon-button [routerLink]="homeLink" class="nav-btn" aria-label="Go home">
-        <mat-icon>home</mat-icon>
-      </button>
-      <button mat-icon-button [matMenuTriggerFor]="menu" class="nav-btn" aria-label="Open menu">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="/grocery/upload">
-          <span>Bon hochladen</span>
-        </button>
-        <button mat-menu-item routerLink="/grocery/receipts">
-          <span>Verlauf</span>
-        </button>
-        <button mat-menu-item routerLink="/grocery/price-trends">
-          <span>Preisverlauf</span>
-        </button>
-        <button mat-menu-item routerLink="/grocery/articles">
-          <span>Artikel-Gruppen</span>
-        </button>
-        <button mat-menu-item routerLink="/grocery/categories">
-          <span>Kategorien</span>
-        </button>
-        <button mat-menu-item routerLink="/grocery">
-          <span>Home</span>
-        </button>
-      </mat-menu>
-    </div>
-
-    <div class="topbar__brand">
-      <span class="topbar__hex">⬡</span>
-      <span class="topbar__name">GROCERY</span>
-    </div>
-
-    <div class="topbar__right"></div>
-  </header>
-
   <main class="content">
-    <router-outlet></router-outlet>
+    <router-outlet />
   </main>
+
+  <nav class="bottom-nav" aria-label="Grocery Navigation">
+    <a class="bottom-nav__item" routerLink="/grocery" routerLinkActive="is-active"
+       [routerLinkActiveOptions]="{exact: true}">
+      <mat-icon>home</mat-icon>
+      <span>Home</span>
+    </a>
+
+    <a class="bottom-nav__item" routerLink="/grocery/receipts" routerLinkActive="is-active">
+      <mat-icon>receipt_long</mat-icon>
+      <span>Bons</span>
+    </a>
+
+    <div class="bottom-nav__fab-slot">
+      <button mat-fab class="bottom-nav__fab" routerLink="/grocery/upload" aria-label="Bon scannen">
+        <mat-icon>photo_camera</mat-icon>
+      </button>
+    </div>
+
+    <a class="bottom-nav__item" routerLink="/grocery/price-trends" routerLinkActive="is-active">
+      <mat-icon>trending_up</mat-icon>
+      <span>Preise</span>
+    </a>
+
+    <a class="bottom-nav__item" routerLink="/grocery/more" routerLinkActive="is-active">
+      <mat-icon>more_horiz</mat-icon>
+      <span>Mehr</span>
+    </a>
+  </nav>
 </div>
