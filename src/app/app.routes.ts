@@ -33,6 +33,7 @@ import {PriceTrendsListComponent} from './grocery/components/price-trends-list/p
 import {PriceTrendDetailComponent} from './grocery/components/price-trend-detail/price-trend-detail.component';
 import {ArticleGroupManagementComponent} from './grocery/components/article-group-management/article-group-management.component';
 import {CategoryManagementComponent} from './grocery/components/category-management/category-management.component';
+import {GroceryMoreComponent} from './grocery/components/grocery-more/grocery-more.component';
 import {NutritionLayoutComponent} from './nutrition/components/nutrition-layout/nutrition-layout.component';
 import {NutritionHomeComponent} from './nutrition/components/nutrition-home/nutrition-home.component';
 import {NutritionWeightComponent} from './nutrition/components/nutrition-weight/nutrition-weight.component';
@@ -114,7 +115,8 @@ export const routes: Routes = [
       {path: 'price-trends', component: PriceTrendsListComponent, data: {home: '/grocery'}},
       {path: 'price-trends/:groupId', component: PriceTrendDetailComponent, data: {home: '/grocery/price-trends'}},
       {path: 'articles', component: ArticleGroupManagementComponent, data: {home: '/grocery'}},
-      {path: 'categories', component: CategoryManagementComponent, data: {home: '/grocery'}}
+      {path: 'categories', component: CategoryManagementComponent, data: {home: '/grocery'}},
+      {path: 'more', component: GroceryMoreComponent, data: {home: '/grocery'}}
     ]
   },
   {
