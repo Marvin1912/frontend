@@ -1,24 +1,63 @@
-<div class="navgrid">
+<div class="dashboard">
 
-  <a class="navcard navcard--g" routerLink="/grocery/upload">
-    <div class="navcard__mark">U</div>
-    <h2 class="navcard__title">Bon hochladen</h2>
-    <p class="navcard__sub">Kassenbon fotografieren & hochladen</p>
-    <span class="navcard__arrow" aria-hidden="true">↗</span>
-  </a>
+  <header class="dashboard__header">
+    <p class="dashboard__greeting">{{ greeting }}</p>
+    <div class="dashboard__week">
+      <span class="grocery-amount dashboard__week-amount">
+        {{ weekTotal | currency:'EUR':'symbol':'1.2-2':'de' }}
+      </span>
+      <span class="grocery-text-muted dashboard__week-label">diese Woche</span>
+      @if (weekDeltaPercent !== null) {
+        <span class="grocery-badge" [class.grocery-badge--up]="weekDeltaUp" [class.grocery-badge--down]="!weekDeltaUp">
+          {{ weekDeltaUp ? '▲' : '▼' }} {{ weekDeltaPercent | number:'1.0-0' }}%
+        </span>
+      }
+    </div>
+  </header>
 
-  <a class="navcard navcard--a" routerLink="/grocery/receipts">
-    <div class="navcard__mark">V</div>
-    <h2 class="navcard__title">Verlauf</h2>
-    <p class="navcard__sub">Gespeicherte Bons anzeigen</p>
-    <span class="navcard__arrow" aria-hidden="true">↗</span>
-  </a>
+  <section class="dashboard__section">
+    <h2 class="dashboard__section-title">Letzte Bons</h2>
+    @if (recentReceipts.length > 0) {
+      <div class="recent-receipts">
+        @for (receipt of recentReceipts; track receipt.id) {
+          <button type="button" class="grocery-card recent-receipts__item" (click)="navigateToReceipt(receipt)">
+            <span class="grocery-text-muted recent-receipts__date">
+              {{ (receipt.receiptDate ?? receipt.creationDate) | date:'dd.MM.yyyy' }}
+            </span>
+            <span class="grocery-amount recent-receipts__amount">
+              @if (receipt.totalAmount !== null) {
+                {{ receipt.totalAmount | currency:'EUR':'symbol':'1.2-2':'de' }}
+              } @else {
+                —
+              }
+            </span>
+          </button>
+        }
+      </div>
+    } @else if (!loading) {
+      <p class="grocery-text-muted dashboard__empty">Noch keine Bons hochgeladen.</p>
+    }
+  </section>
 
-  <a class="navcard navcard--p" routerLink="/grocery/price-trends">
-    <div class="navcard__mark">P</div>
-    <h2 class="navcard__title">Preisverlauf</h2>
-    <p class="navcard__sub">Preisentwicklung je Produkt</p>
-    <span class="navcard__arrow" aria-hidden="true">↗</span>
-  </a>
+  <section class="dashboard__section">
+    <h2 class="dashboard__section-title">Preis-Auffälligkeiten</h2>
+    @if (priceHighlights.length > 0) {
+      <div class="price-highlights">
+        @for (summary of priceHighlights; track summary.groupId) {
+          <button type="button" class="grocery-card price-highlights__item" (click)="navigateToPriceTrend(summary)">
+            <span class="price-highlights__name">{{ summary.groupName }}</span>
+            <span class="grocery-amount price-highlights__price">
+              {{ summary.latestPrice | currency:'EUR':'symbol':'1.2-2':'de' }}
+            </span>
+            <span class="grocery-badge" [class.grocery-badge--up]="summary.up" [class.grocery-badge--down]="!summary.up">
+              {{ summary.up ? '▲' : '▼' }} {{ summary.percentChange | number:'1.0-1' }}%
+            </span>
+          </button>
+        }
+      </div>
+    } @else if (!loading) {
+      <p class="grocery-text-muted dashboard__empty">Noch keine Preisverläufe verfügbar.</p>
+    }
+  </section>
 
 </div>
