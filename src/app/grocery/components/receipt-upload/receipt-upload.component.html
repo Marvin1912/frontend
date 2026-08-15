@@ -1,36 +1,124 @@
-<div class="upload-page">
-  <div class="upload-card">
-    <header class="upload-card__header">
-      <span class="upload-card__dot"></span>
-      <span class="upload-card__label">KASSENBON HOCHLADEN</span>
-    </header>
+<div class="scan-flow">
 
-    <div class="upload-card__body">
-      <label class="file-label" [class.file-label--selected]="selectedFile">
-        <input
-          type="file"
-          accept="image/*"
-          capture="environment"
-          (change)="onFileSelected($event)"
-          class="file-input"
-        />
-        <span class="file-label__icon">{{ selectedFile ? '✓' : '📷' }}</span>
-        <span class="file-label__text">
-          {{ selectedFile ? selectedFile.name : 'Bon auswählen oder fotografieren' }}
-        </span>
-      </label>
+  @if (step === 'capture') {
+    <div class="capture">
+      <video #video class="capture__video" autoplay playsinline muted></video>
+      <canvas #canvas class="capture__canvas"></canvas>
 
-      @if (uploading) {
-        <mat-progress-bar mode="indeterminate" class="progress"></mat-progress-bar>
+      <div class="capture__frame" aria-hidden="true">
+        <span class="capture__corner capture__corner--tl"></span>
+        <span class="capture__corner capture__corner--tr"></span>
+        <span class="capture__corner capture__corner--bl"></span>
+        <span class="capture__corner capture__corner--br"></span>
+      </div>
+
+      <p class="capture__hint">Bon im Rahmen ausrichten</p>
+
+      @if (cameraError) {
+        <p class="capture__error">{{ cameraError }}</p>
       }
 
-      <button
-        class="submit-btn"
-        [disabled]="!selectedFile || uploading"
-        (click)="onSubmit()"
-      >
-        {{ uploading ? 'Wird hochgeladen…' : 'Hochladen' }}
-      </button>
+      <div class="capture__controls">
+        <label class="capture__gallery" aria-label="Aus Galerie wählen">
+          <input type="file" accept="image/*" class="capture__gallery-input" (change)="onGallerySelected($event)" />
+          <mat-icon>photo_library</mat-icon>
+        </label>
+
+        <button type="button" class="capture__shutter" aria-label="Bon fotografieren" (click)="capture()">
+          <span class="capture__shutter-ring"></span>
+        </button>
+
+        <span class="capture__controls-spacer"></span>
+      </div>
     </div>
-  </div>
+  }
+
+  @if (step === 'processing') {
+    <div class="processing">
+      <div class="processing__steps">
+        <div class="processing__step processing__step--done">
+          <mat-icon>check_circle</mat-icon>
+          <span>Scan</span>
+        </div>
+        <div class="processing__step" [class.processing__step--active]="recognizing">
+          <mat-icon>autorenew</mat-icon>
+          <span>Erkennen</span>
+        </div>
+        <div class="processing__step">
+          <mat-icon>fact_check</mat-icon>
+          <span>Prüfen</span>
+        </div>
+        <div class="processing__step">
+          <mat-icon>done_all</mat-icon>
+          <span>Fertig</span>
+        </div>
+      </div>
+
+      <div class="processing__skeleton">
+        @for (i of [1, 2, 3]; track i) {
+          <div class="processing__skeleton-row"></div>
+        }
+      </div>
+    </div>
+  }
+
+  @if (step === 'review') {
+    <div class="review">
+      <div class="review__content">
+        <section class="review__section">
+          <h2 class="review__section-title">Supermarkt</h2>
+          <div class="segmented" role="group" aria-label="Supermarkt auswählen">
+            @for (market of supermarkets; track market.value) {
+              <button type="button" class="segmented__option" [class.segmented__option--active]="supermarket === market.value"
+                      (click)="selectSupermarket(market.value)">
+                {{ market.label }}
+              </button>
+            }
+          </div>
+        </section>
+
+        <section class="review__section">
+          <h2 class="review__section-title">Positionen</h2>
+          <div class="review-list">
+            @for (item of items; track item.id) {
+              <div class="grocery-card review-item">
+                <input class="review-item__name" type="text" [(ngModel)]="item.name" (blur)="saveItem(item)" />
+                <div class="review-item__row">
+                  <label class="review-item__field">
+                    <span class="grocery-text-muted">Menge</span>
+                    <input type="number" step="0.01" min="0" [(ngModel)]="item.quantity" (blur)="saveItem(item)" />
+                  </label>
+                  <label class="review-item__field">
+                    <span class="grocery-text-muted">Einzelpreis</span>
+                    <input type="number" step="0.01" min="0" [(ngModel)]="item.singlePrice" (blur)="saveItem(item)" />
+                  </label>
+                  <span class="review-item__price grocery-amount">
+                    {{ item.price | currency:'EUR':'symbol':'1.2-2':'de' }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      </div>
+
+      <footer class="review__footer">
+        <div class="review__total">
+          <span class="grocery-text-muted">Summe</span>
+          <span class="grocery-amount review__total-amount">
+            {{ runningTotal | currency:'EUR':'symbol':'1.2-2':'de' }}
+          </span>
+        </div>
+        <button type="button" class="grocery-button review__save" (click)="onSave()">Speichern</button>
+      </footer>
+    </div>
+  }
+
+  @if (step === 'success') {
+    <div class="success">
+      <mat-icon class="success__check">check_circle</mat-icon>
+      <p class="success__text">Bon gespeichert</p>
+    </div>
+  }
+
 </div>
