@@ -1,7 +1,6 @@
 <div class="categories">
-  <header class="table-header">
-    <span class="table-header__dot"></span>
-    <span class="table-header__label">KATEGORIEN</span>
+  <header class="list-header">
+    <span class="list-header__label">Kategorien</span>
   </header>
 
   @if (loading()) {
@@ -88,7 +87,7 @@
                       </table>
                     </div>
                   } @else {
-                    <p class="empty-inline">Keine Käufe gefunden.</p>
+                    <p class="grocery-text-muted empty-inline">Keine Käufe gefunden.</p>
                   }
                 }
               </div>
@@ -102,6 +101,6 @@
       </table>
     </div>
   } @else {
-    <p class="empty">Keine Kategorien gefunden.</p>
+    <p class="grocery-text-muted empty">Keine Kategorien gefunden.</p>
   }
 </div>

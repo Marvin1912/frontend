@@ -13,10 +13,10 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="center">
-  <button mat-mini-fab class="btn-confirm" [disabled]="!isValid" (click)="confirm()">
+  <button mat-mini-fab color="primary" [disabled]="!isValid" (click)="confirm()" aria-label="Bestätigen">
     <mat-icon>check_circle</mat-icon>
   </button>
-  <button mat-mini-fab mat-dialog-close class="btn-cancel">
+  <button mat-mini-fab mat-dialog-close aria-label="Abbrechen">
     <mat-icon>close</mat-icon>
   </button>
 </mat-dialog-actions>
