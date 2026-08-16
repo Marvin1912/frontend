@@ -78,6 +78,7 @@ export class PriceTrendsListComponent implements OnInit {
 
   openDetail(product: ProductPriceSummary): void {
     this.bottomSheet.open(PriceTrendDetailComponent, {
+      panelClass: 'grocery-bottom-sheet-panel',
       data: {groupId: product.groupId, displayName: product.groupName}
     });
   }
