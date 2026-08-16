@@ -1,7 +1,7 @@
 import {Component, DestroyRef, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatIcon} from '@angular/material/icon';
-import {MatFabButton, MatIconButton} from '@angular/material/button';
+import {MatFabButton} from '@angular/material/button';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {filter} from 'rxjs';
 
@@ -10,7 +10,6 @@ import {filter} from 'rxjs';
   imports: [
     MatIcon,
     MatFabButton,
-    MatIconButton,
     RouterLink,
     RouterLinkActive,
     RouterOutlet
