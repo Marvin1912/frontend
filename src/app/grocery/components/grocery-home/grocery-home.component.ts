@@ -1,10 +1,12 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {CurrencyPipe, DatePipe, DecimalPipe} from '@angular/common';
 import {Router} from '@angular/router';
+import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {catchError, forkJoin, of} from 'rxjs';
 import {ReceiptService} from '../../services/receipt.service';
 import {Receipt} from '../../models/receipt.model';
 import {ProductPriceSummary} from '../../models/price-trend.model';
+import {PriceTrendDetailComponent} from '../price-trend-detail/price-trend-detail.component';
 
 const RECENT_RECEIPTS_LIMIT = 3;
 const PRICE_HIGHLIGHTS_LIMIT = 4;
@@ -45,6 +47,7 @@ export class GroceryHomeComponent implements OnInit {
 
   private receiptService = inject(ReceiptService);
   private router = inject(Router);
+  private bottomSheet = inject(MatBottomSheet);
   private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
@@ -67,9 +70,9 @@ export class GroceryHomeComponent implements OnInit {
     void this.router.navigate(['/grocery/receipts', receipt.id, 'items']);
   }
 
-  navigateToPriceTrend(summary: ProductPriceSummary): void {
-    void this.router.navigate(['/grocery/price-trends', summary.groupId], {
-      state: {displayName: summary.groupName}
+  openPriceTrend(summary: ProductPriceSummary): void {
+    this.bottomSheet.open(PriceTrendDetailComponent, {
+      data: {groupId: summary.groupId, displayName: summary.groupName}
     });
   }
 

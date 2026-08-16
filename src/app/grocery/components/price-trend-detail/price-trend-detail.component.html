@@ -1,51 +1,40 @@
-<div class="detail">
+<div class="detail" [class.detail--expanded]="expanded">
+
+  <button type="button" class="detail__handle" aria-label="Ansicht vergrößern/verkleinern" (click)="toggleExpanded()">
+    <span class="detail__handle-bar"></span>
+  </button>
 
   <header class="detail__head">
-    <a mat-icon-button routerLink="/grocery/price-trends" aria-label="Zurück zur Übersicht">
-      <mat-icon>arrow_back</mat-icon>
-    </a>
-    <h1 class="detail__title">{{ productName }}</h1>
+    <h1 class="detail__title">{{ data.displayName }}</h1>
+    <button mat-icon-button aria-label="Schließen" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
   </header>
 
-  @if (loading) {
-    <div class="state">
-      <mat-spinner diameter="32" />
-    </div>
-  } @else if (hasHistory) {
-    <section class="panel">
+  <div class="detail__body">
+    @if (loading) {
+      <div class="state">
+        <mat-spinner diameter="32" />
+      </div>
+    } @else if (hasHistory) {
       <div class="chart">
         <canvas baseChart type="line" [data]="chartData" [options]="chartOptions"></canvas>
       </div>
-    </section>
 
-    <section class="panel">
-      <h2 class="panel__title">Günstigster aktueller Preis je Supermarkt</h2>
-      <table class="supermarket-table">
-        <thead>
-          <tr>
-            <th>Supermarkt</th>
-            <th>Preis</th>
-            <th>Artikel</th>
-            <th>Datum</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of latestBySupermarket; track row.supermarket) {
-            <tr>
-              <td>
-                <span class="dot" [style.background]="colorFor(row.supermarket)"></span>
-                {{ row.supermarket }}
-              </td>
-              <td>{{ row.price | currency:'EUR':'symbol':'1.2-2':'de' }}</td>
-              <td>{{ row.articleName }}</td>
-              <td>{{ row.date }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </section>
-  } @else {
-    <p class="empty">Für dieses Produkt liegt noch kein Preisverlauf vor.</p>
-  }
+      <div class="legend">
+        @for (row of latestBySupermarket; track row.supermarket) {
+          <span class="legend__item">
+            <span class="legend__dot" [style.background]="colorFor(row.supermarket)"></span>
+            {{ row.supermarket }}
+            <span class="grocery-amount legend__price">
+              {{ row.price | currency:'EUR':'symbol':'1.2-2':'de' }}
+            </span>
+          </span>
+        }
+      </div>
+    } @else {
+      <p class="grocery-text-muted empty">Für dieses Produkt liegt noch kein Preisverlauf vor.</p>
+    }
+  </div>
 
 </div>

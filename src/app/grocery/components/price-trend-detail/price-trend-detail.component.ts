@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
-import {ActivatedRoute, RouterLink} from '@angular/router';
 import {CurrencyPipe} from '@angular/common';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import {ChartConfiguration, TooltipItem} from 'chart.js';
 import {BaseChartDirective} from 'ng2-charts';
 import {format, parseISO} from 'date-fns';
@@ -12,51 +12,55 @@ import {ReceiptService} from '../../services/receipt.service';
 import {PriceHistoryPoint} from '../../models/price-trend.model';
 
 const SUPERMARKET_COLORS: Record<string, string> = {
-  REWE: '#f97316',
-  EDEKA: '#4da6ff',
-  LIDL: '#2dd4bf'
+  LIDL: '#0f6e5c',
+  EDEKA: '#4a6fa5',
+  REWE: '#c3841e'
 };
-const FALLBACK_COLOR = '#c8d4e8';
+const FALLBACK_COLOR = '#6b7280';
 const UNKNOWN_SUPERMARKET = 'Unbekannt';
+
+const AXIS_COLOR = '#6b7280';
+const GRID_COLOR = 'rgba(0, 0, 0, 0.08)';
 
 function colorForSupermarket(supermarket: string): string {
   return SUPERMARKET_COLORS[supermarket] ?? FALLBACK_COLOR;
 }
 
+export interface PriceTrendDetailData {
+  groupId: number;
+  displayName: string;
+}
+
 interface SupermarketLatestPrice {
   supermarket: string;
   price: number;
-  articleName: string;
-  date: string;
 }
 
 @Component({
   selector: 'app-price-trend-detail',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, MatIconButton, MatIcon, MatProgressSpinner, BaseChartDirective, CurrencyPipe],
+  imports: [MatIconButton, MatIcon, MatProgressSpinner, BaseChartDirective, CurrencyPipe],
   templateUrl: './price-trend-detail.component.html',
   styleUrl: './price-trend-detail.component.css'
 })
 export class PriceTrendDetailComponent implements OnInit {
 
+  readonly data = inject<PriceTrendDetailData>(MAT_BOTTOM_SHEET_DATA);
+
   loading = true;
-  productName = '';
+  expanded = false;
   priceHistory: PriceHistoryPoint[] = [];
   latestBySupermarket: SupermarketLatestPrice[] = [];
 
   chartData: ChartConfiguration<'line'>['data'] = {labels: [], datasets: []};
   chartOptions: ChartConfiguration<'line'>['options'] = {};
 
-  private route = inject(ActivatedRoute);
+  private sheetRef = inject(MatBottomSheetRef<PriceTrendDetailComponent>);
   private receiptService = inject(ReceiptService);
   private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
-    const groupId = this.route.snapshot.paramMap.get('groupId') ?? '';
-    const navigationState = window.history.state as {displayName?: string} | undefined;
-    this.productName = navigationState?.displayName ?? groupId;
-
-    this.receiptService.getArticleGroupPriceHistory(groupId)
+    this.receiptService.getArticleGroupPriceHistory(`${this.data.groupId}`)
       .pipe(catchError(() => of([] as PriceHistoryPoint[])))
       .subscribe(points => {
         this.priceHistory = points;
@@ -73,6 +77,14 @@ export class PriceTrendDetailComponent implements OnInit {
 
   colorFor(supermarket: string): string {
     return colorForSupermarket(supermarket);
+  }
+
+  toggleExpanded(): void {
+    this.expanded = !this.expanded;
+  }
+
+  close(): void {
+    this.sheetRef.dismiss();
   }
 
   private buildChart(history: PriceHistoryPoint[]): void {
@@ -99,19 +111,16 @@ export class PriceTrendDetailComponent implements OnInit {
       maintainAspectRatio: false,
       scales: {
         x: {
-          ticks: {color: '#7a93b0', font: {family: 'JetBrains Mono', size: 10}},
-          grid: {color: 'rgba(255, 255, 255, 0.07)'}
+          ticks: {color: AXIS_COLOR, font: {size: 10}},
+          grid: {color: GRID_COLOR}
         },
         y: {
-          ticks: {color: '#7a93b0', font: {family: 'JetBrains Mono', size: 10}},
-          grid: {color: 'rgba(255, 255, 255, 0.07)'}
+          ticks: {color: AXIS_COLOR, font: {size: 10}},
+          grid: {color: GRID_COLOR}
         }
       },
       plugins: {
-        legend: {
-          display: supermarkets.length > 1,
-          labels: {color: '#7a93b0', font: {family: 'JetBrains Mono', size: 10}}
-        },
+        legend: {display: false},
         tooltip: {
           callbacks: {
             label: (item: TooltipItem<'line'>) => {
@@ -135,12 +144,7 @@ export class PriceTrendDetailComponent implements OnInit {
     }
 
     return Array.from(latest.entries())
-      .map(([supermarket, p]) => ({
-        supermarket,
-        price: p.singlePrice,
-        articleName: p.articleName,
-        date: format(parseISO(p.date), 'dd.MM.yyyy')
-      }))
+      .map(([supermarket, p]) => ({supermarket, price: p.singlePrice}))
       .sort((a, b) => a.price - b.price);
   }
 }

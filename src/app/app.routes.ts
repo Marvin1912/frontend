@@ -30,7 +30,6 @@ import {ReceiptUploadComponent} from './grocery/components/receipt-upload/receip
 import {ReceiptListComponent} from './grocery/components/receipt-list/receipt-list.component';
 import {ReceiptItemsComponent} from './grocery/components/receipt-items/receipt-items.component';
 import {PriceTrendsListComponent} from './grocery/components/price-trends-list/price-trends-list.component';
-import {PriceTrendDetailComponent} from './grocery/components/price-trend-detail/price-trend-detail.component';
 import {ArticleGroupManagementComponent} from './grocery/components/article-group-management/article-group-management.component';
 import {CategoryManagementComponent} from './grocery/components/category-management/category-management.component';
 import {GroceryMoreComponent} from './grocery/components/grocery-more/grocery-more.component';
@@ -113,7 +112,6 @@ export const routes: Routes = [
       {path: 'receipts', component: ReceiptListComponent, data: {home: '/grocery'}},
       {path: 'receipts/:id/items', component: ReceiptItemsComponent, data: {home: '/grocery/receipts'}},
       {path: 'price-trends', component: PriceTrendsListComponent, data: {home: '/grocery'}},
-      {path: 'price-trends/:groupId', component: PriceTrendDetailComponent, data: {home: '/grocery/price-trends'}},
       {path: 'articles', component: ArticleGroupManagementComponent, data: {home: '/grocery'}},
       {path: 'categories', component: CategoryManagementComponent, data: {home: '/grocery'}},
       {path: 'more', component: GroceryMoreComponent, data: {home: '/grocery'}}
