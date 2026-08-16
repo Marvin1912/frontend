@@ -1,4 +1,10 @@
 <div class="grocery-layout">
+  <header class="topbar">
+    <button mat-icon-button class="topbar__home" [routerLink]="homeLink" aria-label="Zurück zur App">
+      <mat-icon>home</mat-icon>
+    </button>
+  </header>
+
   <main class="content">
     <router-outlet />
   </main>
