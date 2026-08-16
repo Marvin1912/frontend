@@ -5,6 +5,18 @@
   overflow: hidden;
 }
 
+/* ── Topbar ──────────────────────────────────────── */
+.topbar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: max(0.25rem, env(safe-area-inset-top)) max(0.5rem, env(safe-area-inset-right)) 0 max(0.5rem, env(safe-area-inset-left));
+}
+
+.topbar__home {
+  color: var(--mat-sys-on-surface-variant);
+}
+
 .content {
   flex: 1;
   overflow-y: auto;
