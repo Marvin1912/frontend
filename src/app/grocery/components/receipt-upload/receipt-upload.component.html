@@ -5,6 +5,10 @@
       <video #video class="capture__video" autoplay playsinline muted></video>
       <canvas #canvas class="capture__canvas"></canvas>
 
+      @if (flash) {
+        <div class="capture__flash" aria-hidden="true"></div>
+      }
+
       <div class="capture__frame" aria-hidden="true">
         <span class="capture__corner capture__corner--tl"></span>
         <span class="capture__corner capture__corner--tr"></span>

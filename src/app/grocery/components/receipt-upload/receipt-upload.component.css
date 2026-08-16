@@ -33,6 +33,19 @@
   display: none;
 }
 
+.capture__flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  animation: shutter-flash 0.2s ease-out;
+  pointer-events: none;
+}
+
+@keyframes shutter-flash {
+  from { opacity: 0.85; }
+  to   { opacity: 0; }
+}
+
 .capture__frame {
   position: absolute;
   inset: 12% 8%;

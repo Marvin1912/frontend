@@ -34,6 +34,7 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
   step: ScanStep = 'capture';
   cameraError: string | null = null;
   recognizing = false;
+  flash = false;
 
   receiptId = '';
   items: ReceiptItem[] = [];
@@ -61,6 +62,10 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
     const video = this.videoRef?.nativeElement;
     const canvas = this.canvasRef?.nativeElement;
     if (!video || !canvas || !video.videoWidth) return;
+
+    navigator.vibrate?.(20);
+    this.flash = true;
+    setTimeout(() => { this.flash = false; }, 200);
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
