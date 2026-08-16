@@ -1,0 +1,130 @@
+:host {
+  display: block;
+  min-height: 100%;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+}
+
+.matching-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Header */
+.list-header {
+  padding: 0 0 0.25rem;
+}
+
+.list-header__label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface);
+}
+
+/* Run actions */
+.run-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.run-actions button mat-spinner {
+  display: inline-flex;
+}
+
+/* Run summary */
+.run-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  font-size: 0.85rem;
+  padding: 0.75rem 1rem;
+}
+
+/* Table container */
+.table-container {
+  background: var(--mat-sys-surface-container);
+  border-radius: var(--grocery-radius);
+  box-shadow: var(--grocery-shadow);
+  overflow: hidden;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+table {
+  width: 100%;
+  background: transparent !important;
+}
+
+.col-header {
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  color: var(--mat-sys-on-surface-variant) !important;
+  background: var(--mat-sys-surface-container-high) !important;
+  border-bottom: 1px solid var(--mat-sys-outline-variant) !important;
+  height: 40px !important;
+  padding: 0 16px !important;
+}
+
+::ng-deep .mat-mdc-header-row {
+  background: var(--mat-sys-surface-container-high) !important;
+}
+
+::ng-deep .mat-mdc-cell {
+  font-size: 0.85rem !important;
+  color: var(--mat-sys-on-surface) !important;
+  background: transparent !important;
+  border-bottom: 1px solid var(--mat-sys-outline-variant) !important;
+}
+
+/* Source badge */
+.badge--heuristic {
+  background: color-mix(in srgb, var(--mat-sys-primary) 16%, transparent);
+  color: var(--mat-sys-primary);
+}
+
+.badge--llm {
+  background: color-mix(in srgb, var(--mat-sys-tertiary) 16%, transparent);
+  color: var(--mat-sys-tertiary);
+}
+
+/* Actions */
+.col-actions {
+  width: 88px;
+  padding: 0 8px !important;
+}
+
+.action-btn {
+  color: var(--mat-sys-on-surface-variant);
+  transition: color 0.2s;
+}
+
+.accept-btn:hover {
+  color: var(--grocery-price-down);
+}
+
+.reject-btn:hover {
+  color: var(--mat-sys-error);
+}
+
+/* States */
+.state {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.empty {
+  margin: 0;
+  padding: 1.25rem;
+  text-align: center;
+  font-size: 0.85rem;
+  background: var(--mat-sys-surface-container);
+  border: 1px dashed var(--mat-sys-outline-variant);
+  border-radius: var(--grocery-radius-sm);
+}

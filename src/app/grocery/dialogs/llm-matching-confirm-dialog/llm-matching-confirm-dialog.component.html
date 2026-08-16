@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>LLM-Matching starten</h2>
+
+<mat-dialog-content>
+  <span>
+    Dieser Lauf ruft die Claude-API auf (kostenpflichtig) und weist Artikel
+    <strong>direkt final</strong> zu, ohne weitere Review-Möglichkeit. Wirklich fortfahren?
+  </span>
+</mat-dialog-content>
+
+<mat-dialog-actions align="center">
+  <button mat-mini-fab color="primary" (click)="confirm()" aria-label="LLM-Matching bestätigen">
+    <mat-icon>check_circle</mat-icon>
+  </button>
+  <button mat-mini-fab mat-dialog-close aria-label="Abbrechen">
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-dialog-actions>

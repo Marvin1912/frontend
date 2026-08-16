@@ -1,0 +1,92 @@
+<div class="matching-suggestions">
+  <header class="list-header">
+    <span class="list-header__label">Matching-Vorschläge</span>
+  </header>
+
+  <div class="run-actions">
+    <button mat-flat-button
+            class="grocery-button"
+            (click)="runHeuristic()"
+            [disabled]="runningHeuristic() || runningLlm()">
+      @if (runningHeuristic()) {
+        <mat-spinner diameter="18" />
+      } @else {
+        Heuristik-Matching starten
+      }
+    </button>
+
+    <button mat-flat-button
+            class="grocery-button"
+            (click)="openLlmConfirm()"
+            [disabled]="runningHeuristic() || runningLlm()">
+      @if (runningLlm()) {
+        <mat-spinner diameter="18" />
+      } @else {
+        LLM-Matching starten
+      }
+    </button>
+  </div>
+
+  @if (lastRunResult(); as result) {
+    <div class="run-summary grocery-card">
+      <span><strong>{{ result.candidatesEvaluated }}</strong> geprüft</span>
+      <span><strong>{{ result.autoAssigned }}</strong> automatisch zugewiesen</span>
+      <span><strong>{{ result.suggested }}</strong> vorgeschlagen</span>
+      <span><strong>{{ result.unmatched }}</strong> ohne Treffer</span>
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="state">
+      <mat-spinner diameter="32" />
+    </div>
+  } @else if (suggestions().length > 0) {
+    <div class="table-container">
+      <table mat-table [dataSource]="suggestions()">
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef class="col-header">Artikel</th>
+          <td mat-cell *matCellDef="let suggestion">{{ suggestion.articleName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="group">
+          <th mat-header-cell *matHeaderCellDef class="col-header">Vorgeschlagene Gruppe</th>
+          <td mat-cell *matCellDef="let suggestion">{{ suggestion.suggestedGroupName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="score">
+          <th mat-header-cell *matHeaderCellDef class="col-header">Score</th>
+          <td mat-cell *matCellDef="let suggestion">{{ scorePercent(suggestion) | number:'1.0-0' }}%</td>
+        </ng-container>
+
+        <ng-container matColumnDef="source">
+          <th mat-header-cell *matHeaderCellDef class="col-header">Quelle</th>
+          <td mat-cell *matCellDef="let suggestion">
+            <span class="grocery-badge"
+                  [class.badge--heuristic]="suggestion.source === 'HEURISTIC'"
+                  [class.badge--llm]="suggestion.source === 'LLM'">
+              {{ suggestion.source }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="col-header"></th>
+          <td mat-cell *matCellDef="let suggestion" class="col-actions">
+            <button mat-icon-button (click)="accept(suggestion)" class="action-btn accept-btn" aria-label="Vorschlag annehmen">
+              <mat-icon>check</mat-icon>
+            </button>
+            <button mat-icon-button (click)="reject(suggestion)" class="action-btn reject-btn" aria-label="Vorschlag verwerfen">
+              <mat-icon>close</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  } @else {
+    <p class="grocery-text-muted empty">Keine offenen Vorschläge.</p>
+  }
+</div>
