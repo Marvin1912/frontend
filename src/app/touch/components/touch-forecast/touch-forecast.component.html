@@ -1,13 +1,18 @@
 <div class="forecast">
-  <div class="forecast__header">
-    <span class="forecast__title">3-Day Forecast</span>
-    @if (remainingSeconds$ | async; as remaining) {
-      <span class="forecast__countdown">Back to dashboard in {{ remaining }}s</span>
-    }
-  </div>
+  @if (view$ | async; as view) {
+    <div class="forecast__header">
+      <span class="forecast__heading">
+        <span class="forecast__title">3-Day Forecast</span>
+        @if (coordinatesLabel(view.days); as coordinates) {
+          <span class="forecast__coordinates">{{ coordinates }}</span>
+        }
+      </span>
+      @if (remainingSeconds$ | async; as remaining) {
+        <span class="forecast__countdown">Back to dashboard in {{ remaining }}s</span>
+      }
+    </div>
 
-  <div class="forecast__body">
-    @if (view$ | async; as view) {
+    <div class="forecast__body">
       @switch (view.status) {
         @case ('ready') {
           <div class="forecast__days">
@@ -41,8 +46,13 @@
           <div class="forecast__placeholder forecast__placeholder--error">Forecast service unreachable.</div>
         }
       }
-    } @else {
+    </div>
+  } @else {
+    <div class="forecast__header">
+      <span class="forecast__title">3-Day Forecast</span>
+    </div>
+    <div class="forecast__body">
       <div class="forecast__placeholder">Loading forecast…</div>
-    }
-  </div>
+    </div>
+  }
 </div>
