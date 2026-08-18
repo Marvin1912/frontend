@@ -6,4 +6,6 @@ export interface WeatherForecast {
   temperatureC: number;
   humidityPct: number;
   windSpeedMs: number;
+  latitude: number;
+  longitude: number;
 }

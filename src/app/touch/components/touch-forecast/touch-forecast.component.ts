@@ -49,6 +49,14 @@ export class TouchForecastComponent {
     return Math.round(value);
   }
 
+  coordinatesLabel(days: WeatherForecast[]): string | null {
+    const first = days[0];
+    if (!first) return null;
+    const lat = this.formatCoordinate(first.latitude, 'N', 'S');
+    const lon = this.formatCoordinate(first.longitude, 'E', 'W');
+    return `${lat}, ${lon}`;
+  }
+
   iconFor(weatherId: number): string {
     if (weatherId >= 200 && weatherId < 300) return 'thunderstorm';
     if (weatherId >= 300 && weatherId < 600) return 'water_drop';
@@ -56,6 +64,10 @@ export class TouchForecastComponent {
     if (weatherId >= 700 && weatherId < 800) return 'foggy';
     if (weatherId === 800) return 'wb_sunny';
     return 'cloud';
+  }
+
+  private formatCoordinate(value: number, positiveSuffix: string, negativeSuffix: string): string {
+    return `${Math.abs(value).toFixed(4)}° ${value >= 0 ? positiveSuffix : negativeSuffix}`;
   }
 
   private resolveDisplayMs(): number {
