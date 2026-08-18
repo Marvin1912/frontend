@@ -3,6 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {EMPTY, Observable, catchError, shareReplay, switchMap, timer} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {TemperatureReading} from '../models/temperature-reading.model';
+import {WeatherForecast} from '../models/weather-forecast.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +23,9 @@ export class ClimateService {
 
   getReadings(): Observable<TemperatureReading[]> {
     return this.http.get<TemperatureReading[]>(`${this.host}/climate/readings`);
+  }
+
+  getForecast(): Observable<WeatherForecast[]> {
+    return this.http.get<WeatherForecast[]>(`${this.host}/climate/forecast`);
   }
 }

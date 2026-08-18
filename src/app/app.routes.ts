@@ -24,6 +24,7 @@ import {ArticleListComponent} from './it-news/components/article-list/article-li
 import {FeedConfigComponent} from './it-news/components/feed-config/feed-config.component';
 import {TouchLayoutComponent} from './touch/components/touch-layout/touch-layout.component';
 import {TouchDashboardComponent} from './touch/components/touch-dashboard/touch-dashboard.component';
+import {TouchForecastComponent} from './touch/components/touch-forecast/touch-forecast.component';
 import {GroceryLayoutComponent} from './grocery/components/grocery-layout/grocery-layout.component';
 import {GroceryHomeComponent} from './grocery/components/grocery-home/grocery-home.component';
 import {ReceiptUploadComponent} from './grocery/components/receipt-upload/receipt-upload.component';
@@ -101,7 +102,8 @@ export const routes: Routes = [
     path: 'touch',
     component: TouchLayoutComponent,
     children: [
-      {path: '', component: TouchDashboardComponent, data: {home: '/touch'}}
+      {path: '', component: TouchDashboardComponent, data: {home: '/touch'}},
+      {path: 'forecast', component: TouchForecastComponent, data: {home: '/touch'}}
     ]
   },
   {
