@@ -1,0 +1,48 @@
+<div class="forecast">
+  <div class="forecast__header">
+    <span class="forecast__title">3-Day Forecast</span>
+    @if (remainingSeconds$ | async; as remaining) {
+      <span class="forecast__countdown">Back to dashboard in {{ remaining }}s</span>
+    }
+  </div>
+
+  <div class="forecast__body">
+    @if (view$ | async; as view) {
+      @switch (view.status) {
+        @case ('ready') {
+          <div class="forecast__days">
+            @for (day of view.days; track day.date) {
+              <div class="forecast__card">
+                <span class="forecast__day-label">{{ day.date | date:'EEE d MMM' }}</span>
+                <mat-icon class="forecast__icon" [attr.aria-label]="day.description">{{ iconFor(day.weatherId) }}</mat-icon>
+                <span class="forecast__description">{{ day.description }}</span>
+                <div class="forecast__temp">
+                  <span class="forecast__temp-value">{{ day.temperatureC.toFixed(1) }}</span>
+                  <span class="forecast__temp-unit">°C</span>
+                </div>
+                <div class="forecast__meta">
+                  <span class="forecast__meta-item">
+                    <span class="forecast__meta-icon" aria-hidden="true">💧</span>
+                    {{ round(day.humidityPct) }}%
+                  </span>
+                  <span class="forecast__meta-item">
+                    <span class="forecast__meta-icon" aria-hidden="true">🌬</span>
+                    {{ day.windSpeedMs.toFixed(1) }} m/s
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        }
+        @case ('empty') {
+          <div class="forecast__placeholder">No forecast available.</div>
+        }
+        @case ('error') {
+          <div class="forecast__placeholder forecast__placeholder--error">Forecast service unreachable.</div>
+        }
+      }
+    } @else {
+      <div class="forecast__placeholder">Loading forecast…</div>
+    }
+  </div>
+</div>

@@ -18,6 +18,14 @@
   min-height: 0;
 }
 
+.dashboard__hero-link {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .dashboard__rooms {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

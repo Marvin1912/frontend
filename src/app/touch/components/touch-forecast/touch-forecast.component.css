@@ -1,0 +1,145 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.25rem;
+  gap: 1.25rem;
+  overflow: hidden;
+}
+
+.forecast {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 1.25rem;
+  min-height: 0;
+}
+
+.forecast__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-family: 'Outfit', sans-serif;
+}
+
+.forecast__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.forecast__countdown {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.forecast__body {
+  flex: 1;
+  min-height: 0;
+}
+
+.forecast__days {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.forecast__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.5rem 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border-mid);
+  border-radius: 14px;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text);
+  text-align: center;
+}
+
+.forecast__day-label {
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.forecast__icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  color: var(--c-c);
+  filter: drop-shadow(0 0 8px var(--cg-c));
+}
+
+.forecast__description {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+.forecast__temp {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  color: var(--c-c);
+  margin-top: 0.25rem;
+}
+
+.forecast__temp-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.forecast__temp-unit {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.forecast__meta {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  width: 100%;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.forecast__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.forecast__placeholder {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px dashed var(--border-mid);
+  border-radius: 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.forecast__placeholder--error {
+  color: var(--c-e);
+  border-color: rgba(251, 113, 133, 0.4);
+}

@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {AsyncPipe} from '@angular/common';
+import {RouterLink} from '@angular/router';
 import {catchError, combineLatest, map, of, timer} from 'rxjs';
 import {ClimateService} from '../../services/climate.service';
 import {TemperatureReading} from '../../models/temperature-reading.model';
@@ -18,7 +19,7 @@ const VISIBLE_INDOOR_COUNT = 2;
 
 @Component({
   selector: 'app-touch-dashboard',
-  imports: [AsyncPipe, TemperatureCardComponent, PlantsSummaryTileComponent, PortfolioTileComponent],
+  imports: [AsyncPipe, RouterLink, TemperatureCardComponent, PlantsSummaryTileComponent, PortfolioTileComponent],
   templateUrl: './touch-dashboard.component.html',
   styleUrl: './touch-dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
