@@ -1,58 +1,94 @@
 <div class="forecast">
   @if (view$ | async; as view) {
     <div class="forecast__header">
-      <span class="forecast__heading">
-        <span class="forecast__title">3-Day Forecast</span>
-        @if (coordinatesLabel(view.days); as coordinates) {
-          <span class="forecast__coordinates">{{ coordinates }}</span>
-        }
-      </span>
+      @if (coordinatesLabel(view); as coordinates) {
+        <span class="forecast__coordinates">{{ coordinates }}</span>
+      }
       @if (remainingSeconds$ | async; as remaining) {
         <span class="forecast__countdown">Back to dashboard in {{ remaining }}s</span>
       }
     </div>
 
-    <div class="forecast__body">
-      @switch (view.status) {
-        @case ('ready') {
-          <div class="forecast__days">
-            @for (day of view.days; track day.date) {
-              <div class="forecast__card">
-                <span class="forecast__day-label">{{ day.date | date:'EEE d MMM' }}</span>
-                <mat-icon class="forecast__icon" [attr.aria-label]="day.description">{{ iconFor(day.weatherId) }}</mat-icon>
-                <span class="forecast__description">{{ day.description }}</span>
-                <div class="forecast__temp">
-                  <span class="forecast__temp-value">{{ day.temperatureC.toFixed(1) }}</span>
-                  <span class="forecast__temp-unit">°C</span>
+    <section class="forecast__section">
+      <span class="forecast__title">Wetter der nächsten Stunden</span>
+      <div class="forecast__body">
+        @switch (view.hourly.status) {
+          @case ('ready') {
+            <div class="forecast__cards">
+              @for (hour of view.hourly.items; track hour.dateTime) {
+                <div class="forecast__card">
+                  <span class="forecast__label">{{ hour.dateTime | date:'HH:mm' }}</span>
+                  <mat-icon class="forecast__icon" [attr.aria-label]="hour.description">{{ iconFor(hour.weatherId) }}</mat-icon>
+                  <span class="forecast__description">{{ hour.description }}</span>
+                  <div class="forecast__temp">
+                    <span class="forecast__temp-value">{{ hour.temperatureC.toFixed(1) }}</span>
+                    <span class="forecast__temp-unit">°C</span>
+                  </div>
+                  <div class="forecast__meta">
+                    <span class="forecast__meta-item">
+                      <span class="forecast__meta-icon" aria-hidden="true">💧</span>
+                      {{ round(hour.humidityPct) }}%
+                    </span>
+                    <span class="forecast__meta-item">
+                      <span class="forecast__meta-icon" aria-hidden="true">🌬</span>
+                      {{ hour.windSpeedMs.toFixed(1) }} m/s
+                    </span>
+                  </div>
                 </div>
-                <div class="forecast__meta">
-                  <span class="forecast__meta-item">
-                    <span class="forecast__meta-icon" aria-hidden="true">💧</span>
-                    {{ round(day.humidityPct) }}%
-                  </span>
-                  <span class="forecast__meta-item">
-                    <span class="forecast__meta-icon" aria-hidden="true">🌬</span>
-                    {{ day.windSpeedMs.toFixed(1) }} m/s
-                  </span>
+              }
+            </div>
+          }
+          @case ('empty') {
+            <div class="forecast__placeholder">No hourly forecast available.</div>
+          }
+          @case ('error') {
+            <div class="forecast__placeholder forecast__placeholder--error">Forecast service unreachable.</div>
+          }
+        }
+      </div>
+    </section>
+
+    <section class="forecast__section">
+      <span class="forecast__title">Wetter der nächsten Tage</span>
+      <div class="forecast__body">
+        @switch (view.daily.status) {
+          @case ('ready') {
+            <div class="forecast__cards">
+              @for (day of view.daily.items; track day.date) {
+                <div class="forecast__card">
+                  <span class="forecast__label">{{ day.date | date:'EEE d MMM' }}</span>
+                  <mat-icon class="forecast__icon" [attr.aria-label]="day.description">{{ iconFor(day.weatherId) }}</mat-icon>
+                  <span class="forecast__description">{{ day.description }}</span>
+                  <div class="forecast__temp">
+                    <span class="forecast__temp-value">{{ day.temperatureC.toFixed(1) }}</span>
+                    <span class="forecast__temp-unit">°C</span>
+                  </div>
+                  <div class="forecast__meta">
+                    <span class="forecast__meta-item">
+                      <span class="forecast__meta-icon" aria-hidden="true">💧</span>
+                      {{ round(day.humidityPct) }}%
+                    </span>
+                    <span class="forecast__meta-item">
+                      <span class="forecast__meta-icon" aria-hidden="true">🌬</span>
+                      {{ day.windSpeedMs.toFixed(1) }} m/s
+                    </span>
+                  </div>
                 </div>
-              </div>
-            }
-          </div>
+              }
+            </div>
+          }
+          @case ('empty') {
+            <div class="forecast__placeholder">No forecast available.</div>
+          }
+          @case ('error') {
+            <div class="forecast__placeholder forecast__placeholder--error">Forecast service unreachable.</div>
+          }
         }
-        @case ('empty') {
-          <div class="forecast__placeholder">No forecast available.</div>
-        }
-        @case ('error') {
-          <div class="forecast__placeholder forecast__placeholder--error">Forecast service unreachable.</div>
-        }
-      }
-    </div>
+      </div>
+    </section>
   } @else {
     <div class="forecast__header">
-      <span class="forecast__title">3-Day Forecast</span>
-    </div>
-    <div class="forecast__body">
-      <div class="forecast__placeholder">Loading forecast…</div>
+      <span class="forecast__coordinates">Loading forecast…</span>
     </div>
   }
 </div>

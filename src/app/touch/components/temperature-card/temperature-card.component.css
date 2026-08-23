@@ -93,6 +93,13 @@
   color: var(--text-muted);
 }
 
+.card__sub-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
 .card__humidity {
   display: flex;
   align-items: baseline;
@@ -114,6 +121,22 @@
 
 .card__humidity-unit {
   color: var(--text-dim);
+}
+
+.card__hourly-icons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.card__hourly-icon {
+  font-size: 1.4rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  color: var(--accent);
+  filter: drop-shadow(0 0 6px var(--accent-glow));
 }
 
 .card__meta {

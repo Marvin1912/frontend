@@ -22,20 +22,6 @@
   font-family: 'Outfit', sans-serif;
 }
 
-.forecast__heading {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-}
-
-.forecast__title {
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--text);
-}
-
 .forecast__coordinates {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.8rem;
@@ -48,12 +34,29 @@
   color: var(--text-muted);
 }
 
+.forecast__section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.6rem;
+  min-height: 0;
+}
+
+.forecast__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+}
+
 .forecast__body {
   flex: 1;
   min-height: 0;
 }
 
-.forecast__days {
+.forecast__cards {
   height: 100%;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -64,17 +67,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
-  padding: 1.5rem 1.25rem;
+  gap: 0.4rem;
+  padding: 0.9rem 1rem;
   background: var(--surface);
   border: 1px solid var(--border-mid);
   border-radius: 14px;
   font-family: 'Outfit', sans-serif;
   color: var(--text);
   text-align: center;
+  min-height: 0;
 }
 
-.forecast__day-label {
+.forecast__label {
   font-size: 0.85rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -82,15 +86,15 @@
 }
 
 .forecast__icon {
-  font-size: 3rem;
-  width: 3rem;
-  height: 3rem;
+  font-size: 2.25rem;
+  width: 2.25rem;
+  height: 2.25rem;
   color: var(--c-c);
   filter: drop-shadow(0 0 8px var(--cg-c));
 }
 
 .forecast__description {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
   text-transform: capitalize;
 }
@@ -100,19 +104,19 @@
   align-items: baseline;
   gap: 0.3rem;
   color: var(--c-c);
-  margin-top: 0.25rem;
+  margin-top: 0.15rem;
 }
 
 .forecast__temp-value {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 2.75rem;
+  font-size: 2rem;
   font-weight: 700;
   line-height: 1;
 }
 
 .forecast__temp-unit {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: var(--text-muted);
 }
@@ -120,13 +124,13 @@
 .forecast__meta {
   display: flex;
   gap: 1.25rem;
-  margin-top: 0.5rem;
-  padding-top: 0.75rem;
+  margin-top: 0.35rem;
+  padding-top: 0.5rem;
   border-top: 1px solid var(--border);
   width: 100%;
   justify-content: center;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
 }
 

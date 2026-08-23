@@ -1,12 +1,15 @@
 import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
+import {MatIconModule} from '@angular/material/icon';
 import {TemperatureReading} from '../../models/temperature-reading.model';
+import {HourlyWeatherForecast} from '../../models/weather-forecast.model';
+import {weatherIconFor} from '../../utils/weather-icon.util';
 
 type Freshness = 'fresh' | 'aging' | 'stale';
 export type TemperatureCardVariant = 'hero' | 'cell';
 
 @Component({
   selector: 'app-temperature-card',
-  imports: [],
+  imports: [MatIconModule],
   templateUrl: './temperature-card.component.html',
   styleUrl: './temperature-card.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,6 +24,7 @@ export class TemperatureCardComponent {
 
   reading = input.required<TemperatureReading>();
   variant = input<TemperatureCardVariant>('cell');
+  hourlyForecast = input<HourlyWeatherForecast[]>([]);
 
   temperatureDisplay = computed(() => this.reading().temperatureC.toFixed(1));
 
@@ -35,6 +39,10 @@ export class TemperatureCardComponent {
     if (ageMin < 10) return 'aging';
     return 'stale';
   });
+
+  iconFor(weatherId: number): string {
+    return weatherIconFor(weatherId);
+  }
 
   ageLabel = computed(() => {
     const ageMin = Math.max(0, Math.floor((Date.now() - new Date(this.reading().measuredAt).getTime()) / 60_000));
