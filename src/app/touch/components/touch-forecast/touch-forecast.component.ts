@@ -3,15 +3,21 @@ import {AsyncPipe, DatePipe} from '@angular/common';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
-import {catchError, map, of, timer} from 'rxjs';
+import {Observable, catchError, combineLatest, map, of, timer} from 'rxjs';
 import {ClimateService} from '../../services/climate.service';
-import {WeatherForecast} from '../../models/weather-forecast.model';
+import {HourlyWeatherForecast, WeatherForecast} from '../../models/weather-forecast.model';
+import {weatherIconFor} from '../../utils/weather-icon.util';
 
 const DEFAULT_DISPLAY_MS = 30_000;
 
-interface ForecastView {
+interface ForecastSection<T> {
   status: 'ready' | 'empty' | 'error';
-  days: WeatherForecast[];
+  items: T[];
+}
+
+interface ForecastView {
+  hourly: ForecastSection<HourlyWeatherForecast>;
+  daily: ForecastSection<WeatherForecast>;
 }
 
 @Component({
@@ -30,9 +36,11 @@ export class TouchForecastComponent {
 
   private readonly displayMs = this.resolveDisplayMs();
 
-  view$ = this.climate.getForecast().pipe(
-    map(days => ({status: days.length ? 'ready' : 'empty', days} as ForecastView)),
-    catchError(() => of<ForecastView>({status: 'error', days: []}))
+  view$ = combineLatest([
+    this.toSection(this.climate.getHourlyForecast()),
+    this.toSection(this.climate.getForecast())
+  ]).pipe(
+    map(([hourly, daily]) => ({hourly, daily} as ForecastView))
   );
 
   remainingSeconds$ = timer(0, 1000).pipe(
@@ -49,8 +57,8 @@ export class TouchForecastComponent {
     return Math.round(value);
   }
 
-  coordinatesLabel(days: WeatherForecast[]): string | null {
-    const first = days[0];
+  coordinatesLabel(view: ForecastView): string | null {
+    const first = view.daily.items[0] ?? view.hourly.items[0];
     if (!first) return null;
     const lat = this.formatCoordinate(first.latitude, 'N', 'S');
     const lon = this.formatCoordinate(first.longitude, 'E', 'W');
@@ -58,12 +66,14 @@ export class TouchForecastComponent {
   }
 
   iconFor(weatherId: number): string {
-    if (weatherId >= 200 && weatherId < 300) return 'thunderstorm';
-    if (weatherId >= 300 && weatherId < 600) return 'water_drop';
-    if (weatherId >= 600 && weatherId < 700) return 'ac_unit';
-    if (weatherId >= 700 && weatherId < 800) return 'foggy';
-    if (weatherId === 800) return 'wb_sunny';
-    return 'cloud';
+    return weatherIconFor(weatherId);
+  }
+
+  private toSection<T>(source: Observable<T[]>): Observable<ForecastSection<T>> {
+    return source.pipe(
+      map(items => ({status: items.length ? 'ready' : 'empty', items} as ForecastSection<T>)),
+      catchError(() => of<ForecastSection<T>>({status: 'error', items: []}))
+    );
   }
 
   private formatCoordinate(value: number, positiveSuffix: string, negativeSuffix: string): string {

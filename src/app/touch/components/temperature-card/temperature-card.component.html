@@ -7,11 +7,22 @@
     <span class="card__temp-value">{{ temperatureDisplay() }}</span>
     <span class="card__temp-unit">°C</span>
   </div>
-  @if (humidityDisplay() !== null) {
-    <div class="card__humidity">
-      <span class="card__humidity-icon" aria-hidden="true">💧</span>
-      <span class="card__humidity-value">{{ humidityDisplay() }}</span>
-      <span class="card__humidity-unit">%</span>
+  @if (humidityDisplay() !== null || hourlyForecast().length) {
+    <div class="card__sub-row">
+      @if (humidityDisplay() !== null) {
+        <div class="card__humidity">
+          <span class="card__humidity-icon" aria-hidden="true">💧</span>
+          <span class="card__humidity-value">{{ humidityDisplay() }}</span>
+          <span class="card__humidity-unit">%</span>
+        </div>
+      }
+      @if (hourlyForecast().length) {
+        <div class="card__hourly-icons">
+          @for (hour of hourlyForecast(); track hour.dateTime) {
+            <mat-icon class="card__hourly-icon" [attr.aria-label]="hour.description">{{ iconFor(hour.weatherId) }}</mat-icon>
+          }
+        </div>
+      }
     </div>
   }
   <div class="card__meta">

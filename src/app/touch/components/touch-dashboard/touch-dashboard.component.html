@@ -5,7 +5,7 @@
         @case ('ready') {
           @if (view.hero) {
             <a class="dashboard__hero dashboard__hero-link" routerLink="/touch/forecast">
-              <app-temperature-card variant="hero" [reading]="view.hero" />
+              <app-temperature-card variant="hero" [reading]="view.hero" [hourlyForecast]="view.hourlyForecast" />
             </a>
           } @else {
             <div class="dashboard__hero dashboard__placeholder">No outdoor sensor.</div>
