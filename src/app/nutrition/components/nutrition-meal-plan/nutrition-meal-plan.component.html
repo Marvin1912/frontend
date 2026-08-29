@@ -44,23 +44,36 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @for (row of group.rows; track row.id) {
-                      <tr>
-                        <td>{{ row.foodName }}</td>
-                        <td class="col-num col-qty">{{ row.quantityG | number:'1.0-0':'de' }} g</td>
-                        <td class="col-num">{{ row.kcal | number:'1.0-0':'de' }}</td>
-                        <td class="col-num">{{ row.proteinG | number:'1.0-1':'de' }}</td>
-                        <td class="col-num">{{ row.carbsG | number:'1.0-1':'de' }}</td>
-                        <td class="col-num">{{ row.fatG | number:'1.0-1':'de' }}</td>
+                    @for (entry of displayRows(group.rows); track entry.row.id) {
+                      <tr [class.row-alternative]="entry.isAlternative" [class.row-alternative--counted]="entry.isAlternative && entry.isCounted">
+                        <td>
+                          {{ entry.row.foodName }}
+                          @if (entry.isAlternative && entry.isCounted) {
+                            <span class="badge-counted">zählt in Summe</span>
+                          }
+                        </td>
+                        <td class="col-num col-qty">{{ entry.row.quantityG | number:'1.0-0':'de' }} g</td>
+                        <td class="col-num">{{ entry.row.kcal | number:'1.0-0':'de' }}</td>
+                        <td class="col-num">{{ entry.row.proteinG | number:'1.0-1':'de' }}</td>
+                        <td class="col-num">{{ entry.row.carbsG | number:'1.0-1':'de' }}</td>
+                        <td class="col-num">{{ entry.row.fatG | number:'1.0-1':'de' }}</td>
                         <td class="col-actions">
-                          <button mat-icon-button aria-label="Eintrag bearbeiten" (click)="openEditRowDialog(section.id, row)">
+                          <button mat-icon-button aria-label="Alternative hinzufügen" (click)="openAddAlternativeDialog(section.id, entry.row)">
+                            <mat-icon>alt_route</mat-icon>
+                          </button>
+                          <button mat-icon-button aria-label="Eintrag bearbeiten" (click)="openEditRowDialog(section.id, entry.row)">
                             <mat-icon>edit</mat-icon>
                           </button>
-                          <button mat-icon-button aria-label="Eintrag löschen" (click)="openDeleteRowDialog(row)">
+                          <button mat-icon-button aria-label="Eintrag löschen" (click)="openDeleteRowDialog(entry.row)">
                             <mat-icon>delete</mat-icon>
                           </button>
                         </td>
                       </tr>
+                      @if (entry.showDividerAfter) {
+                        <tr class="row-divider">
+                          <td colspan="7" class="row-divider__label">oder</td>
+                        </tr>
+                      }
                     }
                   </tbody>
                   <tfoot>

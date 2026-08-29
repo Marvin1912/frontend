@@ -274,6 +274,12 @@ export interface MealPlanRow {
   proteinG: number;
   carbsG: number;
   fatG: number;
+  /**
+   * Rows sharing the same non-null id, within the same section and mealType, are alternative/OR
+   * options for that one meal slot (e.g. "Protein Käsekuchen ODER Protein Brownie") — the user
+   * eats one or the other, not both. `null` means the row stands alone, as before.
+   */
+  alternativeGroupId: string | null;
 }
 
 /** Create/update payload for a meal-plan row; macros are always server-derived. */
@@ -281,6 +287,7 @@ export interface MealPlanRowInput {
   mealType: MealType;
   foodId: string;
   quantityG: number;
+  alternativeGroupId?: string | null;
 }
 
 /** One day-structure table on the meal-plan page (daily structure / weekdays / weekend). Sections themselves are fixed/seeded; only rows are user-editable. */
