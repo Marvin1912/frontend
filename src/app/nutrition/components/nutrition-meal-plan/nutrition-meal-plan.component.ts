@@ -6,7 +6,7 @@ import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {EMPTY, switchMap} from 'rxjs';
+import {EMPTY, Observable, of, switchMap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
 import {Macros, MealPlan, MealPlanRow, MealPlanRowInput, MealPlanSection, MealPlanShoppingItem, MealType} from '../../models/nutrition.model';
 import {
@@ -37,6 +37,19 @@ interface MealRowGroup {
   label: string;
   dotClass: string;
   rows: MealPlanRow[];
+}
+
+/**
+ * One row as rendered in a meal-group table, annotated with alternative-cluster info: whether it
+ * belongs to an "oder" cluster, whether it's the one currently counted toward totals (highest
+ * kcal in its cluster), and whether an "oder" divider should follow it (i.e. the next rendered
+ * row is its cluster-mate).
+ */
+interface DisplayRow {
+  row: MealPlanRow;
+  isAlternative: boolean;
+  isCounted: boolean;
+  showDividerAfter: boolean;
 }
 
 @Component({
@@ -107,12 +120,81 @@ export class NutritionMealPlanComponent implements OnInit {
 
   /** Macro totals across a section's rows, computed client-side (the backend no longer sends totals). */
   sectionTotals(rows: MealPlanRow[]): Macros {
-    return rows.reduce((acc, row) => ({
+    return this.resolveCountedRows(rows).reduce((acc, row) => ({
       kcal: acc.kcal + row.kcal,
       proteinG: acc.proteinG + row.proteinG,
       carbsG: acc.carbsG + row.carbsG,
       fatG: acc.fatG + row.fatG
     }), {kcal: 0, proteinG: 0, carbsG: 0, fatG: 0});
+  }
+
+  /**
+   * Collapses each alternative-option cluster (rows sharing a non-null `alternativeGroupId`) down
+   * to a single "worst-case ceiling" row — the one with the highest kcal — so totals still hold if
+   * the user always picks the more caloric alternative. Standalone rows (no group) pass through
+   * unchanged. On a kcal tie within a cluster, the first row encountered wins, consistently with
+   * `displayRows()`'s `isCounted` flag.
+   */
+  private resolveCountedRows(rows: MealPlanRow[]): MealPlanRow[] {
+    const standalone: MealPlanRow[] = [];
+    const clusters = new Map<string, MealPlanRow[]>();
+    for (const row of rows) {
+      if (row.alternativeGroupId) {
+        const cluster = clusters.get(row.alternativeGroupId);
+        if (cluster) {
+          cluster.push(row);
+        } else {
+          clusters.set(row.alternativeGroupId, [row]);
+        }
+      } else {
+        standalone.push(row);
+      }
+    }
+    const counted = [...clusters.values()].map(cluster => cluster.reduce((max, row) => row.kcal > max.kcal ? row : max));
+    return [...standalone, ...counted];
+  }
+
+  /**
+   * Rows for one meal-group table, reordered so alternative-cluster rows sit next to each other
+   * (preserving first-appearance order otherwise), and annotated for the template: whether a row
+   * is part of an "oder" cluster, whether it's the one currently counted toward totals, and
+   * whether a divider should render after it.
+   */
+  displayRows(rows: MealPlanRow[]): DisplayRow[] {
+    const clusters = new Map<string, MealPlanRow[]>();
+    for (const row of rows) {
+      const groupId = row.alternativeGroupId;
+      if (!groupId) continue;
+      const cluster = clusters.get(groupId);
+      if (cluster) {
+        cluster.push(row);
+      } else {
+        clusters.set(groupId, [row]);
+      }
+    }
+
+    const ordered: MealPlanRow[] = [];
+    const seenGroups = new Set<string>();
+    for (const row of rows) {
+      const groupId = row.alternativeGroupId;
+      if (!groupId) {
+        ordered.push(row);
+        continue;
+      }
+      if (seenGroups.has(groupId)) continue;
+      seenGroups.add(groupId);
+      ordered.push(...(clusters.get(groupId) ?? [row]));
+    }
+
+    return ordered.map((row, index) => {
+      const groupId = row.alternativeGroupId;
+      const cluster = groupId ? clusters.get(groupId) : undefined;
+      const isAlternative = !!cluster;
+      const isCounted = !cluster || cluster.reduce((max, r) => r.kcal > max.kcal ? r : max).id === row.id;
+      const next = ordered[index + 1];
+      const showDividerAfter = isAlternative && !!next && next.alternativeGroupId === groupId;
+      return {row, isAlternative, isCounted, showDividerAfter};
+    });
   }
 
   /**
@@ -148,6 +230,39 @@ export class NutritionMealPlanComponent implements OnInit {
         this.snackBar.open('Eintrag hinzugefügt', 'OK', {duration: 3000});
       },
       error: () => this.snackBar.open('Eintrag konnte nicht gespeichert werden', 'Schließen', {duration: 5000})
+    });
+  }
+
+  /**
+   * Opens the row dialog in "add" mode, preset to the origin row's meal type, and on save wires
+   * the new row up as an alternative/OR option for that slot: if the origin row isn't in a group
+   * yet, a group id is generated client-side and the origin row is tagged with it first; either
+   * way the new row is created with that same `alternativeGroupId`.
+   */
+  openAddAlternativeDialog(sectionId: string, originRow: MealPlanRow): void {
+    const data: MealPlanRowEditDialogData = {sectionId, row: null, defaultMealType: originRow.mealType};
+    const ref = this.dialog.open(MealPlanRowEditDialogComponent, {data});
+    ref.afterClosed().pipe(
+      switchMap((result: MealPlanRowInput | undefined) => {
+        if (!result) return EMPTY;
+        const groupId = originRow.alternativeGroupId ?? window.crypto.randomUUID();
+        const ensureGroup$: Observable<unknown> = originRow.alternativeGroupId ? of(null) : this.nutritionService.updateMealPlanRow(originRow.id, {
+          mealType: originRow.mealType,
+          foodId: originRow.foodId,
+          quantityG: originRow.quantityG,
+          alternativeGroupId: groupId
+        });
+        return ensureGroup$.pipe(
+          switchMap(() => this.nutritionService.addMealPlanRow(sectionId, {...result, alternativeGroupId: groupId}))
+        );
+      }),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => {
+        this.load();
+        this.snackBar.open('Alternative hinzugefügt', 'OK', {duration: 3000});
+      },
+      error: () => this.snackBar.open('Alternative konnte nicht gespeichert werden', 'Schließen', {duration: 5000})
     });
   }
 
