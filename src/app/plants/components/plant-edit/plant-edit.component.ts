@@ -96,69 +96,61 @@ export class PlantEditComponent implements OnInit {
     }
   }
 
-  // TODO: Extract the calls to plantService
-  // TODO: Introduce a general component or function to map the string format
   saveChanges() {
     this.isEditMode = !this.isEditMode;
+
+    if (!this.tempPlant) {
+      return;
+    }
 
     if (this.selectedFile) {
       this.imageService.createImage(this.selectedFile).subscribe({
         next: response => {
           const imageUuid = this.imageService.extractUuidFromResponse(response) ?? this.plant?.image ?? '';
-          if (this.tempPlant) {
-            this.tempPlant.image = imageUuid;
-
-            const lastWateredDate =
-              this.datePipe.transform(this.tmpLastWatered, 'yyyy-MM-dd') ?? this.plant?.lastWateredDate;
-            const lastFertilizedDate =
-              this.datePipe.transform(this.tmpLastFertilized, 'yyyy-MM-dd') ?? this.plant?.lastFertilizedDate;
-            this.tempPlant = {
-              ...this.tempPlant,
-              lastWateredDate: lastWateredDate,
-              lastFertilizedDate: lastFertilizedDate
-            } as Plant;
-
-            this.platService.updatePlant(this.tempPlant).subscribe({
-              next: _ => {
-                this.plant = {...this.tempPlant} as Plant;
-                this.imageUrl = `${environment.apiUrl}/images/${this.plant.image}`
-                this.snackBar.open(`Plant updated!`, 'Dismiss', {duration: 5000})
-              },
-              error: _ => {
-                this.snackBar.open('Failed to update plant.', 'Dismiss', {duration: 5000})
-              }
-            })
-          }
+          this.tempPlant = this.buildUpdatedPlant(imageUuid);
+          this.updatePlant(true);
         },
         error: _ => {
           this.snackBar.open('Failed to update image.', 'Dismiss', {duration: 5000})
         }
       })
     } else {
-      if (this.tempPlant) {
+      this.tempPlant = this.buildUpdatedPlant();
+      this.updatePlant(false);
+    }
+  }
 
-        const lastWateredDate =
-          this.datePipe.transform(this.tmpLastWatered, 'yyyy-MM-dd') ?? this.plant?.lastWateredDate;
-        const lastFertilizedDate =
-          this.datePipe.transform(this.tmpLastFertilized, 'yyyy-MM-dd') ?? this.plant?.lastFertilizedDate;
-        this.tempPlant = {
-          ...this.tempPlant,
-          lastWateredDate: lastWateredDate,
-          lastFertilizedDate: lastFertilizedDate
-        } as Plant;
+  private buildUpdatedPlant(image?: string): Plant {
+    const lastWateredDate =
+      this.datePipe.transform(this.tmpLastWatered, 'yyyy-MM-dd') ?? this.plant?.lastWateredDate;
+    const lastFertilizedDate =
+      this.datePipe.transform(this.tmpLastFertilized, 'yyyy-MM-dd') ?? this.plant?.lastFertilizedDate;
 
-        this.platService.updatePlant(this.tempPlant).subscribe({
-          next: _ => {
-            this.plant = {...this.tempPlant} as Plant;
-            this.snackBar.open(`Plant updated!`, 'Dismiss', {duration: 5000})
-          },
-          error: _ => {
-            this.snackBar.open('Failed to update plant.', 'Dismiss', {duration: 5000})
-          }
-        })
-      }
+    return {
+      ...this.tempPlant,
+      ...(image !== undefined ? {image} : {}),
+      lastWateredDate,
+      lastFertilizedDate
+    } as Plant;
+  }
+
+  private updatePlant(refreshImageUrl: boolean) {
+    if (!this.tempPlant) {
+      return;
     }
 
+    this.platService.updatePlant(this.tempPlant).subscribe({
+      next: _ => {
+        this.plant = {...this.tempPlant} as Plant;
+        if (refreshImageUrl) {
+          this.imageUrl = `${environment.apiUrl}/images/${this.plant.image}`
+        }
+        this.snackBar.open(`Plant updated!`, 'Dismiss', {duration: 5000})
+      },
+      error: _ => {
+        this.snackBar.open('Failed to update plant.', 'Dismiss', {duration: 5000})
+      }
+    })
   }
 
 }
