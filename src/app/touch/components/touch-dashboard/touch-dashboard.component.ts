@@ -17,7 +17,7 @@ interface ClimateView {
 }
 
 const ROOM_ROTATION_MS = 30_000;
-const VISIBLE_INDOOR_COUNT = 2;
+const VISIBLE_INDOOR_COUNT = 4;
 
 @Component({
   selector: 'app-touch-dashboard',
