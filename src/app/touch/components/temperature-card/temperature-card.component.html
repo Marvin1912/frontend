@@ -3,27 +3,27 @@
     <span class="card__label">{{ reading().label }}</span>
     <span class="card__dot" aria-hidden="true" [attr.data-freshness]="freshness()"></span>
   </div>
-  <div class="card__temp">
-    <span class="card__temp-value">{{ temperatureDisplay() }}</span>
-    <span class="card__temp-unit">°C</span>
-  </div>
-  @if (humidityDisplay() !== null || hourlyForecast().length) {
-    <div class="card__sub-row">
-      @if (humidityDisplay() !== null) {
-        <div class="card__humidity">
-          <span class="card__humidity-icon" aria-hidden="true">💧</span>
-          <span class="card__humidity-value">{{ humidityDisplay() }}</span>
-          <span class="card__humidity-unit">%</span>
-        </div>
-      }
-      @if (hourlyForecast().length) {
-        <div class="card__hourly-icons">
-          @for (hour of hourlyForecast(); track hour.dateTime) {
-            <mat-icon class="card__hourly-icon" [attr.aria-label]="hour.description">{{ iconFor(hour.weatherId) }}</mat-icon>
-          }
-        </div>
-      }
+  <div class="card__humidity__container">
+    <div class="card__temp">
+      <span class="card__temp-value">{{ temperatureDisplay() }}</span>
+      <span class="card__temp-unit">°C</span>
     </div>
+    @if (humidityDisplay() !== null) {
+      <div class="card__humidity">
+        <span class="card__humidity-value">{{ humidityDisplay() }}</span>
+        <span class="card__humidity-unit">%</span>
+        <span class="card__humidity-icon" aria-hidden="true">💧</span>
+      </div>
+    }
+  </div>
+  @if (hourlyForecast().length) {
+    @if (hourlyForecast().length) {
+      <div class="card__hourly-icons">
+        @for (hour of hourlyForecast(); track hour.dateTime) {
+          <mat-icon class="card__hourly-icon" [attr.aria-label]="hour.description">{{ iconFor(hour.weatherId) }}</mat-icon>
+        }
+      </div>
+    }
   }
   <div class="card__meta">
     <span class="card__meta-label">Updated</span>
