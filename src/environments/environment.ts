@@ -1,10 +1,10 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:9001',
-  portfolioApiUrl: 'http://localhost:8000',
-  buildTime: '2025-12-21T13:08:55.024Z',
-  nodeVersion: 'v23.9.0',
+  buildTime: '2026-09-12T18:55:17.649Z',
+  nodeVersion: 'v24.13.0',
   angularVersion: '20.2.8',
-  npmVersion: '11.2.0',
-  ankiUrl: 'http://anki.home-lab.com'
+  npmVersion: '11.6.2',
+  ankiUrl: 'https://anki.geitner.cc',
+  portfolioApiUrl: 'http://localhost:8000'
 };

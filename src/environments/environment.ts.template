@@ -5,6 +5,6 @@ export const environment = {
   nodeVersion: ###nodeVersion###,
   angularVersion: ###angularVersion###,
   npmVersion: ###npmVersion###,
-  ankiUrl: 'http://anki.home-lab.com',
+  ankiUrl: 'https://anki.geitner.cc',
   portfolioApiUrl: ###portfolioApiUrl###
 };

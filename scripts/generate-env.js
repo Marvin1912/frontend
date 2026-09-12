@@ -27,8 +27,8 @@ const environments = {
   },
   production: {
     production: true,
-    apiUrl: 'http://backend.home-lab.com',
-    portfolioApiUrl: 'http://stock.home-lab.com',
+    apiUrl: 'https://backend.geitner.cc',
+    portfolioApiUrl: 'https://stock.geitner.cc',
     outputFile: 'src/environments/environment.prod.ts'
   }
 };
