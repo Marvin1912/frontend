@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
@@ -22,6 +22,7 @@ import {CurrencyPipe} from '@angular/common';
     CurrencyPipe
   ],
   templateUrl: './receipt-item-add-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './receipt-item-add-dialog.component.css'
 })
 export class ReceiptItemAddDialogComponent implements OnInit {

@@ -1,5 +1,4 @@
-import {ChangeDetectorRef, Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
-
+import {ChangeDetectorRef, Component, HostListener, Inject, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -33,8 +32,9 @@ import {ArithmeticService} from '../../services/arithmetic.service';
     MatProgressBarModule,
     MatDialogModule,
     MatSnackBarModule
-],
+  ],
   templateUrl: './arithmetic-session.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./arithmetic-session.component.css']
 })
 export class ArithmeticSessionComponent implements OnInit, OnDestroy {
@@ -499,7 +499,6 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     if (this.currentSession && this.currentSession.status === SessionStatus.ACTIVE) {
       event.preventDefault();
       // Modern browsers ignore custom messages, but this shows the browser's default confirmation dialog
-      // eslint-disable-next-line @typescript-eslint/no-deprecated
       event.returnValue = 'Möchten Sie die Sitzung wirklich verlassen? Ihr Fortschritt wird gespeichert.';
     }
   }
@@ -512,24 +511,24 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     MatDialogModule,
     MatButtonModule,
     MatIconModule
-],
+  ],
   template: `
     <div class="dialog-container">
       <h2 mat-dialog-title>Training beenden</h2>
-    
+
       <mat-dialog-content>
         <p>Möchten Sie die Trainingseinheit wirklich beenden?</p>
-    
+
         @if (data) {
           <div class="session-stats">
             <p><strong>Aktueller Punktestand:</strong> {{ data.currentScore }}</p>
             <p><strong>Gelöste Aufgaben:</strong> {{ data.problemsCompleted }} / {{ data.totalProblems }}</p>
           </div>
         }
-    
+
         <p class="warning-text">Ihr bisheriger Fortschritt wird gespeichert.</p>
       </mat-dialog-content>
-    
+
       <mat-dialog-actions align="center">
         <button mat-button
           (click)="dialogRef.close('confirm')"
@@ -546,6 +545,7 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
       </mat-dialog-actions>
     </div>
     `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .dialog-container {
       padding: 20px;

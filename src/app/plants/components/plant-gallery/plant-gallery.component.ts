@@ -1,4 +1,4 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, OnInit, signal, ChangeDetectionStrategy} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {PlantService} from '../../services/plant.service';
@@ -13,6 +13,7 @@ import {RouterLink} from '@angular/router';
   imports: [MatButtonModule, RouterLink],
   templateUrl: './plant-gallery.component.html',
   styleUrl: './plant-gallery.component.css',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [DatePipe]
 })
 export class PlantGalleryComponent implements OnInit {

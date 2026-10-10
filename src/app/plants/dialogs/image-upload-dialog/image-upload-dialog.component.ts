@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -21,6 +21,7 @@ import {ImageService} from '../../services/image.service';
     MatButton
   ],
   templateUrl: './image-upload-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './image-upload-dialog.component.css'
 })
 export class ImageUploadDialogComponent {

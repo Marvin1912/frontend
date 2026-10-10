@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Plant} from '../../models/plant.model';
 import {ActivatedRoute} from '@angular/router';
 import {environment} from '../../../../environments/environment';
@@ -14,6 +14,7 @@ import {MatTab, MatTabGroup} from '@angular/material/tabs';
     DatePipe,
   ],
   templateUrl: './plant-view.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './plant-view.component.css'
 })
 export class PlantViewComponent implements OnInit {

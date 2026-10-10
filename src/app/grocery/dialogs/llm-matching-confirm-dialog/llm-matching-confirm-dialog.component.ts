@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
 import {MatMiniFabButton} from '@angular/material/button';
@@ -14,6 +14,7 @@ import {MatMiniFabButton} from '@angular/material/button';
     MatMiniFabButton
   ],
   templateUrl: './llm-matching-confirm-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './llm-matching-confirm-dialog.component.css'
 })
 export class LlmMatchingConfirmDialogComponent {

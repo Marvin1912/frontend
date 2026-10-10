@@ -1,4 +1,4 @@
-import {Component, DestroyRef, inject, OnInit, signal, WritableSignal} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit, signal, WritableSignal, ChangeDetectionStrategy} from '@angular/core';
 import {VocabularyService} from "../../services/vocabulary.service";
 import {Deck} from "../../model/Deck";
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -20,6 +20,7 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
     MatDialogClose
   ],
   templateUrl: './deck-management-dialog.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './deck-management-dialog.css',
 })
 export class DeckManagementDialog implements OnInit {

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {RouterLink} from '@angular/router';
-import { CommonModule, DatePipe } from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 import {environment} from "../../environments/environment";
 
 @Component({

@@ -1,6 +1,6 @@
 import {MatDialogClose, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
 import {MatButton} from '@angular/material/button';
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 @Component({
@@ -13,6 +13,7 @@ import {FormsModule} from '@angular/forms';
     MatDialogClose
   ],
   templateUrl: './article-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './article-dialog.component.css'
 })
 export class ArticleDialogComponent {

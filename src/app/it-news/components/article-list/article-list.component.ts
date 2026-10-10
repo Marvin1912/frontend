@@ -1,5 +1,4 @@
 import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
-
 import {FormsModule} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
@@ -22,7 +21,7 @@ import {ArticleService} from '../../services/article.service';
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatTooltipModule
-],
+  ],
   templateUrl: './article-list.component.html',
   styleUrl: './article-list.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

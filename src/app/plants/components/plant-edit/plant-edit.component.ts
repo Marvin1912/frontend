@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {PlantService} from '../../services/plant.service';
 import {Plant} from '../../models/plant.model';
@@ -27,9 +27,10 @@ import {ImageService} from '../../services/image.service';
     MatDatepicker,
     MatDatepickerToggle,
     MatSuffix
-],
+  ],
   templateUrl: './plant-edit.component.html',
   styleUrl: './plant-edit.component.css',
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [DatePipe]
 })
 export class PlantEditComponent implements OnInit {

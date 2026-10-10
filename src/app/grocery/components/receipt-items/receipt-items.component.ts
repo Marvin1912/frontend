@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {CurrencyPipe, DatePipe} from '@angular/common';
 import {ActivatedRoute} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
@@ -23,6 +23,7 @@ const supermarketLabels: Record<Supermarket, string> = {
   selector: 'app-receipt-items',
   imports: [CurrencyPipe, DatePipe, MatIcon, MatIconButton, SwipeRevealDirective],
   templateUrl: './receipt-items.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './receipt-items.component.css'
 })
 export class ReceiptItemsComponent {

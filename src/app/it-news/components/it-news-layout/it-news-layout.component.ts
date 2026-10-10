@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
@@ -17,6 +17,7 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
     MatMenuItem
   ],
   templateUrl: './it-news-layout.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './it-news-layout.component.css'
 })
 export class ItNewsLayoutComponent {

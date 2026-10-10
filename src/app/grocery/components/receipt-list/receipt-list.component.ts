@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {CurrencyPipe, DatePipe} from '@angular/common';
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
@@ -25,6 +25,7 @@ function sortByDateDesc(receipts: Receipt[]): Receipt[] {
   selector: 'app-receipt-list',
   imports: [CurrencyPipe, DatePipe, MatIcon, SwipeRevealDirective],
   templateUrl: './receipt-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './receipt-list.component.css'
 })
 export class ReceiptListComponent {

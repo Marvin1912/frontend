@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy} from '@angular/core';
 import {Plant} from '../../models/plant.model';
 import {MatIcon} from '@angular/material/icon';
 import {PlantLocation} from '../../models/plant-location.enum';
@@ -9,8 +9,9 @@ import {environment} from '../../../../environments/environment';
   selector: 'app-plant-preview',
   imports: [
     MatIcon
-],
+  ],
   templateUrl: './plant-preview.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './plant-preview.component.css'
 })
 export class PlantPreviewComponent implements OnChanges {

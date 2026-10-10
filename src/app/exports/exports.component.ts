@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -11,6 +11,7 @@ import {ExportService} from './services/export.service';
     MatIconModule,
   ],
   templateUrl: './exports.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './exports.component.css'
 })
 export class ExportsComponent {

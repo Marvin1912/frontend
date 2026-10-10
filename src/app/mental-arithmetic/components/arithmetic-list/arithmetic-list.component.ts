@@ -1,4 +1,4 @@
-import {Component, OnInit, signal, WritableSignal} from '@angular/core';
+import {Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {FormsModule} from '@angular/forms';
@@ -36,6 +36,7 @@ import {MatTooltip} from '@angular/material/tooltip';
     MatTooltip
   ],
   templateUrl: './arithmetic-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./arithmetic-list.component.css']
 })
 export class ArithmeticListComponent implements OnInit {

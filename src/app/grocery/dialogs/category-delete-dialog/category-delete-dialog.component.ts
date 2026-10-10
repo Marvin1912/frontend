@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
 import {MatMiniFabButton} from '@angular/material/button';
@@ -14,6 +14,7 @@ import {MatMiniFabButton} from '@angular/material/button';
     MatMiniFabButton
   ],
   templateUrl: './category-delete-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './category-delete-dialog.component.css'
 })
 export class CategoryDeleteDialogComponent {

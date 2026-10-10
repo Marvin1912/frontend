@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Plant} from '../../models/plant.model';
 import {PlantService} from '../../services/plant.service';
 import {
@@ -43,6 +43,7 @@ import {environment} from '../../../../environments/environment';
     PlantPreviewComponent
   ],
   templateUrl: './plant-table.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './plant-table.component.css'
 })
 export class PlantTableComponent implements OnInit, OnDestroy {

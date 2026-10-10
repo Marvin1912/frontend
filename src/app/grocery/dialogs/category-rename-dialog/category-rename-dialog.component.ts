@@ -1,4 +1,4 @@
-import {Component, inject, model} from '@angular/core';
+import {Component, inject, model, ChangeDetectionStrategy} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
@@ -28,6 +28,7 @@ import {MatMiniFabButton} from '@angular/material/button';
     MatMiniFabButton
   ],
   templateUrl: './category-rename-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './category-rename-dialog.component.css'
 })
 export class CategoryRenameDialogComponent {

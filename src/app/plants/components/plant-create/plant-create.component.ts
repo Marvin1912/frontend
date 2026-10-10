@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 import {PlantService} from '../../services/plant.service';
@@ -34,9 +34,10 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
     MatDatepicker,
     MatDatepickerInput,
     MatDatepickerToggle
-],
+  ],
   standalone: true,
   styleUrl: './plant-create.component.css',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './plant-create.component.html'
 })
 export class PlantCreateComponent {

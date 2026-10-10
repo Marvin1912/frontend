@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
@@ -23,6 +23,7 @@ import {Supermarket} from '../../models/receipt.model';
     MatMiniFabButton
   ],
   templateUrl: './supermarket-select-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './supermarket-select-dialog.component.css'
 })
 export class SupermarketSelectDialogComponent implements OnInit {
