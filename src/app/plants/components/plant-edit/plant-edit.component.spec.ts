@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { provideRouter } from '@angular/router';
 
 import { PlantEditComponent } from './plant-edit.component';
 import { Plant } from '../../models/plant.model';
@@ -32,7 +33,7 @@ describe('PlantDetailComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PlantEditComponent],
-      providers: [provideHttpClient(withXhr()), provideHttpClientTesting()]
+      providers: [provideHttpClient(withXhr()), provideHttpClientTesting(), provideRouter([])]
     })
     .compileComponents();
 
@@ -62,11 +63,11 @@ describe('PlantDetailComponent', () => {
     });
 
     it('updates the plant without touching the image when no file was selected', () => {
-      const snackBarSpy = spyOn(snackBar, 'open');
+      const snackBarSpy = vi.spyOn(snackBar, 'open').mockReturnValue(undefined as any);
 
       component.saveChanges();
 
-      expect(component.isEditMode).toBeFalse();
+      expect(component.isEditMode).toBe(false);
 
       const req = httpMock.expectOne(req => req.url.endsWith('/plants') && req.method === 'PUT');
       expect(req.request.body.lastWateredDate).toBe('2024-02-01');
@@ -75,7 +76,7 @@ describe('PlantDetailComponent', () => {
 
       expect(component.plant?.lastWateredDate).toBe('2024-02-01');
       expect(snackBarSpy).toHaveBeenCalled();
-      expect(snackBarSpy.calls.mostRecent().args[0]).toContain('updated');
+      expect(snackBarSpy.mock.lastCall?.[0]).toContain('updated');
     });
 
     it('uploads the selected image first and links it to the updated plant', () => {
@@ -95,18 +96,18 @@ describe('PlantDetailComponent', () => {
     });
 
     it('shows an error snackbar when the plant update fails', () => {
-      const snackBarSpy = spyOn(snackBar, 'open');
+      const snackBarSpy = vi.spyOn(snackBar, 'open').mockReturnValue(undefined as any);
 
       component.saveChanges();
 
       const req = httpMock.expectOne(req => req.url.endsWith('/plants') && req.method === 'PUT');
       req.flush('error', {status: 500, statusText: 'Server Error'});
 
-      expect(snackBarSpy.calls.mostRecent().args[0]).toContain('Failed');
+      expect(snackBarSpy.mock.lastCall?.[0]).toContain('Failed');
     });
 
     it('shows an error snackbar when the image upload fails', () => {
-      const snackBarSpy = spyOn(snackBar, 'open');
+      const snackBarSpy = vi.spyOn(snackBar, 'open').mockReturnValue(undefined as any);
       component.selectedFile = new File(['content'], 'plant.png', {type: 'image/png'});
 
       component.saveChanges();
@@ -114,7 +115,7 @@ describe('PlantDetailComponent', () => {
       const imageReq = httpMock.expectOne(req => req.url.includes('/images'));
       imageReq.flush('error', {status: 500, statusText: 'Server Error'});
 
-      expect(snackBarSpy.calls.mostRecent().args[0]).toContain('Failed to update image');
+      expect(snackBarSpy.mock.lastCall?.[0]).toContain('Failed to update image');
       httpMock.expectNone(req => req.url.endsWith('/plants') && req.method === 'PUT');
     });
 

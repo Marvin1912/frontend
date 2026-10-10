@@ -50,15 +50,15 @@ describe('PriceTrendsListComponent', () => {
   it('should load product price summaries and stop loading', () => {
     httpMock.expectOne(`${environment.apiUrl}/receipts/groups`).flush(summaries);
 
-    expect(component.loading).toBeFalse();
-    expect(component.products.data.length).toBe(1);
-    expect(component.products.data[0].groupName).toBe('Milch');
-    expect(component.hasProducts).toBeTrue();
+    expect(component.loading).toBe(false);
+    expect(component.products.length).toBe(1);
+    expect(component.products[0].groupName).toBe('Milch');
+    expect(component.hasProducts).toBe(true);
   });
 
   it('should report no products for an empty summary list', () => {
     httpMock.expectOne(`${environment.apiUrl}/receipts/groups`).flush([]);
 
-    expect(component.hasProducts).toBeFalse();
+    expect(component.hasProducts).toBe(false);
   });
 });

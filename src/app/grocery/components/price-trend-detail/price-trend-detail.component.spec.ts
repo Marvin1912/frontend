@@ -1,7 +1,7 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
 import {provideHttpClient, withXhr} from '@angular/common/http';
-import {ActivatedRoute, convertToParamMap} from '@angular/router';
+import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 import {provideCharts, withDefaultRegisterables} from 'ng2-charts';
 
 import {PriceTrendDetailComponent} from './price-trend-detail.component';
@@ -25,10 +25,8 @@ describe('PriceTrendDetailComponent', () => {
         provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideCharts(withDefaultRegisterables()),
-        {
-          provide: ActivatedRoute,
-          useValue: {snapshot: {paramMap: convertToParamMap({groupId: '4'})}}
-        }
+        {provide: MAT_BOTTOM_SHEET_DATA, useValue: {groupId: 4, displayName: 'Milch'}},
+        {provide: MatBottomSheetRef, useValue: {dismiss: vi.fn()}}
       ]
     }).compileComponents();
 
@@ -47,18 +45,18 @@ describe('PriceTrendDetailComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load price history for the routed product name', () => {
+  it('should load price history for the given article group', () => {
     httpMock.expectOne(`${environment.apiUrl}/receipts/groups/4/history`).flush(history);
 
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     expect(component.priceHistory.length).toBe(2);
-    expect(component.hasHistory).toBeTrue();
+    expect(component.hasHistory).toBe(true);
   });
 
   it('should report no history for a product without price data', () => {
     httpMock.expectOne(`${environment.apiUrl}/receipts/groups/4/history`).flush([]);
 
-    expect(component.hasHistory).toBeFalse();
+    expect(component.hasHistory).toBe(false);
   });
 
   it('should build a chart series per supermarket', () => {
@@ -72,7 +70,7 @@ describe('PriceTrendDetailComponent', () => {
     httpMock.expectOne(`${environment.apiUrl}/receipts/groups/4/history`).flush(history);
 
     expect(component.latestBySupermarket.map(r => r.supermarket)).toEqual(['REWE', 'EDEKA']);
-    expect(component.latestBySupermarket[0].articleName).toBe('Milch 1,5%');
+    expect(component.latestBySupermarket.map(r => r.price)).toEqual([1.19, 1.39]);
   });
 
   it('should still plot points that have no supermarket field', () => {
