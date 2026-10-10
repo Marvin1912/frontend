@@ -40,7 +40,9 @@ npm install          # Install dependencies
 npm start           # Dev server (http://localhost:4200)
 npm run build       # Production build
 npm run generate-env # Generate environment files from template
-npm test            # Run tests
+npm test            # Run unit tests (Vitest, watch mode)
+npm run test:ci     # Single test run
+npm run test:coverage # Coverage report (coverage/index.html)
 ```
 
 ## 🏗️ Architecture
