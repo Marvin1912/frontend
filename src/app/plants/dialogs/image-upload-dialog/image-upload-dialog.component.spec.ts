@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Plant } from '../../models/plant.model';
 
 import { ImageUploadDialogComponent } from './image-upload-dialog.component';
 
@@ -8,7 +10,11 @@ describe('ImageUploadDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ImageUploadDialogComponent]
+      imports: [ImageUploadDialogComponent],
+      providers: [
+        {provide: MAT_DIALOG_DATA, useValue: {id: 1, name: 'Monstera'} as Plant},
+        {provide: MatDialogRef, useValue: {close: vi.fn()}}
+      ]
     })
     .compileComponents();
 

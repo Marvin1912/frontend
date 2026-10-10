@@ -94,7 +94,8 @@
           "options": {
             "runner": "vitest",
             "buildTarget": "::development",
-            "tsConfig": "tsconfig.spec.json"
+            "tsConfig": "tsconfig.spec.json",
+            "providersFile": "src/test-providers.ts"
           }
         }
       }
