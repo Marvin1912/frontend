@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddWordComponent } from './add-word.component';
 
-describe('ManageComponent', () => {
+describe('AddWordComponent', () => {
   let component: AddWordComponent;
   let fixture: ComponentFixture<AddWordComponent>;
 

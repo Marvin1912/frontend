@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { DeckChangeNameDialog } from './deck-change-name-dialog';
 
@@ -8,7 +9,8 @@ describe('DeckChangeNameDialog', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DeckChangeNameDialog]
+      imports: [DeckChangeNameDialog],
+      providers: [{provide: MAT_DIALOG_DATA, useValue: {name: 'Deck'}}]
     })
     .compileComponents();
 
