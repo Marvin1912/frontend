@@ -32,5 +32,6 @@ These steps apply to **every change** (features, fixes, refactors, style tweaks 
    - Branch prefixes: `feature/`, `fix/`, `style/`, `refactor/`
 2. Implement the change.
 3. Run `npm run build` — must succeed before continuing.
-4. Commit and push the branch.
-5. Open a Pull Request on GitHub targeting `master`.
+4. Run `npm run test:ci` — all tests must pass before continuing. Never commit or open a PR with failing tests.
+5. Commit and push the branch.
+6. Open a Pull Request on GitHub targeting `master`. The `Test` GitHub Actions workflow (`.github/workflows/test.yml`) runs `test:ci` + `build` on every PR; do not merge while it is red.
