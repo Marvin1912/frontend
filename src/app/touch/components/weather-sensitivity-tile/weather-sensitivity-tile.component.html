@@ -1,0 +1,56 @@
+@if (view$ | async; as v) {
+  @switch (v.status) {
+    @case ('ready') {
+      <button type="button"
+              class="tile"
+              [class]="'tile--' + v.light"
+              [class.is-expanded]="expanded()"
+              [attr.aria-expanded]="expanded()"
+              [title]="v.reasons!.join('\n')"
+              (click)="toggle()">
+        <header class="tile__header">
+          <span class="tile__label">Wetterfühligkeit</span>
+          <span class="tile__trend" [attr.aria-label]="'Trend ' + v.trendLabel">
+            <span class="tile__trend-arrow">{{ v.trendArrow }}</span>
+            {{ v.trendLabel }}
+          </span>
+        </header>
+        <div class="tile__body">
+          <div class="tile__level">
+            <span class="tile__light" aria-hidden="true"></span>
+            <span class="tile__level-text">{{ v.levelLabel }}</span>
+          </div>
+          @if (expanded() && v.reasons!.length > 1) {
+            <ul class="tile__reasons">
+              @for (reason of v.reasons; track $index) {
+                <li>{{ reason }}</li>
+              }
+            </ul>
+          } @else if (v.reasons!.length) {
+            <span class="tile__reason">
+              {{ v.reasons![0] }}
+              @if (v.reasons!.length > 1) {
+                <span class="tile__more">+{{ v.reasons!.length - 1 }}</span>
+              }
+            </span>
+          } @else {
+            <span class="tile__reason">Keine Auffälligkeiten</span>
+          }
+        </div>
+        <span class="tile__hint">Tendenz, keine medizinische Aussage</span>
+      </button>
+    }
+    @case ('error') {
+      <div class="tile tile--muted">
+        <span class="tile__label">Wetterfühligkeit</span>
+        <span class="tile__status">Derzeit nicht verfügbar</span>
+      </div>
+    }
+    @default {
+      <div class="tile tile--muted">
+        <span class="tile__label">Wetterfühligkeit</span>
+        <span class="tile__status">Lädt…</span>
+      </div>
+    }
+  }
+}

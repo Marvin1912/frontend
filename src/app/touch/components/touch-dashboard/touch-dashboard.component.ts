@@ -8,6 +8,7 @@ import {HourlyWeatherForecast} from '../../models/weather-forecast.model';
 import {TemperatureCardComponent} from '../temperature-card/temperature-card.component';
 import {PlantsSummaryTileComponent} from '../plants-summary-tile/plants-summary-tile.component';
 import {PortfolioTileComponent} from '../portfolio-tile/portfolio-tile.component';
+import {WeatherSensitivityTileComponent} from '../weather-sensitivity-tile/weather-sensitivity-tile.component';
 
 interface ClimateView {
   status: 'ready' | 'empty' | 'error';
@@ -21,7 +22,8 @@ const VISIBLE_INDOOR_COUNT = 4;
 
 @Component({
   selector: 'app-touch-dashboard',
-  imports: [AsyncPipe, RouterLink, TemperatureCardComponent, PlantsSummaryTileComponent, PortfolioTileComponent],
+  imports: [AsyncPipe, RouterLink, TemperatureCardComponent, PlantsSummaryTileComponent, WeatherSensitivityTileComponent,
+    PortfolioTileComponent],
   templateUrl: './touch-dashboard.component.html',
   styleUrl: './touch-dashboard.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
