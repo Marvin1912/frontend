@@ -9,6 +9,7 @@
     "build:nice": "nice -n 15 ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:ci": "ng test --watch=false",
     "env:production": "node scripts/generate-env.js --build-time --node-version --angular-version --npm-version",
     "owasp": "owasp-dependency-check --project \"frontend\" --scan \"package-lock.json\" --out reports --format HTML"
   },
@@ -42,6 +43,7 @@
     "baseline-browser-mapping": "2.11.21",
     "istanbul-lib-instrument": "6.0.3",
     "jasmine-core": "5.13.0",
+    "jsdom": "30.1.2",
     "karma": "6.4.4",
     "karma-chrome-launcher": "3.2.0",
     "karma-coverage": "2.2.1",
@@ -49,6 +51,7 @@
     "karma-jasmine-html-reporter": "2.1.0",
     "owasp-dependency-check": "1.0.1",
     "sass": "1.104.1",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "vitest": "5.0.3"
   }
 }
