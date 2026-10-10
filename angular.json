@@ -93,9 +93,12 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "runner": "vitest",
+            "runnerConfig": "vitest-base.config.mts",
             "buildTarget": "::development",
             "tsConfig": "tsconfig.spec.json",
-            "providersFile": "src/test-providers.ts"
+            "providersFile": "src/test-providers.ts",
+            "coverageReporters": ["text-summary", "html"],
+            "coverageExclude": ["src/environments/**", "**/*.model.ts", "src/main.ts"]
           }
         }
       }
