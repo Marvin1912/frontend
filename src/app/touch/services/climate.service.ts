@@ -4,6 +4,7 @@ import {EMPTY, Observable, catchError, shareReplay, switchMap, timer} from 'rxjs
 import {environment} from '../../../environments/environment';
 import {TemperatureReading} from '../models/temperature-reading.model';
 import {HourlyWeatherForecast, WeatherForecast} from '../models/weather-forecast.model';
+import {WeatherSensitivity} from '../models/weather-sensitivity.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,13 @@ export class ClimateService {
     shareReplay({bufferSize: 1, refCount: true})
   );
 
+  weatherSensitivity$: Observable<WeatherSensitivity> = timer(0, 10 * 60_000).pipe(
+    switchMap(() => this.getWeatherSensitivity().pipe(
+      catchError(() => EMPTY)
+    )),
+    shareReplay({bufferSize: 1, refCount: true})
+  );
+
   getReadings(): Observable<TemperatureReading[]> {
     return this.http.get<TemperatureReading[]>(`${this.host}/climate/readings`);
   }
@@ -38,5 +46,9 @@ export class ClimateService {
 
   getHourlyForecast(): Observable<HourlyWeatherForecast[]> {
     return this.http.get<HourlyWeatherForecast[]>(`${this.host}/climate/forecast/hourly`);
+  }
+
+  getWeatherSensitivity(): Observable<WeatherSensitivity> {
+    return this.http.get<WeatherSensitivity>(`${this.host}/climate/weather-sensitivity`);
   }
 }
