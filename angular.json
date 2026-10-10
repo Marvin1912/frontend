@@ -94,13 +94,7 @@
           "options": {
             "runner": "vitest",
             "buildTarget": "::development",
-            "tsConfig": "tsconfig.spec.json",
-            "exclude": [
-              "src/app/plants/components/plant-edit/plant-edit.component.spec.ts",
-              "src/app/grocery/components/price-trends-list/price-trends-list.component.spec.ts",
-              "src/app/grocery/components/price-trend-detail/price-trend-detail.component.spec.ts",
-              "src/app/vocabulary/components/deck-management-dialog/deck-management-dialog.spec.ts"
-            ]
+            "tsConfig": "tsconfig.spec.json"
           }
         }
       }

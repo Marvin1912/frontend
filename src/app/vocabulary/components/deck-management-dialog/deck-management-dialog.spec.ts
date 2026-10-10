@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { of, throwError } from 'rxjs';
 
 import { DeckManagementDialog } from './deck-management-dialog';
 import { Deck } from '../../model/Deck';
@@ -39,44 +40,36 @@ describe('DeckManagementDialog', () => {
   });
 
   it('should update local deck state and show a success snackbar when the rename succeeds', () => {
-    const snackBarSpy = spyOn(snackBar, 'open');
+    const snackBarSpy = vi.spyOn(snackBar, 'open').mockReturnValue(undefined as any);
 
-    (component as any).vocabularyService.updateDeck = jasmine.createSpy().and.callFake(() => {
-      return {
-        subscribe: (handlers: any) => handlers.next({body: {id: 1, name: 'New Name'}})
-      };
-    });
+    (component as any).vocabularyService.updateDeck = vi.fn().mockReturnValue(of({body: {id: 1, name: 'New Name'}}));
 
     (component as any).decks.set([deck]);
 
-    const dialogRef = {afterClosed: () => ({subscribe: (cb: (v: string | undefined) => void) => cb('New Name')})};
-    spyOn((component as any).dialog, 'open').and.returnValue(dialogRef);
+    const dialogRef = {afterClosed: () => of('New Name')};
+    vi.spyOn((component as any).dialog, 'open').mockReturnValue(dialogRef);
 
     component.openDialog(deck);
 
     expect((component as any).decks()).toEqual([{id: 1, name: 'New Name'}]);
     expect(snackBarSpy).toHaveBeenCalled();
-    expect(snackBarSpy.calls.mostRecent().args[0]).toContain('changed to New Name');
+    expect(snackBarSpy.mock.lastCall?.[0]).toContain('changed to New Name');
   });
 
   it('should keep local deck state unchanged and show an error snackbar when the rename fails', () => {
-    const snackBarSpy = spyOn(snackBar, 'open');
+    const snackBarSpy = vi.spyOn(snackBar, 'open').mockReturnValue(undefined as any);
 
-    (component as any).vocabularyService.updateDeck = jasmine.createSpy().and.callFake(() => {
-      return {
-        subscribe: (handlers: any) => handlers.error('boom')
-      };
-    });
+    (component as any).vocabularyService.updateDeck = vi.fn().mockReturnValue(throwError(() => 'boom'));
 
     (component as any).decks.set([deck]);
 
-    const dialogRef = {afterClosed: () => ({subscribe: (cb: (v: string | undefined) => void) => cb('New Name')})};
-    spyOn((component as any).dialog, 'open').and.returnValue(dialogRef);
+    const dialogRef = {afterClosed: () => of('New Name')};
+    vi.spyOn((component as any).dialog, 'open').mockReturnValue(dialogRef);
 
     component.openDialog(deck);
 
     expect((component as any).decks()).toEqual([deck]);
     expect(snackBarSpy).toHaveBeenCalled();
-    expect(snackBarSpy.calls.mostRecent().args[0]).toContain('failed');
+    expect(snackBarSpy.mock.lastCall?.[0]).toContain('failed');
   });
 });
