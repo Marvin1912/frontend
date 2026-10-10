@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, signal, WritableSignal, DestroyRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, signal, WritableSignal, DestroyRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {VocabularyService} from '../../services/vocabulary.service';
 import {MatInput} from '@angular/material/input';
 import {MatError, MatFormField} from '@angular/material/form-field';
@@ -95,6 +95,7 @@ function validateWordPrefix(
   ],
   templateUrl: './add-word.component.html',
   styleUrl: './add-word.component.css',
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true
 })
 export class AddWordComponent implements OnInit {

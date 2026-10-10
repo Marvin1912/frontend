@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, inject, OnDestroy, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, OnDestroy, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
@@ -18,6 +18,7 @@ interface SupermarketOption {
   selector: 'app-receipt-upload',
   imports: [FormsModule, MatIcon, CurrencyPipe],
   templateUrl: './receipt-upload.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './receipt-upload.component.css'
 })
 export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {

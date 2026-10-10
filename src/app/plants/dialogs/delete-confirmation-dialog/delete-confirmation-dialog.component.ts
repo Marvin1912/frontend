@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
@@ -24,6 +24,7 @@ import {MatMiniFabButton} from '@angular/material/button';
     MatMiniFabButton
   ],
   templateUrl: './delete-confirmation-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './delete-confirmation-dialog.component.css'
 })
 export class DeleteConfirmationDialogComponent {

@@ -1,5 +1,4 @@
-import {ChangeDetectorRef, Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {ChangeDetectorRef, Component, HostListener, Inject, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -23,7 +22,6 @@ import {ArithmeticService} from '../../services/arithmetic.service';
   selector: 'app-arithmetic-session',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
@@ -36,6 +34,7 @@ import {ArithmeticService} from '../../services/arithmetic.service';
     MatSnackBarModule
   ],
   templateUrl: './arithmetic-session.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./arithmetic-session.component.css']
 })
 export class ArithmeticSessionComponent implements OnInit, OnDestroy {
@@ -500,7 +499,6 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     if (this.currentSession && this.currentSession.status === SessionStatus.ACTIVE) {
       event.preventDefault();
       // Modern browsers ignore custom messages, but this shows the browser's default confirmation dialog
-      // eslint-disable-next-line @typescript-eslint/no-deprecated
       event.returnValue = 'Möchten Sie die Sitzung wirklich verlassen? Ihr Fortschritt wird gespeichert.';
     }
   }
@@ -510,7 +508,6 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   selector: 'app-end-session-dialog',
   standalone: true,
   imports: [
-    CommonModule,
     MatDialogModule,
     MatButtonModule,
     MatIconModule
@@ -522,30 +519,33 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
       <mat-dialog-content>
         <p>Möchten Sie die Trainingseinheit wirklich beenden?</p>
 
-        <div class="session-stats" *ngIf="data">
-          <p><strong>Aktueller Punktestand:</strong> {{ data.currentScore }}</p>
-          <p><strong>Gelöste Aufgaben:</strong> {{ data.problemsCompleted }} / {{ data.totalProblems }}</p>
-        </div>
+        @if (data) {
+          <div class="session-stats">
+            <p><strong>Aktueller Punktestand:</strong> {{ data.currentScore }}</p>
+            <p><strong>Gelöste Aufgaben:</strong> {{ data.problemsCompleted }} / {{ data.totalProblems }}</p>
+          </div>
+        }
 
         <p class="warning-text">Ihr bisheriger Fortschritt wird gespeichert.</p>
       </mat-dialog-content>
 
       <mat-dialog-actions align="center">
         <button mat-button
-                (click)="dialogRef.close('confirm')"
-                class="confirm-button">
+          (click)="dialogRef.close('confirm')"
+          class="confirm-button">
           <mat-icon>check_circle</mat-icon>
           Beenden
         </button>
         <button mat-button
-                (click)="dialogRef.close()"
-                class="cancel-button">
+          (click)="dialogRef.close()"
+          class="cancel-button">
           <mat-icon>close</mat-icon>
           Weitermachen
         </button>
       </mat-dialog-actions>
     </div>
-  `,
+    `,
+  changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
     .dialog-container {
       padding: 20px;

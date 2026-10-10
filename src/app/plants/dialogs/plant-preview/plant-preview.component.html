@@ -1,22 +1,22 @@
-<div class="plant-box" *ngIf="plant">
-
-  <div class="preview-name">{{ plant!.name }}</div>
-
-  <div class="preview-body">
-    <div class="preview-meta">
-      <span class="meta-item">
-        <mat-icon class="meta-icon">{{ getIcon(plant!) }}</mat-icon>
-        <span class="meta-text">{{ plant!.location }}</span>
-      </span>
-      <span class="meta-item">
-        <span class="meta-label">Species</span>
-        <span class="meta-text">{{ plant!.species }}</span>
-      </span>
-    </div>
-
-    <div class="preview-image" *ngIf="imageUrl">
-      <img [src]="imageUrl" alt="Plant image" class="plant-img"/>
+@if (plant) {
+  <div class="plant-box">
+    <div class="preview-name">{{ plant!.name }}</div>
+    <div class="preview-body">
+      <div class="preview-meta">
+        <span class="meta-item">
+          <mat-icon class="meta-icon">{{ getIcon(plant!) }}</mat-icon>
+          <span class="meta-text">{{ plant!.location }}</span>
+        </span>
+        <span class="meta-item">
+          <span class="meta-label">Species</span>
+          <span class="meta-text">{{ plant!.species }}</span>
+        </span>
+      </div>
+      @if (imageUrl) {
+        <div class="preview-image">
+          <img [src]="imageUrl" alt="Plant image" class="plant-img"/>
+        </div>
+      }
     </div>
   </div>
-
-</div>
+}

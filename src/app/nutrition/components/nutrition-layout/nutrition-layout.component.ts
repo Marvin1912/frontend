@@ -1,4 +1,4 @@
-import {Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -20,6 +20,7 @@ import {ExportDialogComponent} from '../../dialogs/export-dialog/export-dialog.c
     MatMenuItem
   ],
   templateUrl: './nutrition-layout.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './nutrition-layout.component.css'
 })
 export class NutritionLayoutComponent implements OnInit {

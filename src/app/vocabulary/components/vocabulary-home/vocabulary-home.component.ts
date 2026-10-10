@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {RouterLink, RouterOutlet} from "@angular/router";
 import {MatFabButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
@@ -14,6 +14,7 @@ import {MatDialog} from "@angular/material/dialog";
     MatIcon
   ],
   templateUrl: './vocabulary-home.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './vocabulary-home.component.css'
 })
 export class VocabularyHomeComponent {

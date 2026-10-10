@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
-import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClient, withXhr} from '@angular/common/http';
 import {ActivatedRoute, convertToParamMap} from '@angular/router';
 import {provideCharts, withDefaultRegisterables} from 'ng2-charts';
 
@@ -22,7 +22,7 @@ describe('PriceTrendDetailComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PriceTrendDetailComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideCharts(withDefaultRegisterables()),
         {

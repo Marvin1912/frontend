@@ -6,10 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm start` — dev server (localhost:4200)
 - `npm run build` — production build
 - `npm test` — Karma + Jasmine
-- `npm run lint` / `npm run lint:fix`
 
 ## Stack
-Angular 20 standalone components, RxJS (no NgRx), Angular Material 20 (Azure Blue) + Bootstrap 5.3.6 + SASS. Backend API at `http://localhost:9001`.
+Angular 22 standalone components, RxJS (no NgRx), Angular Material 22 (Azure Blue) + Bootstrap 5.3.6 + SASS. Backend API at `http://localhost:9001`.
 
 ## Modules (`src/app/`)
 - `backend/` → `/account` — CAMT bank statement upload & analysis

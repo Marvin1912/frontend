@@ -29,9 +29,11 @@
                   <span>Subtraktion</span>
                 </mat-checkbox>
               </div>
-              <mat-error *ngIf="getErrorMessage()" class="error-message">
-                {{ getErrorMessage() }}
-              </mat-error>
+              @if (getErrorMessage()) {
+                <mat-error class="error-message">
+                  {{ getErrorMessage() }}
+                </mat-error>
+              }
             </div>
 
             <!-- Difficulty Selection -->
@@ -83,9 +85,11 @@
                   placeholder="z.B. 15">
                 <mat-icon matSuffix>timer</mat-icon>
                 <mat-hint>Leer lassen für keine Zeitbegrenzung</mat-hint>
-                <mat-error *ngIf="settingsForm.get('timeLimit')?.invalid && settingsForm.get('timeLimit')?.touched">
-                  Zeit muss zwischen 1 und 60 Minuten liegen
-                </mat-error>
+                @if (settingsForm.get('timeLimit')?.invalid && settingsForm.get('timeLimit')?.touched) {
+                  <mat-error>
+                    Zeit muss zwischen 1 und 60 Minuten liegen
+                  </mat-error>
+                }
               </mat-form-field>
             </div>
 
@@ -103,17 +107,21 @@
                   placeholder="Anzahl zwischen 5 und 50">
                 <mat-icon matSuffix>assignment</mat-icon>
                 <mat-hint>Wählen Sie zwischen 5 und 50 Aufgaben</mat-hint>
-                <mat-error *ngIf="settingsForm.get('problemCount')?.invalid && settingsForm.get('problemCount')?.touched">
-                  Anzahl muss zwischen 5 und 50 liegen
-                </mat-error>
+                @if (settingsForm.get('problemCount')?.invalid && settingsForm.get('problemCount')?.touched) {
+                  <mat-error>
+                    Anzahl muss zwischen 5 und 50 liegen
+                  </mat-error>
+                }
               </mat-form-field>
             </div>
 
             <!-- Form Validation Error Summary -->
-            <div *ngIf="settingsForm.invalid && settingsForm.touched" class="validation-summary">
-              <mat-icon class="error-icon">error</mat-icon>
-              <span class="error-text">{{ getErrorMessage() }}</span>
-            </div>
+            @if (settingsForm.invalid && settingsForm.touched) {
+              <div class="validation-summary">
+                <mat-icon class="error-icon">error</mat-icon>
+                <span class="error-text">{{ getErrorMessage() }}</span>
+              </div>
+            }
 
           </form>
         </mat-card-content>

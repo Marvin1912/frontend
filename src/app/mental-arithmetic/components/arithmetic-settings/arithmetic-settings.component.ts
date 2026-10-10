@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,7 +18,6 @@ import { ArithmeticService } from '../../services/arithmetic.service';
   selector: 'app-arithmetic-settings',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
@@ -32,6 +30,7 @@ import { ArithmeticService } from '../../services/arithmetic.service';
     MatIconModule
   ],
   templateUrl: './arithmetic-settings.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./arithmetic-settings.component.css']
 })
 export class ArithmeticSettingsComponent implements OnInit {

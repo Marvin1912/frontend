@@ -1,4 +1,4 @@
-import {Component, DestroyRef, inject} from '@angular/core';
+import {Component, DestroyRef, inject, ChangeDetectionStrategy} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatIcon} from '@angular/material/icon';
 import {MatFabButton} from '@angular/material/button';
@@ -15,6 +15,7 @@ import {filter} from 'rxjs';
     RouterOutlet
   ],
   templateUrl: './grocery-layout.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './grocery-layout.component.css'
 })
 export class GroceryLayoutComponent {

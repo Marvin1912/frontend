@@ -1,4 +1,4 @@
-import {Component, inject, model} from '@angular/core';
+import {Component, inject, model, ChangeDetectionStrategy} from '@angular/core';
 import {MatFormField, MatInput, MatLabel} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent} from "@angular/material/dialog";
@@ -21,6 +21,7 @@ export interface Data {
     MatDialogClose
   ],
   templateUrl: './deck-change-name-dialog.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './deck-change-name-dialog.css',
 })
 export class DeckChangeNameDialog {

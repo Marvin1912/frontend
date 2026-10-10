@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 import {PlantService} from '../../services/plant.service';
@@ -9,7 +9,7 @@ import {Plant} from '../../models/plant.model';
 import {MatStep, MatStepLabel, MatStepper, MatStepperNext, MatStepperPrevious} from '@angular/material/stepper';
 import {MatInput} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
-import {NgForOf, NgIf} from '@angular/common';
+
 import {Router} from '@angular/router';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
@@ -31,14 +31,13 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
     MatButton,
     MatStepperNext,
     MatStepperPrevious,
-    NgForOf,
     MatDatepicker,
     MatDatepickerInput,
-    MatDatepickerToggle,
-    NgIf
+    MatDatepickerToggle
   ],
   standalone: true,
   styleUrl: './plant-create.component.css',
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './plant-create.component.html'
 })
 export class PlantCreateComponent {

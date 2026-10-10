@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HttpTestingController, provideHttpClientTesting} from '@angular/common/http/testing';
-import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClient, withXhr} from '@angular/common/http';
 import {provideRouter} from '@angular/router';
 import {registerLocaleData} from '@angular/common';
 import localeDe from '@angular/common/locales/de';
@@ -25,7 +25,7 @@ describe('PriceTrendsListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [PriceTrendsListComponent],
       providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         provideRouter([]),
         provideCharts(withDefaultRegisterables())

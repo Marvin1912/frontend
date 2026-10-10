@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, DestroyRef, inject, model, ModelSignal, OnDestroy, OnInit, Signal, signal, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, DestroyRef, inject, model, ModelSignal, OnDestroy, OnInit, Signal, signal, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {VocabularyService} from '../../services/vocabulary.service';
@@ -78,6 +78,7 @@ function applyFilter(flashcard: Flashcard, filter: string, value: string): boole
     MatOption
   ],
   templateUrl: './vocabulary-list.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './vocabulary-list.component.css'
 })
 export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy {
