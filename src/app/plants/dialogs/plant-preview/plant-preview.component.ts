@@ -3,14 +3,13 @@ import {Plant} from '../../models/plant.model';
 import {MatIcon} from '@angular/material/icon';
 import {PlantLocation} from '../../models/plant-location.enum';
 import {environment} from '../../../../environments/environment';
-import {NgIf} from '@angular/common';
+
 
 @Component({
   selector: 'app-plant-preview',
   imports: [
-    MatIcon,
-    NgIf
-  ],
+    MatIcon
+],
   templateUrl: './plant-preview.component.html',
   styleUrl: './plant-preview.component.css'
 })

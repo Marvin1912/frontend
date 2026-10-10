@@ -4,16 +4,17 @@
   <header class="edit-header">
     <span class="plant-name">{{ plant?.name }}</span>
     <div class="header-actions">
-      <ng-container *ngIf="isEditMode">
+      @if (isEditMode) {
         <button class="icon-btn save-btn" (click)="saveChanges()">
           <mat-icon>download_done</mat-icon>
         </button>
-      </ng-container>
+      }
       <button class="icon-btn toggle-btn" [class.active]="isEditMode" (click)="toggleEditMode()">
-        <mat-icon *ngIf="!isEditMode; else editIconButton">construction</mat-icon>
-        <ng-template #editIconButton>
+        @if (!isEditMode) {
+          <mat-icon>construction</mat-icon>
+        } @else {
           <mat-icon>close</mat-icon>
-        </ng-template>
+        }
       </button>
     </div>
   </header>
@@ -23,128 +24,117 @@
 
     <!-- Image -->
     <div class="image-panel">
-      <ng-container *ngIf="!isEditMode; else editImage">
-        <img *ngIf="plant?.image && imageUrl" [src]="imageUrl" alt="Plant image" class="plant-img"/>
-      </ng-container>
-      <ng-template #editImage>
+      @if (!isEditMode) {
+        @if (plant?.image && imageUrl) {
+          <img [src]="imageUrl" alt="Plant image" class="plant-img"/>
+        }
+      } @else {
         <form class="file-form">
           <input type="file" (change)="onFileSelected($event)"/>
         </form>
-      </ng-template>
+      }
     </div>
 
     <!-- Details -->
-    <div *ngIf="plant" class="details-panel" [class.edit-mode]="isEditMode">
-
-      <div class="text-fields">
-
-        <div class="field-group">
-          <span class="field-label">Description</span>
-          <div *ngIf="!isEditMode; else editDescription" class="field-value field-text">{{ plant.description }}</div>
-          <ng-template #editDescription>
-            <ng-container *ngIf="tempPlant">
-              <textarea [(ngModel)]="tempPlant.description" rows="5" class="field-input"></textarea>
-            </ng-container>
-          </ng-template>
+    @if (plant) {
+      <div class="details-panel" [class.edit-mode]="isEditMode">
+        <div class="text-fields">
+          <div class="field-group">
+            <span class="field-label">Description</span>
+            @if (!isEditMode) {
+              <div class="field-value field-text">{{ plant.description }}</div>
+            } @else {
+              @if (tempPlant) {
+                <textarea [(ngModel)]="tempPlant.description" rows="5" class="field-input"></textarea>
+              }
+            }
+          </div>
+          <div class="field-group">
+            <span class="field-label">Care instructions</span>
+            @if (!isEditMode) {
+              <div class="field-value field-text">{{ plant.careInstructions }}</div>
+            } @else {
+              @if (tempPlant) {
+                <textarea [(ngModel)]="tempPlant.careInstructions" rows="5" class="field-input"></textarea>
+              }
+            }
+          </div>
         </div>
-
-        <div class="field-group">
-          <span class="field-label">Care instructions</span>
-          <div *ngIf="!isEditMode; else editCareInstructions" class="field-value field-text">{{ plant.careInstructions }}</div>
-          <ng-template #editCareInstructions>
-            <ng-container *ngIf="tempPlant">
-              <textarea [(ngModel)]="tempPlant.careInstructions" rows="5" class="field-input"></textarea>
-            </ng-container>
-          </ng-template>
+        <div class="meta-grid">
+          <div class="field-group">
+            <span class="field-label">Species</span>
+            @if (!isEditMode) {
+              <span class="field-value">{{ plant.species }}</span>
+            } @else {
+              @if (tempPlant) {
+                <input [(ngModel)]="tempPlant.species" class="field-input"/>
+              }
+            }
+          </div>
+          <div class="field-group">
+            <span class="field-label">Room</span>
+            @if (!isEditMode) {
+              <span class="field-value">{{ plant.location }}</span>
+            } @else {
+              @if (tempPlant) {
+                <mat-select [(ngModel)]="tempPlant.location" class="field-select">
+                  @for (loc of plantLocationOptions; track loc) {
+                    <mat-option [value]="loc">{{ loc }}</mat-option>
+                  }
+                </mat-select>
+              }
+            }
+          </div>
+          <div class="field-group">
+            <span class="field-label">Last watered</span>
+            @if (!isEditMode) {
+              <span class="field-value">{{ plant.lastWateredDate }}</span>
+            } @else {
+              @if (tempPlant) {
+                <div class="date-input-wrap">
+                  <input matInput [matDatepicker]="picker" [(ngModel)]="tmpLastWatered" class="field-input"/>
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </div>
+              }
+            }
+          </div>
+          <div class="field-group">
+            <span class="field-label">Watering frequency</span>
+            @if (!isEditMode) {
+              <span class="field-value">{{ plant.wateringFrequency }}</span>
+            } @else {
+              @if (tempPlant) {
+                <input [(ngModel)]="tempPlant.wateringFrequency" class="field-input"/>
+              }
+            }
+          </div>
+          <div class="field-group">
+            <span class="field-label">Last fertilized</span>
+            @if (!isEditMode) {
+              <span class="field-value">{{ plant.lastFertilizedDate ?? '-' }}</span>
+            } @else {
+              @if (tempPlant) {
+                <div class="date-input-wrap">
+                  <input matInput [matDatepicker]="fertilizedPicker" [(ngModel)]="tmpLastFertilized" class="field-input"/>
+                  <mat-datepicker-toggle matIconSuffix [for]="fertilizedPicker"></mat-datepicker-toggle>
+                  <mat-datepicker #fertilizedPicker></mat-datepicker>
+                </div>
+              }
+            }
+          </div>
+          <div class="field-group">
+            <span class="field-label">Fertilizing frequency</span>
+            @if (!isEditMode) {
+              <span class="field-value">{{ plant.fertilizingFrequency ?? '-' }}</span>
+            } @else {
+              @if (tempPlant) {
+                <input [(ngModel)]="tempPlant.fertilizingFrequency" class="field-input"/>
+              }
+            }
+          </div>
         </div>
-
       </div>
-
-      <div class="meta-grid">
-
-        <div class="field-group">
-          <span class="field-label">Species</span>
-          <ng-container *ngIf="!isEditMode; else editSpecies">
-            <span class="field-value">{{ plant.species }}</span>
-          </ng-container>
-          <ng-template #editSpecies>
-            <ng-container *ngIf="tempPlant">
-              <input [(ngModel)]="tempPlant.species" class="field-input"/>
-            </ng-container>
-          </ng-template>
-        </div>
-
-        <div class="field-group">
-          <span class="field-label">Room</span>
-          <ng-container *ngIf="!isEditMode; else editLocation">
-            <span class="field-value">{{ plant.location }}</span>
-          </ng-container>
-          <ng-template #editLocation>
-            <ng-container *ngIf="tempPlant">
-              <mat-select [(ngModel)]="tempPlant.location" class="field-select">
-                <mat-option *ngFor="let loc of plantLocationOptions" [value]="loc">{{ loc }}</mat-option>
-              </mat-select>
-            </ng-container>
-          </ng-template>
-        </div>
-
-        <div class="field-group">
-          <span class="field-label">Last watered</span>
-          <ng-container *ngIf="!isEditMode; else editLastWatered">
-            <span class="field-value">{{ plant.lastWateredDate }}</span>
-          </ng-container>
-          <ng-template #editLastWatered>
-            <ng-container *ngIf="tempPlant">
-              <div class="date-input-wrap">
-                <input matInput [matDatepicker]="picker" [(ngModel)]="tmpLastWatered" class="field-input"/>
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-              </div>
-            </ng-container>
-          </ng-template>
-        </div>
-
-        <div class="field-group">
-          <span class="field-label">Watering frequency</span>
-          <ng-container *ngIf="!isEditMode; else editWateringFrequency">
-            <span class="field-value">{{ plant.wateringFrequency }}</span>
-          </ng-container>
-          <ng-template #editWateringFrequency>
-            <ng-container *ngIf="tempPlant">
-              <input [(ngModel)]="tempPlant.wateringFrequency" class="field-input"/>
-            </ng-container>
-          </ng-template>
-        </div>
-
-        <div class="field-group">
-          <span class="field-label">Last fertilized</span>
-          <ng-container *ngIf="!isEditMode; else editLastFertilized">
-            <span class="field-value">{{ plant.lastFertilizedDate ?? '-' }}</span>
-          </ng-container>
-          <ng-template #editLastFertilized>
-            <ng-container *ngIf="tempPlant">
-              <div class="date-input-wrap">
-                <input matInput [matDatepicker]="fertilizedPicker" [(ngModel)]="tmpLastFertilized" class="field-input"/>
-                <mat-datepicker-toggle matIconSuffix [for]="fertilizedPicker"></mat-datepicker-toggle>
-                <mat-datepicker #fertilizedPicker></mat-datepicker>
-              </div>
-            </ng-container>
-          </ng-template>
-        </div>
-
-        <div class="field-group">
-          <span class="field-label">Fertilizing frequency</span>
-          <ng-container *ngIf="!isEditMode; else editFertilizingFrequency">
-            <span class="field-value">{{ plant.fertilizingFrequency ?? '-' }}</span>
-          </ng-container>
-          <ng-template #editFertilizingFrequency>
-            <ng-container *ngIf="tempPlant">
-              <input [(ngModel)]="tempPlant.fertilizingFrequency" class="field-input"/>
-            </ng-container>
-          </ng-template>
-        </div>
-
-      </div>
-    </div>
+    }
   </div>
 </div>

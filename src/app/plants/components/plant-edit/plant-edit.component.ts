@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {PlantService} from '../../services/plant.service';
 import {Plant} from '../../models/plant.model';
-import {DatePipe, NgForOf, NgIf} from '@angular/common';
+import { DatePipe } from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatOption} from '@angular/material/core';
@@ -17,19 +17,17 @@ import {ImageService} from '../../services/image.service';
 @Component({
   selector: 'app-plant-detail',
   imports: [
-    NgIf,
     MatIcon,
     FormsModule,
     MatOption,
     MatSelect,
-    NgForOf,
     ReactiveFormsModule,
     MatInput,
     MatDatepickerInput,
     MatDatepicker,
     MatDatepickerToggle,
     MatSuffix
-  ],
+],
   templateUrl: './plant-edit.component.html',
   styleUrl: './plant-edit.component.css',
   providers: [DatePipe]

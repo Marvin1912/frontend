@@ -4,7 +4,9 @@
     <mat-step [stepControl]="basicInfoForm">
       <form [formGroup]="basicInfoForm" class="create-form">
         <ng-template matStepLabel>
-          <ng-container *ngIf="!isSmallScreen">Basic Info</ng-container>
+          @if (!isSmallScreen) {
+            Basic Info
+          }
         </ng-template>
 
         <div class="row basic-info">
@@ -35,15 +37,19 @@
     <mat-step [stepControl]="locationForm">
       <form [formGroup]="locationForm" class="create-form">
         <ng-template matStepLabel>
-          <ng-container *ngIf="!isSmallScreen">Location</ng-container>
+          @if (!isSmallScreen) {
+            Location
+          }
         </ng-template>
 
         <mat-form-field appearance="outline">
           <mat-label>Location</mat-label>
           <mat-select formControlName="location" required>
-            <mat-option *ngFor="let loc of plantLocationOptions" [value]="loc">
-              {{ loc }}
-            </mat-option>
+            @for (loc of plantLocationOptions; track loc) {
+              <mat-option [value]="loc">
+                {{ loc }}
+              </mat-option>
+            }
           </mat-select>
         </mat-form-field>
 
@@ -57,7 +63,9 @@
     <mat-step [stepControl]="careForm">
       <form [formGroup]="careForm" class="create-form">
         <ng-template matStepLabel>
-          <ng-container *ngIf="!isSmallScreen">Care Details</ng-container>
+          @if (!isSmallScreen) {
+            Care Details
+          }
         </ng-template>
 
         <div class="row care-info">
@@ -98,7 +106,9 @@
     <mat-step [stepControl]="imageForm">
       <form [formGroup]="imageForm" class="create-form">
         <ng-template matStepLabel>
-          <ng-container *ngIf="!isSmallScreen">Image</ng-container>
+          @if (!isSmallScreen) {
+            Image
+          }
         </ng-template>
 
         <input type="file" class="file-input" (change)="onFileChange($event)">

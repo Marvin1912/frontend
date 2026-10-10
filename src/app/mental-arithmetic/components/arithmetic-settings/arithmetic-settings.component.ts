@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,7 +19,6 @@ import { ArithmeticService } from '../../services/arithmetic.service';
   selector: 'app-arithmetic-settings',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     MatCardModule,
     MatFormFieldModule,
@@ -30,7 +29,7 @@ import { ArithmeticService } from '../../services/arithmetic.service';
     MatButtonModule,
     MatSliderModule,
     MatIconModule
-  ],
+],
   templateUrl: './arithmetic-settings.component.html',
   styleUrls: ['./arithmetic-settings.component.css']
 })
