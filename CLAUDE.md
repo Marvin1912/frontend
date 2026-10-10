@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 - `npm start` — dev server (localhost:4200)
 - `npm run build` — production build
-- `npm test` — Karma + Jasmine
+- `npm test` — Vitest (jsdom, via `@angular/build:unit-test`); `npm run test:ci` for a single run
 
 ## Stack
 Angular 22 standalone components, RxJS (no NgRx), Angular Material 22 (Azure Blue) + Bootstrap 5.3.6 + SASS. Backend API at `http://localhost:9001`.
