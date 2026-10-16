@@ -271,7 +271,8 @@ textarea.field-input {
 /* Responsive */
 @media (max-width: 768px) {
   .edit-body {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
     overflow-y: auto;
   }
 
@@ -279,7 +280,28 @@ textarea.field-input {
     min-height: 200px;
   }
 
+  .plant-img {
+    height: auto;
+    max-height: 320px;
+  }
+
+  .details-panel {
+    overflow: visible;
+  }
+
   .text-fields {
     grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    flex: 0 0 auto;
+  }
+
+  .field-text,
+  textarea.field-input {
+    min-height: 140px;
+    max-height: 240px;
+  }
+
+  .meta-grid {
+    flex: 0 0 auto;
   }
 }
