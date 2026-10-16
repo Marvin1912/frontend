@@ -382,6 +382,11 @@ tfoot td {
   color: var(--text-muted);
 }
 
+.sources a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 .dot-sep {
   margin: 0 0.35rem;
 }
