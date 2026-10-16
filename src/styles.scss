@@ -5,6 +5,10 @@
    Basis für alle grocery-Redesign-Issues (#313–#319). Petrol/Tannengrün
    als Primärfarbe, Orange als Akzent — bewusst kein reines Rot, siehe
    --grocery-price-up/-down unten. */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 html {
   @include mat.theme((
     color: (

@@ -49,7 +49,6 @@ npm run test:coverage # Coverage report (coverage/index.html)
 
 - **Angular 20** with standalone components
 - **Angular Material 20** with Azure Blue theme
-- **Bootstrap 5.3.6** + SASS for styling
 - **TypeScript** strict mode
 - **Docker** + Nginx for deployment
 

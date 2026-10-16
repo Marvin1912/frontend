@@ -156,6 +156,7 @@
 
 .table-meal-group {
   min-width: 560px;
+  border-collapse: collapse;
 }
 
 /* ── Section total ───────────────────────────────── */
@@ -380,6 +381,11 @@ tfoot td {
 
 .plan-footer a {
   color: var(--text-muted);
+}
+
+.sources a {
+  color: inherit;
+  text-decoration: underline;
 }
 
 .dot-sep {

@@ -1,4 +1,4 @@
-/* Tailwind v4 ohne Preflight: nur theme + utilities, damit Bootstrap/Material unberührt bleiben. */
+/* Tailwind v4 ohne Preflight: nur theme + utilities, damit Material unberührt bleibt. */
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);

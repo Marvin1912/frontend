@@ -28,7 +28,6 @@
     "@angular/platform-browser-dynamic": "22.2.2",
     "@angular/router": "22.2.2",
     "@tailwindcss/postcss": "4.3.3",
-    "bootstrap": "5.3.8",
     "chart.js": "4.5.1",
     "date-fns": "4.4.0",
     "ng2-charts": "11.0.0",
