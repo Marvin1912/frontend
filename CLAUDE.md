@@ -34,4 +34,4 @@ These steps apply to **every change** (features, fixes, refactors, style tweaks 
 3. Run `npm run build` — must succeed before continuing.
 4. Run `npm run test:ci` — all tests must pass before continuing. Never commit or open a PR with failing tests.
 5. Commit and push the branch.
-6. Open a Pull Request on GitHub targeting `master`. The `Test` GitHub Actions workflow (`.github/workflows/test.yml`) runs `test:ci` + `build` on every PR; do not merge while it is red.
+6. Open a Pull Request on GitHub targeting `master`. There is no CI: build and tests (steps 3–4) run locally and must be green before opening the PR.
