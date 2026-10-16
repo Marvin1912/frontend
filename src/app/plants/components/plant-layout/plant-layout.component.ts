@@ -1,5 +1,4 @@
 import {Component, ChangeDetectionStrategy} from '@angular/core';
-import {MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from "@angular/router";
 import {filter} from 'rxjs';
@@ -8,7 +7,6 @@ import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 @Component({
   selector: 'app-plant-layout',
   imports: [
-    MatIconButton,
     MatIcon,
     RouterLink,
     RouterOutlet,

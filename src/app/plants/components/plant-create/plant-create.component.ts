@@ -8,7 +8,6 @@ import {PlantLocation} from '../../models/plant-location.enum';
 import {Plant} from '../../models/plant.model';
 import {MatStep, MatStepLabel, MatStepper, MatStepperNext, MatStepperPrevious} from '@angular/material/stepper';
 import {MatInput} from '@angular/material/input';
-import {MatButton} from '@angular/material/button';
 
 import {Router} from '@angular/router';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
@@ -28,7 +27,6 @@ import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
     ReactiveFormsModule,
     MatStepLabel,
     MatInput,
-    MatButton,
     MatStepperNext,
     MatStepperPrevious,
     MatDatepicker,

@@ -6,14 +6,12 @@ import {
   MatDialogContent,
   MatDialogTitle
 } from '@angular/material/dialog';
-import {MatButton} from '@angular/material/button';
 
 @Component({
   selector: 'app-image-view-dialog',
   imports: [
     MatDialogContent,
     MatDialogTitle,
-    MatButton,
     MatDialogClose,
     MatDialogActions
   ],

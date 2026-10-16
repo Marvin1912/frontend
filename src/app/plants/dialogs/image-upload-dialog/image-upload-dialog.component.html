@@ -7,6 +7,6 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button class="btn-cancel" (click)="dialogRef.close()">Cancel</button>
-  <button mat-button class="btn-upload" (click)="onSubmit()" [disabled]="!selectedFile">Upload</button>
+  <button class="ui-btn" (click)="dialogRef.close()">Cancel</button>
+  <button class="ui-btn" (click)="onSubmit()" [disabled]="!selectedFile">Upload</button>
 </mat-dialog-actions>

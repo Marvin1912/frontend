@@ -7,7 +7,6 @@ import {
   MatDialogTitle
 } from '@angular/material/dialog';
 import {FormsModule} from '@angular/forms';
-import {MatButton} from '@angular/material/button';
 import {Plant} from '../../models/plant.model';
 import {ImageService} from '../../services/image.service';
 
@@ -18,7 +17,6 @@ import {ImageService} from '../../services/image.service';
     MatDialogContent,
     MatDialogActions,
     FormsModule,
-    MatButton
   ],
   templateUrl: './image-upload-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

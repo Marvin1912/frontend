@@ -1,10 +1,10 @@
 <div class="plant-layout">
   <header class="topbar">
     <div class="topbar__left">
-      <button mat-icon-button [routerLink]="homeLink" class="nav-btn" aria-label="Go home">
+      <button [routerLink]="homeLink" class="ui-btn-home" aria-label="Go home">
         <mat-icon>home</mat-icon>
       </button>
-      <button mat-icon-button [matMenuTriggerFor]="menu" class="nav-btn" aria-label="Open menu">
+      <button [matMenuTriggerFor]="menu" class="ui-btn-home" aria-label="Open menu">
         <mat-icon>more_vert</mat-icon>
       </button>
       <mat-menu #menu="matMenu">

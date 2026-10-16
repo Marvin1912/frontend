@@ -81,26 +81,6 @@
   filter: drop-shadow(0 0 6px rgba(34, 211, 94, 0.5));
 }
 
-/* ── Nav Buttons ─────────────────────────────────── */
-.nav-btn {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
-  color: var(--text-muted) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 8px !important;
-  width: 36px !important;
-  height: 36px !important;
-  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s !important;
-}
-
-.nav-btn:hover {
-  color: var(--c-p) !important;
-  border-color: var(--c-p) !important;
-  box-shadow: 0 0 10px rgba(34, 211, 94, 0.2) !important;
-}
-
 /* ── Content ─────────────────────────────────────── */
 .content {
   flex: 1;

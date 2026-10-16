@@ -25,36 +25,25 @@
   justify-content: center !important;
 }
 
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
+
 .btn-confirm {
-  background: rgba(34, 211, 94, 0.10) !important;
-  border: 1px solid rgba(34, 211, 94, 0.3) !important;
-  border-radius: 8px !important;
-  color: var(--c-p) !important;
-  transition: background 0.2s, box-shadow 0.2s;
-}
-
-.btn-confirm:hover {
-  background: rgba(34, 211, 94, 0.18) !important;
-  box-shadow: 0 0 12px rgba(34, 211, 94, 0.25) !important;
-}
-
-.btn-confirm mat-icon {
-  color: var(--c-p) !important;
+  --ui-btn-accent: #22d35e;
+  --ui-btn-fg: #22d35e;
+  --ui-btn-border: rgba(34, 211, 94, 0.3);
+  --ui-btn-glow: rgba(34, 211, 94, 0.25);
 }
 
 .btn-cancel {
-  background: rgba(251, 113, 133, 0.10) !important;
-  border: 1px solid rgba(251, 113, 133, 0.3) !important;
-  border-radius: 8px !important;
-  color: var(--c-e) !important;
-  transition: background 0.2s, box-shadow 0.2s;
-}
-
-.btn-cancel:hover {
-  background: rgba(251, 113, 133, 0.18) !important;
-  box-shadow: 0 0 12px rgba(251, 113, 133, 0.25) !important;
-}
-
-.btn-cancel mat-icon {
-  color: var(--c-e) !important;
+  --ui-btn-accent: #fb7185;
+  --ui-btn-fg: #fb7185;
+  --ui-btn-border: rgba(251, 113, 133, 0.3);
+  --ui-btn-glow: rgba(251, 113, 133, 0.25);
 }
