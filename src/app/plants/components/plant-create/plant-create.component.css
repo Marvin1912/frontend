@@ -230,38 +230,16 @@
   .file-input { width: 100%; }
 }
 
-.btn-nav {
-  background: transparent !important;
-  border: 1px solid var(--border-mid) !important;
-  border-radius: 8px !important;
-  color: var(--text-muted) !important;
-  font-family: 'Outfit', sans-serif !important;
-  font-size: 0.8rem !important;
-  letter-spacing: 0.04em !important;
-  padding: 0.4rem 1.1rem !important;
-  min-width: 80px !important;
-  transition: border-color 0.2s, color 0.2s, box-shadow 0.2s !important;
+.ui-btn {
+  min-width: 80px;
 }
 
-.btn-nav:hover {
-  border-color: rgba(255, 255, 255, 0.3) !important;
-  color: var(--text) !important;
-}
-
+/* Primary: grüner Akzent, auf den hellen Material-Flächen lokal überschrieben */
 .btn-nav--primary {
-  border-color: rgba(34, 211, 94, 0.4) !important;
-  color: var(--c-p) !important;
-}
-
-.btn-nav--primary:hover {
-  border-color: var(--c-p) !important;
-  box-shadow: 0 0 14px rgba(34, 211, 94, 0.2) !important;
-  color: var(--c-p) !important;
-}
-
-.btn-nav--primary:disabled {
-  border-color: var(--border) !important;
-  color: var(--text-dim) !important;
-  box-shadow: none !important;
-  cursor: not-allowed !important;
+  --ui-btn-accent: var(--c-p);
+  --ui-btn-fg: var(--c-p);
+  --ui-btn-border: rgba(34, 211, 94, 0.4);
+  --ui-btn-glow: rgba(34, 211, 94, 0.2);
+  --ui-btn-disabled-fg: var(--text-dim);
+  --ui-btn-disabled-bg: transparent;
 }

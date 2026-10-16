@@ -11,7 +11,6 @@ import {Plant} from '../../models/plant.model';
 import {MatIcon} from '@angular/material/icon';
 import {PlantService} from '../../services/plant.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {MatMiniFabButton} from '@angular/material/button';
 
 @Component({
   selector: 'app-delete-confirmation-dialog',
@@ -21,7 +20,6 @@ import {MatMiniFabButton} from '@angular/material/button';
     MatDialogContent,
     MatDialogTitle,
     MatIcon,
-    MatMiniFabButton
   ],
   templateUrl: './delete-confirmation-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
