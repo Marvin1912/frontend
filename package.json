@@ -27,12 +27,15 @@
     "@angular/platform-browser": "22.2.2",
     "@angular/platform-browser-dynamic": "22.2.2",
     "@angular/router": "22.2.2",
+    "@tailwindcss/postcss": "4.3.3",
     "bootstrap": "5.3.8",
     "chart.js": "4.5.1",
     "date-fns": "4.4.0",
     "ng2-charts": "11.0.0",
     "rxjs": "7.8.2",
+    "tailwindcss": "4.3.3",
     "tslib": "2.8.1",
+    "ui-styles": "git+https://github.com/Marvin1912/ui-styles.git#51bbe800fdd56c694d1516a53d684780fb31469d",
     "zone.js": "0.16.3"
   },
   "devDependencies": {

@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm test` — Vitest (jsdom, via `@angular/build:unit-test`); `npm run test:ci` for a single run; `npm run test:coverage` writes `coverage/index.html`
 
 ## Stack
-Angular 22 standalone components, RxJS (no NgRx), Angular Material 22 (Azure Blue) + Bootstrap 5.3.6 + SASS. Backend API at `http://localhost:9001`.
+Angular 22 standalone components, RxJS (no NgRx), Angular Material 22 (Azure Blue) + Bootstrap 5.3.6 + SASS + Tailwind v4 (no preflight, `src/tailwind.css`) + `ui-styles` (private Git dep; builds run locally with SSH, Docker build needs `--ssh default`). Backend API at `http://localhost:9001`.
 
 ## Modules (`src/app/`)
 - `backend/` → `/account` — CAMT bank statement upload & analysis
@@ -34,4 +34,4 @@ These steps apply to **every change** (features, fixes, refactors, style tweaks 
 3. Run `npm run build` — must succeed before continuing.
 4. Run `npm run test:ci` — all tests must pass before continuing. Never commit or open a PR with failing tests.
 5. Commit and push the branch.
-6. Open a Pull Request on GitHub targeting `master`. The `Test` GitHub Actions workflow (`.github/workflows/test.yml`) runs `test:ci` + `build` on every PR; do not merge while it is red.
+6. Open a Pull Request on GitHub targeting `master`. There is no CI: build and tests (steps 3–4) run locally and must be green before opening the PR.
