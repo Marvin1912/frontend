@@ -290,9 +290,3 @@ mat-spinner {
     height: 40px;
   }
 }
-
-button,
-input,
-textarea {
-  font-family: inherit;
-}

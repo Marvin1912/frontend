@@ -93,7 +93,6 @@
 }
 
 .view-card__img {
-  vertical-align: middle;
   width: 100%;
   max-height: 400px;
   object-fit: cover;
