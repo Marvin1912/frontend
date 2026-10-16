@@ -17,6 +17,10 @@ jobs:
           node-version: 24
           cache: npm
 
+      # ui-styles is a private Git dependency; UI_STYLES_TOKEN = PAT with read access to Marvin1912/ui-styles
+      - name: Allow access to private ui-styles repo
+        run: git config --global url."https://x-access-token:${{ secrets.UI_STYLES_TOKEN }}@github.com/".insteadOf "ssh://git@github.com/"
+
       - run: npm ci
 
       - run: npm run test:ci

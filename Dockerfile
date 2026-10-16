@@ -3,9 +3,14 @@ FROM node:24-alpine AS build-stage
 
 WORKDIR /app
 
+# git + ssh are needed to resolve the private ui-styles Git dependency (pinned by commit in package-lock.json)
+RUN apk add --no-cache git openssh-client \
+    && mkdir -p -m 0700 /root/.ssh \
+    && ssh-keyscan github.com >> /root/.ssh/known_hosts
+
 COPY package*.json ./
 
-RUN --mount=type=cache,target=/root/.npm npm ci --loglevel=error
+RUN --mount=type=ssh --mount=type=cache,target=/root/.npm npm ci --loglevel=error
 
 COPY . .
 
