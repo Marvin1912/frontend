@@ -50,7 +50,14 @@
   flex-direction: column;
 }
 
+::ng-deep .plant-create .mat-horizontal-stepper-wrapper {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+}
+
 ::ng-deep .plant-create .mat-horizontal-stepper-header-container {
+  flex: 0 0 auto;
   background: var(--surface) !important;
   border-bottom: 1px solid var(--border) !important;
   padding: 0 1rem;

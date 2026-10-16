@@ -189,3 +189,25 @@ table {
     transform: translateY(0) scale(1);
   }
 }
+
+/* Mobile: weniger Außenabstand, damit Image- und Delete-Spalte sichtbar bleiben */
+@media (max-width: 768px) {
+  .plant-table {
+    padding: 1rem;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .mat-mdc-header-cell,
+  .mat-mdc-cell {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .mat-column-image,
+  .mat-column-delete {
+    width: 56px;
+  }
+}

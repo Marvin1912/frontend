@@ -190,3 +190,40 @@
   max-height: calc(100% - 0.75rem);
   overflow-y: auto;
 }
+
+/* Mobile: einspaltig, Seite scrollt statt zu clippen */
+@media (max-width: 768px) {
+  :host {
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  .plant-view {
+    height: auto;
+    padding: 1rem;
+  }
+
+  .view-card__body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+  }
+
+  .view-card__image-col {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 1rem;
+  }
+
+  .view-card__img {
+    max-height: 300px;
+  }
+
+  .view-card__detail-col {
+    padding: 1rem;
+  }
+
+  .tab-content {
+    max-height: none;
+  }
+}
