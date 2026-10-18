@@ -1,108 +1,74 @@
-import {Component, EventEmitter, Input, Output, ChangeDetectionStrategy} from '@angular/core';
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow,
-  MatRowDef,
-  MatTable
-} from '@angular/material/table';
+import {ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal} from '@angular/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatButtonModule} from '@angular/material/button';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {BookingEntryDTO} from '../model/BookingEntryDTO';
 import {DecimalPipe} from '@angular/common';
+import {round2, sumAmounts} from '../model/booking-math';
+
+export type BookingCategory = 'usualBookings' | 'dailyCosts' | 'incomes';
 
 @Component({
   selector: 'app-table',
-  standalone: true,
   imports: [
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
-    MatTable,
-    MatHeaderCellDef,
     MatIconModule,
     MatTooltipModule,
-    MatButtonModule,
     ClipboardModule,
     DecimalPipe
   ],
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css'],
+  styleUrl: './table.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent {
 
-  @Input() bookings?: BookingEntryDTO[];
-  @Input() title?: string;
-  @Output() itemRemoved = new EventEmitter<{ booking: BookingEntryDTO, category: string }>();
+  bookings = input<BookingEntryDTO[]>();
+  title = input('');
+  category = input.required<BookingCategory>();
+  itemRemoved = output<{ booking: BookingEntryDTO, category: BookingCategory }>();
 
-  displayedColumns: string[] = ['creditName', 'additionalInfo', 'amount', 'actions'];
-  sortDirection: 'asc' | 'desc' = 'desc';
-  copiedIban: string | null = null;
+  sortDirection = signal<'asc' | 'desc'>('desc');
+  copiedIban = signal<string | null>(null);
 
-  getSortedBookings() {
-    if (!this.bookings) return [];
-    return [...this.bookings].sort((a, b) => {
-      return this.sortDirection === 'desc' ? b.amount - a.amount : a.amount - b.amount;
-    });
-  }
+  sortedBookings = computed(() => {
+    const direction = this.sortDirection();
+    return [...(this.bookings() ?? [])].sort((a, b) => direction === 'desc' ? b.amount - a.amount : a.amount - b.amount);
+  });
 
-  getTotalAmount() {
-    return this.bookings?.map(b => b.amount)
-      .reduce((amount, sum) => amount + sum, 0);
+  totalAmount = computed(() => round2(sumAmounts(this.bookings())));
+
+  sortLabel = computed(() => 'Sortierung: ' + (this.sortDirection() === 'desc' ? 'Höchste zuerst' : 'Niedrigste zuerst'));
+
+  private copiedTimeout?: ReturnType<typeof setTimeout>;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.copiedTimeout));
   }
 
   toggleSort() {
-    this.sortDirection = this.sortDirection === 'desc' ? 'asc' : 'desc';
+    this.sortDirection.update(direction => direction === 'desc' ? 'asc' : 'desc');
   }
 
   getPartyName(element: BookingEntryDTO): string {
-    return this.getCategoryFromTitle() === 'incomes' ? element.debitName : element.creditName;
+    return this.category() === 'incomes' ? element.debitName : element.creditName;
   }
 
   getPartyIban(element: BookingEntryDTO): string {
-    return this.getCategoryFromTitle() === 'incomes' ? element.debitIban : element.creditIban;
+    return this.category() === 'incomes' ? element.debitIban : element.creditIban;
+  }
+
+  // Anzeige in 4er-Gruppen; kopiert wird die IBAN ohne Leerzeichen
+  formatIban(iban: string): string {
+    return iban.replace(/\s/g, '').replace(/(.{4})(?=.)/g, '$1 ');
   }
 
   onIbanCopied(iban: string) {
-    this.copiedIban = iban;
-    setTimeout(() => {
-      if (this.copiedIban === iban) this.copiedIban = null;
-    }, 1500);
+    this.copiedIban.set(iban);
+    clearTimeout(this.copiedTimeout);
+    this.copiedTimeout = setTimeout(() => this.copiedIban.set(null), 1500);
   }
 
   removeItem(booking: BookingEntryDTO) {
-    this.itemRemoved.emit({
-      booking,
-      category: this.getCategoryFromTitle()
-    });
+    this.itemRemoved.emit({booking, category: this.category()});
   }
-
-  private getCategoryFromTitle(): string {
-    if (!this.title) return 'unknown';
-
-    switch (this.title) {
-      case 'Generelle Buchungen':
-        return 'usualBookings';
-      case 'Täglicher Bedarf':
-        return 'dailyCosts';
-      case 'Einkommen':
-        return 'incomes';
-      default:
-        return 'unknown';
-    }
-  }
-
 }

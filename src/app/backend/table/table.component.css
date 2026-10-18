@@ -1,232 +1,146 @@
-/* ── Design Tokens (inherited from host context) ─── */
-/* These vars are defined on :host of the bookings component
-   and cascade down. We redeclare fallbacks here for standalone use. */
 :host {
-  --bg:         #06080e;
-  --surface:    #0c1018;
-  --raised:     #111826;
-  --border:     rgba(255, 255, 255, 0.07);
-  --border-mid: rgba(255, 255, 255, 0.13);
-  --text:       #c8d4e8;
-  --text-muted: #7a93b0;
-  --text-dim:   #3d5470;
-  --c-a:  #4da6ff;
-  --c-p:  #22d35e;
-  --c-e:  #fb7185;
-
   display: flex;
   flex-direction: column;
-  height: 100%;
-  font-family: 'Outfit', sans-serif;
-  color: var(--text);
+  min-width: 0;
+  container-type: inline-size;
 }
 
-/* ── Shell ───────────────────────────────────────── */
-.tbl {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-}
-
-/* ── Header ──────────────────────────────────────── */
-.tbl__header {
+.ui-btn-icon mat-icon {
   flex-shrink: 0;
-  padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--border-mid);
-  background: var(--raised);
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
 }
 
-.tbl__title-row {
+/* ── Kopf / Fuß ──────────────────────────────────── */
+.tbl__head,
+.tbl__foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
-}
-
-.tbl__title {
-  margin: 0;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-dim);
-}
-
-/* ── Body / Scroll ───────────────────────────────── */
-.tbl__body {
-  flex: 1 1 auto;
-  overflow-y: auto;
-  min-height: 0;
-}
-
-/* ── Footer ──────────────────────────────────────── */
-.tbl__footer {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.4rem 0.75rem;
-  border-top: 1px solid var(--border-mid);
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-2) var(--ui-space-3);
   background: var(--raised);
 }
 
+.tbl__head {
+  border-bottom: 1px solid var(--border);
+}
+
+.tbl__title,
 .tbl__sum-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
+  margin: 0;
+  font-size: var(--ui-text-xs);
+  font-weight: 700;
+  letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--text-dim);
+  color: var(--text-muted);
+}
+
+.tbl__foot {
+  margin-top: auto;
+  border-top: 1px solid var(--border-mid);
 }
 
 .tbl__sum-val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.78rem;
+  font-size: var(--ui-text-sm);
   font-weight: 700;
-  color: var(--text);
+  font-variant-numeric: tabular-nums;
 }
 
-/* ── Angular Material Table Overrides ────────────── */
-.tbl__mat {
-  background-color: transparent !important;
-  width: 100%;
-}
-
-.mat-mdc-header-row {
-  height: 28px !important;
-  min-height: 28px !important;
-  background: var(--raised) !important;
-}
-
-.mat-mdc-header-cell {
-  background: var(--raised) !important;
-  color: var(--text-dim) !important;
-  border-bottom: 1px solid var(--border-mid) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 0.6rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.08em !important;
-  text-transform: uppercase !important;
-  padding: 4px 12px !important;
-  line-height: 1.2 !important;
-}
-
-.mat-mdc-cell {
-  color: var(--text) !important;
-  border-bottom: 1px solid var(--border) !important;
-  background: transparent !important;
-  padding: 6px 12px !important;
-  height: auto !important;
-  font-family: 'Outfit', sans-serif !important;
-  font-size: 0.8rem !important;
-}
-
-.mat-mdc-row:hover .mat-mdc-cell {
-  background: var(--raised) !important;
-}
-
-/* Material's mdc-data-table cells default to overflow: hidden for text
-   truncation, which clips the absolutely-positioned IBAN popup entirely.
-   Allow this column's cell to overflow so the popup can render. */
-.mat-column-creditName.mat-mdc-cell {
-  overflow: visible !important;
-}
-
-/* ── Sort / Action Buttons ───────────────────────── */
-.tbl__sort-btn.mat-mdc-mini-fab {
-  background: var(--surface) !important;
-  color: var(--text-muted) !important;
-  border: 1px solid var(--border-mid) !important;
-  box-shadow: none !important;
-  width: 28px !important;
-  height: 28px !important;
-}
-
-.tbl__sort-btn.mat-mdc-mini-fab:hover {
-  background: var(--raised) !important;
-  color: var(--c-a) !important;
-  border-color: rgba(77, 166, 255, 0.35) !important;
-}
-
-.tbl__sort-btn .mat-icon {
-  font-size: 16px !important;
-  width: 16px !important;
-  height: 16px !important;
-  line-height: 16px !important;
-}
-
-.tbl__delete-btn.mat-mdc-mini-fab {
-  background: rgba(251, 113, 133, 0.1) !important;
-  color: var(--c-e) !important;
-  border: 1px solid rgba(251, 113, 133, 0.25) !important;
-  box-shadow: none !important;
-  width: 28px !important;
-  height: 28px !important;
-}
-
-.tbl__delete-btn.mat-mdc-mini-fab:hover {
-  background: rgba(251, 113, 133, 0.2) !important;
-}
-
-.tbl__delete-btn .mat-icon {
-  font-size: 16px !important;
-  width: 16px !important;
-  height: 16px !important;
-  line-height: 16px !important;
-}
-
-/* ── IBAN Hover Popup ─────────────────────────────── */
-.tbl__iban-cell {
-  position: relative;
-  display: inline-block;
-  cursor: default;
-}
-
-.tbl__iban-popup {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  margin-top: 4px;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 6px;
-  background: var(--raised);
-  border: 1px solid var(--border-mid);
-  border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  color: var(--text);
+/* ── Tabelle ─────────────────────────────────────── */
+.col-amount {
+  text-align: right;
   white-space: nowrap;
-  user-select: text;
-  z-index: 20;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-.tbl__iban-cell:hover .tbl__iban-popup {
+.col-action {
+  width: 52px;
+  text-align: center;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ── Gegenpartei mit IBAN ────────────────────────── */
+.party {
+  position: relative;
+}
+
+.party__name {
+  overflow-wrap: break-word;
+}
+
+.party__iban {
   display: flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  color: var(--text-muted);
+  user-select: text;
 }
 
-.tbl__iban-copy-btn.mat-mdc-icon-button {
-  width: 24px !important;
-  height: 24px !important;
-  padding: 0 !important;
+.party__iban-text {
+  font-variant-numeric: tabular-nums;
 }
 
-.tbl__iban-copy-btn .mat-icon {
-  font-size: 15px !important;
-  width: 15px !important;
-  height: 15px !important;
-  line-height: 15px !important;
+.party__copy {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
 }
 
-/* ── Icon button fallback ────────────────────────── */
-button.mat-mdc-icon-button {
-  color: var(--text-muted) !important;
+.party__copy mat-icon {
+  width: 15px;
+  height: 15px;
+  font-size: 15px;
 }
 
-button.mat-mdc-icon-button:hover {
-  background: var(--raised) !important;
+/* Mit Maus: IBAN als Popup über dem Namen bei Hover oder Tastaturfokus */
+@media (hover: hover) {
+  .party {
+    display: inline-block;
+  }
+
+  /* opacity statt display: none, damit der Kopier-Button per Tab erreichbar bleibt */
+  .party__iban {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    z-index: 20;
+    padding: var(--ui-space-1) var(--ui-space-2);
+    background: var(--raised);
+    border: 1px solid var(--border-mid);
+    border-radius: var(--ui-radius-sm);
+    color: var(--text);
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .4);
+  }
+
+  .party:hover .party__iban,
+  .party:focus-within .party__iban {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Schmale Tabelle (mobil, zweispaltig): Buchungstext unter dem Namen statt eigener Spalte */
+.info-inline {
+  display: none;
+}
+
+@container (max-width: 559px) {
+  .col-info {
+    display: none;
+  }
+
+  .info-inline {
+    display: block;
+    margin-top: .15rem;
+    color: var(--text-muted);
+    overflow-wrap: break-word;
+  }
 }

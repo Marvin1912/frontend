@@ -1,17 +1,27 @@
-import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input, linkedSignal} from '@angular/core';
 import {BookingsDTO} from '../model/BookingsDTO';
-import {TableComponent} from '../table/table.component';
+import {BookingCategory, TableComponent} from '../table/table.component';
 import {MonthlyBookingEntriesDTO} from '../model/MonthlyBookingEntriesDTO';
 import {BookingEntryDTO} from '../model/BookingEntryDTO';
-import {DecimalPipe} from '@angular/common';
-import {MatExpansionModule} from '@angular/material/expansion';
+import {DecimalPipe, formatDate} from '@angular/common';
+import {MatIcon} from '@angular/material/icon';
+import {round2, sumAmounts} from '../model/booking-math';
+
+export interface MonthSummary {
+  key: string;
+  label: string;
+  month: MonthlyBookingEntriesDTO;
+  expenses: number;
+  income: number;
+  difference: number;
+}
 
 @Component({
   selector: 'app-bookings',
   imports: [
     TableComponent,
     DecimalPipe,
-    MatExpansionModule
+    MatIcon
   ],
   templateUrl: './bookings.component.html',
   styleUrl: './bookings.component.css',
@@ -19,62 +29,28 @@ import {MatExpansionModule} from '@angular/material/expansion';
 })
 export class BookingsComponent {
 
-  @Input() bookings?: BookingsDTO;
-  totalAmount = 0;
+  bookings = input<BookingsDTO>();
 
-  private sumAmounts(items: { amount: number }[] | undefined): number {
-    if (!items?.length) {
-      return 0;
-    }
-    return items.reduce((sum, b) => sum + (b?.amount ?? 0), 0);
+  // Lokale Kopie: Entfernen einer Buchung verändert nicht das Input-Objekt
+  private months = linkedSignal(() => this.bookings()?.bookingsPerMonth ?? []);
+
+  summaries = computed<MonthSummary[]>(() => this.months().map(month => {
+    const expenses = round2(sumAmounts(month.usualBookings) + sumAmounts(month.dailyCosts));
+    const income = round2(sumAmounts(month.incomes));
+    return {
+      key: `${month.year}-${month.month}`,
+      label: formatDate(new Date(month.year, month.month - 1, 1), 'MMMM yyyy', 'de'),
+      month,
+      expenses,
+      income,
+      difference: round2(income - expenses)
+    };
+  }));
+
+  onItemRemoved(event: { booking: BookingEntryDTO, category: BookingCategory }, month: MonthlyBookingEntriesDTO) {
+    const {booking, category} = event;
+    this.months.update(months => months.map(m => m === month
+      ? {...m, [category]: (m[category] ?? []).filter(b => b !== booking)}
+      : m));
   }
-
-  private round2(n: number): number {
-    return Math.round((n + Number.EPSILON) * 100) / 100;
-  }
-
-  getTotalAmount(booking: MonthlyBookingEntriesDTO): number {
-    const usual = this.sumAmounts(booking.usualBookings);
-    const daily = this.sumAmounts(booking.dailyCosts);
-    return this.round2(usual + daily);
-  }
-
-  areExpensesHigherThanIncome(booking: MonthlyBookingEntriesDTO): boolean {
-    const total = this.getTotalAmount(booking);
-    const income = this.round2(this.sumAmounts(booking.incomes));
-    return total > income;
-  }
-
-  getIncomeAmount(booking: MonthlyBookingEntriesDTO): number {
-    return this.round2(this.sumAmounts(booking.incomes));
-  }
-
-  getEarningsDifference(booking: MonthlyBookingEntriesDTO): number {
-    const income = this.getIncomeAmount(booking);
-    const expenses = this.getTotalAmount(booking);
-    return this.round2(income - expenses);
-  }
-
-  onItemRemoved(event: { booking: BookingEntryDTO, category: string }, monthBooking: MonthlyBookingEntriesDTO) {
-    const { booking, category } = event;
-
-    switch (category) {
-      case 'usualBookings':
-        if (monthBooking.usualBookings) {
-          monthBooking.usualBookings = [...monthBooking.usualBookings.filter(b => b !== booking)];
-        }
-        break;
-      case 'dailyCosts':
-        if (monthBooking.dailyCosts) {
-          monthBooking.dailyCosts = [...monthBooking.dailyCosts.filter(b => b !== booking)];
-        }
-        break;
-      case 'incomes':
-        if (monthBooking.incomes) {
-          monthBooking.incomes = [...monthBooking.incomes.filter(b => b !== booking)];
-        }
-        break;
-    }
-  }
-
 }

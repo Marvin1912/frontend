@@ -1,50 +1,95 @@
-<div class="backend">
-
-  <!-- ── Topbar ──────────────────────────────────────── -->
-  <header class="topbar">
-    <div class="topbar__brand">
-      <button mat-icon-button routerLink="/" matTooltip="Home" class="topbar__home-btn">
-        <mat-icon>home</mat-icon>
-      </button>
-      <span class="topbar__hex">⬡</span>
-      <span class="topbar__name">KONTOAUSZÜGE</span>
-    </div>
-    <div class="topbar__actions">
-      <label class="file-input">
-        <input type="file" class="file-input__native" (change)="onFileSelected($event)" />
-        <span class="file-input__label">
-          <mat-icon class="file-input__icon">attach_file</mat-icon>
-          {{ uploadedFile ? uploadedFile.name : 'Datei wählen' }}
-        </span>
-      </label>
-      <button mat-mini-fab (click)="uploadFile()" matTooltip="Upload" class="action-btn action-btn--upload">
-        <mat-icon>upload</mat-icon>
-      </button>
-      <label class="file-input">
-        <input type="file" class="file-input__native" (change)="onImportFileSelected($event)" />
-        <span class="file-input__label">
-          <mat-icon class="file-input__icon">attach_file</mat-icon>
-          {{ importFile ? importFile.name : 'Datei wählen' }}
-        </span>
-      </label>
-      <button mat-mini-fab (click)="importAndSaveFile()" matTooltip="Import & Save" class="action-btn action-btn--import">
-        <mat-icon>save</mat-icon>
-      </button>
-      <button mat-mini-fab (click)="backupCostData()" matTooltip="Backup" class="action-btn action-btn--backup">
-        <mat-icon>backup</mat-icon>
-      </button>
-    </div>
-  </header>
-
-  <!-- ── Content ─────────────────────────────────────── -->
-  <div class="backend__content">
-    @if (isLoading) {
-      <div class="backend__spinner">
-        <mat-spinner></mat-spinner>
-      </div>
-    } @else {
-      <app-bookings [bookings]="responseData"></app-bookings>
-    }
+<header class="ui-topbar ui-topbar--blue sticky top-0 z-10">
+  <div class="ui-topbar-group">
+    <button type="button" routerLink="/" class="ui-btn-home" aria-label="Go home">
+      <mat-icon>home</mat-icon>
+    </button>
+    <span class="ui-topbar-icon" aria-hidden="true"><mat-icon inline>account_balance</mat-icon></span>
+    <h1 class="ui-topbar-title">Kontoauszüge</h1>
   </div>
+  <div class="ui-topbar-group">
+    <button type="button" class="ui-btn-icon" aria-label="Kosten sichern" matTooltip="Kosten sichern"
+            [disabled]="busy() !== null" (click)="backupCostData()">
+      @if (busy() === 'backup') {
+        <mat-spinner diameter="16"></mat-spinner>
+      } @else {
+        <mat-icon aria-hidden="true">backup</mat-icon>
+      }
+    </button>
+  </div>
+</header>
 
-</div>
+<main class="content">
+  <div class="ui-container page">
+
+    <!-- ── Dateien ──────────────────────────────────── -->
+    <section class="ui-panel ui-panel--blue" aria-labelledby="camt-title">
+      <div class="ui-panel-head">
+        <h2 class="ui-panel-label" id="camt-title"><span class="ui-panel-dot"></span>CAMT-Datei</h2>
+      </div>
+      <div class="ui-panel-body">
+        <div class="upload-grid">
+          <div class="upload-row">
+            <span class="ui-input-label" id="analyze-label">Analysieren</span>
+            <div class="upload-controls">
+              <label class="ui-btn file-pick">
+                <input type="file" class="sr-only" aria-labelledby="analyze-label"
+                       [disabled]="busy() !== null" (change)="onFileSelected($event)"/>
+                <mat-icon aria-hidden="true">attach_file</mat-icon>
+                <span class="file-pick__name">{{ uploadedFile()?.name ?? 'Datei wählen' }}</span>
+              </label>
+              <button type="button" class="ui-btn ui-btn--blue"
+                      [disabled]="!uploadedFile() || busy() !== null" (click)="uploadFile()">
+                <mat-icon aria-hidden="true">upload</mat-icon>Hochladen
+              </button>
+            </div>
+          </div>
+
+          <div class="upload-row">
+            <span class="ui-input-label" id="import-label">Importieren &amp; speichern</span>
+            <div class="upload-controls">
+              <label class="ui-btn file-pick">
+                <input type="file" class="sr-only" aria-labelledby="import-label"
+                       [disabled]="busy() !== null" (change)="onImportFileSelected($event)"/>
+                <mat-icon aria-hidden="true">attach_file</mat-icon>
+                <span class="file-pick__name">{{ importFile()?.name ?? 'Datei wählen' }}</span>
+              </label>
+              <button type="button" class="ui-btn ui-btn--green"
+                      [disabled]="!importFile() || busy() !== null" (click)="importAndSaveFile()">
+                @if (busy() === 'import') {
+                  <mat-spinner diameter="16"></mat-spinner>
+                } @else {
+                  <mat-icon aria-hidden="true">save</mat-icon>
+                }
+                Importieren
+              </button>
+            </div>
+          </div>
+        </div>
+
+        @if (status(); as s) {
+          <div class="ui-alert status" [class.ui-alert--info]="s.kind === 'info'"
+               [class.ui-alert--danger]="s.kind === 'danger'"
+               [attr.role]="s.kind === 'danger' ? 'alert' : 'status'">
+            {{ s.text }}
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- ── Buchungen ────────────────────────────────── -->
+    @if (busy() === 'upload') {
+      <div class="ui-empty" role="status">
+        <mat-spinner diameter="32"></mat-spinner>
+        <p class="m-0">Kontoauszug wird analysiert…</p>
+      </div>
+    } @else if (hasBookings()) {
+      <app-bookings [bookings]="responseData()"></app-bookings>
+    } @else {
+      <div class="ui-empty" role="status">
+        <mat-icon aria-hidden="true">receipt_long</mat-icon>
+        <p class="m-0">{{ responseData() ? 'Keine Buchungen in der Datei' : 'Noch kein Kontoauszug analysiert' }}</p>
+      </div>
+    }
+
+  </div>
+</main>
