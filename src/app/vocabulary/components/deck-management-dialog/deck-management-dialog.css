@@ -1,62 +1,44 @@
-::ng-deep .mdc-dialog__surface {
-  background: var(--surface, #0c1018) !important;
-  border: 1px solid var(--border-mid, rgba(255,255,255,0.13)) !important;
-  border-radius: 12px !important;
-}
-
-::ng-deep .mdc-dialog__title {
-  color: var(--text, #c8d4e8) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-}
-
-::ng-deep .mat-mdc-dialog-content {
+.deck-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-2);
+  max-height: 60vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
   overscroll-behavior: contain;
+  list-style: none;
 }
 
 .deck-row {
-  width: 75%;
-  background: var(--raised, #111826);
-  border: 1px solid var(--border, rgba(255,255,255,0.07));
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-2) var(--ui-space-2) var(--ui-space-2) var(--ui-space-4);
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: var(--ui-radius);
 }
 
 .deck-row__id {
-  width: 2.5rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.7rem;
-  color: var(--text-dim, #3d5470);
+  width: 2rem;
   flex-shrink: 0;
+  color: var(--text-dim);
+  font-size: var(--ui-text-xs);
+  font-variant-numeric: tabular-nums;
 }
 
 .deck-row__name {
   flex: 1 1 0;
   min-width: 0;
-  color: var(--text, #c8d4e8);
   overflow: hidden;
+  color: var(--text);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.icon-btn--yellow {
-  color: var(--text-muted, #7a93b0) !important;
-  transition: color 0.2s, background 0.2s;
-}
-
-.icon-btn--yellow:hover {
-  color: var(--c-v, #fbbf24) !important;
-  background: rgba(251,191,36,0.1) !important;
-}
-
-::ng-deep .mat-mdc-dialog-actions .mdc-button {
-  color: var(--text-muted, #7a93b0) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  transition: color 0.2s;
-}
-
-::ng-deep .mat-mdc-dialog-actions .mdc-button:hover {
-  color: var(--c-v, #fbbf24) !important;
+.ui-btn-icon mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
 }

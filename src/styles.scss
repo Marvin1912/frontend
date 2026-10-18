@@ -102,6 +102,15 @@ html {
   --c-c:  #f97316;  --cg-c: rgba(249, 115,  22, 0.18);
 }
 
+/* ── MatDialog mit ui-dialog ─────────────────────── */
+/* panelClass für MatDialog, deren Komponente ui-dialog als Wurzel nutzt:
+   Material-Fläche neutralisieren, ui-dialog malt Fläche, Rahmen und Radius. */
+.ui-dialog-pane {
+  --mat-dialog-container-color: transparent;
+  --mat-dialog-container-elevation-shadow: none;
+  --mat-dialog-container-shape: 12px;
+}
+
 html, body { height: 100vh; }
 body { margin: 0; font-family: var(--mat-sys-body-medium-font, system-ui, sans-serif); }
 
