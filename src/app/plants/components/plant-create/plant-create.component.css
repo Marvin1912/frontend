@@ -1,252 +1,183 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
-
-/* ── Design Tokens ───────────────────────────────── */
 :host {
-  --bg:          #06080e;
-  --surface:     #0c1018;
-  --raised:      #111826;
-  --border:      rgba(255, 255, 255, 0.07);
-  --border-mid:  rgba(255, 255, 255, 0.13);
-
-  --text:        #c8d4e8;
-  --text-muted:  #7a93b0;
-  --text-dim:    #3d5470;
-
-  --c-a:  #4da6ff;  --cg-a: rgba(77,  166, 255, 0.18);
-  --c-p:  #22d35e;  --cg-p: rgba(34,  211,  94, 0.18);
-  --c-v:  #fbbf24;  --cg-v: rgba(251, 191,  36, 0.18);
-  --c-m:  #a78bfa;  --cg-m: rgba(167, 139, 250, 0.18);
-  --c-e:  #fb7185;  --cg-e: rgba(251, 113, 133, 0.18);
-
   display: block;
-  height: 100%;
-  font-family: 'Outfit', sans-serif;
+}
+
+.create-page {
+  max-width: 760px;
+}
+
+/* ── Schritte ────────────────────────────────────── */
+.stepper {
+  border-bottom: 1px solid var(--border);
+}
+
+.stepper__list {
+  display: flex;
+  margin: 0;
+  padding: 0 var(--ui-space-2);
+  list-style: none;
+}
+
+.stepper__item {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.stepper__step {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  min-width: 0;
+  min-height: 48px;
+  padding: var(--ui-space-2);
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: var(--ui-text-sm);
+  cursor: pointer;
+  transition: color .2s, border-color .2s;
+}
+
+.stepper__step:disabled {
+  color: var(--text-dim);
+  cursor: default;
+}
+
+.stepper__step:not(:disabled):hover {
   color: var(--text);
 }
 
-/* ── Host Container ──────────────────────────────── */
-.plant-create {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+.stepper__step:focus-visible {
+  outline: 2px solid var(--c-p);
+  outline-offset: -2px;
+}
+
+.stepper__step.is-active {
+  color: var(--text);
+  border-bottom-color: var(--c-p);
+}
+
+.stepper__num {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--raised);
+  border: 1px solid var(--border-mid);
+  border-radius: 50%;
+  font-size: .72rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.is-active .stepper__num,
+.is-done .stepper__num {
+  background: color-mix(in srgb, var(--c-p) 15%, transparent);
+  border-color: color-mix(in srgb, var(--c-p) 40%, transparent);
+  color: var(--c-p);
+}
+
+.stepper__label {
+  white-space: nowrap;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(34, 211, 94, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(77, 166, 255, 0.03) 0%, transparent 55%),
-    var(--bg);
-  background-image:
-    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(34, 211, 94, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(77, 166, 255, 0.03) 0%, transparent 55%),
-    radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 28px 28px;
-  background-color: var(--bg);
+  text-overflow: ellipsis;
 }
 
-/* ── Stepper Overrides ───────────────────────────── */
-::ng-deep .plant-create mat-horizontal-stepper {
-  background: transparent !important;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+/* Mobil nur Nummern; die aktive Beschriftung steht im Badge im Panel-Kopf */
+@media (max-width: 639px) {
+  .stepper__label {
+    display: none;
+  }
 }
 
-::ng-deep .plant-create .mat-horizontal-stepper-wrapper {
-  flex: 1 1 auto;
-  min-height: 0;
-  height: 100%;
-}
-
-::ng-deep .plant-create .mat-horizontal-stepper-header-container {
-  flex: 0 0 auto;
-  background: var(--surface) !important;
-  border-bottom: 1px solid var(--border) !important;
-  padding: 0 1rem;
-}
-
-::ng-deep .plant-create .mat-step-header {
-  background: transparent !important;
-}
-
-::ng-deep .plant-create .mat-step-header:hover {
-  background: var(--raised) !important;
-}
-
-::ng-deep .plant-create .mat-step-header .mat-step-label {
-  color: var(--text-muted) !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 0.7rem !important;
-  letter-spacing: 0.04em !important;
-  text-transform: uppercase !important;
-}
-
-::ng-deep .plant-create .mat-step-header .mat-step-label.mat-step-label-active {
-  color: var(--text) !important;
-}
-
-::ng-deep .plant-create .mat-step-header .mat-step-icon {
-  background: var(--raised) !important;
-  color: var(--text-muted) !important;
-  border: 1px solid var(--border-mid) !important;
-}
-
-::ng-deep .plant-create .mat-step-header .mat-step-icon-selected,
-::ng-deep .plant-create .mat-step-header .mat-step-icon-state-done {
-  background: rgba(34, 211, 94, 0.15) !important;
-  color: var(--c-p) !important;
-  border-color: rgba(34, 211, 94, 0.4) !important;
-}
-
-::ng-deep .plant-create .mat-stepper-horizontal-line {
-  border-top-color: var(--border) !important;
-}
-
-::ng-deep .plant-create .mat-horizontal-content-container {
-  flex: 1;
-  overflow: auto;
-  padding: 0 !important;
-}
-
-/* ── Form Layout ─────────────────────────────────── */
+/* ── Formular ────────────────────────────────────── */
 .create-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 2rem 10%;
-  min-height: 100%;
-  box-sizing: border-box;
+  gap: var(--ui-space-4);
 }
 
-.care-info,
-.basic-info {
-  width: 75%;
+.field-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ui-space-4);
 }
 
-@media (max-width: 480px) {
-  .care-info,
-  .basic-info {
-    width: 100%;
-  }
-
-  .create-form {
-    padding: 1rem 1rem;
+@media (min-width: 640px) {
+  .field-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-/* ── Material Form Field Overrides ───────────────── */
-::ng-deep .plant-create .mat-mdc-form-field {
-  width: 100%;
+.field {
+  min-width: 0;
 }
 
-::ng-deep .plant-create .mat-mdc-text-field-wrapper {
-  background: var(--raised) !important;
+.field-hint,
+.field-error {
+  margin: var(--ui-space-1) 0 0;
+  font-size: .72rem;
 }
 
-::ng-deep .plant-create .mdc-notched-outline__leading,
-::ng-deep .plant-create .mdc-notched-outline__notch,
-::ng-deep .plant-create .mdc-notched-outline__trailing {
-  border-color: var(--border-mid) !important;
+.field-hint {
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
 }
 
-::ng-deep .plant-create .mat-mdc-form-field:hover .mdc-notched-outline__leading,
-::ng-deep .plant-create .mat-mdc-form-field:hover .mdc-notched-outline__notch,
-::ng-deep .plant-create .mat-mdc-form-field:hover .mdc-notched-outline__trailing {
-  border-color: rgba(255, 255, 255, 0.25) !important;
+.field-error {
+  color: var(--c-e);
 }
 
-::ng-deep .plant-create .mat-mdc-form-field.mat-focused .mdc-notched-outline__leading,
-::ng-deep .plant-create .mat-mdc-form-field.mat-focused .mdc-notched-outline__notch,
-::ng-deep .plant-create .mat-mdc-form-field.mat-focused .mdc-notched-outline__trailing {
-  border-color: var(--c-a) !important;
-  border-width: 1px !important;
+/* Ungültige Felder nach Interaktion: Rahmen und Fokus in Rose */
+.ui-input.ng-invalid.ng-touched {
+  --ui-input-accent: var(--c-e);
+  --ui-input-border: color-mix(in srgb, var(--c-e) 55%, transparent);
 }
 
-::ng-deep .plant-create .mat-mdc-form-field .mat-mdc-floating-label {
-  color: var(--text-muted) !important;
-  font-family: 'Outfit', sans-serif !important;
-}
-
-::ng-deep .plant-create .mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
-  color: var(--c-a) !important;
-}
-
-::ng-deep .plant-create .mat-mdc-input-element {
-  color: var(--text) !important;
-  caret-color: var(--c-a) !important;
-}
-
-::ng-deep .plant-create .mat-mdc-select-value-text {
-  color: var(--text) !important;
-}
-
-::ng-deep .plant-create .mat-mdc-select-arrow {
-  color: var(--text-muted) !important;
-}
-
-::ng-deep .plant-create .mat-datepicker-toggle {
-  color: var(--text-muted) !important;
-}
-
-/* ── File Input ──────────────────────────────────── */
 .file-input {
-  background: var(--raised);
-  border: 1px solid var(--border-mid);
-  border-radius: 8px;
-  padding: 0.6rem 0.75rem;
-  color: var(--text);
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.85rem;
-  width: 75%;
   cursor: pointer;
-  transition: border-color 0.2s;
-}
-
-.file-input:hover {
-  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .file-input::file-selector-button {
+  margin-right: var(--ui-space-3);
+  padding: var(--ui-space-1) var(--ui-space-3);
   background: var(--surface);
   border: 1px solid var(--border-mid);
-  border-radius: 6px;
+  border-radius: var(--ui-radius-sm);
   color: var(--text-muted);
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.8rem;
-  padding: 0.25rem 0.75rem;
-  margin-right: 0.75rem;
+  font: inherit;
+  font-size: var(--ui-text-sm);
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
+  transition: color .2s, border-color .2s;
 }
 
-.file-input::file-selector-button:hover {
+.file-input:hover::file-selector-button {
   border-color: var(--c-p);
   color: var(--c-p);
 }
 
-/* ── Nav Buttons ─────────────────────────────────── */
+/* ── Navigation ──────────────────────────────────── */
 .form-nav {
   display: flex;
-  gap: 0.5rem;
   justify-content: flex-end;
-  width: 75%;
-  padding-top: 0.25rem;
+  gap: var(--ui-space-2);
 }
 
-@media (max-width: 480px) {
-  .form-nav { width: 100%; }
-  .file-input { width: 100%; }
+.form-nav .ui-btn {
+  justify-content: center;
+  min-width: 96px;
+  min-height: 40px;
 }
 
-.ui-btn {
-  min-width: 80px;
-}
-
-/* Primary: grüner Akzent, auf den hellen Material-Flächen lokal überschrieben */
-.btn-nav--primary {
-  --ui-btn-accent: var(--c-p);
-  --ui-btn-fg: var(--c-p);
-  --ui-btn-border: rgba(34, 211, 94, 0.4);
-  --ui-btn-glow: rgba(34, 211, 94, 0.2);
-  --ui-btn-disabled-fg: var(--text-dim);
-  --ui-btn-disabled-bg: transparent;
+@media (max-width: 419px) {
+  .form-nav .ui-btn {
+    flex: 1;
+  }
 }

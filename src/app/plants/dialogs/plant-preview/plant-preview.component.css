@@ -1,23 +1,17 @@
 .plant-box {
-  height: 220px;
-  width: 280px;
-  background: var(--surface);
-  border: 1px solid var(--border-mid);
-  border-radius: 12px;
-  padding: 14px 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border);
-  backdrop-filter: blur(16px);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  width: 280px;
+  height: 220px;
+  border-color: var(--border-mid);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .6);
 }
 
 .preview-name {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1rem;
-  font-weight: 700;
+  min-width: 0;
   color: var(--text);
+  font-size: var(--ui-text-md);
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -25,58 +19,60 @@
 
 .preview-body {
   display: flex;
-  gap: 12px;
   flex: 1;
+  gap: var(--ui-space-3);
   min-height: 0;
+  padding: var(--ui-space-3);
 }
 
 .preview-meta {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   flex: 1;
+  gap: var(--ui-space-2);
   min-width: 0;
+  margin: 0;
 }
 
 .meta-item {
   display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.meta-icon {
-  font-size: 1rem;
-  width: 1rem;
-  height: 1rem;
-  color: var(--c-p);
-  flex-shrink: 0;
+  flex-direction: column;
+  gap: .15rem;
 }
 
 .meta-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  text-transform: uppercase;
   color: var(--text-dim);
-  display: block;
+  font-size: var(--ui-text-xs);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 
 .meta-text {
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-1);
+  margin: 0;
   color: var(--text-muted);
+  font-size: var(--ui-text-sm);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.preview-image {
+.meta-icon {
   flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  font-size: 1rem;
+  color: var(--c-p);
 }
 
 .plant-img {
+  flex-shrink: 0;
+  display: block;
   width: 110px;
   height: 140px;
   object-fit: cover;
-  border-radius: 8px;
-  display: block;
+  border-radius: var(--ui-radius);
 }

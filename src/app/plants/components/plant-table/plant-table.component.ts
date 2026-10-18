@@ -1,21 +1,8 @@
-import {Component, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, signal, viewChild} from '@angular/core';
 import {Plant} from '../../models/plant.model';
 import {PlantService} from '../../services/plant.service';
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow,
-  MatRowDef,
-  MatTable,
-  MatTableDataSource
-} from '@angular/material/table';
 import {MatIcon} from '@angular/material/icon';
-import {MatIconButton} from '@angular/material/button';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatDialog} from '@angular/material/dialog';
 import {ImageUploadDialogComponent} from '../../dialogs/image-upload-dialog/image-upload-dialog.component';
 import {ImageViewDialogComponent} from '../../dialogs/image-view-dialog/image-view-dialog.component';
@@ -25,36 +12,31 @@ import {PlantPreviewComponent} from '../../dialogs/plant-preview/plant-preview.c
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {environment} from '../../../../environments/environment';
 
+const PREVIEW_WIDTH = 280;
+const PREVIEW_HEIGHT = 220;
+
 @Component({
   selector: 'app-plant-table',
   imports: [
-    MatTable,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
     MatIcon,
-    MatIconButton,
+    MatProgressSpinner,
     PlantPreviewComponent
   ],
   templateUrl: './plant-table.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './plant-table.component.css'
 })
 export class PlantTableComponent implements OnInit, OnDestroy {
 
-  plants = new MatTableDataSource<Plant>();
-  columnsToDisplay = ['name', 'species', 'image', 'delete'];
+  plants = signal<Plant[]>([]);
+  loadState = signal<'loading' | 'loaded' | 'error'>('loading');
+
+  private tableWrap = viewChild<ElementRef<HTMLElement>>('tableWrap');
 
   // Preview popup properties
-  previewVisible = false;
-  currentPreviewPlant: Plant | null = null;
-  previewPosition = { x: 0, y: 0 };
+  previewVisible = signal(false);
+  currentPreviewPlant = signal<Plant | null>(null);
+  previewPosition = signal({x: 0, y: 0});
   hoverTimeout: ReturnType<typeof setTimeout> | null = null;
   hideTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -71,14 +53,20 @@ export class PlantTableComponent implements OnInit, OnDestroy {
   }
 
   loadPlants(): void {
-    this.plantService.getPlants().subscribe(plants => {
-      this.plants.data = plants.sort((a, b) => a.id - b.id);
+    this.plantService.getPlants().subscribe({
+      next: plants => {
+        this.plants.set([...plants].sort((a, b) => a.id - b.id));
+        this.loadState.set('loaded');
+      },
+      error: () => this.loadState.set('error')
     });
   }
 
   openCreateImageDialog(plant: Plant): void {
     const matDialogRef = this.dialog.open(ImageUploadDialogComponent, {
       width: '400px',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'ui-dialog-pane',
       data: plant
     });
 
@@ -93,7 +81,6 @@ export class PlantTableComponent implements OnInit, OnDestroy {
             this.loadPlants();
           },
           error: err => {
-            plant.image = null;
             this.snackBar.open(`Plant update failed: ${err}`, 'Dismiss', {
               duration: 5000
             })
@@ -107,6 +94,8 @@ export class PlantTableComponent implements OnInit, OnDestroy {
     const imageUrl = `${environment.apiUrl}/images/${plant.image}`
 
     this.dialog.open(ImageViewDialogComponent, {
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'ui-dialog-pane',
       data: {imageUrl, name: plant.name}
     });
   }
@@ -117,12 +106,14 @@ export class PlantTableComponent implements OnInit, OnDestroy {
 
   openDeletePlantDialog(plant: Plant) {
     const matDialogRef = this.dialog.open(DeleteConfirmationDialogComponent, {
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'ui-dialog-pane',
       data: {plant}
     });
 
     matDialogRef.afterClosed().subscribe(result => {
       if (result === 'deleted') {
-        this.plants.data = this.plants.data.filter(p => p.id !== plant.id);
+        this.plants.update(plants => plants.filter(p => p.id !== plant.id));
       }
     });
   }
@@ -133,19 +124,19 @@ export class PlantTableComponent implements OnInit, OnDestroy {
     clearTimeout(this.hideTimeout ?? 0);
 
     this.hoverTimeout = setTimeout(() => {
-      this.currentPreviewPlant = plant;
-      this.previewVisible = true;
+      this.currentPreviewPlant.set(plant);
+      this.previewVisible.set(true);
 
-      // Position the preview near the mouse
-      const tableContainer = document.querySelector('.table-container');
-      if (tableContainer) {
-        const rect = tableContainer.getBoundingClientRect();
-        this.previewPosition = {
-          x: Math.min(event.clientX - rect.left + 15, rect.width - 270), // 270px is the popup width
-          y: Math.min(event.clientY - rect.top, window.innerHeight - 300) // 300px is popup height with margin
-        };
+      // Position the preview near the mouse, relative to the wrapper
+      const wrap = this.tableWrap()?.nativeElement;
+      if (wrap) {
+        const rect = wrap.getBoundingClientRect();
+        this.previewPosition.set({
+          x: Math.max(0, Math.min(event.clientX - rect.left + 15, rect.width - PREVIEW_WIDTH)),
+          y: Math.max(0, Math.min(event.clientY - rect.top, window.innerHeight - rect.top - PREVIEW_HEIGHT - 16))
+        });
       }
-    }, 300); // Reduced timeout for better UX
+    }, 300);
   }
 
   hidePlantPreview(): void {
@@ -154,8 +145,8 @@ export class PlantTableComponent implements OnInit, OnDestroy {
 
     // Add a small delay before hiding to allow moving mouse to preview
     this.hideTimeout = setTimeout(() => {
-      this.previewVisible = false;
-      this.currentPreviewPlant = null;
+      this.previewVisible.set(false);
+      this.currentPreviewPlant.set(null);
     }, 200);
   }
 
@@ -165,6 +156,7 @@ export class PlantTableComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.hidePlantPreview();
+    clearTimeout(this.hoverTimeout ?? 0);
+    clearTimeout(this.hideTimeout ?? 0);
   }
 }

@@ -1,12 +1,16 @@
-<h2 mat-dialog-title>Upload a File</h2>
+<form class="ui-dialog" (ngSubmit)="onSubmit()">
+  <h2 class="ui-dialog-title">Upload an image</h2>
 
-<mat-dialog-content>
-  <form (ngSubmit)="onSubmit()">
-    <input type="file" class="file-input" (change)="onFileSelected($event)" required/>
-  </form>
-</mat-dialog-content>
+  <label class="ui-input-label" for="plant-image-upload">Image for {{ plant.name }}</label>
+  <input id="plant-image-upload" type="file" accept="image/*" class="ui-input ui-input--blue file-input"
+         (change)="onFileSelected($event)" required/>
 
-<mat-dialog-actions align="end">
-  <button class="ui-btn" (click)="dialogRef.close()">Cancel</button>
-  <button class="ui-btn" (click)="onSubmit()" [disabled]="!selectedFile">Upload</button>
-</mat-dialog-actions>
+  @if (error()) {
+    <div class="ui-alert ui-alert--danger dialog-alert" role="alert">{{ error() }}</div>
+  }
+
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn ui-btn--rose" [disabled]="uploading()" (click)="dialogRef.close()">Cancel</button>
+    <button type="submit" class="ui-btn ui-btn--teal" [disabled]="!selectedFile() || uploading()">Upload</button>
+  </div>
+</form>

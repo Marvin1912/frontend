@@ -1,41 +1,76 @@
-<div class="plant-view">
-  @if (plant) {
-    <div class="view-card">
-      <div class="view-card__header">
-        <span class="view-card__name">{{ plant.name }}</span>
+<div class="ui-container view-page">
+  @if (loadState() === 'loading') {
+    <div class="ui-empty" role="status">
+      <mat-spinner diameter="32"></mat-spinner>
+      <p class="m-0">Loading plant…</p>
+    </div>
+  } @else if (loadState() === 'error') {
+    <div class="ui-empty ui-empty--error" role="alert">
+      <mat-icon aria-hidden="true">error_outline</mat-icon>
+      <p class="m-0">Plant could not be loaded</p>
+    </div>
+  }
+
+  @if (plant(); as plant) {
+    <article class="ui-panel ui-panel--green view-card">
+      <div class="ui-panel-head">
+        <h2 class="view-card__name">{{ plant.name }}</h2>
+        <a class="ui-btn-icon ui-btn--green" [routerLink]="['/plant-root/edit', plant.id]"
+           [attr.aria-label]="'Edit ' + plant.name">
+          <mat-icon aria-hidden="true">edit</mat-icon>
+        </a>
       </div>
 
       <div class="view-card__body">
         <div class="view-card__image-col">
-          <img [src]="getImageUrl(plant)" alt="{{ plant.name }}" class="view-card__img">
+          @if (plant.image) {
+            <img [src]="getImageUrl(plant)" [alt]="plant.name" class="view-card__img">
+          } @else {
+            <mat-icon class="view-card__placeholder" aria-hidden="true">image_not_supported</mat-icon>
+          }
         </div>
 
         <div class="view-card__detail-col">
-          <div class="info-badges">
-            <div class="info-badge">
-              <span class="info-badge__label">Species</span>
-              <span class="info-badge__value">{{ plant.species }}</span>
+          <dl class="info-tiles">
+            <div class="info-tile">
+              <dt class="info-tile__label">Species</dt>
+              <dd class="info-tile__value">{{ plant.species }}</dd>
             </div>
-            <div class="info-badge">
-              <span class="info-badge__label">Location</span>
-              <span class="info-badge__value">{{ plant.location }}</span>
+            <div class="info-tile">
+              <dt class="info-tile__label">Location</dt>
+              <dd class="info-tile__value">{{ plant.location }}</dd>
             </div>
-            <div class="info-badge">
-              <span class="info-badge__label">Last Watered</span>
-              <span class="info-badge__value">{{ plant.lastWateredDate | date: 'dd.MM.yyyy' }}</span>
+            <div class="info-tile">
+              <dt class="info-tile__label">Last Watered</dt>
+              <dd class="info-tile__value">{{ (plant.lastWateredDate | date: 'dd.MM.yyyy') ?? 'n/a' }}</dd>
             </div>
-          </div>
+          </dl>
 
-          <mat-tab-group class="view-tabs">
-            <mat-tab label="Beschreibung">
-              <div class="tab-content">{{ plant.description }}</div>
-            </mat-tab>
-            <mat-tab label="Pflegehinweise">
-              <div class="tab-content">{{ plant.careInstructions }}</div>
-            </mat-tab>
-          </mat-tab-group>
+          <div class="view-tabs">
+            <div class="view-tabs__list" role="tablist" aria-label="Plant details" (keydown)="onTabKeydown($event)">
+              @for (tab of tabs; track tab.id) {
+                <button type="button" class="view-tabs__tab" role="tab"
+                        [id]="'plant-tab-' + tab.id"
+                        [attr.aria-selected]="activeTab() === tab.id"
+                        [attr.aria-controls]="activeTab() === tab.id ? 'plant-tabpanel-' + tab.id : null"
+                        [tabindex]="activeTab() === tab.id ? 0 : -1"
+                        (click)="activeTab.set(tab.id)">
+                  {{ tab.label }}
+                </button>
+              }
+            </div>
+            @for (tab of tabs; track tab.id) {
+              @if (activeTab() === tab.id) {
+                <div class="tab-content" role="tabpanel" tabindex="0"
+                     [id]="'plant-tabpanel-' + tab.id"
+                     [attr.aria-labelledby]="'plant-tab-' + tab.id">
+                  {{ tab.id === 'description' ? plant.description : plant.careInstructions }}
+                </div>
+              }
+            }
+          </div>
         </div>
       </div>
-    </div>
+    </article>
   }
 </div>

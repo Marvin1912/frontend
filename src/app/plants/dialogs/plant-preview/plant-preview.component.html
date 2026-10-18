@@ -1,21 +1,24 @@
 @if (plant) {
-  <div class="plant-box">
-    <div class="preview-name">{{ plant!.name }}</div>
-    <div class="preview-body">
-      <div class="preview-meta">
-        <span class="meta-item">
-          <mat-icon class="meta-icon">{{ getIcon(plant!) }}</mat-icon>
-          <span class="meta-text">{{ plant!.location }}</span>
-        </span>
-        <span class="meta-item">
-          <span class="meta-label">Species</span>
-          <span class="meta-text">{{ plant!.species }}</span>
-        </span>
-      </div>
-      @if (imageUrl) {
-        <div class="preview-image">
-          <img [src]="imageUrl" alt="Plant image" class="plant-img"/>
+  <div class="ui-panel ui-panel--green plant-box">
+    <div class="ui-panel-head">
+      <span class="preview-name">{{ plant.name }}</span>
+    </div>
+    <div class="ui-panel-body preview-body">
+      <dl class="preview-meta">
+        <div class="meta-item">
+          <dt class="meta-label">Location</dt>
+          <dd class="meta-text">
+            <mat-icon class="meta-icon" aria-hidden="true">{{ getIcon(plant) }}</mat-icon>
+            {{ plant.location }}
+          </dd>
         </div>
+        <div class="meta-item">
+          <dt class="meta-label">Species</dt>
+          <dd class="meta-text">{{ plant.species }}</dd>
+        </div>
+      </dl>
+      @if (imageUrl) {
+        <img [src]="imageUrl" [alt]="plant.name" class="plant-img"/>
       }
     </div>
   </div>
