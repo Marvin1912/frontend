@@ -1,55 +1,79 @@
-<div class="receipt-list">
-  <header class="list-header">
-    <span class="list-header__label">Verlauf</span>
-  </header>
+<div #scrollEl class="scroll"
+     (pointerdown)="onPullStart($event, scrollEl)"
+     (pointermove)="onPullMove($event, scrollEl)"
+     (pointerup)="onPullEnd()"
+     (pointercancel)="onPullEnd()">
 
-  <div #scrollEl class="receipt-list__scroll"
-       (pointerdown)="onPullStart($event, scrollEl)"
-       (pointermove)="onPullMove($event, scrollEl)"
-       (pointerup)="onPullEnd()"
-       (pointercancel)="onPullEnd()">
-
-    @if (refreshing || pullDistance > 0) {
-      <div class="pull-indicator" [style.height.px]="refreshing ? 48 : pullDistance">
-        <mat-icon [class.pull-indicator__spin]="refreshing">autorenew</mat-icon>
-      </div>
-    }
-
-    @if (!loading && receipts.length === 0) {
-      <p class="grocery-text-muted receipt-list__empty">Noch keine Bons hochgeladen.</p>
-    }
-
-    <div class="receipt-cards">
-      @for (receipt of receipts; track receipt.id) {
-        <div class="swipe-row">
-          <div class="swipe-row__actions">
-            <button type="button" class="swipe-action swipe-action--delete"
-                    aria-label="Bon löschen" (click)="requestDelete($event, receipt, swipe)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-
-          <div #swipe="appSwipeReveal" class="grocery-card swipe-row__content" appSwipeReveal [revealWidth]="72"
-               (click)="navigateToItems(receipt.id)">
-            <div class="receipt-card__main">
-              <span class="receipt-card__date">
-                {{ (receipt.receiptDate ?? receipt.creationDate) | date:'dd.MM.yyyy' }}
-              </span>
-              <button type="button" class="supermarket-chip" [class.supermarket-chip--empty]="!receipt.supermarket"
-                      (click)="openSupermarketDialog($event, receipt)">
-                {{ supermarketLabel(receipt.supermarket) }}
-              </button>
-            </div>
-            <span class="grocery-amount receipt-card__amount">
-              @if (receipt.totalAmount !== null) {
-                {{ receipt.totalAmount | currency:'EUR':'symbol':'1.2-2':'de' }}
-              } @else {
-                —
-              }
-            </span>
-          </div>
-        </div>
+  @if (refreshing || pullDistance > 0) {
+    <div class="pull-indicator" [style.height.px]="refreshing ? 48 : pullDistance" [attr.role]="refreshing ? 'status' : null">
+      <mat-icon aria-hidden="true" [class.pull-indicator__spin]="refreshing">autorenew</mat-icon>
+      @if (refreshing) {
+        <span class="sr-only">Aktualisiere…</span>
       }
     </div>
+  }
+
+  <div class="ui-container page">
+    <section class="ui-panel ui-panel--orange" aria-labelledby="receipts-title">
+      <div class="ui-panel-head">
+        <h2 class="ui-panel-label" id="receipts-title"><span class="ui-panel-dot"></span>Verlauf</h2>
+        <div class="panel-actions">
+          @if (receipts.length > 0) {
+            <span class="panel-stat">{{ receipts.length }} Bons</span>
+          }
+          <button type="button" class="ui-btn-icon" aria-label="Neu laden" [disabled]="refreshing" (click)="refresh()">
+            <mat-icon aria-hidden="true">refresh</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      @if (loading) {
+        <div class="ui-empty" role="status"><mat-spinner diameter="24" /><p class="m-0">Lade Bons…</p></div>
+      } @else if (receipts.length === 0) {
+        <div class="ui-empty" role="status">
+          <p class="m-0">Noch keine Bons hochgeladen.</p>
+          <a class="ui-btn ui-btn--orange" routerLink="/grocery/upload">
+            <mat-icon aria-hidden="true">photo_camera</mat-icon>
+            <span>Bon scannen</span>
+          </a>
+        </div>
+      } @else {
+        <ul class="list">
+          @for (receipt of receipts; track receipt.id) {
+            <li class="swipe-row">
+              <div class="swipe-row__actions">
+                <button type="button" class="ui-btn-icon ui-btn--rose swipe-action"
+                        [attr.aria-label]="'Bon vom ' + (receiptDateOf(receipt) | date:'dd.MM.yyyy') + ' löschen'"
+                        (focus)="swipe.open()" (blur)="swipe.close()"
+                        (click)="requestDelete(receipt, swipe)">
+                  <mat-icon aria-hidden="true">delete</mat-icon>
+                </button>
+              </div>
+
+              <div #swipe="appSwipeReveal" class="swipe-row__content receipt" appSwipeReveal [revealWidth]="72">
+                <a class="list-row receipt__link" [routerLink]="['/grocery/receipts', receipt.id, 'items']">
+                  <span class="list-row__main">
+                    <span class="list-row__title">{{ receiptDateOf(receipt) | date:'dd.MM.yyyy' }}</span>
+                  </span>
+                  <span class="amount receipt__amount">
+                    @if (receipt.totalAmount !== null) {
+                      {{ receipt.totalAmount | currency:'EUR':'symbol':'1.2-2':'de' }}
+                    } @else {
+                      —
+                    }
+                  </span>
+                </a>
+                @let market = supermarketOf(receipt);
+                <button type="button" class="ui-badge chip receipt__chip ui-badge--{{ market?.palette ?? 'orange' }}"
+                        [attr.aria-label]="market ? 'Supermarkt ändern: ' + market.label : 'Supermarkt wählen'"
+                        (click)="openSupermarketDialog(receipt)">
+                  {{ market?.label ?? 'Markt?' }}
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </section>
   </div>
 </div>

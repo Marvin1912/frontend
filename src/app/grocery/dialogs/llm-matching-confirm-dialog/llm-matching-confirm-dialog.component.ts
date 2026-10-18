@@ -1,29 +1,18 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
-import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
-import {MatMiniFabButton} from '@angular/material/button';
 
 @Component({
   selector: 'app-llm-matching-confirm-dialog',
-  imports: [
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
-    MatIcon,
-    MatMiniFabButton
-  ],
+  imports: [MatDialogClose, MatIcon],
   templateUrl: './llm-matching-confirm-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './llm-matching-confirm-dialog.component.css'
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LlmMatchingConfirmDialogComponent {
 
-  constructor(private dialogRef: MatDialogRef<LlmMatchingConfirmDialogComponent>) {
-  }
+  private dialogRef = inject(MatDialogRef<LlmMatchingConfirmDialogComponent>);
 
-  confirm() {
+  confirm(): void {
     this.dialogRef.close('confirmed');
   }
-
 }

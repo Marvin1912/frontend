@@ -1,199 +1,53 @@
-:host {
-  display: block;
-  min-height: 100%;
-  background: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-}
-
-.categories {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 1rem;
-  box-sizing: border-box;
-}
-
-/* Header */
-.list-header {
-  padding: 0 0 0.25rem;
-}
-
-.list-header__label {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--mat-sys-on-surface);
-}
-
-/* Table container */
-.table-container {
-  background: var(--mat-sys-surface-container);
-  border-radius: var(--grocery-radius);
-  box-shadow: var(--grocery-shadow);
-  overflow: hidden;
-  max-height: 70vh;
-  overflow-y: auto;
-}
-
-table {
-  width: 100%;
-  background: transparent !important;
-}
-
-.col-header {
-  font-size: 0.75rem !important;
-  font-weight: 600 !important;
-  color: var(--mat-sys-on-surface-variant) !important;
-  background: var(--mat-sys-surface-container-high) !important;
-  border-bottom: 1px solid var(--mat-sys-outline-variant) !important;
-  height: 40px !important;
-  padding: 0 16px !important;
-}
-
-::ng-deep .mat-mdc-header-row {
-  background: var(--mat-sys-surface-container-high) !important;
-}
-
-::ng-deep .mat-mdc-cell {
-  font-size: 0.85rem !important;
-  color: var(--mat-sys-on-surface) !important;
-  background: transparent !important;
-  border-bottom: 1px solid var(--mat-sys-outline-variant) !important;
-}
-
-/* Expand */
 .col-expand {
-  width: 40px;
-  padding: 0 4px !important;
+  width: 1%;
+  padding-right: 0;
 }
 
-.expand-btn {
-  color: var(--mat-sys-on-surface-variant);
-  transition: color 0.2s;
+.expand-icon {
+  transition: transform .2s;
 }
 
-.expand-btn:hover {
-  color: var(--mat-sys-primary);
+.is-expanded .expand-icon {
+  transform: rotate(90deg);
 }
 
-/* Actions */
-.col-actions {
-  width: 88px;
-  padding: 0 8px !important;
+@media (prefers-reduced-motion: reduce) {
+  .expand-icon {
+    transition: none;
+  }
 }
 
-.action-btn {
-  color: var(--mat-sys-on-surface-variant);
-  transition: color 0.2s;
+.nowrap {
+  white-space: nowrap;
 }
 
-.action-btn:hover {
-  color: var(--mat-sys-error);
+/* ── Aufgeklappte Kaufhistorie ───────────────────── */
+.detail-cell {
+  padding: 0 var(--ui-space-2) var(--ui-space-3);
+  background: color-mix(in srgb, var(--raised) 60%, transparent);
+  border-bottom: 1px solid var(--border);
 }
 
-.edit-btn {
-  color: var(--mat-sys-on-surface-variant);
-  transition: color 0.2s;
-}
-
-.edit-btn:hover {
-  color: var(--mat-sys-primary);
-}
-
-/* Expanded detail row */
-.col-detail {
-  padding: 0 !important;
+@media (min-width: 640px) {
+  .detail-cell {
+    padding: 0 var(--ui-space-3) var(--ui-space-3) 2.75rem;
+  }
 }
 
 .detail {
-  padding: 0.75rem 1rem 1rem 3.5rem;
-  background: var(--mat-sys-surface-container-high);
-}
-
-.detail-state {
-  display: flex;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.detail-table-container {
   max-height: 320px;
-  overflow-y: auto;
-  border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: var(--grocery-radius-sm);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--ui-radius);
 }
 
-.detail-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.8rem;
-}
-
-.detail-table th {
+/* Kopf bleibt beim Scrollen der Historie stehen */
+.detail .ui-table-head {
   position: sticky;
   top: 0;
-  text-align: left;
-  padding: 0.4rem 0.75rem;
-  color: var(--mat-sys-on-surface-variant);
-  font-size: 0.7rem;
-  font-weight: 600;
-  background: var(--mat-sys-surface-container);
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
+  z-index: 1;
 }
 
-.detail-table td {
-  padding: 0.4rem 0.75rem;
-  color: var(--mat-sys-on-surface);
-  border-bottom: 1px solid var(--mat-sys-outline-variant);
-}
-
-.detail-table tr:last-child td {
-  border-bottom: none;
-}
-
-.detail-actions {
-  width: 40px;
-  text-align: right;
-}
-
-.detail-action-btn {
-  color: var(--mat-sys-on-surface-variant) !important;
-  transition: color 0.2s;
-  width: 32px !important;
-  height: 32px !important;
-  line-height: 32px !important;
-}
-
-.detail-action-btn:hover {
-  color: var(--mat-sys-error) !important;
-}
-
-.detail-action-btn mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-}
-
-.empty-inline {
-  margin: 0;
-  padding: 0.75rem;
-  font-size: 0.8rem;
-}
-
-/* States */
-.state {
-  display: flex;
-  justify-content: center;
-  padding: 3rem;
-}
-
-.empty {
-  margin: 0;
-  padding: 1.25rem;
-  text-align: center;
-  font-size: 0.85rem;
-  background: var(--mat-sys-surface-container);
-  border: 1px dashed var(--mat-sys-outline-variant);
-  border-radius: var(--grocery-radius-sm);
+.detail-empty {
+  padding: var(--ui-space-4);
 }

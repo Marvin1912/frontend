@@ -1,56 +1,70 @@
-<div class="receipt-items">
-
-  <header class="detail-header">
-    <span class="detail-header__date">
-      @if (receipt) {
-        {{ (receipt.receiptDate ?? receipt.creationDate) | date:'dd.MM.yyyy' }}
-      }
-    </span>
-    <button type="button" class="supermarket-chip" [class.supermarket-chip--empty]="!receipt?.supermarket"
-            (click)="changeSupermarket()">
-      {{ supermarketLabel(receipt?.supermarket) }}
-    </button>
-    <button mat-icon-button class="detail-header__add" aria-label="Artikel hinzufügen" (click)="openAddDialog()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </header>
-
-  <div class="receipt-items__scroll">
-    @if (!loading && items.length === 0) {
-      <p class="grocery-text-muted receipt-items__empty">Noch keine Positionen erfasst.</p>
-    }
-
-    <div class="item-cards">
-      @for (item of items; track item.id) {
-        <div class="swipe-row">
-          <div class="swipe-row__actions">
-            <button type="button" class="swipe-action swipe-action--edit"
-                    aria-label="Artikel bearbeiten" (click)="openEditDialog(item, swipe)">
-              <mat-icon>edit</mat-icon>
-            </button>
-          </div>
-
-          <div #swipe="appSwipeReveal" class="grocery-card swipe-row__content" appSwipeReveal [revealWidth]="72">
-            <span class="item-card__name">{{ item.name }}</span>
-            <div class="item-card__math">
-              <span class="grocery-text-muted item-card__breakdown">
-                {{ item.quantity }} × {{ item.singlePrice | currency:'EUR':'symbol':'1.2-2':'de' }}
-              </span>
-              <span class="grocery-amount item-card__total">
-                {{ item.price | currency:'EUR':'symbol':'1.2-2':'de' }}
-              </span>
-            </div>
-          </div>
+<div class="scroll">
+  <div class="ui-container page">
+    <section class="ui-panel ui-panel--orange" aria-labelledby="items-title">
+      <div class="ui-panel-head">
+        <h2 class="ui-panel-label" id="items-title">
+          <span class="ui-panel-dot"></span>
+          @if (receipt) {
+            Bon vom {{ (receipt.receiptDate ?? receipt.creationDate) | date:'dd.MM.yyyy' }}
+          } @else {
+            Bon
+          }
+        </h2>
+        <div class="panel-actions">
+          @let market = supermarket();
+          <button type="button" class="ui-badge chip ui-badge--{{ market?.palette ?? 'orange' }}"
+                  [disabled]="!receipt"
+                  [attr.aria-label]="market ? 'Supermarkt ändern: ' + market.label : 'Supermarkt wählen'"
+                  (click)="changeSupermarket()">
+            {{ market?.label ?? 'Supermarkt wählen' }}
+          </button>
+          <button type="button" class="ui-btn-icon ui-btn--orange" aria-label="Artikel hinzufügen"
+                  [disabled]="loading" (click)="openAddDialog()">
+            <mat-icon aria-hidden="true">add</mat-icon>
+          </button>
         </div>
+      </div>
+
+      @if (loading) {
+        <div class="ui-empty" role="status"><mat-spinner diameter="24" /><p class="m-0">Lade Positionen…</p></div>
+      } @else if (loadFailed) {
+        <div class="ui-empty ui-empty--error" role="alert"><p class="m-0">Bon konnte nicht geladen werden.</p></div>
+      } @else if (items.length === 0) {
+        <div class="ui-empty" role="status"><p class="m-0">Noch keine Positionen erfasst.</p></div>
+      } @else {
+        <ul class="list">
+          @for (item of items; track item.id) {
+            <li class="swipe-row">
+              <div class="swipe-row__actions">
+                <button type="button" class="ui-btn-icon ui-btn--orange swipe-action"
+                        [attr.aria-label]="item.name + ' bearbeiten'"
+                        (focus)="swipe.open()" (blur)="swipe.close()"
+                        (click)="openEditDialog(item, swipe)">
+                  <mat-icon aria-hidden="true">edit</mat-icon>
+                </button>
+              </div>
+
+              <div #swipe="appSwipeReveal" class="swipe-row__content item" appSwipeReveal [revealWidth]="72">
+                <span class="item__name">{{ item.name }}</span>
+                <span class="item__math">
+                  <span class="list-row__meta">
+                    {{ item.quantity | number:'1.0-3':'de' }} × {{ item.singlePrice | currency:'EUR':'symbol':'1.2-2':'de' }}
+                  </span>
+                  <span class="amount">{{ item.price | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
+                </span>
+              </div>
+            </li>
+          }
+        </ul>
       }
-    </div>
+    </section>
   </div>
-
-  <footer class="receipt-items__footer">
-    <span class="grocery-text-muted">Summe</span>
-    <span class="grocery-amount receipt-items__total">
-      {{ total | currency:'EUR':'symbol':'1.2-2':'de' }}
-    </span>
-  </footer>
-
 </div>
+
+<footer class="sum-footer">
+  <span class="sum-footer__total">
+    <span class="sum-footer__label">Summe</span>
+    <span class="amount sum-footer__amount">{{ total | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
+  </span>
+  <span class="panel-stat">{{ items.length }} Positionen</span>
+</footer>

@@ -1,105 +1,23 @@
-:host {
-  display: block;
-  min-height: 100%;
+.ui-empty {
+  text-align: center;
 }
 
-.price-trends {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem;
-  max-width: 640px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-.list-header__label {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--mat-sys-on-surface);
-}
-
-.state {
-  display: flex;
-  justify-content: center;
-  padding: 3rem;
-}
-
-/* ── Trend Cards ─────────────────────────────────── */
-.trend-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.trend-card {
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  width: 100%;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  font: inherit;
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.trend-card__info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  flex: 1;
-  min-width: 0;
-}
-
-.trend-card__name {
-  font-size: 0.9rem;
-  color: var(--mat-sys-on-surface);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.trend-card__price {
-  font-size: 1rem;
-}
-
-.trend-card__sparkline {
+.sparkline {
   position: relative;
+  flex-shrink: 0;
   width: 72px;
   height: 32px;
+}
+
+@media (min-width: 640px) {
+  .sparkline {
+    width: 120px;
+  }
+}
+
+/* Feste Breite, damit die Badges beim Hochzählen nicht springen */
+.trend-badge {
   flex-shrink: 0;
-}
-
-.trend-card__badge {
-  flex-shrink: 0;
-}
-
-/* ── Empty state ─────────────────────────────────── */
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1.5rem 1.25rem;
-  text-align: center;
-  font-size: 0.85rem;
-  border: 1px dashed var(--mat-sys-outline-variant);
-  border-radius: var(--grocery-radius);
-}
-
-.empty__text {
-  margin: 0;
-}
-
-.empty__link {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--mat-sys-primary);
-  text-decoration: none;
-}
-
-.empty__link:hover {
-  text-decoration: underline;
+  justify-content: flex-end;
+  min-width: 4.75rem;
 }

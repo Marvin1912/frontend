@@ -1,28 +1,30 @@
-<div class="more-list">
-  <a class="grocery-card more-list__item" routerLink="/grocery/articles">
-    <mat-icon class="more-list__icon">category</mat-icon>
-    <div class="more-list__text">
-      <span class="more-list__title">Artikel-Gruppen</span>
-      <span class="grocery-text-muted more-list__sub">Artikel zu Gruppen zuordnen</span>
-    </div>
-    <mat-icon class="more-list__chevron">chevron_right</mat-icon>
-  </a>
+<div class="ui-container page">
+  <nav class="more-grid" aria-label="Weitere Grocery-Bereiche">
+    <a class="ui-navcard ui-navcard--row ui-navcard--orange" routerLink="/grocery/articles">
+      <div class="ui-navcard-mark"><mat-icon aria-hidden="true">category</mat-icon></div>
+      <div class="ui-navcard-body">
+        <h2 class="ui-navcard-title">Artikel-Gruppen</h2>
+        <p class="ui-navcard-sub">Artikel zu Gruppen zuordnen</p>
+      </div>
+      <span class="ui-navcard-arrow" aria-hidden="true">↗</span>
+    </a>
 
-  <a class="grocery-card more-list__item" routerLink="/grocery/categories">
-    <mat-icon class="more-list__icon">label</mat-icon>
-    <div class="more-list__text">
-      <span class="more-list__title">Kategorien</span>
-      <span class="grocery-text-muted more-list__sub">Kategorien verwalten &amp; löschen</span>
-    </div>
-    <mat-icon class="more-list__chevron">chevron_right</mat-icon>
-  </a>
+    <a class="ui-navcard ui-navcard--row ui-navcard--amber" routerLink="/grocery/categories">
+      <div class="ui-navcard-mark"><mat-icon aria-hidden="true">label</mat-icon></div>
+      <div class="ui-navcard-body">
+        <h2 class="ui-navcard-title">Kategorien</h2>
+        <p class="ui-navcard-sub">Kategorien verwalten &amp; löschen</p>
+      </div>
+      <span class="ui-navcard-arrow" aria-hidden="true">↗</span>
+    </a>
 
-  <a class="grocery-card more-list__item" routerLink="/grocery/matching">
-    <mat-icon class="more-list__icon">join_inner</mat-icon>
-    <div class="more-list__text">
-      <span class="more-list__title">Matching-Vorschläge</span>
-      <span class="grocery-text-muted more-list__sub">Automatische Gruppen-Zuordnung prüfen</span>
-    </div>
-    <mat-icon class="more-list__chevron">chevron_right</mat-icon>
-  </a>
+    <a class="ui-navcard ui-navcard--row ui-navcard--violet" routerLink="/grocery/matching">
+      <div class="ui-navcard-mark"><mat-icon aria-hidden="true">join_inner</mat-icon></div>
+      <div class="ui-navcard-body">
+        <h2 class="ui-navcard-title">Matching-Vorschläge</h2>
+        <p class="ui-navcard-sub">Automatische Gruppen-Zuordnung prüfen</p>
+      </div>
+      <span class="ui-navcard-arrow" aria-hidden="true">↗</span>
+    </a>
+  </nav>
 </div>

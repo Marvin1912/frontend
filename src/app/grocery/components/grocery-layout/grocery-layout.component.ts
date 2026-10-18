@@ -1,38 +1,42 @@
-import {Component, DestroyRef, inject, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {MatIcon} from '@angular/material/icon';
-import {MatFabButton} from '@angular/material/button';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet} from '@angular/router';
 import {filter} from 'rxjs';
+
+/** Views reached from "Mehr"; the tab stays highlighted while one of them is open. */
+const MORE_ROUTES = ['/grocery/more', '/grocery/articles', '/grocery/categories', '/grocery/matching'];
 
 @Component({
   selector: 'app-grocery-layout',
   imports: [
     MatIcon,
-    MatFabButton,
     RouterLink,
     RouterLinkActive,
     RouterOutlet
   ],
   templateUrl: './grocery-layout.component.html',
+  styleUrl: './grocery-layout.component.css',
+  // Eager: the routed views below are Eager too and are only checked when this view is
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './grocery-layout.component.css'
+  host: {class: 'ui-bg grocery-scope'}
 })
 export class GroceryLayoutComponent {
 
-  homeLink = '/';
+  homeLink = signal('/');
+  moreActive = signal(false);
 
-  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor() {
     this.router.events
-      .pipe(
-        filter(event => event instanceof NavigationEnd),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe(() => {
+      .pipe(filter(event => event instanceof NavigationEnd), takeUntilDestroyed())
+      .subscribe(event => {
         const home = this.getDeepestChild(this.route).snapshot.data['home'];
-        this.homeLink = home || '/';
+        this.homeLink.set(home || '/');
+        const path = event.urlAfterRedirects.split(/[?#]/)[0];
+        this.moreActive.set(MORE_ROUTES.some(route => path.startsWith(route)));
       });
   }
 

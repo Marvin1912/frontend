@@ -1,19 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {CurrencyPipe} from '@angular/common';
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow,
-  MatRowDef,
-  MatTable
-} from '@angular/material/table';
-import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -26,6 +13,8 @@ import {Article} from '../../models/article-group.model';
 import {PriceHistoryPoint} from '../../models/price-trend.model';
 import {CategoryDeleteDialogComponent} from '../../dialogs/category-delete-dialog/category-delete-dialog.component';
 import {CategoryRenameDialogComponent} from '../../dialogs/category-rename-dialog/category-rename-dialog.component';
+import {groceryDialogConfig} from '../../dialogs/dialog-config';
+import {findSupermarket} from '../../models/supermarket';
 
 interface CategoryRow {
   id: number;
@@ -37,17 +26,6 @@ interface CategoryRow {
   selector: 'app-category-management',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatTable,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
-    MatIconButton,
     MatIcon,
     MatProgressSpinner,
     CurrencyPipe
@@ -66,7 +44,6 @@ export class CategoryManagementComponent implements OnInit {
 
   loading = signal(false);
   categories = signal<CategoryRow[]>([]);
-  displayedColumns = ['expand', 'name', 'articleCount', 'actions'];
 
   expandedCategoryId = signal<number | null>(null);
   historyLoading = signal<number | null>(null);
@@ -117,6 +94,10 @@ export class CategoryManagementComponent implements OnInit {
     return format(parseISO(date), 'dd.MM.yyyy');
   }
 
+  supermarketLabel(supermarket: string | undefined): string {
+    return findSupermarket(supermarket)?.label ?? supermarket ?? 'Unbekannt';
+  }
+
   removeArticleFromCategory(category: CategoryRow, point: PriceHistoryPoint): void {
     this.articleGroupService.unassignArticle(point.articleId).pipe(
       catchError(() => {
@@ -142,7 +123,7 @@ export class CategoryManagementComponent implements OnInit {
   }
 
   openRenameDialog(category: CategoryRow): void {
-    const ref = this.dialog.open(CategoryRenameDialogComponent, {data: {name: category.name}});
+    const ref = this.dialog.open(CategoryRenameDialogComponent, groceryDialogConfig({name: category.name}));
     ref.afterClosed().pipe(
       switchMap((result: string | undefined) => result && result !== category.name
         ? this.articleGroupService.renameGroup(category.id, result)
@@ -163,7 +144,7 @@ export class CategoryManagementComponent implements OnInit {
   }
 
   openDeleteDialog(category: CategoryRow): void {
-    const ref = this.dialog.open(CategoryDeleteDialogComponent, {data: {name: category.name}});
+    const ref = this.dialog.open(CategoryDeleteDialogComponent, groceryDialogConfig({name: category.name}));
     ref.afterClosed().pipe(
       switchMap(result => result === 'confirmed' ? this.articleGroupService.deleteGroup(category.id) : EMPTY),
       takeUntilDestroyed(this.destroyRef)

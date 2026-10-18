@@ -1,53 +1,35 @@
-import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatSelect} from '@angular/material/select';
-import {MatOption} from '@angular/material/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
-import {MatMiniFabButton} from '@angular/material/button';
 import {Supermarket} from '../../models/receipt.model';
+import {SUPERMARKETS} from '../../models/supermarket';
+
+export interface SupermarketSelectDialogData {
+  supermarket?: Supermarket | null;
+}
 
 @Component({
   selector: 'app-supermarket-select-dialog',
-  imports: [
-    ReactiveFormsModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatFormField,
-    MatLabel,
-    MatSelect,
-    MatOption,
-    MatIcon,
-    MatMiniFabButton
-  ],
+  imports: [ReactiveFormsModule, MatDialogClose, MatIcon],
   templateUrl: './supermarket-select-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './supermarket-select-dialog.component.css'
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SupermarketSelectDialogComponent implements OnInit {
+export class SupermarketSelectDialogComponent {
 
   private fb = inject(FormBuilder);
-  private dialogRef = inject(MatDialogRef<SupermarketSelectDialogComponent>);
-  private data = inject<{supermarket?: Supermarket | null} | undefined>(MAT_DIALOG_DATA, {optional: true});
+  private dialogRef = inject(MatDialogRef<SupermarketSelectDialogComponent, Supermarket>);
+  private data = inject<SupermarketSelectDialogData | undefined>(MAT_DIALOG_DATA, {optional: true});
 
-  readonly supermarkets: {value: Supermarket; label: string}[] = [
-    {value: 'LIDL', label: 'Lidl'},
-    {value: 'EDEKA', label: 'Edeka'},
-    {value: 'REWE', label: 'Rewe'}
-  ];
+  readonly supermarkets = SUPERMARKETS;
 
-  form!: FormGroup;
-
-  ngOnInit(): void {
-    this.form = this.fb.group({
-      supermarket: [this.data?.supermarket ?? 'LIDL', Validators.required]
-    });
-  }
+  readonly form = this.fb.group({
+    supermarket: this.fb.control<Supermarket>(this.data?.supermarket ?? 'LIDL', Validators.required)
+  });
 
   save(): void {
-    if (this.form.invalid) return;
-    this.dialogRef.close(this.form.value.supermarket as Supermarket);
+    const supermarket = this.form.value.supermarket;
+    if (this.form.invalid || !supermarket) return;
+    this.dialogRef.close(supermarket);
   }
 }

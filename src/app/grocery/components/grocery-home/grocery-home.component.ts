@@ -1,12 +1,15 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {CurrencyPipe, DatePipe, DecimalPipe} from '@angular/common';
-import {Router} from '@angular/router';
+import {RouterLink} from '@angular/router';
+import {MatIcon} from '@angular/material/icon';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {catchError, forkJoin, of} from 'rxjs';
 import {ReceiptService} from '../../services/receipt.service';
 import {Receipt} from '../../models/receipt.model';
 import {ProductPriceSummary} from '../../models/price-trend.model';
-import {PriceTrendDetailComponent} from '../price-trend-detail/price-trend-detail.component';
+import {findSupermarket, SupermarketOption} from '../../models/supermarket';
+import {openPriceTrendDetail} from '../price-trend-detail/price-trend-detail.component';
 
 const RECENT_RECEIPTS_LIMIT = 3;
 const PRICE_HIGHLIGHTS_LIMIT = 4;
@@ -24,11 +27,12 @@ function startOfWeek(date: Date): Date {
 
 interface PriceHighlight extends ProductPriceSummary {
   up: boolean;
+  absPercent: number;
 }
 
 @Component({
   selector: 'app-grocery-home',
-  imports: [CurrencyPipe, DatePipe, DecimalPipe],
+  imports: [CurrencyPipe, DatePipe, DecimalPipe, RouterLink, MatIcon, MatProgressSpinner],
   templateUrl: './grocery-home.component.html',
   styleUrl: './grocery-home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -46,7 +50,6 @@ export class GroceryHomeComponent implements OnInit {
   priceHighlights: PriceHighlight[] = [];
 
   private receiptService = inject(ReceiptService);
-  private router = inject(Router);
   private bottomSheet = inject(MatBottomSheet);
   private cdr = inject(ChangeDetectorRef);
 
@@ -60,21 +63,18 @@ export class GroceryHomeComponent implements OnInit {
       this.priceHighlights = [...priceSummaries]
         .sort((a, b) => Math.abs(b.percentChange) - Math.abs(a.percentChange))
         .slice(0, PRICE_HIGHLIGHTS_LIMIT)
-        .map(summary => ({...summary, up: summary.percentChange > 0}));
+        .map(summary => ({...summary, up: summary.percentChange > 0, absPercent: Math.abs(summary.percentChange)}));
       this.loading = false;
       this.cdr.markForCheck();
     });
   }
 
-  navigateToReceipt(receipt: Receipt): void {
-    void this.router.navigate(['/grocery/receipts', receipt.id, 'items']);
+  supermarketOf(receipt: Receipt): SupermarketOption | undefined {
+    return findSupermarket(receipt.supermarket);
   }
 
   openPriceTrend(summary: ProductPriceSummary): void {
-    this.bottomSheet.open(PriceTrendDetailComponent, {
-      panelClass: 'grocery-bottom-sheet-panel',
-      data: {groupId: summary.groupId, displayName: summary.groupName}
-    });
+    openPriceTrendDetail(this.bottomSheet, summary);
   }
 
   private applyReceipts(receipts: Receipt[]): void {
@@ -99,10 +99,12 @@ export class GroceryHomeComponent implements OnInit {
     }
 
     this.weekTotal = thisWeekTotal;
-    this.weekDeltaPercent = lastWeekTotal > 0
+    const delta = lastWeekTotal > 0
       ? ((thisWeekTotal - lastWeekTotal) / lastWeekTotal) * 100
       : null;
-    this.weekDeltaUp = (this.weekDeltaPercent ?? 0) > 0;
+    this.weekDeltaUp = (delta ?? 0) > 0;
+    // Direction is shown by the arrow, the number stays unsigned
+    this.weekDeltaPercent = delta === null ? null : Math.abs(delta);
   }
 
   private buildGreeting(): string {

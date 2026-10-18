@@ -1,10 +1,8 @@
-import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
+import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
-import {MatMiniFabButton} from '@angular/material/button';
 import {CurrencyPipe} from '@angular/common';
 import {ReceiptItem} from '../../models/receipt.model';
 
@@ -12,23 +10,17 @@ import {ReceiptItem} from '../../models/receipt.model';
   selector: 'app-receipt-item-edit-dialog',
   imports: [
     ReactiveFormsModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatFormField,
-    MatLabel,
-    MatInput,
+    MatDialogClose,
     MatIcon,
-    MatMiniFabButton,
     CurrencyPipe
   ],
   templateUrl: './receipt-item-edit-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './receipt-item-edit-dialog.component.css'
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ReceiptItemEditDialogComponent implements OnInit {
 
   private fb = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
   private dialogRef = inject(MatDialogRef<ReceiptItemEditDialogComponent>);
   item: ReceiptItem = inject(MAT_DIALOG_DATA);
 
@@ -44,11 +36,16 @@ export class ReceiptItemEditDialogComponent implements OnInit {
 
     this.calculatedPrice = this.item.price;
 
-    this.form.valueChanges.subscribe(v => {
+    this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(v => {
       const q = Number(v.quantity) || 0;
       const p = Number(v.singlePrice) || 0;
       this.calculatedPrice = Math.round(q * p * 100) / 100;
     });
+  }
+
+  isInvalid(name: string): boolean {
+    const control = this.form.get(name);
+    return !!control && control.invalid && control.touched;
   }
 
   save(): void {

@@ -6,13 +6,9 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {CurrencyPipe} from '@angular/common';
 import {ReceiptService} from '../../services/receipt.service';
 import {ReceiptItem, Supermarket} from '../../models/receipt.model';
+import {SUPERMARKETS} from '../../models/supermarket';
 
 type ScanStep = 'capture' | 'processing' | 'review' | 'success';
-
-interface SupermarketOption {
-  value: Supermarket;
-  label: string;
-}
 
 @Component({
   selector: 'app-receipt-upload',
@@ -23,17 +19,22 @@ interface SupermarketOption {
 })
 export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
 
-  @ViewChild('video') private videoRef?: ElementRef<HTMLVideoElement>;
   @ViewChild('canvas') private canvasRef?: ElementRef<HTMLCanvasElement>;
 
-  readonly supermarkets: SupermarketOption[] = [
-    {value: 'LIDL', label: 'Lidl'},
-    {value: 'EDEKA', label: 'Edeka'},
-    {value: 'REWE', label: 'Rewe'}
-  ];
+  /** The video is re-created whenever the capture step is shown again; attach the running stream to it. */
+  @ViewChild('video')
+  private set videoRef(ref: ElementRef<HTMLVideoElement> | undefined) {
+    this.video = ref?.nativeElement;
+    if (this.video && this.mediaStream) {
+      this.video.srcObject = this.mediaStream;
+    }
+  }
+
+  readonly supermarkets = SUPERMARKETS;
 
   step: ScanStep = 'capture';
   cameraError: string | null = null;
+  cameraReady = false;
   recognizing = false;
   flash = false;
 
@@ -42,6 +43,8 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
   supermarket: Supermarket | null = null;
 
   private mediaStream: MediaStream | null = null;
+  private video?: HTMLVideoElement;
+  private destroyed = false;
 
   private receiptService = inject(ReceiptService);
   private router = inject(Router);
@@ -52,6 +55,7 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
     this.stopCamera();
   }
 
@@ -60,7 +64,7 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
   }
 
   capture(): void {
-    const video = this.videoRef?.nativeElement;
+    const video = this.video;
     const canvas = this.canvasRef?.nativeElement;
     if (!video || !canvas || !video.videoWidth) return;
 
@@ -110,7 +114,9 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
   onSave(): void {
     this.step = 'success';
     this.snackBar.open('Bon gespeichert', undefined, {duration: 2500});
-    setTimeout(() => void this.router.navigate(['/grocery']), 1400);
+    setTimeout(() => {
+      if (!this.destroyed) void this.router.navigate(['/grocery']);
+    }, 1400);
   }
 
   private processFile(file: File): void {
@@ -147,9 +153,14 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
     }
     navigator.mediaDevices.getUserMedia({video: {facingMode: {ideal: 'environment'}}, audio: false})
       .then(stream => {
+        // Left the view or moved on (gallery upload) before the camera answered
+        if (this.destroyed || this.step !== 'capture') {
+          stream.getTracks().forEach(track => track.stop());
+          return;
+        }
         this.mediaStream = stream;
-        if (this.videoRef) {
-          this.videoRef.nativeElement.srcObject = stream;
+        if (this.video) {
+          this.video.srcObject = stream;
         }
       })
       .catch(() => {
@@ -160,5 +171,6 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
   private stopCamera(): void {
     this.mediaStream?.getTracks().forEach(track => track.stop());
     this.mediaStream = null;
+    this.cameraReady = false;
   }
 }

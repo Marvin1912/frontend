@@ -2,7 +2,7 @@
 
   @if (step === 'capture') {
     <div class="capture">
-      <video #video class="capture__video" autoplay playsinline muted></video>
+      <video #video class="capture__video" autoplay playsinline muted (loadedmetadata)="cameraReady = true"></video>
       <canvas #canvas class="capture__canvas"></canvas>
 
       @if (flash) {
@@ -19,16 +19,18 @@
       <p class="capture__hint">Bon im Rahmen ausrichten</p>
 
       @if (cameraError) {
-        <p class="capture__error">{{ cameraError }}</p>
+        <div class="ui-alert ui-alert--danger capture__error" role="alert">{{ cameraError }}</div>
       }
 
       <div class="capture__controls">
-        <label class="capture__gallery" aria-label="Aus Galerie wählen">
-          <input type="file" accept="image/*" class="capture__gallery-input" (change)="onGallerySelected($event)" />
-          <mat-icon>photo_library</mat-icon>
+        <label class="capture__gallery">
+          <input type="file" accept="image/*" class="sr-only" aria-label="Bon aus Galerie wählen"
+                 (change)="onGallerySelected($event)" />
+          <mat-icon aria-hidden="true">photo_library</mat-icon>
         </label>
 
-        <button type="button" class="capture__shutter" aria-label="Bon fotografieren" (click)="capture()">
+        <button type="button" class="capture__shutter" aria-label="Bon fotografieren"
+                [disabled]="!cameraReady" (click)="capture()">
           <span class="capture__shutter-ring"></span>
         </button>
 
@@ -38,29 +40,30 @@
   }
 
   @if (step === 'processing') {
-    <div class="processing">
-      <div class="processing__steps">
-        <div class="processing__step processing__step--done">
-          <mat-icon>check_circle</mat-icon>
+    <div class="ui-container page processing" role="status" aria-live="polite">
+      <ol class="steps" aria-label="Fortschritt">
+        <li class="steps__item steps__item--done">
+          <mat-icon aria-hidden="true">check_circle</mat-icon>
           <span>Scan</span>
-        </div>
-        <div class="processing__step" [class.processing__step--active]="recognizing">
-          <mat-icon>autorenew</mat-icon>
+        </li>
+        <li class="steps__item" [class.steps__item--active]="recognizing" [attr.aria-current]="recognizing ? 'step' : null">
+          <mat-icon aria-hidden="true">autorenew</mat-icon>
           <span>Erkennen</span>
-        </div>
-        <div class="processing__step">
-          <mat-icon>fact_check</mat-icon>
+        </li>
+        <li class="steps__item">
+          <mat-icon aria-hidden="true">fact_check</mat-icon>
           <span>Prüfen</span>
-        </div>
-        <div class="processing__step">
-          <mat-icon>done_all</mat-icon>
+        </li>
+        <li class="steps__item">
+          <mat-icon aria-hidden="true">done_all</mat-icon>
           <span>Fertig</span>
-        </div>
-      </div>
+        </li>
+      </ol>
+      <span class="sr-only">Bon wird erkannt…</span>
 
-      <div class="processing__skeleton">
+      <div class="ui-panel skeleton" aria-hidden="true">
         @for (i of [1, 2, 3]; track i) {
-          <div class="processing__skeleton-row"></div>
+          <div class="skeleton__row"></div>
         }
       </div>
     </div>
@@ -68,59 +71,77 @@
 
   @if (step === 'review') {
     <div class="review">
-      <div class="review__content">
-        <section class="review__section">
-          <h2 class="review__section-title">Supermarkt</h2>
-          <div class="segmented" role="group" aria-label="Supermarkt auswählen">
-            @for (market of supermarkets; track market.value) {
-              <button type="button" class="segmented__option" [class.segmented__option--active]="supermarket === market.value"
-                      (click)="selectSupermarket(market.value)">
-                {{ market.label }}
-              </button>
-            }
-          </div>
-        </section>
-
-        <section class="review__section">
-          <h2 class="review__section-title">Positionen</h2>
-          <div class="review-list">
-            @for (item of items; track item.id) {
-              <div class="grocery-card review-item">
-                <input class="review-item__name" type="text" [(ngModel)]="item.name" (blur)="saveItem(item)" />
-                <div class="review-item__row">
-                  <label class="review-item__field">
-                    <span class="grocery-text-muted">Menge</span>
-                    <input type="number" step="0.01" min="0" [(ngModel)]="item.quantity" (blur)="saveItem(item)" />
-                  </label>
-                  <label class="review-item__field">
-                    <span class="grocery-text-muted">Einzelpreis</span>
-                    <input type="number" step="0.01" min="0" [(ngModel)]="item.singlePrice" (blur)="saveItem(item)" />
-                  </label>
-                  <span class="review-item__price grocery-amount">
-                    {{ item.price | currency:'EUR':'symbol':'1.2-2':'de' }}
-                  </span>
-                </div>
+      <div class="review__scroll">
+        <div class="ui-container page">
+          <section class="ui-panel ui-panel--orange" aria-labelledby="market-title">
+            <div class="ui-panel-head">
+              <h2 class="ui-panel-label" id="market-title"><span class="ui-panel-dot"></span>Supermarkt</h2>
+            </div>
+            <div class="ui-panel-body">
+              <div class="segmented" role="group" aria-labelledby="market-title">
+                @for (market of supermarkets; track market.value) {
+                  <button type="button" class="ui-btn" [class]="supermarket === market.value ? 'ui-btn--' + market.palette : ''"
+                          [attr.aria-pressed]="supermarket === market.value"
+                          (click)="selectSupermarket(market.value)">
+                    {{ market.label }}
+                  </button>
+                }
               </div>
+            </div>
+          </section>
+
+          <section class="ui-panel ui-panel--amber" aria-labelledby="positions-title">
+            <div class="ui-panel-head">
+              <h2 class="ui-panel-label" id="positions-title"><span class="ui-panel-dot"></span>Positionen</h2>
+              <span class="panel-stat">{{ items.length }}</span>
+            </div>
+            @if (items.length === 0) {
+              <div class="ui-empty" role="status"><p class="m-0">Keine Positionen erkannt.</p></div>
+            } @else {
+              <ul class="list">
+                @for (item of items; track item.id) {
+                  <li class="review-item">
+                    <input class="ui-input ui-input--orange review-item__name" type="text" [(ngModel)]="item.name"
+                           [attr.aria-label]="'Artikelname Position ' + ($index + 1)" (blur)="saveItem(item)" />
+                    <div class="review-item__row">
+                      <label class="field">
+                        <span class="ui-input-label">Menge</span>
+                        <input class="ui-input ui-input--orange" type="number" inputmode="decimal" step="0.01" min="0"
+                               [(ngModel)]="item.quantity" (blur)="saveItem(item)" />
+                      </label>
+                      <label class="field">
+                        <span class="ui-input-label">Einzelpreis (€)</span>
+                        <input class="ui-input ui-input--orange" type="number" inputmode="decimal" step="0.01" min="0"
+                               [(ngModel)]="item.singlePrice" (blur)="saveItem(item)" />
+                      </label>
+                      <span class="amount review-item__price">
+                        {{ item.price | currency:'EUR':'symbol':'1.2-2':'de' }}
+                      </span>
+                    </div>
+                  </li>
+                }
+              </ul>
             }
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
 
-      <footer class="review__footer">
-        <div class="review__total">
-          <span class="grocery-text-muted">Summe</span>
-          <span class="grocery-amount review__total-amount">
-            {{ runningTotal | currency:'EUR':'symbol':'1.2-2':'de' }}
-          </span>
-        </div>
-        <button type="button" class="grocery-button review__save" (click)="onSave()">Speichern</button>
+      <footer class="sum-footer">
+        <span class="sum-footer__total">
+          <span class="sum-footer__label">Summe</span>
+          <span class="amount sum-footer__amount">{{ runningTotal | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
+        </span>
+        <button type="button" class="ui-btn ui-btn--orange review__save" (click)="onSave()">
+          <mat-icon aria-hidden="true">check</mat-icon>
+          <span>Speichern</span>
+        </button>
       </footer>
     </div>
   }
 
   @if (step === 'success') {
-    <div class="success">
-      <mat-icon class="success__check">check_circle</mat-icon>
+    <div class="success" role="status">
+      <mat-icon class="success__check" aria-hidden="true">check_circle</mat-icon>
       <p class="success__text">Bon gespeichert</p>
     </div>
   }
