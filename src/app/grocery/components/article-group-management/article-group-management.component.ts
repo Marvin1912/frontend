@@ -1,24 +1,8 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, OnInit, signal} from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow,
-  MatRowDef,
-  MatTable
-} from '@angular/material/table';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatOption} from '@angular/material/core';
-import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
-import {MatSlideToggle, MatSlideToggleChange} from '@angular/material/slide-toggle';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {catchError, of} from 'rxjs';
@@ -35,25 +19,10 @@ interface ArticleRow {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
-    MatTable,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
-    MatFormField,
-    MatLabel,
-    MatInput,
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatOption,
-    MatIconButton,
     MatIcon,
-    MatSlideToggle,
     MatProgressSpinner
   ],
   templateUrl: './article-group-management.component.html',
@@ -69,7 +38,6 @@ export class ArticleGroupManagementComponent implements OnInit {
   rows = signal<ArticleRow[]>([]);
   searchTerm = signal('');
   unassignedOnly = signal(false);
-  displayedColumns = ['name', 'purchaseCount', 'group', 'actions'];
 
   ngOnInit(): void {
     this.load();
@@ -92,10 +60,11 @@ export class ArticleGroupManagementComponent implements OnInit {
     });
   }
 
-  get filteredRows(): ArticleRow[] {
+  readonly filteredRows = computed(() => {
     const term = this.searchTerm().trim().toLowerCase();
+    const unassignedOnly = this.unassignedOnly();
     return this.rows().filter(row => {
-      if (this.unassignedOnly() && row.article.groupId) {
+      if (unassignedOnly && row.article.groupId) {
         return false;
       }
       if (!term) {
@@ -104,23 +73,30 @@ export class ArticleGroupManagementComponent implements OnInit {
       return row.article.name.toLowerCase().includes(term)
         || row.article.normalizedName.toLowerCase().includes(term);
     });
-  }
+  });
 
-  get hasRows(): boolean {
-    return this.filteredRows.length > 0;
-  }
+  /** Distinct group names of all articles, sorted for the autocomplete. */
+  private readonly groupNames = computed(() => {
+    const names = new Set<string>();
+    for (const row of this.rows()) {
+      if (row.article.groupName) {
+        names.add(row.article.groupName);
+      }
+    }
+    return [...names].sort((a, b) => a.localeCompare(b, 'de'));
+  });
 
   onSearchChange(value: string): void {
     this.searchTerm.set(value);
   }
 
-  onUnassignedOnlyChange(event: MatSlideToggleChange): void {
-    this.unassignedOnly.set(event.checked);
+  toggleUnassignedOnly(): void {
+    this.unassignedOnly.update(value => !value);
   }
 
   filteredGroups(query: string): string[] {
     const q = query.trim().toLowerCase();
-    const names = this.groupNames;
+    const names = this.groupNames();
     return q ? names.filter(name => name.toLowerCase().includes(q)) : names;
   }
 
@@ -174,16 +150,6 @@ export class ArticleGroupManagementComponent implements OnInit {
       row.groupControl.setValue('', {emitEvent: false});
       this.snackBar.open('Zuweisung entfernt', 'Schließen', {duration: 2500});
     });
-  }
-
-  private get groupNames(): string[] {
-    const names = new Set<string>();
-    for (const row of this.rows()) {
-      if (row.article.groupName) {
-        names.add(row.article.groupName);
-      }
-    }
-    return [...names].sort((a, b) => a.localeCompare(b, 'de'));
   }
 
   private findGroupIdByName(name: string): number | undefined {

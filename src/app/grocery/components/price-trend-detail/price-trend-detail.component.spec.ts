@@ -63,7 +63,7 @@ describe('PriceTrendDetailComponent', () => {
     httpMock.expectOne(`${environment.apiUrl}/receipts/groups/4/history`).flush(history);
 
     expect(component.chartData.datasets.length).toBe(2);
-    expect(component.chartData.datasets.map(d => d.label)).toEqual(['REWE', 'EDEKA']);
+    expect(component.chartData.datasets.map(d => d.label)).toEqual(['Rewe', 'Edeka']);
   });
 
   it('should compute the cheapest current price per supermarket, sorted ascending', () => {

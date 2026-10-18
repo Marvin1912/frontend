@@ -1,12 +1,15 @@
 import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {CurrencyPipe, DatePipe} from '@angular/common';
-import {Router} from '@angular/router';
+import {RouterLink} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatIcon} from '@angular/material/icon';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {Receipt, Supermarket} from '../../models/receipt.model';
 import {ReceiptService} from '../../services/receipt.service';
-import {SupermarketSelectDialogComponent} from '../../dialogs/supermarket-select-dialog/supermarket-select-dialog.component';
+import {SupermarketSelectDialogComponent, SupermarketSelectDialogData} from '../../dialogs/supermarket-select-dialog/supermarket-select-dialog.component';
+import {groceryDialogConfig} from '../../dialogs/dialog-config';
+import {findSupermarket, SupermarketOption} from '../../models/supermarket';
 import {SwipeRevealDirective} from '../../directives/swipe-reveal.directive';
 
 const UNDO_DURATION_MS = 5000;
@@ -23,7 +26,7 @@ function sortByDateDesc(receipts: Receipt[]): Receipt[] {
 
 @Component({
   selector: 'app-receipt-list',
-  imports: [CurrencyPipe, DatePipe, MatIcon, SwipeRevealDirective],
+  imports: [CurrencyPipe, DatePipe, MatIcon, MatProgressSpinner, RouterLink, SwipeRevealDirective],
   templateUrl: './receipt-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './receipt-list.component.css'
@@ -35,16 +38,9 @@ export class ReceiptListComponent {
   refreshing = false;
   pullDistance = 0;
 
-  private readonly supermarketLabels: Record<Supermarket, string> = {
-    LIDL: 'Lidl',
-    EDEKA: 'Edeka',
-    REWE: 'Rewe'
-  };
-
   private pullStartY: number | null = null;
 
   private receiptService = inject(ReceiptService);
-  private router = inject(Router);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 
@@ -55,19 +51,17 @@ export class ReceiptListComponent {
     });
   }
 
-  navigateToItems(id: string): void {
-    void this.router.navigate(['/grocery/receipts', id, 'items']);
+  receiptDateOf(receipt: Receipt): Date {
+    return receiptDate(receipt);
   }
 
-  supermarketLabel(supermarket: Supermarket | null): string {
-    return supermarket ? this.supermarketLabels[supermarket] : '—';
+  supermarketOf(receipt: Receipt): SupermarketOption | undefined {
+    return findSupermarket(receipt.supermarket);
   }
 
-  openSupermarketDialog(event: MouseEvent, receipt: Receipt): void {
-    event.stopPropagation();
-    const ref = this.dialog.open(SupermarketSelectDialogComponent, {
-      data: {supermarket: receipt.supermarket}
-    });
+  openSupermarketDialog(receipt: Receipt): void {
+    const ref = this.dialog.open<SupermarketSelectDialogComponent, SupermarketSelectDialogData, Supermarket>(
+      SupermarketSelectDialogComponent, groceryDialogConfig({supermarket: receipt.supermarket}));
     ref.afterClosed().subscribe((supermarket: Supermarket | undefined) => {
       if (!supermarket) return;
       this.receiptService.updateSupermarket(receipt.id, supermarket).subscribe({
@@ -81,8 +75,7 @@ export class ReceiptListComponent {
     });
   }
 
-  requestDelete(event: MouseEvent, receipt: Receipt, swipe: SwipeRevealDirective): void {
-    event.stopPropagation();
+  requestDelete(receipt: Receipt, swipe: SwipeRevealDirective): void {
     swipe.close();
     this.receipts = this.receipts.filter(r => r.id !== receipt.id);
 
@@ -126,7 +119,8 @@ export class ReceiptListComponent {
     this.pullDistance = 0;
   }
 
-  private refresh(): void {
+  refresh(): void {
+    if (this.refreshing) return;
     this.refreshing = true;
     this.receiptService.getReceipts().subscribe({
       next: receipts => {

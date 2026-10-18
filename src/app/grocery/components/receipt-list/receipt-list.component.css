@@ -3,27 +3,9 @@
   height: 100%;
 }
 
-.receipt-list {
-  display: flex;
-  flex-direction: column;
+/* Eigener Scroll-Container für Pull-to-Refresh */
+.scroll {
   height: 100%;
-}
-
-/* ── Header ──────────────────────────────────────── */
-.list-header {
-  flex-shrink: 0;
-  padding: 1rem 1rem 0.5rem;
-}
-
-.list-header__label {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--mat-sys-on-surface);
-}
-
-/* ── Scroll container / pull-to-refresh ───────────── */
-.receipt-list__scroll {
-  flex: 1;
   overflow-y: auto;
   overscroll-behavior-y: contain;
 }
@@ -33,100 +15,62 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  color: var(--mat-sys-primary);
-  transition: height 0.15s;
+  color: var(--g-accent);
+  transition: height .15s;
 }
 
 .pull-indicator__spin {
-  animation: spin 0.9s linear infinite;
+  animation: spin .9s linear infinite;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-.receipt-list__empty {
-  padding: 2rem 1rem;
-  text-align: center;
+@media (prefers-reduced-motion: reduce) {
+  .pull-indicator__spin {
+    animation: none;
+  }
 }
 
-/* ── Cards ───────────────────────────────────────── */
-.receipt-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 0.25rem 1rem 1.5rem;
-  max-width: 640px;
-  margin: 0 auto;
-  box-sizing: border-box;
-}
-
-.swipe-row {
-  position: relative;
-  border-radius: var(--grocery-radius);
-  overflow: hidden;
-}
-
-.swipe-row__actions {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.swipe-action {
-  width: 72px;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-}
-
-.swipe-action--delete {
-  background: var(--mat-sys-error);
-}
-
-.swipe-row__content {
-  position: relative;
+/* ── Bon-Zeile: Link (Datum, Betrag) + Supermarkt-Chip ── */
+.receipt {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  cursor: pointer;
-  touch-action: pan-y;
-  -webkit-tap-highlight-color: transparent;
+  background: var(--surface);
 }
 
-.receipt-card__main {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.375rem;
+/* Chip sitzt neben dem Link, damit keine Buttons verschachtelt sind */
+.receipt__link {
+  flex: 1;
+  min-width: 0;
+  padding-right: var(--ui-space-2);
 }
 
-.receipt-card__date {
-  font-size: 0.9rem;
-  color: var(--mat-sys-on-surface);
+.receipt__chip {
+  flex-shrink: 0;
+  min-width: 3.5rem;
+  margin-right: var(--ui-space-4);
+  justify-content: center;
 }
 
-.receipt-card__amount {
-  font-size: 1.15rem;
-  color: var(--mat-sys-on-surface);
+.receipt__amount {
+  font-size: 1.05rem;
 }
 
-/* ── Supermarket chip ────────────────────────────── */
-.supermarket-chip {
-  border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: 999px;
-  padding: 0.125rem 0.625rem;
-  font-size: 0.7rem;
-  font-weight: 500;
-  background: var(--mat-sys-surface-container-high);
-  color: var(--mat-sys-on-surface-variant);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
+/* Inline-Aktion (Maus): Chip näher an den Button */
+@media (hover: hover) and (pointer: fine) {
+  .receipt__chip {
+    margin-right: var(--ui-space-3);
+  }
 }
 
-.supermarket-chip--empty {
-  color: var(--mat-sys-primary);
-  border-color: var(--mat-sys-primary);
+/* Hover auf der ganzen Zeile, nicht nur auf dem Link-Bereich */
+.receipt__link:hover {
+  background: transparent;
+}
+
+.swipe-row:hover,
+.swipe-row:hover .receipt {
+  background: color-mix(in srgb, var(--g-accent) 4%, var(--surface));
 }

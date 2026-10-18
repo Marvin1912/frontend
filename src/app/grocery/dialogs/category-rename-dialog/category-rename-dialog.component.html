@@ -1,22 +1,20 @@
-<h2 mat-dialog-title>Kategorie umbenennen</h2>
+<form class="ui-dialog form" (ngSubmit)="confirm()">
+  <h2 class="ui-dialog-title m-0">Kategorie umbenennen</h2>
 
-<mat-dialog-content>
-  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="name-field">
-    <mat-label>Name</mat-label>
-    <input matInput
-           [(ngModel)]="name"
-           name="name"
-           autocomplete="off"
-           cdkFocusInitial
-           (keydown.enter)="confirm()" />
-  </mat-form-field>
-</mat-dialog-content>
+  <div class="field">
+    <label class="ui-input-label" for="category-name">Name</label>
+    <input id="category-name" class="ui-input ui-input--amber" name="name" autocomplete="off" required
+           [(ngModel)]="name" cdkFocusInitial />
+  </div>
 
-<mat-dialog-actions align="center">
-  <button mat-mini-fab color="primary" [disabled]="!isValid" (click)="confirm()" aria-label="Bestätigen">
-    <mat-icon>check_circle</mat-icon>
-  </button>
-  <button mat-mini-fab mat-dialog-close aria-label="Abbrechen">
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-dialog-actions>
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn" mat-dialog-close>
+      <mat-icon aria-hidden="true">close</mat-icon>
+      <span>Abbrechen</span>
+    </button>
+    <button type="submit" class="ui-btn ui-btn--teal" [disabled]="!isValid">
+      <mat-icon aria-hidden="true">check</mat-icon>
+      <span>Speichern</span>
+    </button>
+  </div>
+</form>

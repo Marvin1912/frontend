@@ -1,14 +1,15 @@
-<h2 mat-dialog-title>Kategorie löschen</h2>
+<div class="ui-dialog">
+  <h2 class="ui-dialog-title">Kategorie löschen?</h2>
+  <p class="m-0">Kategorie «{{ data.name }}» wird endgültig entfernt.</p>
 
-<mat-dialog-content>
-  <span>Kategorie <strong>{{ data.name }}</strong> wirklich löschen?</span>
-</mat-dialog-content>
-
-<mat-dialog-actions align="center">
-  <button mat-mini-fab color="warn" (click)="confirm()" aria-label="Löschen bestätigen">
-    <mat-icon>check_circle</mat-icon>
-  </button>
-  <button mat-mini-fab mat-dialog-close aria-label="Abbrechen">
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-dialog-actions>
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn" mat-dialog-close>
+      <mat-icon aria-hidden="true">close</mat-icon>
+      <span>Abbrechen</span>
+    </button>
+    <button type="button" class="ui-btn ui-btn--rose" (click)="confirm()">
+      <mat-icon aria-hidden="true">delete</mat-icon>
+      <span>Löschen</span>
+    </button>
+  </div>
+</div>

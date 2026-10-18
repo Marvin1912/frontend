@@ -1,39 +1,37 @@
 <div class="detail" [class.detail--expanded]="expanded">
 
-  <button type="button" class="detail__handle" aria-label="Ansicht vergrößern/verkleinern" (click)="toggleExpanded()">
+  <button type="button" class="detail__handle" [attr.aria-expanded]="expanded"
+          [attr.aria-label]="expanded ? 'Ansicht verkleinern' : 'Ansicht vergrößern'" (click)="toggleExpanded()">
     <span class="detail__handle-bar"></span>
   </button>
 
   <header class="detail__head">
-    <h1 class="detail__title">{{ data.displayName }}</h1>
-    <button mat-icon-button aria-label="Schließen" (click)="close()">
-      <mat-icon>close</mat-icon>
+    <h2 class="detail__title">{{ data.displayName }}</h2>
+    <button type="button" class="ui-btn-icon" aria-label="Schließen" (click)="close()">
+      <mat-icon aria-hidden="true">close</mat-icon>
     </button>
   </header>
 
   <div class="detail__body">
     @if (loading) {
-      <div class="state">
-        <mat-spinner diameter="32" />
-      </div>
+      <div class="ui-empty" role="status"><mat-spinner diameter="24" /><p class="m-0">Lade Preisverlauf…</p></div>
     } @else if (hasHistory) {
       <div class="chart">
-        <canvas baseChart type="line" [data]="chartData" [options]="chartOptions"></canvas>
+        <canvas baseChart type="line" [data]="chartData" [options]="chartOptions"
+                role="img" [attr.aria-label]="'Preisverlauf ' + data.displayName"></canvas>
       </div>
 
-      <div class="legend">
+      <ul class="legend" aria-label="Aktueller Preis je Supermarkt">
         @for (row of latestBySupermarket; track row.supermarket) {
-          <span class="legend__item">
-            <span class="legend__dot" [style.background]="colorFor(row.supermarket)"></span>
-            {{ row.supermarket }}
-            <span class="grocery-amount legend__price">
-              {{ row.price | currency:'EUR':'symbol':'1.2-2':'de' }}
-            </span>
-          </span>
+          <li class="legend__item">
+            <span class="legend__dot" [style.background]="row.color" aria-hidden="true"></span>
+            {{ row.label }}
+            <span class="amount legend__price">{{ row.price | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
+          </li>
         }
-      </div>
+      </ul>
     } @else {
-      <p class="grocery-text-muted empty">Für dieses Produkt liegt noch kein Preisverlauf vor.</p>
+      <div class="ui-empty" role="status"><p class="m-0">Für dieses Produkt liegt noch kein Preisverlauf vor.</p></div>
     }
   </div>
 

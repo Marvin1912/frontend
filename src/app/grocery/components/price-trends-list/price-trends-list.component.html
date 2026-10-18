@@ -1,41 +1,47 @@
-<div class="price-trends">
-  <header class="list-header">
-    <span class="list-header__label">Preisverlauf</span>
-  </header>
-
-  @if (loading) {
-    <div class="state">
-      <mat-spinner diameter="32" />
-    </div>
-  } @else if (hasProducts) {
-    <div class="trend-cards">
-      @for (product of products; track product.groupId) {
-        <button type="button" class="grocery-card trend-card" (click)="openDetail(product)">
-          <div class="trend-card__info">
-            <span class="trend-card__name">{{ product.groupName }}</span>
-            <span class="grocery-amount trend-card__price">
-              {{ product.latestPrice | currency:'EUR':'symbol':'1.2-2':'de' }}
-            </span>
-          </div>
-
-          @if (product.sparklinePrices.length > 1) {
-            <div class="trend-card__sparkline">
-              <canvas baseChart type="line" [data]="product.sparklineData" [options]="sparklineOptions"></canvas>
-            </div>
-          }
-
-          <span class="grocery-badge trend-card__badge" [class.grocery-badge--up]="product.up" [class.grocery-badge--down]="!product.up">
-            {{ product.up ? '▲' : '▼' }} {{ product.displayPercent | number:'1.1-1':'de' }}%
-          </span>
-        </button>
+<div class="ui-container page">
+  <section class="ui-panel ui-panel--orange" aria-labelledby="trends-title">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label" id="trends-title"><span class="ui-panel-dot"></span>Preisverlauf</h2>
+      @if (hasProducts) {
+        <span class="panel-stat">{{ products.length }} Gruppen</span>
       }
     </div>
-  } @else {
-    <div class="empty">
-      <p class="grocery-text-muted empty__text">
-        Noch keine Artikel-Gruppen mit Preisdaten. Artikel ohne Gruppenzuordnung werden hier ausgeblendet.
-      </p>
-      <a class="empty__link" routerLink="/grocery/articles">Artikel-Gruppen verwalten →</a>
-    </div>
-  }
+
+    @if (loading) {
+      <div class="ui-empty" role="status"><mat-spinner diameter="24" /><p class="m-0">Lade Preisverläufe…</p></div>
+    } @else if (hasProducts) {
+      <ul class="list">
+        @for (product of products; track product.groupId) {
+          <li>
+            <button type="button" class="list-row" (click)="openDetail(product)">
+              <span class="list-row__main">
+                <span class="list-row__title">{{ product.groupName }}</span>
+                <span class="amount">{{ product.latestPrice | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
+              </span>
+
+              @if (product.sparklinePrices.length > 1) {
+                <span class="sparkline" aria-hidden="true">
+                  <canvas baseChart type="line" [data]="product.sparklineData" [options]="sparklineOptions"></canvas>
+                </span>
+              }
+
+              <span class="ui-badge trend-badge" [class.ui-badge--amber]="product.up" [class.ui-badge--green]="!product.up">
+                <span aria-hidden="true">{{ product.up ? '▲' : '▼' }}</span>
+                <span class="sr-only">{{ product.up ? 'gestiegen' : 'gesunken' }}</span>
+                {{ product.displayPercent | number:'1.1-1':'de' }} %
+              </span>
+            </button>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="ui-empty" role="status">
+        <p class="m-0">Noch keine Artikel-Gruppen mit Preisdaten. Artikel ohne Gruppenzuordnung werden hier ausgeblendet.</p>
+        <a class="ui-btn ui-btn--orange" routerLink="/grocery/articles">
+          <mat-icon aria-hidden="true">category</mat-icon>
+          <span>Artikel-Gruppen verwalten</span>
+        </a>
+      </div>
+    }
+  </section>
 </div>

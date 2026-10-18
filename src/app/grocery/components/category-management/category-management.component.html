@@ -1,106 +1,107 @@
-<div class="categories">
-  <header class="list-header">
-    <span class="list-header__label">Kategorien</span>
-  </header>
-
-  @if (loading()) {
-    <div class="state">
-      <mat-spinner diameter="32" />
+<div class="ui-container page">
+  <section class="ui-panel ui-panel--amber" aria-labelledby="categories-title">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label" id="categories-title"><span class="ui-panel-dot"></span>Kategorien</h2>
+      @if (!loading() && categories().length > 0) {
+        <span class="panel-stat">{{ categories().length }}</span>
+      }
     </div>
-  } @else if (categories().length > 0) {
-    <div class="table-container">
-      <table mat-table [dataSource]="categories()" multiTemplateDataRows>
 
-        <ng-container matColumnDef="expand">
-          <th mat-header-cell *matHeaderCellDef class="col-header"></th>
-          <td mat-cell *matCellDef="let category" class="col-expand">
-            <button mat-icon-button
-                    (click)="toggleExpand(category)"
-                    class="expand-btn"
-                    [attr.aria-label]="expandedCategoryId() === category.id ? 'Kaufhistorie einklappen' : 'Kaufhistorie anzeigen'">
-              <mat-icon>{{ expandedCategoryId() === category.id ? 'expand_more' : 'chevron_right' }}</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef class="col-header">Kategorie</th>
-          <td mat-cell *matCellDef="let category">{{ category.name }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="articleCount">
-          <th mat-header-cell *matHeaderCellDef class="col-header">Artikel</th>
-          <td mat-cell *matCellDef="let category">{{ category.articleCount }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="col-header"></th>
-          <td mat-cell *matCellDef="let category" class="col-actions">
-            <button mat-icon-button (click)="openRenameDialog(category)" class="edit-btn" aria-label="Kategorie umbenennen">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button (click)="openDeleteDialog(category)" class="action-btn" aria-label="Kategorie löschen">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="expandedDetail">
-          <td mat-cell *matCellDef="let category" [attr.colspan]="displayedColumns.length" class="col-detail">
-            @if (expandedCategoryId() === category.id) {
-              <div class="detail">
-                @if (historyLoading() === category.id) {
-                  <div class="detail-state">
-                    <mat-spinner diameter="24" />
-                  </div>
-                } @else {
-                  @if ((historyByCategory().get(category.id) ?? []).length > 0) {
-                    <div class="detail-table-container">
-                      <table class="detail-table">
-                        <thead>
-                          <tr>
-                            <th>Datum</th>
-                            <th>Artikel</th>
-                            <th>Preis</th>
-                            <th>Supermarkt</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          @for (point of historyByCategory().get(category.id); track point.date + point.articleId + point.singlePrice) {
-                            <tr>
-                              <td>{{ formatDate(point.date) }}</td>
-                              <td>{{ point.articleName }}</td>
-                              <td>{{ point.singlePrice | currency:'EUR':'symbol':'1.2-2':'de' }}</td>
-                              <td>{{ point.supermarket ?? 'Unbekannt' }}</td>
-                              <td class="detail-actions">
-                                <button mat-icon-button
-                                        (click)="removeArticleFromCategory(category, point)"
-                                        class="detail-action-btn"
-                                        aria-label="Artikel aus Kategorie entfernen">
-                                  <mat-icon>link_off</mat-icon>
-                                </button>
-                              </td>
-                            </tr>
-                          }
-                        </tbody>
-                      </table>
-                    </div>
-                  } @else {
-                    <p class="grocery-text-muted empty-inline">Keine Käufe gefunden.</p>
-                  }
-                }
-              </div>
+    @if (loading()) {
+      <div class="ui-empty" role="status"><mat-spinner diameter="24" /><p class="m-0">Lade Kategorien…</p></div>
+    } @else if (categories().length > 0) {
+      <div class="table-container">
+        <table class="ui-table">
+          <thead>
+            <tr>
+              <th class="ui-table-head col-expand" scope="col"><span class="sr-only">Kaufhistorie</span></th>
+              <th class="ui-table-head" scope="col">Kategorie</th>
+              <th class="ui-table-head col-num" scope="col">Artikel</th>
+              <th class="ui-table-head col-actions" scope="col"><span class="sr-only">Aktionen</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (category of categories(); track category.id) {
+              @let expanded = expandedCategoryId() === category.id;
+              <tr class="ui-table-row" [class.is-expanded]="expanded">
+                <td class="ui-table-cell col-expand">
+                  <button type="button" class="ui-btn-icon" (click)="toggleExpand(category)"
+                          [attr.aria-expanded]="expanded"
+                          [attr.aria-controls]="'category-history-' + category.id"
+                          [attr.aria-label]="'Kaufhistorie von ' + category.name">
+                    <mat-icon aria-hidden="true" class="expand-icon">chevron_right</mat-icon>
+                  </button>
+                </td>
+                <td class="ui-table-cell"><span class="cell-title">{{ category.name }}</span></td>
+                <td class="ui-table-cell col-num">{{ category.articleCount }}</td>
+                <td class="ui-table-cell col-actions">
+                  <span class="row-actions">
+                    <button type="button" class="ui-btn-icon" (click)="openRenameDialog(category)"
+                            [attr.aria-label]="category.name + ' umbenennen'">
+                      <mat-icon aria-hidden="true">edit</mat-icon>
+                    </button>
+                    <button type="button" class="ui-btn-icon ui-btn--rose" (click)="openDeleteDialog(category)"
+                            [attr.aria-label]="category.name + ' löschen'">
+                      <mat-icon aria-hidden="true">delete</mat-icon>
+                    </button>
+                  </span>
+                </td>
+              </tr>
+              @if (expanded) {
+                <tr class="detail-row" [id]="'category-history-' + category.id">
+                  <td class="detail-cell" colspan="4">
+                    @if (historyLoading() === category.id) {
+                      <div class="ui-empty detail-empty" role="status"><mat-spinner diameter="20" /><p class="m-0">Lade Käufe…</p></div>
+                    } @else {
+                      @let history = historyByCategory().get(category.id) ?? [];
+                      @if (history.length > 0) {
+                        <div class="detail">
+                          <table class="ui-table">
+                            <caption class="sr-only">Käufe in {{ category.name }}</caption>
+                            <thead>
+                              <tr>
+                                <th class="ui-table-head" scope="col">Datum</th>
+                                <th class="ui-table-head" scope="col">Artikel</th>
+                                <th class="ui-table-head col-num" scope="col">Preis</th>
+                                <th class="ui-table-head col-wide" scope="col">Supermarkt</th>
+                                <th class="ui-table-head col-actions" scope="col"><span class="sr-only">Aktionen</span></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              @for (point of history; track point.date + point.articleId + point.singlePrice) {
+                                <tr class="ui-table-row">
+                                  <td class="ui-table-cell nowrap">{{ formatDate(point.date) }}</td>
+                                  <td class="ui-table-cell">
+                                    <span class="cell-title">{{ point.articleName }}</span>
+                                    <span class="cell-meta cell-meta--narrow">{{ supermarketLabel(point.supermarket) }}</span>
+                                  </td>
+                                  <td class="ui-table-cell col-num">{{ point.singlePrice | currency:'EUR':'symbol':'1.2-2':'de' }}</td>
+                                  <td class="ui-table-cell col-wide">{{ supermarketLabel(point.supermarket) }}</td>
+                                  <td class="ui-table-cell col-actions">
+                                    <button type="button" class="ui-btn-icon ui-btn--rose"
+                                            (click)="removeArticleFromCategory(category, point)"
+                                            [attr.aria-label]="point.articleName + ' aus Kategorie entfernen'">
+                                      <mat-icon aria-hidden="true">link_off</mat-icon>
+                                    </button>
+                                  </td>
+                                </tr>
+                              }
+                            </tbody>
+                          </table>
+                        </div>
+                      } @else {
+                        <div class="ui-empty detail-empty" role="status"><p class="m-0">Keine Käufe gefunden.</p></div>
+                      }
+                    }
+                  </td>
+                </tr>
+              }
             }
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
-      </table>
-    </div>
-  } @else {
-    <p class="grocery-text-muted empty">Keine Kategorien gefunden.</p>
-  }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <div class="ui-empty" role="status"><p class="m-0">Keine Kategorien gefunden.</p></div>
+    }
+  </section>
 </div>

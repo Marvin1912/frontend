@@ -1,33 +1,25 @@
-import {Component, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
+import {MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
-import {MatMiniFabButton} from '@angular/material/button';
 import {CurrencyPipe} from '@angular/common';
 
 @Component({
   selector: 'app-receipt-item-add-dialog',
   imports: [
     ReactiveFormsModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatFormField,
-    MatLabel,
-    MatInput,
+    MatDialogClose,
     MatIcon,
-    MatMiniFabButton,
     CurrencyPipe
   ],
   templateUrl: './receipt-item-add-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './receipt-item-add-dialog.component.css'
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ReceiptItemAddDialogComponent implements OnInit {
 
   private fb = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
   private dialogRef = inject(MatDialogRef<ReceiptItemAddDialogComponent>);
 
   form!: FormGroup;
@@ -40,11 +32,16 @@ export class ReceiptItemAddDialogComponent implements OnInit {
       singlePrice: [0, [Validators.required, Validators.min(0)]]
     });
 
-    this.form.valueChanges.subscribe(v => {
+    this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(v => {
       const q = Number(v.quantity) || 0;
       const p = Number(v.singlePrice) || 0;
       this.calculatedPrice = Math.round(q * p * 100) / 100;
     });
+  }
+
+  isInvalid(name: string): boolean {
+    const control = this.form.get(name);
+    return !!control && control.invalid && control.touched;
   }
 
   save(): void {

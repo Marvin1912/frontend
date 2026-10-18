@@ -1,0 +1,393 @@
+/* Gemeinsame Bausteine der Grocery-Views und -Dialoge, einmal global ausgeliefert.
+   Gilt unter .grocery-scope: am Layout (Views) sowie per panelClass/class an Dialogen,
+   Bottom-Sheets und Autocomplete-Panels, die im CDK-Overlay außerhalb des Layouts liegen.
+   Farben, Flächen und Formularfelder kommen aus ui-styles; hier nur das App-Layout. */
+
+.grocery-scope {
+  /* Akzent der App (Home-Navcard „Grocery“) */
+  --g-accent: #f97316;
+
+  /* Im Overlay fehlt ui-bg: Schrift und Textfarbe selbst setzen */
+  font-family: var(--ui-font-family);
+  color: var(--text);
+
+  /* ── Icons und Spinner ───────────────────────────── */
+  .ui-btn mat-icon,
+  .ui-btn-icon mat-icon {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
+
+  /* Spinner übernehmen die Textfarbe (ui-empty, Buttons) */
+  mat-spinner,
+  mat-progress-spinner {
+    --mat-progress-spinner-active-indicator-color: currentColor;
+  }
+
+  /* ── Seiten ──────────────────────────────────────── */
+  .page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ui-space-4);
+    max-width: 640px;
+  }
+
+  @media (min-width: 640px) {
+    .page {
+      gap: var(--ui-space-6);
+    }
+  }
+
+  .panel-actions {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--ui-space-2);
+  }
+
+  .panel-stat {
+    color: var(--text-muted);
+    font-size: var(--ui-text-sm);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .amount {
+    color: var(--text);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .muted {
+    color: var(--text-muted);
+  }
+
+  .dim {
+    color: var(--text-dim);
+  }
+
+  /* ── Listen in Panels ────────────────────────────── */
+  .list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .list > li + li {
+    border-top: 1px solid var(--border);
+  }
+
+  /* Klickbare Zeile (Button oder Link), volle Breite */
+  .list-row {
+    display: flex;
+    align-items: center;
+    gap: var(--ui-space-3);
+    width: 100%;
+    min-height: 56px;
+    margin: 0;
+    padding: var(--ui-space-3) var(--ui-space-4);
+    box-sizing: border-box;
+    border: 0;
+    background: var(--surface);
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .16s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .list-row:hover {
+    background: color-mix(in srgb, var(--g-accent) 4%, var(--surface));
+  }
+
+  .list-row:focus-visible {
+    outline: 2px solid var(--g-accent);
+    outline-offset: -2px;
+  }
+
+  .list-row__main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: .15rem;
+    min-width: 0;
+  }
+
+  .list-row__title {
+    overflow: hidden;
+    color: var(--text);
+    font-size: var(--ui-text-md);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .list-row__meta {
+    color: var(--text-muted);
+    font-size: .75rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Wisch-Zeilen (Bons, Positionen) ─────────────── */
+  /* Touch: Aktion liegt hinter dem Inhalt und wird per Wischen freigelegt.
+     Maus: Aktion steht als ui-btn-icon in der Zeile, Wischen ist aus. */
+  .swipe-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .swipe-row__content {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    min-width: 0;
+    touch-action: pan-y;
+    transition: transform .2s ease;
+  }
+
+  .swipe-row__actions {
+    position: absolute;
+    inset: 0 0 0 auto;
+    display: flex;
+    width: 72px;
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .swipe-action {
+      --ui-btn-bg: color-mix(in srgb, var(--ui-btn-accent) 22%, var(--surface));
+      --ui-btn-border: transparent;
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
+    }
+
+    .swipe-action mat-icon {
+      width: 22px;
+      height: 22px;
+      font-size: 22px;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    /* Fokus auf der Aktion öffnet die Zeile; inline gibt es nichts freizulegen */
+    .swipe-row__content {
+      transform: none !important;
+    }
+
+    .swipe-row__actions {
+      position: static;
+      order: 1;
+      flex-shrink: 0;
+      width: auto;
+      padding-right: var(--ui-space-3);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .swipe-row__content {
+      transition: none;
+    }
+  }
+
+  /* Supermarkt als ui-badge-Button */
+  .chip {
+    border: 0;
+    font-family: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .chip:hover {
+    --ui-badge-bg: color-mix(in srgb, var(--ui-badge-accent) 26%, transparent);
+  }
+
+  .chip:focus-visible {
+    outline: 2px solid var(--ui-badge-accent);
+    outline-offset: 2px;
+  }
+
+  /* ── Fußzeile mit Summe (Positionen, Prüfen) ─────── */
+  .sum-footer {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ui-space-4);
+    padding: var(--ui-space-3) max(var(--ui-space-4), calc((100% - 640px) / 2 + var(--ui-space-4)))
+             var(--ui-space-3);
+    background: rgba(6, 8, 14, .88);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+  }
+
+  .sum-footer__total {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sum-footer__label {
+    color: var(--text-dim);
+    font-size: var(--ui-text-xs);
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .sum-footer__amount {
+    font-size: 1.25rem;
+  }
+
+  /* ── Tabellen ────────────────────────────────────── */
+  .table-container {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .col-num {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .col-actions {
+    width: 1%;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .row-actions {
+    display: inline-flex;
+    gap: var(--ui-space-1);
+  }
+
+  .cell-title {
+    color: var(--text);
+    overflow-wrap: anywhere;
+  }
+
+  .cell-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ui-space-1) var(--ui-space-2);
+    margin-top: .2rem;
+    color: var(--text-muted);
+    font-size: .68rem;
+  }
+
+  /* Schmale Bildschirme: Nebenspalten ausblenden, Werte stehen als Meta in der Hauptzelle */
+  @media (max-width: 639px) {
+    .col-wide {
+      display: none;
+    }
+  }
+
+  @media (min-width: 640px) {
+    .cell-meta--narrow {
+      display: none;
+    }
+  }
+
+  /* ── Formulare ───────────────────────────────────── */
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ui-space-3);
+    margin: 0;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ui-space-3);
+  }
+
+  .field-error {
+    margin: var(--ui-space-1) 0 0;
+    color: var(--c-e);
+    font-size: .72rem;
+  }
+
+  /* Ungültige Felder nach Interaktion: Rahmen und Fokus in Rose */
+  .ui-input.ng-invalid.ng-touched {
+    --ui-input-accent: var(--c-e);
+    --ui-input-border: color-mix(in srgb, var(--c-e) 55%, transparent);
+  }
+
+  /* Berechneter Gesamtpreis in Dialogen */
+  .price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--ui-space-2) var(--ui-space-3);
+    background: var(--raised);
+    border: 1px solid var(--border);
+    border-radius: var(--ui-radius);
+  }
+
+  .price-row__label {
+    color: var(--text-dim);
+    font-size: var(--ui-text-xs);
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .price-row__value {
+    color: var(--g-accent);
+    font-size: var(--ui-text-md);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Hervorhebungen im gedämpften Dialogtext */
+  .ui-dialog strong {
+    color: var(--text);
+  }
+
+  /* ── Umschalter (Supermarkt, Filter) ─────────────── */
+  .segmented {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ui-space-2);
+  }
+
+  .segmented .ui-btn {
+    flex: 1 1 0;
+    justify-content: center;
+  }
+}
+
+/* Bottom-Sheet (Preisverlauf): panelClass landet am Overlay-Pane, die Tokens erbt
+   der Material-Container darin. */
+.ui-sheet-pane {
+  --mat-bottom-sheet-container-background-color: var(--surface);
+  --mat-bottom-sheet-container-text-color: var(--text);
+  --mat-bottom-sheet-container-text-font: var(--ui-font-family);
+  --mat-bottom-sheet-container-shape: 16px;
+}
+
+.ui-sheet-pane .mat-bottom-sheet-container {
+  border: 1px solid var(--border-mid);
+  border-bottom: 0;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, .5);
+}
+
+/* Spring-Easing beim Aufziehen statt des Standard-Material-Eases */
+.ui-sheet-pane .mat-bottom-sheet-container-enter {
+  animation-timing-function: cubic-bezier(.34, 1.56, .64, 1);
+}

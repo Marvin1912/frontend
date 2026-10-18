@@ -1,6 +1,7 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {CurrencyPipe, DecimalPipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
+import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatBottomSheet} from '@angular/material/bottom-sheet';
 import {ChartConfiguration} from 'chart.js';
@@ -8,10 +9,11 @@ import {BaseChartDirective} from 'ng2-charts';
 import {catchError, of} from 'rxjs';
 import {ReceiptService} from '../../services/receipt.service';
 import {ProductPriceSummary} from '../../models/price-trend.model';
-import {PriceTrendDetailComponent} from '../price-trend-detail/price-trend-detail.component';
+import {openPriceTrendDetail} from '../price-trend-detail/price-trend-detail.component';
 
-const PRICE_UP_COLOR = '#e8a33d';
-const PRICE_DOWN_COLOR = '#2e7d32';
+/* ui-badge--amber / --green */
+const PRICE_UP_COLOR = '#fbbf24';
+const PRICE_DOWN_COLOR = '#22d35e';
 const BADGE_ANIMATION_MS = 600;
 
 const SPARKLINE_OPTIONS: ChartConfiguration<'line'>['options'] = {
@@ -41,7 +43,7 @@ interface PriceTrendRow extends ProductPriceSummary {
 @Component({
   selector: 'app-price-trends-list',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CurrencyPipe, DecimalPipe, MatProgressSpinner, BaseChartDirective, RouterLink],
+  imports: [CurrencyPipe, DecimalPipe, MatIcon, MatProgressSpinner, BaseChartDirective, RouterLink],
   templateUrl: './price-trends-list.component.html',
   styleUrl: './price-trends-list.component.css'
 })
@@ -55,6 +57,11 @@ export class PriceTrendsListComponent implements OnInit {
   private receiptService = inject(ReceiptService);
   private bottomSheet = inject(MatBottomSheet);
   private cdr = inject(ChangeDetectorRef);
+  private destroyed = false;
+
+  constructor() {
+    inject(DestroyRef).onDestroy(() => { this.destroyed = true; });
+  }
 
   ngOnInit(): void {
     this.receiptService.getArticleGroupPriceSummaries()
@@ -77,10 +84,7 @@ export class PriceTrendsListComponent implements OnInit {
   }
 
   openDetail(product: ProductPriceSummary): void {
-    this.bottomSheet.open(PriceTrendDetailComponent, {
-      panelClass: 'grocery-bottom-sheet-panel',
-      data: {groupId: product.groupId, displayName: product.groupName}
-    });
+    openPriceTrendDetail(this.bottomSheet, product);
   }
 
   private buildSparklineData(summary: ProductPriceSummary): ChartConfiguration<'line'>['data'] {
@@ -98,9 +102,14 @@ export class PriceTrendsListComponent implements OnInit {
 
   private animateBadges(): void {
     const targets = this.products.map(p => Math.abs(p.percentChange));
+    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      this.products.forEach((product, i) => { product.displayPercent = targets[i]; });
+      return;
+    }
     const start = window.performance.now();
 
     const step = (now: number): void => {
+      if (this.destroyed) return;
       const progress = Math.min(1, (now - start) / BADGE_ANIMATION_MS);
       const eased = 1 - (1 - progress) ** 3;
       this.products.forEach((product, i) => { product.displayPercent = targets[i] * eased; });

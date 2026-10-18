@@ -1,11 +1,11 @@
 @use '@angular/material' as mat;
 @use './theme-colors' as theme;
 @use './app/nutrition/nutrition';
+@use './app/grocery/grocery';
 
-/* ── Material 3 Theme (Design System, Milestone "UI/UX Redesign") ──
-   Basis für alle grocery-Redesign-Issues (#313–#319). Petrol/Tannengrün
-   als Primärfarbe, Orange als Akzent — bewusst kein reines Rot, siehe
-   --grocery-price-up/-down unten. */
+/* ── Material 3 Theme ──────────────────────────────
+   Basis für Material-Komponenten ohne ui-styles-Gegenstück (Snackbar, Tooltip …).
+   Petrol/Tannengrün als Primärfarbe, Orange als Akzent. */
 html {
   @include mat.theme((
     color: (
@@ -18,68 +18,6 @@ html {
     ),
     density: 0,
   ));
-}
-
-/* ── Grocery Design Tokens ─────────────────────────
-   Wiederverwendbar in allen grocery-Screens (Cards, Badges, Buttons). */
-:root {
-  --grocery-radius:     16px;
-  --grocery-radius-sm:  12px;
-  --grocery-shadow:     0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-
-  --grocery-price-up:   #e8a33d;  /* Preisanstieg / Hinweis — bewusst kein reines Rot */
-  --grocery-price-down: #2e7d32;  /* Preisrückgang / Ersparnis */
-}
-
-/* Ruhige, große Zahlen für Beträge — tabular figures. */
-.grocery-amount {
-  font-variant-numeric: tabular-nums;
-  font-weight: 500;
-}
-
-.grocery-text-muted {
-  font-weight: 400;
-  color: var(--mat-sys-on-surface-variant);
-}
-
-/* Card-Basis: abgerundet, dezenter Schatten. */
-.grocery-card {
-  background: var(--mat-sys-surface-container);
-  color: var(--mat-sys-on-surface);
-  border-radius: var(--grocery-radius);
-  box-shadow: var(--grocery-shadow);
-  padding: 1rem;
-}
-
-/* Badge-Basis, z. B. für Preisänderungen. */
-.grocery-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.125rem 0.625rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.grocery-badge--up {
-  background: color-mix(in srgb, var(--grocery-price-up) 16%, transparent);
-  color: var(--grocery-price-up);
-}
-
-.grocery-badge--down {
-  background: color-mix(in srgb, var(--grocery-price-down) 16%, transparent);
-  color: var(--grocery-price-down);
-}
-
-.grocery-button {
-  border-radius: var(--grocery-radius-sm);
-}
-
-/* Spring-Easing für Bottom Sheets (Preisverlauf-Detail): leichtes
-   Überschwingen beim Aufziehen statt des Standard-Material-Eases. */
-.grocery-bottom-sheet-panel.mat-bottom-sheet-container-enter {
-  animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
 
 /* ── Global Design Tokens (Legacy-Module) ──────────── */

@@ -1,17 +1,18 @@
-<h2 mat-dialog-title>LLM-Matching starten</h2>
-
-<mat-dialog-content>
-  <span>
+<div class="ui-dialog">
+  <h2 class="ui-dialog-title">LLM-Matching starten?</h2>
+  <p class="m-0">
     Dieser Lauf ruft die Claude-API auf (kostenpflichtig) und weist Artikel
-    <strong>direkt final</strong> zu, ohne weitere Review-Möglichkeit. Wirklich fortfahren?
-  </span>
-</mat-dialog-content>
+    <strong>direkt final</strong> zu, ohne weitere Review-Möglichkeit.
+  </p>
 
-<mat-dialog-actions align="center">
-  <button mat-mini-fab color="primary" (click)="confirm()" aria-label="LLM-Matching bestätigen">
-    <mat-icon>check_circle</mat-icon>
-  </button>
-  <button mat-mini-fab mat-dialog-close aria-label="Abbrechen">
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-dialog-actions>
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn" mat-dialog-close>
+      <mat-icon aria-hidden="true">close</mat-icon>
+      <span>Abbrechen</span>
+    </button>
+    <button type="button" class="ui-btn ui-btn--violet" (click)="confirm()">
+      <mat-icon aria-hidden="true">psychology</mat-icon>
+      <span>Starten</span>
+    </button>
+  </div>
+</div>

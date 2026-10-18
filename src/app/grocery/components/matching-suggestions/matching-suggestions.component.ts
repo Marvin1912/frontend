@@ -1,19 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow,
-  MatRowDef,
-  MatTable
-} from '@angular/material/table';
-import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -22,23 +9,12 @@ import {catchError, EMPTY, of, switchMap} from 'rxjs';
 import {ArticleMatchingService} from '../../services/article-matching.service';
 import {ArticleGroupSuggestion, MatchingRunResult} from '../../models/article-matching.model';
 import {LlmMatchingConfirmDialogComponent} from '../../dialogs/llm-matching-confirm-dialog/llm-matching-confirm-dialog.component';
+import {groceryDialogConfig} from '../../dialogs/dialog-config';
 
 @Component({
   selector: 'app-matching-suggestions',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    MatTable,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
-    MatButton,
-    MatIconButton,
     MatIcon,
     MatProgressSpinner,
     DecimalPipe
@@ -59,7 +35,6 @@ export class MatchingSuggestionsComponent implements OnInit {
   runningHeuristic = signal(false);
   runningLlm = signal(false);
   lastRunResult = signal<MatchingRunResult | null>(null);
-  displayedColumns = ['name', 'group', 'score', 'source', 'actions'];
 
   ngOnInit(): void {
     this.load();
@@ -81,6 +56,14 @@ export class MatchingSuggestionsComponent implements OnInit {
 
   scorePercent(suggestion: ArticleGroupSuggestion): number {
     return suggestion.score * 100;
+  }
+
+  sourceLabel(suggestion: ArticleGroupSuggestion): string {
+    return suggestion.source === 'LLM' ? 'LLM' : 'Heuristik';
+  }
+
+  sourceBadge(suggestion: ArticleGroupSuggestion): string {
+    return suggestion.source === 'LLM' ? 'ui-badge--violet' : 'ui-badge--sky';
   }
 
   accept(suggestion: ArticleGroupSuggestion): void {
@@ -125,7 +108,7 @@ export class MatchingSuggestionsComponent implements OnInit {
   }
 
   openLlmConfirm(): void {
-    const ref = this.dialog.open(LlmMatchingConfirmDialogComponent);
+    const ref = this.dialog.open(LlmMatchingConfirmDialogComponent, groceryDialogConfig());
     ref.afterClosed().pipe(
       switchMap(result => {
         if (result !== 'confirmed') {

@@ -1,62 +1,88 @@
-<div class="dashboard">
+<div class="ui-container page">
 
-  <header class="dashboard__header">
-    <p class="dashboard__greeting">{{ greeting }}</p>
-    <div class="dashboard__week">
-      <span class="grocery-amount dashboard__week-amount">
-        {{ weekTotal | currency:'EUR':'symbol':'1.2-2':'de' }}
-      </span>
-      <span class="grocery-text-muted dashboard__week-label">diese Woche</span>
+  <section class="ui-panel ui-panel--orange" aria-labelledby="week-title">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label" id="week-title"><span class="ui-panel-dot"></span>Diese Woche</h2>
+      <span class="panel-stat">{{ greeting }}</span>
+    </div>
+    <div class="ui-panel-body week">
+      <span class="amount week__amount">{{ weekTotal | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
       @if (weekDeltaPercent !== null) {
-        <span class="grocery-badge" [class.grocery-badge--up]="weekDeltaUp" [class.grocery-badge--down]="!weekDeltaUp">
-          {{ weekDeltaUp ? '▲' : '▼' }} {{ weekDeltaPercent | number:'1.0-0' }}%
+        <span class="ui-badge" [class.ui-badge--amber]="weekDeltaUp" [class.ui-badge--green]="!weekDeltaUp">
+          <span aria-hidden="true">{{ weekDeltaUp ? '▲' : '▼' }}</span>
+          <span class="sr-only">{{ weekDeltaUp ? 'mehr' : 'weniger' }}</span>
+          {{ weekDeltaPercent | number:'1.0-0':'de' }} %
         </span>
+        <span class="week__hint">ggü. Vorwoche</span>
       }
     </div>
-  </header>
+  </section>
 
-  <section class="dashboard__section">
-    <h2 class="dashboard__section-title">Letzte Bons</h2>
-    @if (recentReceipts.length > 0) {
-      <div class="recent-receipts">
-        @for (receipt of recentReceipts; track receipt.id) {
-          <button type="button" class="grocery-card recent-receipts__item" (click)="navigateToReceipt(receipt)">
-            <span class="grocery-text-muted recent-receipts__date">
-              {{ (receipt.receiptDate ?? receipt.creationDate) | date:'dd.MM.yyyy' }}
-            </span>
-            <span class="grocery-amount recent-receipts__amount">
-              @if (receipt.totalAmount !== null) {
-                {{ receipt.totalAmount | currency:'EUR':'symbol':'1.2-2':'de' }}
-              } @else {
-                —
-              }
-            </span>
-          </button>
-        }
+  <section class="ui-panel ui-panel--amber" aria-labelledby="recent-title">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label" id="recent-title"><span class="ui-panel-dot"></span>Letzte Bons</h2>
+      <a class="ui-btn-icon" routerLink="/grocery/receipts" aria-label="Alle Bons anzeigen">
+        <mat-icon aria-hidden="true">chevron_right</mat-icon>
+      </a>
+    </div>
+    @if (loading) {
+      <div class="ui-empty" role="status"><mat-spinner diameter="24" /><p class="m-0">Lade Bons…</p></div>
+    } @else if (recentReceipts.length > 0) {
+      <div class="ui-panel-body">
+        <ul class="recent">
+          @for (receipt of recentReceipts; track receipt.id) {
+            <li>
+              <a class="recent__item" [routerLink]="['/grocery/receipts', receipt.id, 'items']">
+                <span class="recent__date">{{ (receipt.receiptDate ?? receipt.creationDate) | date:'dd.MM.yyyy' }}</span>
+                <span class="amount recent__amount">
+                  @if (receipt.totalAmount !== null) {
+                    {{ receipt.totalAmount | currency:'EUR':'symbol':'1.2-2':'de' }}
+                  } @else {
+                    —
+                  }
+                </span>
+                @if (supermarketOf(receipt); as market) {
+                  <span class="ui-badge ui-badge--{{ market.palette }} recent__market">{{ market.label }}</span>
+                }
+              </a>
+            </li>
+          }
+        </ul>
       </div>
-    } @else if (!loading) {
-      <p class="grocery-text-muted dashboard__empty">Noch keine Bons hochgeladen.</p>
+    } @else {
+      <div class="ui-empty" role="status"><p class="m-0">Noch keine Bons hochgeladen.</p></div>
     }
   </section>
 
-  <section class="dashboard__section">
-    <h2 class="dashboard__section-title">Preis-Auffälligkeiten</h2>
-    @if (priceHighlights.length > 0) {
-      <div class="price-highlights">
+  <section class="ui-panel ui-panel--rose" aria-labelledby="highlights-title">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label" id="highlights-title"><span class="ui-panel-dot"></span>Preis-Auffälligkeiten</h2>
+      <a class="ui-btn-icon" routerLink="/grocery/price-trends" aria-label="Alle Preisverläufe anzeigen">
+        <mat-icon aria-hidden="true">chevron_right</mat-icon>
+      </a>
+    </div>
+    @if (loading) {
+      <div class="ui-empty" role="status"><mat-spinner diameter="24" /><p class="m-0">Lade Preise…</p></div>
+    } @else if (priceHighlights.length > 0) {
+      <ul class="list">
         @for (summary of priceHighlights; track summary.groupId) {
-          <button type="button" class="grocery-card price-highlights__item" (click)="openPriceTrend(summary)">
-            <span class="price-highlights__name">{{ summary.groupName }}</span>
-            <span class="grocery-amount price-highlights__price">
-              {{ summary.latestPrice | currency:'EUR':'symbol':'1.2-2':'de' }}
-            </span>
-            <span class="grocery-badge" [class.grocery-badge--up]="summary.up" [class.grocery-badge--down]="!summary.up">
-              {{ summary.up ? '▲' : '▼' }} {{ summary.percentChange | number:'1.0-1' }}%
-            </span>
-          </button>
+          <li>
+            <button type="button" class="list-row" (click)="openPriceTrend(summary)">
+              <span class="list-row__main">
+                <span class="list-row__title">{{ summary.groupName }}</span>
+              </span>
+              <span class="amount">{{ summary.latestPrice | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
+              <span class="ui-badge" [class.ui-badge--amber]="summary.up" [class.ui-badge--green]="!summary.up">
+                <span aria-hidden="true">{{ summary.up ? '▲' : '▼' }}</span>
+                <span class="sr-only">{{ summary.up ? 'gestiegen' : 'gesunken' }}</span>
+                {{ summary.absPercent | number:'1.0-1':'de' }} %
+              </span>
+            </button>
+          </li>
         }
-      </div>
-    } @else if (!loading) {
-      <p class="grocery-text-muted dashboard__empty">Noch keine Preisverläufe verfügbar.</p>
+      </ul>
+    } @else {
+      <div class="ui-empty" role="status"><p class="m-0">Noch keine Preisverläufe verfügbar.</p></div>
     }
   </section>
 

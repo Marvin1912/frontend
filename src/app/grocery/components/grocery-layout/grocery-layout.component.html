@@ -1,34 +1,46 @@
-<div class="grocery-layout">
-  <main class="content">
-    <router-outlet />
-  </main>
-
-  <nav class="bottom-nav" aria-label="Grocery Navigation">
-    <a class="bottom-nav__item" [routerLink]="homeLink" routerLinkActive="is-active"
-       [routerLinkActiveOptions]="{exact: true}">
+<header class="ui-topbar ui-topbar--orange">
+  <div class="ui-topbar-group">
+    <button type="button" [routerLink]="homeLink()" class="ui-btn-home" aria-label="Zurück">
       <mat-icon>home</mat-icon>
-      <span>Home</span>
+    </button>
+    <span class="ui-topbar-icon" aria-hidden="true"><mat-icon inline>shopping_cart</mat-icon></span>
+    <h1 class="ui-topbar-title">Grocery</h1>
+  </div>
+</header>
+
+<main class="content">
+  <router-outlet />
+</main>
+
+<nav class="bottom-nav" aria-label="Grocery Navigation">
+  <div class="bottom-nav__inner">
+    <a class="bottom-nav__item" routerLink="/grocery" routerLinkActive="is-active" ariaCurrentWhenActive="page"
+       [routerLinkActiveOptions]="{exact: true}">
+      <mat-icon aria-hidden="true">dashboard</mat-icon>
+      <span>Übersicht</span>
     </a>
 
-    <a class="bottom-nav__item" routerLink="/grocery/receipts" routerLinkActive="is-active">
-      <mat-icon>receipt_long</mat-icon>
+    <a class="bottom-nav__item" routerLink="/grocery/receipts" routerLinkActive="is-active" ariaCurrentWhenActive="page">
+      <mat-icon aria-hidden="true">receipt_long</mat-icon>
       <span>Bons</span>
     </a>
 
     <div class="bottom-nav__fab-slot">
-      <button mat-fab class="bottom-nav__fab" routerLink="/grocery/upload" aria-label="Bon scannen">
-        <mat-icon>photo_camera</mat-icon>
-      </button>
+      <a class="bottom-nav__fab" routerLink="/grocery/upload" routerLinkActive="is-active" ariaCurrentWhenActive="page"
+         aria-label="Bon scannen">
+        <mat-icon aria-hidden="true">photo_camera</mat-icon>
+      </a>
     </div>
 
-    <a class="bottom-nav__item" routerLink="/grocery/price-trends" routerLinkActive="is-active">
-      <mat-icon>trending_up</mat-icon>
+    <a class="bottom-nav__item" routerLink="/grocery/price-trends" routerLinkActive="is-active" ariaCurrentWhenActive="page">
+      <mat-icon aria-hidden="true">trending_up</mat-icon>
       <span>Preise</span>
     </a>
 
-    <a class="bottom-nav__item" routerLink="/grocery/more" routerLinkActive="is-active">
-      <mat-icon>more_horiz</mat-icon>
+    <a class="bottom-nav__item" routerLink="/grocery/more" [class.is-active]="moreActive()"
+       [attr.aria-current]="moreActive() ? 'page' : null">
+      <mat-icon aria-hidden="true">more_horiz</mat-icon>
       <span>Mehr</span>
     </a>
-  </nav>
-</div>
+  </div>
+</nav>
