@@ -1,51 +1,34 @@
-<div class="bookings">
-  <div class="bookings__scroll">
+@for (s of summaries(); track s.key) {
+  <details class="ui-panel month" [class.ui-panel--green]="s.difference >= 0" [class.ui-panel--rose]="s.difference < 0">
 
-    <mat-accordion multi>
-      @for (booking of bookings?.bookingsPerMonth; track $index) {
-        <mat-expansion-panel class="booking-panel">
+    <summary class="ui-panel-head month__head">
+      <h2 class="ui-panel-label month__label">
+        <span class="ui-panel-dot"></span>{{ s.label }}
+      </h2>
+      <span class="month__stats">
+        <span class="ui-badge ui-badge--amber">
+          <span class="stat-key">Ausgaben</span>{{ s.expenses | number: '1.2-2' : 'de' }}
+        </span>
+        <span class="ui-badge ui-badge--green">
+          <span class="stat-key">Einnahmen</span>{{ s.income | number: '1.2-2' : 'de' }}
+        </span>
+        <span class="ui-badge" [class.ui-badge--blue]="s.difference >= 0" [class.ui-badge--rose]="s.difference < 0">
+          <span class="stat-key">Differenz</span>{{ s.difference | number: '1.2-2' : 'de' }}
+        </span>
+      </span>
+      <mat-icon class="month__chevron" aria-hidden="true">expand_more</mat-icon>
+    </summary>
 
-          <!-- ── Panel Header ──────────────────────────────── -->
-          <mat-expansion-panel-header class="panel__header">
-            <mat-panel-title class="panel__title">
-              <span class="panel__dot"></span>
-              <span class="panel__month">{{ booking.year }}-{{ booking.month }}</span>
-            </mat-panel-title>
-            <mat-panel-description class="panel__stats">
-              <span class="stat stat--neutral">
-                <span class="stat__key">Ausgaben</span>
-                <span class="stat__val">{{ getTotalAmount(booking) | number: '.2' : 'de' }}</span>
-              </span>
-              <span class="stat stat--income">
-                <span class="stat__key">Einnahmen</span>
-                <span class="stat__val">{{ getIncomeAmount(booking) | number: '.2' : 'de' }}</span>
-              </span>
-              <span class="stat"
-                    [class.stat--positive]="getEarningsDifference(booking) >= 0"
-                    [class.stat--negative]="getEarningsDifference(booking) < 0">
-                <span class="stat__key">Differenz</span>
-                <span class="stat__val">{{ getEarningsDifference(booking) | number: '.2' : 'de' }}</span>
-              </span>
-            </mat-panel-description>
-          </mat-expansion-panel-header>
+    <div class="month__body">
+      <app-table title="Generelle Buchungen" category="usualBookings" [bookings]="s.month.usualBookings"
+                 (itemRemoved)="onItemRemoved($event, s.month)"></app-table>
+      <div class="month__col">
+        <app-table title="Täglicher Bedarf" category="dailyCosts" [bookings]="s.month.dailyCosts"
+                   (itemRemoved)="onItemRemoved($event, s.month)"></app-table>
+        <app-table title="Einkommen" category="incomes" [bookings]="s.month.incomes"
+                   (itemRemoved)="onItemRemoved($event, s.month)"></app-table>
+      </div>
+    </div>
 
-          <!-- ── Panel Body ────────────────────────────────── -->
-          <div class="panel__body">
-            <div class="panel__col">
-              <app-table title="Generelle Buchungen" [bookings]="booking.usualBookings"
-                         (itemRemoved)="onItemRemoved($event, booking)"></app-table>
-            </div>
-            <div class="panel__col panel__col--split">
-              <app-table title="Täglicher Bedarf" [bookings]="booking.dailyCosts"
-                         (itemRemoved)="onItemRemoved($event, booking)"></app-table>
-              <app-table title="Einkommen" [bookings]="booking.incomes"
-                         (itemRemoved)="onItemRemoved($event, booking)"></app-table>
-            </div>
-          </div>
-
-        </mat-expansion-panel>
-      }
-    </mat-accordion>
-
-  </div>
-</div>
+  </details>
+}
