@@ -1,13 +1,9 @@
 import {ChangeDetectorRef, Component, HostListener, Inject, OnDestroy, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatCardModule} from '@angular/material/card';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
+import {CdkTrapFocus} from '@angular/cdk/a11y';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
 import {Router} from '@angular/router';
@@ -23,13 +19,9 @@ import {ArithmeticService} from '../../services/arithmetic.service';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
+    CdkTrapFocus,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatProgressBarModule,
     MatDialogModule,
     MatSnackBarModule
   ],
@@ -59,6 +51,9 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
 
   // Loading state
   isLoading: boolean = false;
+
+  // Ziffernblock ohne letzte Zeile (+/-, 0, Backspace)
+  readonly padDigits = ['7', '8', '9', '4', '5', '6', '1', '2', '3'];
 
   constructor(
     private arithmeticService: ArithmeticService,
@@ -340,10 +335,9 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
 
   endSession(): void {
     const dialogRef = this.dialog.open(EndSessionDialogComponent, {
-      width: '350px',
-      panelClass: 'end-session-dialog',
-      backdropClass: 'dialog-backdrop',
-      disableClose: false,
+      panelClass: 'ui-dialog-pane',
+      maxWidth: 'calc(100vw - 32px)',
+      autoFocus: 'dialog',
       data: {
         currentScore: this.currentSession?.score || 0,
         problemsCompleted: this.currentSession?.problemsCompleted || 0,
@@ -397,11 +391,16 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
     return (this.currentSession.problemsCompleted / this.currentSession.totalProblems) * 100;
   }
 
-  getProgressColor(): string {
-    if (!this.currentSession) return 'primary';
-    if (this.currentSession.accuracy >= 80) return 'primary';
-    if (this.currentSession.accuracy >= 60) return 'accent';
-    return 'warn';
+  getProgressColor(): 'good' | 'medium' | 'low' {
+    if (!this.currentSession) return 'good';
+    if (this.currentSession.accuracy >= 80) return 'good';
+    if (this.currentSession.accuracy >= 60) return 'medium';
+    return 'low';
+  }
+
+  get answerInvalid(): boolean {
+    const control = this.answerForm.get('userAnswer');
+    return !!control && control.invalid && (control.dirty || control.touched);
   }
 
   // Getters for template
@@ -440,6 +439,8 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   // Keyboard shortcuts
   onKeydown(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
+      // Enter auf Buttons (z. B. "Fortsetzen" im Pause-Overlay) normal auslösen
+      if (this.isPaused || event.target instanceof HTMLButtonElement) return;
       event.preventDefault();
       if (!this.answerForm.disabled) {
         this.onSubmitAnswer();
@@ -453,32 +454,45 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   appendNumber(digit: string): void {
     if (this.answerForm.disabled) return;
 
-    const currentValue = this.answerForm.get('userAnswer')?.value || '';
+    const currentValue = this.currentAnswerText();
     const newValue = currentValue + digit;
 
     // Handle leading zeros
     const cleanValue = newValue === '0' ? '0' : newValue.replace(/^0+/, '') || '0';
 
-    this.answerForm.get('userAnswer')?.setValue(cleanValue);
+    this.setAnswerFromPad(cleanValue);
   }
 
   backspace(): void {
     if (this.answerForm.disabled) return;
 
-    const currentValue = this.answerForm.get('userAnswer')?.value || '';
+    const currentValue = this.currentAnswerText();
     const newValue = currentValue.slice(0, -1);
-    this.answerForm.get('userAnswer')?.setValue(newValue || '');
+    // Ein einzelnes "-" kann input[type=number] nicht darstellen
+    this.setAnswerFromPad(newValue === '-' ? '' : newValue);
   }
 
   toggleNegative(): void {
     if (this.answerForm.disabled) return;
 
-    const currentValue = this.answerForm.get('userAnswer')?.value || '';
+    const currentValue = this.currentAnswerText();
     if (currentValue.startsWith('-')) {
-      this.answerForm.get('userAnswer')?.setValue(currentValue.substring(1));
+      this.setAnswerFromPad(currentValue.substring(1));
     } else if (currentValue !== '0' && currentValue !== '') {
-      this.answerForm.get('userAnswer')?.setValue('-' + currentValue);
+      this.setAnswerFromPad('-' + currentValue);
     }
+  }
+
+  // input[type=number] liefert eine Zahl (oder null), der Ziffernblock arbeitet mit Text
+  private currentAnswerText(): string {
+    const value = this.answerForm.get('userAnswer')?.value;
+    return value === null || value === undefined ? '' : String(value);
+  }
+
+  private setAnswerFromPad(value: string): void {
+    const control = this.answerForm.get('userAnswer');
+    control?.setValue(value);
+    control?.markAsDirty();
   }
 
   // Navigation methods
@@ -509,123 +523,81 @@ export class ArithmeticSessionComponent implements OnInit, OnDestroy {
   standalone: true,
   imports: [
     MatDialogModule,
-    MatButtonModule,
     MatIconModule
   ],
   template: `
-    <div class="dialog-container">
-      <h2 mat-dialog-title>Training beenden</h2>
+    <div class="ui-dialog end-dialog">
+      <h2 class="ui-dialog-title">Training beenden</h2>
 
-      <mat-dialog-content>
-        <p>Möchten Sie die Trainingseinheit wirklich beenden?</p>
+      <p class="m-0">Möchten Sie die Trainingseinheit wirklich beenden?</p>
 
-        @if (data) {
-          <div class="session-stats">
-            <p><strong>Aktueller Punktestand:</strong> {{ data.currentScore }}</p>
-            <p><strong>Gelöste Aufgaben:</strong> {{ data.problemsCompleted }} / {{ data.totalProblems }}</p>
-          </div>
-        }
+      @if (data) {
+        <dl class="session-stats">
+          <div><dt>Aktueller Punktestand</dt><dd>{{ data.currentScore }}</dd></div>
+          <div><dt>Gelöste Aufgaben</dt><dd>{{ data.problemsCompleted }} / {{ data.totalProblems }}</dd></div>
+        </dl>
+      }
 
-        <p class="warning-text">Ihr bisheriger Fortschritt wird gespeichert.</p>
-      </mat-dialog-content>
+      <p class="hint">Ihr bisheriger Fortschritt wird gespeichert.</p>
 
-      <mat-dialog-actions align="center">
-        <button mat-button
-          (click)="dialogRef.close('confirm')"
-          class="confirm-button">
-          <mat-icon>check_circle</mat-icon>
+      <div class="ui-dialog-actions">
+        <button type="button" class="ui-btn ui-btn--rose" [mat-dialog-close]="'confirm'">
+          <mat-icon aria-hidden="true">stop</mat-icon>
           Beenden
         </button>
-        <button mat-button
-          (click)="dialogRef.close()"
-          class="cancel-button">
-          <mat-icon>close</mat-icon>
+        <button type="button" class="ui-btn ui-btn--green" mat-dialog-close>
+          <mat-icon aria-hidden="true">play_arrow</mat-icon>
           Weitermachen
         </button>
-      </mat-dialog-actions>
+      </div>
     </div>
     `,
   changeDetection: ChangeDetectionStrategy.Eager,
   styles: [`
-    .dialog-container {
-      padding: 20px;
-      text-align: center;
-      min-width: 300px;
-      background: #0c1018;
-      color: #c8d4e8;
-    }
-
-    h2 {
-      color: #a78bfa;
-      margin-bottom: 20px;
+    .end-dialog {
+      max-width: 400px;
     }
 
     .session-stats {
-      background-color: #111826;
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      padding: 15px;
-      border-radius: 8px;
-      margin: 15px 0;
-      text-align: left;
-    }
-
-    .session-stats p {
-      margin: 8px 0;
-      color: #c8d4e8;
-    }
-
-    .warning-text {
-      color: #7a93b0;
-      font-style: italic;
-      margin: 15px 0;
-    }
-
-    mat-dialog-actions {
       display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 20px;
+      flex-direction: column;
+      gap: var(--ui-space-2);
+      margin: var(--ui-space-4) 0 0;
+      padding: var(--ui-space-3) var(--ui-space-4);
+      background: var(--raised);
+      border: 1px solid var(--border);
+      border-radius: var(--ui-radius);
     }
 
-    .confirm-button {
-      background-color: rgba(251, 113, 133, 0.15);
-      border: 1px solid rgba(251, 113, 133, 0.3);
-      color: #fb7185;
-      border-radius: 20px;
-      padding: 8px 16px;
+    .session-stats div {
       display: flex;
-      align-items: center;
-      gap: 8px;
+      justify-content: space-between;
+      gap: var(--ui-space-4);
     }
 
-    .confirm-button:hover {
-      background-color: rgba(251, 113, 133, 0.25);
+    .session-stats dd {
+      margin: 0;
+      color: var(--text);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
     }
 
-    .cancel-button {
-      background-color: rgba(34, 211, 94, 0.15);
-      border: 1px solid rgba(34, 211, 94, 0.3);
-      color: #22d35e;
-      border-radius: 20px;
-      padding: 8px 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    .hint {
+      margin: var(--ui-space-3) 0 0;
+      color: var(--text-dim);
+      font-size: var(--ui-text-sm);
     }
 
-    .cancel-button:hover {
-      background-color: rgba(34, 211, 94, 0.25);
-    }
-
-    mat-icon {
-      width: 20px;
-      height: 20px;
+    .ui-btn mat-icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      font-size: 18px;
     }
   `]
 })
 export class EndSessionDialogComponent {
   constructor(
-    public dialogRef: MatDialogRef<EndSessionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: {
       currentScore: number;
       problemsCompleted: number;

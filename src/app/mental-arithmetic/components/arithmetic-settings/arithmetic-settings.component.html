@@ -1,150 +1,101 @@
-<div class="box-border min-h-[calc(100vh-64px)] p-2 min-[481px]:p-3 md:p-6">
-  <div class="mx-auto w-full md:w-2/3 lg:w-1/2">
-    <mat-card class="settings-card">
-      <mat-card-header>
-        <mat-card-title class="text-center">
-          <h2>Einstellungen</h2>
-        </mat-card-title>
-      </mat-card-header>
+<div class="ui-container settings-page">
+  <section class="ui-panel ui-panel--violet">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Einstellungen</h2>
+    </div>
 
-      <mat-card-content>
-        <form [formGroup]="settingsForm" class="settings-form">
+    <form [formGroup]="settingsForm" class="ui-panel-body settings-form" (ngSubmit)="onStartTraining()">
 
-          <!-- Operations Selection -->
-          <div class="section">
-            <h3 class="section-title">Rechenarten</h3>
-            <div formGroupName="operations" class="operations-group">
-              <mat-checkbox
-                formControlName="addition"
-                class="operation-checkbox">
-                <mat-icon>add</mat-icon>
-                <span>Addition</span>
-              </mat-checkbox>
+      <!-- Rechenarten -->
+      <fieldset class="section" formGroupName="operations"
+                [attr.aria-describedby]="operationsError() ? 'operations-error' : null">
+        <legend class="section-title">Rechenarten</legend>
+        <div class="option-group">
+          <label class="option-tile">
+            <input type="checkbox" formControlName="addition">
+            <mat-icon aria-hidden="true">add</mat-icon>
+            <span class="option-label">Addition</span>
+          </label>
+          <label class="option-tile">
+            <input type="checkbox" formControlName="subtraction">
+            <mat-icon aria-hidden="true">remove</mat-icon>
+            <span class="option-label">Subtraktion</span>
+          </label>
+        </div>
+        @if (operationsError()) {
+          <p id="operations-error" class="field-error" role="alert">{{ operationsError() }}</p>
+        }
+      </fieldset>
 
-              <mat-checkbox
-                formControlName="subtraction"
-                class="operation-checkbox">
-                <mat-icon>remove</mat-icon>
-                <span>Subtraktion</span>
-              </mat-checkbox>
-            </div>
-            @if (getErrorMessage()) {
-              <mat-error class="error-message">
-                {{ getErrorMessage() }}
-              </mat-error>
-            }
-          </div>
+      <!-- Schwierigkeitsgrad -->
+      <fieldset class="section">
+        <legend class="section-title">Schwierigkeitsgrad</legend>
+        <div class="option-group">
+          <label class="option-tile">
+            <input type="radio" formControlName="difficulty" [value]="Difficulty.EASY">
+            <span class="option-text">
+              <span class="option-label">Einfach</span>
+              <span class="option-desc">2-stellige Zahlen (10-99)</span>
+            </span>
+          </label>
+          <label class="option-tile">
+            <input type="radio" formControlName="difficulty" [value]="Difficulty.MEDIUM">
+            <span class="option-text">
+              <span class="option-label">Mittel</span>
+              <span class="option-desc">3-stellige Zahlen (100-999)</span>
+            </span>
+          </label>
+          <label class="option-tile">
+            <input type="radio" formControlName="difficulty" [value]="Difficulty.HARD">
+            <span class="option-text">
+              <span class="option-label">Schwer</span>
+              <span class="option-desc">4-stellige Zahlen (1000-9999)</span>
+            </span>
+          </label>
+        </div>
+      </fieldset>
 
-          <!-- Difficulty Selection -->
-          <div class="section">
-            <h3 class="section-title">Schwierigkeitsgrad</h3>
-            <mat-radio-group
-              formControlName="difficulty"
-              class="difficulty-group">
-              <mat-radio-button
-                [value]="Difficulty.EASY"
-                class="difficulty-option">
-                <div class="difficulty-content">
-                  <span class="difficulty-label">Einfach</span>
-                  <span class="difficulty-desc">2-stellige Zahlen (10-99)</span>
-                </div>
-              </mat-radio-button>
-
-              <mat-radio-button
-                [value]="Difficulty.MEDIUM"
-                class="difficulty-option">
-                <div class="difficulty-content">
-                  <span class="difficulty-label">Mittel</span>
-                  <span class="difficulty-desc">3-stellige Zahlen (100-999)</span>
-                </div>
-              </mat-radio-button>
-
-              <mat-radio-button
-                [value]="Difficulty.HARD"
-                class="difficulty-option">
-                <div class="difficulty-content">
-                  <span class="difficulty-label">Schwer</span>
-                  <span class="difficulty-desc">4-stellige Zahlen (1000-9999)</span>
-                </div>
-              </mat-radio-button>
-            </mat-radio-group>
-          </div>
-
-          <!-- Time Limit -->
-          <div class="section">
-            <h3 class="section-title">Zeitbegrenzung (optional)</h3>
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Zeit in Minuten</mat-label>
-              <input
-                matInput
-                type="number"
-                formControlName="timeLimit"
-                min="1"
-                max="60"
-                placeholder="z.B. 15">
-              <mat-icon matSuffix>timer</mat-icon>
-              <mat-hint>Leer lassen für keine Zeitbegrenzung</mat-hint>
-              @if (settingsForm.get('timeLimit')?.invalid && settingsForm.get('timeLimit')?.touched) {
-                <mat-error>
-                  Zeit muss zwischen 1 und 60 Minuten liegen
-                </mat-error>
-              }
-            </mat-form-field>
-          </div>
-
-          <!-- Problem Count -->
-          <div class="section">
-            <h3 class="section-title">Anzahl der Aufgaben</h3>
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Anzahl Aufgaben</mat-label>
-              <input
-                matInput
-                type="number"
-                formControlName="problemCount"
-                min="5"
-                max="50"
-                placeholder="Anzahl zwischen 5 und 50">
-              <mat-icon matSuffix>assignment</mat-icon>
-              <mat-hint>Wählen Sie zwischen 5 und 50 Aufgaben</mat-hint>
-              @if (settingsForm.get('problemCount')?.invalid && settingsForm.get('problemCount')?.touched) {
-                <mat-error>
-                  Anzahl muss zwischen 5 und 50 liegen
-                </mat-error>
-              }
-            </mat-form-field>
-          </div>
-
-          <!-- Form Validation Error Summary -->
-          @if (settingsForm.invalid && settingsForm.touched) {
-            <div class="validation-summary">
-              <mat-icon class="error-icon">error</mat-icon>
-              <span class="error-text">{{ getErrorMessage() }}</span>
-            </div>
+      <!-- Zeitbegrenzung und Anzahl -->
+      <div class="section number-fields">
+        <div>
+          <label class="ui-input-label" for="ma-time-limit">Zeitbegrenzung in Minuten (optional)</label>
+          <input id="ma-time-limit" class="ui-input ui-input--violet" type="number"
+                 formControlName="timeLimit" min="1" max="60" placeholder="z.B. 15"
+                 aria-describedby="ma-time-limit-hint"
+                 [attr.aria-invalid]="isInvalid('timeLimit')">
+          @if (isInvalid('timeLimit')) {
+            <p id="ma-time-limit-hint" class="field-error">Zeit muss zwischen 1 und 60 Minuten liegen</p>
+          } @else {
+            <p id="ma-time-limit-hint" class="field-hint">Leer lassen für keine Zeitbegrenzung</p>
           }
+        </div>
 
-        </form>
-      </mat-card-content>
+        <div>
+          <label class="ui-input-label" for="ma-problem-count">Anzahl der Aufgaben</label>
+          <input id="ma-problem-count" class="ui-input ui-input--violet" type="number"
+                 formControlName="problemCount" min="5" max="50" placeholder="5 – 50"
+                 aria-describedby="ma-problem-count-hint"
+                 [attr.aria-invalid]="isInvalid('problemCount')">
+          @if (isInvalid('problemCount')) {
+            <p id="ma-problem-count-hint" class="field-error">
+              {{ settingsForm.get('problemCount')?.hasError('required') ? 'Anzahl der Aufgaben ist erforderlich' : 'Anzahl muss zwischen 5 und 50 liegen' }}
+            </p>
+          } @else {
+            <p id="ma-problem-count-hint" class="field-hint">Zwischen 5 und 50 Aufgaben</p>
+          }
+        </div>
+      </div>
 
-      <mat-card-actions class="action-buttons">
-        <button
-          mat-button
-          (click)="onSaveSettings()"
-          [disabled]="settingsForm.invalid"
-          class="save-button">
-          <mat-icon>save</mat-icon>
+      <div class="action-buttons">
+        <button type="button" class="ui-btn" (click)="onSaveSettings()" [disabled]="settingsForm.invalid">
+          <mat-icon aria-hidden="true">save</mat-icon>
           Einstellungen speichern
         </button>
-
-        <button
-          mat-raised-button
-          color="primary"
-          (click)="onStartTraining()"
-          [disabled]="settingsForm.invalid"
-          class="start-button">
-          <mat-icon>play_arrow</mat-icon>
+        <button type="submit" class="ui-btn ui-btn--violet" [disabled]="settingsForm.invalid">
+          <mat-icon aria-hidden="true">play_arrow</mat-icon>
           Training starten
         </button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+      </div>
+    </form>
+  </section>
 </div>

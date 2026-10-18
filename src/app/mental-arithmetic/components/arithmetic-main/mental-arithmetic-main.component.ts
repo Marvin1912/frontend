@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
-import {Router, RouterLink} from "@angular/router";
+import {RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-mental-arithmetic-main',
@@ -9,11 +9,4 @@ import {Router, RouterLink} from "@angular/router";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MentalArithmeticMainComponent {
-
-  constructor(private router: Router) {}
-
-  onStartTraining(): void {
-    this.router.navigate(['/mental-arithmetic/session']);
-  }
-
 }
