@@ -3,24 +3,10 @@ import {Subject} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
 import {VocabularyService} from '../../services/vocabulary.service';
 import {Flashcard} from '../../model/Flashcard';
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow,
-  MatRowDef,
-  MatTable,
-  MatTableDataSource
-} from '@angular/material/table';
+import {MatTableDataSource} from '@angular/material/table';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatSort, MatSortHeader} from '@angular/material/sort';
-import {MatFormField} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
-import {MatLabel, MatOption, MatSelect, MatSelectChange} from '@angular/material/select';
+import {MatIcon} from '@angular/material/icon';
 import {MatCheckbox} from '@angular/material/checkbox';
 import {FormsModule} from '@angular/forms';
 
@@ -57,25 +43,11 @@ function applyFilter(flashcard: Flashcard, filter: string, value: string): boole
 @Component({
   selector: 'vocabulary-list',
   imports: [
-    MatCell,
-    MatCellDef,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatLabel,
-    MatRowDef,
-    MatTable,
-    MatHeaderCellDef,
     MatSortHeader,
     MatSort,
-    MatFormField,
-    MatInput,
+    MatIcon,
     MatCheckbox,
-    FormsModule,
-    MatSelect,
-    MatOption
+    FormsModule
   ],
   templateUrl: './vocabulary-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
@@ -86,7 +58,8 @@ export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy
   @ViewChild(MatSort) sort: MatSort | null = null;
 
   flashcards: MatTableDataSource<Flashcard> = new MatTableDataSource();
-  displayedColumns: string[] = ['deck', 'front', 'back', 'description', 'ankiId'];
+  // Gefilterte und sortierte Zeilen für die native ui-table
+  readonly rows: Signal<Flashcard[]> = toSignal(this.flashcards.connect(), {initialValue: []});
   filters: string[] = [];
 
   readonly withoutArticle: ModelSignal<boolean> = model(false);
@@ -97,6 +70,7 @@ export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy
   readonly filteredCount = signal(0);
   readonly totalCount = signal(0);
   readonly hasActiveFilters = signal(false);
+  readonly loadState = signal<'loading' | 'loaded' | 'error'>('loading');
 
   readonly searchText = signal('');
   readonly selectedDeckId = signal<number | null>(null);
@@ -119,9 +93,11 @@ export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy
           this.flashcards.data = value;
           this.applyStateFromQueryParams();
           this.updateCounts();
+          this.loadState.set('loaded');
         },
         error: err => {
           console.log(err)
+          this.loadState.set('error');
         }
       });
 
@@ -151,6 +127,7 @@ export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngOnDestroy(): void {
+    this.flashcards.disconnect();
     this.destroyed$.next();
     this.destroyed$.complete();
   }
@@ -215,7 +192,10 @@ export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy
     return key in data;
   }
 
-  navigateToWord(id: number) {
+  navigateToWord(id: number | null) {
+    if (id == null) {
+      return;
+    }
     void this.router.navigate(['/vocabulary/add', id]);
   }
 
@@ -233,9 +213,9 @@ export class VocabularyListComponent implements OnInit, AfterViewInit, OnDestroy
     this.searchChanged$.next(word);
   }
 
-  filterDeck(event: MatSelectChange) {
+  filterDeck(deckId: number) {
 
-    let deckId: number = event.value;
+    this.selectedDeckId.set(deckId || null);
 
     this.filters = this.filters.filter(t => !/^deck#[0-9]+$/.test(t));
 

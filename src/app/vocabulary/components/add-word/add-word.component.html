@@ -2,54 +2,46 @@
 
   @if (!isFromRouteCall) {
     <div class="search-section">
+      <label class="ui-input-label" for="word-search">English word</label>
       <div class="search-bar">
-        <mat-form-field appearance="outline">
-          <mat-label>Enter English word</mat-label>
-          <input
-              matInput
-              type="text"
-              autocomplete="off"
-              [(ngModel)]="word"
-              (keyup.enter)="getWord(word)"
-              placeholder="Type a word and press Enter…"
-          >
-        </mat-form-field>
+        <input
+            id="word-search"
+            class="ui-input ui-input--amber"
+            type="text"
+            autocomplete="off"
+            [(ngModel)]="word"
+            (keyup.enter)="getWord(word)"
+            placeholder="Type a word and press Enter…"
+        >
         @if (word) {
           <button
-              mat-icon-button
-              class="icon-btn icon-btn--yellow"
-              aria-label="Search word"
+              class="ui-btn ui-btn--amber"
               (click)="getWord(word)"
               type="button"
           >
-            <mat-icon>search</mat-icon>
+            <mat-icon aria-hidden="true">search</mat-icon>
+            <span>Search</span>
           </button>
         }
       </div>
     </div>
   }
 
-  <div class="add-word-main">
+  @if (wordToShow) {
+    <div class="add-word-main">
 
-    <!-- Dictionary Results Section -->
-    <div class="dictionary-section">
-      @if (wordToShow) {
-        <header class="panel-header">
-          <span class="panel-dot"></span>
-          <span class="panel-label">DICTIONARY — {{ wordToShow }}</span>
-        </header>
-      }
+      <!-- Dictionary Results Section -->
+      <section class="ui-panel ui-panel--amber dictionary-section">
+        <div class="ui-panel-head">
+          <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Dictionary — {{ wordToShow }}</h2>
+        </div>
 
-      @if (wordToShow) {
-      <div class="entries-container">
-        <div class="word-entries-list">
+        <div class="ui-panel-body panel-scroll">
           @for (wordEntry of wordEntries(); track entryIndex; let entryIndex = $index) {
             <div class="word-entry">
               @for (meaning of wordEntry.meanings; track meaningIndex; let meaningIndex = $index) {
                 <div class="meaning-group">
-                  <div class="part-of-speech-header">
-                    <span class="part-of-speech">{{ meaning.partOfSpeech }}</span>
-                  </div>
+                  <span class="ui-badge ui-badge--amber part-of-speech">{{ meaning.partOfSpeech }}</span>
 
                   @for (definition of meaning.definitions; track definitionIndex; let definitionIndex = $index) {
                     <div class="definition-item"
@@ -59,7 +51,9 @@
 
                       <div class="definition-actions">
                         <button
-                            [ngClass]="{selected: isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
+                            class="ui-btn"
+                            [class.ui-btn--amber]="isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))"
+                            [attr.aria-pressed]="isChosen(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))"
                             (click)="setChosenText(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex), definition.definition)"
                             type="button"
                         >
@@ -73,7 +67,9 @@
                         </button>
 
                         <button
-                            [ngClass]="{selected: isChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))}"
+                            class="ui-btn"
+                            [class.ui-btn--amber]="isChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))"
+                            [attr.aria-pressed]="isChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex))"
                             (click)="setChosenForContext(getDefinitionIndex(entryIndex, meaningIndex, definitionIndex), definition.definition)"
                             type="button"
                         >
@@ -93,142 +89,172 @@
             </div>
           }
         </div>
-      </div>
-      }
+      </section>
 
-    </div>
+      <!-- Translation Section -->
+      <section class="ui-panel ui-panel--amber translation-section">
+        <div class="ui-panel-head">
+          <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Translation</h2>
+        </div>
 
-    <!-- Translation Section -->
-    @if (wordToShow) {
-      <div class="translation-section">
-        <header class="panel-header">
-          <span class="panel-dot"></span>
-          <span class="panel-label">TRANSLATION</span>
-        </header>
-
-        <form
-            #wordFormTranslationEl
-            [formGroup]="wordFormTranslation"
-            (ngSubmit)="onSubmitTranslation()"
-        >
-          <mat-form-field appearance="outline">
-            <mat-label>Word</mat-label>
-            <input matInput formControlName="word" autocomplete="off">
-            @if (wordFormTranslation.get('word')?.invalid) {
-              <mat-error>Word is required.</mat-error>
-            }
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Context</mat-label>
-            <input matInput formControlName="context" autocomplete="off">
-            @if (wordFormTranslation.get('context')?.invalid) {
-              <mat-error>Context is required.</mat-error>
-            }
-          </mat-form-field>
-
-          <button
-              mat-flat-button
-              color="primary"
-              [disabled]="isTranslating()"
-              type="submit"
+        <div class="ui-panel-body panel-scroll">
+          <form
+              #wordFormTranslationEl
+              class="word-form"
+              [formGroup]="wordFormTranslation"
+              (ngSubmit)="onSubmitTranslation()"
           >
-            @if (isTranslating()) {
-              <mat-spinner diameter="18" aria-hidden="true"></mat-spinner>
-            } @else {
-              Translate
-            }
-          </button>
-        </form>
-
-        @if (translation()) {
-          <div class="translation-result" aria-live="polite">{{ translation() }}</div>
-        }
-      </div>
-    }
-
-    <!-- Save Word Section -->
-    <div class="save-word-section">
-      @if (wordToShow) {
-        <header class="panel-header">
-          <span class="panel-dot"></span>
-          <span class="panel-label">SAVE WORD</span>
-        </header>
-
-        <div class="save-word-content">
-          <div class="part-of-speech-toggle-group">
-            <mat-button-toggle-group [(ngModel)]="partOfSpeech" name="partOfSpeech">
-              @for (pos of partsOfSpeech; track pos) {
-                <mat-button-toggle
-                    (click)="addArticleToWord(pos)"
-                    [value]="pos"
-                >
-                  {{ pos }}
-                </mat-button-toggle>
+            <div>
+              <label class="ui-input-label" for="translation-word">Word</label>
+              <input id="translation-word" class="ui-input ui-input--amber" formControlName="word" autocomplete="off"
+                     [attr.aria-invalid]="showError(wordFormTranslation, 'word')"
+                     [attr.aria-describedby]="showError(wordFormTranslation, 'word') ? 'translation-word-error' : null">
+              @if (showError(wordFormTranslation, 'word')) {
+                <p id="translation-word-error" class="field-error">Word is required.</p>
               }
-            </mat-button-toggle-group>
-          </div>
+            </div>
+
+            <div>
+              <label class="ui-input-label" for="translation-context">Context</label>
+              <input id="translation-context" class="ui-input ui-input--amber" formControlName="context" autocomplete="off"
+                     [attr.aria-invalid]="showError(wordFormTranslation, 'context')"
+                     [attr.aria-describedby]="showError(wordFormTranslation, 'context') ? 'translation-context-error' : null">
+              @if (showError(wordFormTranslation, 'context')) {
+                <p id="translation-context-error" class="field-error">Context is required.</p>
+              }
+            </div>
+
+            <button
+                class="ui-btn ui-btn--amber form-submit"
+                [disabled]="isTranslating()"
+                type="submit"
+            >
+              @if (isTranslating()) {
+                <mat-spinner diameter="18" aria-hidden="true"></mat-spinner>
+              } @else {
+                <mat-icon aria-hidden="true">translate</mat-icon>
+              }
+              <span>Translate</span>
+            </button>
+          </form>
+
+          @if (translation()) {
+            <div class="ui-alert ui-alert--info translation-result" role="status">{{ translation() }}</div>
+          }
+        </div>
+      </section>
+
+      <!-- Save Word Section -->
+      <section class="ui-panel ui-panel--amber save-word-section">
+        <div class="ui-panel-head">
+          <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Save Word</h2>
+        </div>
+
+        <div class="ui-panel-body panel-scroll">
+          @if (partsOfSpeech.size > 0) {
+            <div class="part-of-speech-group" role="group" aria-label="Part of speech">
+              @for (pos of partsOfSpeech; track pos) {
+                <button
+                    type="button"
+                    class="ui-btn"
+                    [class.ui-btn--amber]="partOfSpeech === pos"
+                    [attr.aria-pressed]="partOfSpeech === pos"
+                    (click)="selectPartOfSpeech(pos)"
+                >{{ pos }}</button>
+              }
+            </div>
+          }
 
           <form
               #wordFormEl
+              class="word-form"
               [formGroup]="wordForm"
               (ngSubmit)="onSubmit()"
           >
-            <mat-form-field appearance="outline">
-              <mat-label>Deck</mat-label>
-              <input matInput formControlName="deck" autocomplete="off">
-              @if (wordForm.get('deck')?.invalid) {
-                <mat-error>Deck is required.</mat-error>
+            <div>
+              <label class="ui-input-label" for="save-deck">Deck</label>
+              <input id="save-deck" class="ui-input ui-input--amber" formControlName="deck" autocomplete="off"
+                     [attr.aria-invalid]="showError(wordForm, 'deck')"
+                     [attr.aria-describedby]="showError(wordForm, 'deck') ? 'save-deck-error' : null">
+              @if (showError(wordForm, 'deck')) {
+                <p id="save-deck-error" class="field-error">Deck is required.</p>
               }
-            </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Front</mat-label>
-              <input matInput formControlName="front" autocomplete="off">
-              @if (wordForm.get('front')?.hasError('required')) {
-                <mat-error>Front is required.</mat-error>
-              } @else if (wordForm.get('front')?.hasError('partOfSpeechIsMissing')) {
-                <mat-error>Please select a part of speech above.</mat-error>
-              } @else if (wordForm.get('front')?.hasError('articleIsMissing')) {
-                <mat-error>Noun must start with "a" or "an".</mat-error>
-              } @else if (wordForm.get('front')?.hasError('toIsMissing')) {
-                <mat-error>Verb must start with "to".</mat-error>
+            <div>
+              <label class="ui-input-label" for="save-front">Front</label>
+              <input id="save-front" class="ui-input ui-input--amber" formControlName="front" autocomplete="off"
+                     [attr.aria-invalid]="showError(wordForm, 'front')"
+                     [attr.aria-describedby]="showError(wordForm, 'front') ? 'save-front-error' : null">
+              @if (showError(wordForm, 'front')) {
+                <p id="save-front-error" class="field-error">
+                  @if (wordForm.get('front')?.hasError('required')) {
+                    Front is required.
+                  } @else if (wordForm.get('front')?.hasError('partOfSpeechIsMissing')) {
+                    Please select a part of speech above.
+                  } @else if (wordForm.get('front')?.hasError('articleIsMissing')) {
+                    Noun must start with "a" or "an".
+                  } @else if (wordForm.get('front')?.hasError('toIsMissing')) {
+                    Verb must start with "to".
+                  }
+                </p>
               }
-            </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Back</mat-label>
-              <input matInput formControlName="back" autocomplete="off">
-              @if (wordForm.get('back')?.invalid) {
-                <mat-error>Back is required.</mat-error>
+            <div>
+              <label class="ui-input-label" for="save-back">Back</label>
+              <input id="save-back" class="ui-input ui-input--amber" formControlName="back" autocomplete="off"
+                     [attr.aria-invalid]="showError(wordForm, 'back')"
+                     [attr.aria-describedby]="showError(wordForm, 'back') ? 'save-back-error' : null">
+              @if (showError(wordForm, 'back')) {
+                <p id="save-back-error" class="field-error">Back is required.</p>
               }
-            </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Description</mat-label>
-              <textarea matInput formControlName="description" rows="3" autocomplete="off"></textarea>
-              @if (wordForm.get('description')?.invalid) {
-                <mat-error>Description is required.</mat-error>
+            <div>
+              <label class="ui-input-label" for="save-description">Description</label>
+              <textarea id="save-description" class="ui-input ui-input--amber" formControlName="description" rows="3" autocomplete="off"
+                        [attr.aria-invalid]="showError(wordForm, 'description')"
+                        [attr.aria-describedby]="showError(wordForm, 'description') ? 'save-description-error' : null"></textarea>
+              @if (showError(wordForm, 'description')) {
+                <p id="save-description-error" class="field-error">Description is required.</p>
               }
-            </mat-form-field>
+            </div>
 
             <button
-                mat-flat-button
-                color="primary"
+                class="ui-btn ui-btn--amber form-submit"
                 [disabled]="isSaving()"
                 type="submit"
             >
               @if (isSaving()) {
                 <mat-spinner diameter="18" aria-hidden="true"></mat-spinner>
               } @else {
-                {{ update() ? 'Update' : 'Save' }}
+                <mat-icon aria-hidden="true">save</mat-icon>
               }
+              <span>{{ update() ? 'Update' : 'Save' }}</span>
             </button>
           </form>
         </div>
+      </section>
+
+    </div>
+  } @else {
+    @if (flashcardLoadFailed()) {
+      <div class="ui-empty ui-empty--error" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <p class="m-0">Flashcard could not be loaded</p>
+      </div>
+    } @else {
+    <div class="ui-empty" role="status">
+      @if (isFromRouteCall) {
+        <mat-spinner diameter="28" aria-hidden="true"></mat-spinner>
+        <p class="m-0">Loading flashcard…</p>
+      } @else {
+        <mat-icon aria-hidden="true">menu_book</mat-icon>
+        <p class="m-0">Look up an English word to see its definitions.</p>
       }
     </div>
-
-  </div>
+    }
+  }
 
 </div>

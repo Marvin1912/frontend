@@ -1,7 +1,5 @@
 import {Component, ElementRef, OnInit, signal, WritableSignal, DestroyRef, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {VocabularyService} from '../../services/vocabulary.service';
-import {MatInput} from '@angular/material/input';
-import {MatError, MatFormField} from '@angular/material/form-field';
 import {
   AbstractControl,
   FormControl,
@@ -12,15 +10,12 @@ import {
   ValidatorFn,
   Validators
 } from '@angular/forms';
-import {MatIcon, MatIconModule} from '@angular/material/icon';
-import {MatLabel} from '@angular/material/select';
+import {MatIcon} from '@angular/material/icon';
 import {DictionaryEntry} from '../../model/DictionaryEntry';
-import {MatButtonModule} from '@angular/material/button';
 import {ArticleDialogComponent} from '../article-dialog/article-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {Flashcard} from '../../model/Flashcard';
 import {ActivatedRoute} from '@angular/router';
-import {MatButtonToggle, MatButtonToggleGroup} from '@angular/material/button-toggle';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {NgClass} from '@angular/common';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -79,19 +74,11 @@ function validateWordPrefix(
 @Component({
   selector: 'vocabulary-add',
   imports: [
-    MatInput,
     FormsModule,
     MatIcon,
-    MatLabel,
     ReactiveFormsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormField,
-    MatButtonToggleGroup,
-    MatButtonToggle,
     NgClass,
-    MatProgressSpinnerModule,
-    MatError
+    MatProgressSpinnerModule
   ],
   templateUrl: './add-word.component.html',
   styleUrl: './add-word.component.css',
@@ -114,6 +101,7 @@ export class AddWordComponent implements OnInit {
   public chosenForContext: ChosenContextItem[] = [];
   public isTranslating: WritableSignal<boolean> = signal(false);
   public isSaving: WritableSignal<boolean> = signal(false);
+  public flashcardLoadFailed: WritableSignal<boolean> = signal(false);
 
   @ViewChild('wordFormTranslationEl') private wordFormTranslationEl?: ElementRef<HTMLFormElement>;
   @ViewChild('wordFormEl') private wordFormEl?: ElementRef<HTMLFormElement>;
@@ -234,6 +222,7 @@ export class AddWordComponent implements OnInit {
           this.handleFlashcardLoad(flashcard);
         },
         error: err => {
+          this.flashcardLoadFailed.set(true);
           this.showSnackBar(`Getting flashcard failed: ${err.message}`, 10000);
         }
       });
@@ -309,6 +298,16 @@ export class AddWordComponent implements OnInit {
     return partsOfSpeech;
   }
 
+  public selectPartOfSpeech(partOfSpeech: string): void {
+    this.partOfSpeech = partOfSpeech;
+    this.addArticleToWord(partOfSpeech);
+  }
+
+  public showError(form: FormGroup, controlName: string): boolean {
+    const control = form.get(controlName);
+    return !!control && control.invalid && control.touched;
+  }
+
   public addArticleToWord(partOfSpeech: string): void {
     const match = ARTICLE_WORD_PATTERN.exec(this.wordToShow);
 
@@ -333,7 +332,9 @@ export class AddWordComponent implements OnInit {
 
   private openArticleDialog(word: string): void {
     const dialogRef = this.dialog.open(ArticleDialogComponent, {
-      width: '200px',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'ui-dialog-pane',
+      ariaLabelledBy: 'article-dialog-title',
       autoFocus: false
     });
 

@@ -1,14 +1,25 @@
-<mat-dialog-content class="flex-1 flex flex-col justify-center items-center gap-2">
-  @for (deck of decks(); track deck.id) {
-    <div class="deck-row">
-      <span class="deck-row__id">{{ deck.id }}</span>
-      <span class="deck-row__name">{{ deck.name }}</span>
-      <button mat-icon-button class="icon-btn icon-btn--yellow" (click)="openDialog(deck)" [attr.aria-label]="'Rename deck ' + deck.name">
-        <mat-icon>build</mat-icon>
-      </button>
-    </div>
-  }
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button matButton cdkFocusInitial mat-dialog-close>Ok</button>
-</mat-dialog-actions>
+<div class="ui-dialog">
+  <h2 id="deck-management-title" class="ui-dialog-title">Manage Decks</h2>
+
+  <ul class="deck-list">
+    @for (deck of decks(); track deck.id) {
+      <li class="deck-row">
+        <span class="deck-row__id">{{ deck.id }}</span>
+        <span class="deck-row__name">{{ deck.name }}</span>
+        <button type="button" class="ui-btn-icon ui-btn--amber" (click)="openDialog(deck)" [attr.aria-label]="'Rename deck ' + deck.name">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </li>
+    } @empty {
+      @if (loadState() === 'error') {
+        <li class="ui-empty ui-empty--error" role="alert">Decks could not be loaded</li>
+      } @else if (loadState() === 'loaded') {
+        <li class="ui-empty" role="status">No decks yet</li>
+      }
+    }
+  </ul>
+
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn" mat-dialog-close>Close</button>
+  </div>
+</div>

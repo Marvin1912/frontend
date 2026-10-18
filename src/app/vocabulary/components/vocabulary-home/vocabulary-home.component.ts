@@ -1,6 +1,5 @@
 import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
-import {RouterLink, RouterOutlet} from "@angular/router";
-import {MatFabButton} from '@angular/material/button';
+import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {MatIcon} from '@angular/material/icon';
 import {DeckManagementDialog} from "../deck-management-dialog/deck-management-dialog";
 import {MatDialog} from "@angular/material/dialog";
@@ -9,13 +8,14 @@ import {MatDialog} from "@angular/material/dialog";
   selector: 'vocabulary-home',
   imports: [
     RouterLink,
+    RouterLinkActive,
     RouterOutlet,
-    MatFabButton,
     MatIcon
   ],
   templateUrl: './vocabulary-home.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './vocabulary-home.component.css'
+  styleUrl: './vocabulary-home.component.css',
+  host: {class: 'ui-bg'}
 })
 export class VocabularyHomeComponent {
 
@@ -23,9 +23,10 @@ export class VocabularyHomeComponent {
 
   openDialog(): void {
     this.dialog.open(DeckManagementDialog, {
-      width: '800px',
-      height: '600px'
+      width: '560px',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'ui-dialog-pane',
+      ariaLabelledBy: 'deck-management-title'
     });
   }
-
 }

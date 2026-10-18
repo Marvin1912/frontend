@@ -1,42 +1,46 @@
-<div class="page-header">
-  <h1 class="visually-hidden">Vocabulary</h1>
+<header class="ui-topbar ui-topbar--amber sticky top-0 z-10">
+  <div class="ui-topbar-group">
+    <button routerLink="/" class="ui-btn-home" aria-label="Home">
+      <mat-icon>home</mat-icon>
+    </button>
+    <span class="ui-topbar-icon" aria-hidden="true"><mat-icon inline>translate</mat-icon></span>
+    <h1 class="ui-topbar-title">Vocabulary</h1>
+  </div>
+</header>
 
-  <button mat-fab routerLink="/" class="home-fab" aria-label="Home">
-    <mat-icon>home</mat-icon>
+<nav class="navgrid ui-container" aria-label="Vocabulary">
+
+  <a class="ui-navcard ui-navcard--amber ui-navcard--row" routerLink="/vocabulary/add" routerLinkActive="active" ariaCurrentWhenActive="page">
+    <div class="ui-navcard-mark">+</div>
+    <div class="ui-navcard-body">
+      <h2 class="ui-navcard-title">Add Word</h2>
+      <p class="ui-navcard-sub">Look up and save new vocabulary</p>
+    </div>
+    <span class="ui-navcard-arrow" aria-hidden="true">↗</span>
+  </a>
+
+  <a class="ui-navcard ui-navcard--amber ui-navcard--row" routerLink="/vocabulary/list" routerLinkActive="active" ariaCurrentWhenActive="page">
+    <div class="ui-navcard-mark">L</div>
+    <div class="ui-navcard-body">
+      <h2 class="ui-navcard-title">List</h2>
+      <p class="ui-navcard-sub">Browse all flashcards</p>
+    </div>
+    <span class="ui-navcard-arrow" aria-hidden="true">↗</span>
+  </a>
+
+  <button type="button" class="ui-navcard ui-navcard--amber ui-navcard--row" (click)="openDialog()">
+    <div class="ui-navcard-mark">D</div>
+    <div class="ui-navcard-body">
+      <h2 class="ui-navcard-title">Manage Decks</h2>
+      <p class="ui-navcard-sub">Rename and organise decks</p>
+    </div>
+    <span class="ui-navcard-arrow" aria-hidden="true">↗</span>
   </button>
 
-  <div class="navgrid">
+</nav>
 
-    <a class="navcard" routerLink="/vocabulary/add">
-      <div class="navcard__mark">+</div>
-      <div class="navcard__body">
-        <h2 class="navcard__title">Add Word</h2>
-        <p class="navcard__sub">Look up and save new vocabulary</p>
-      </div>
-      <span class="navcard__arrow" aria-hidden="true">↗</span>
-    </a>
-
-    <a class="navcard" routerLink="/vocabulary/list">
-      <div class="navcard__mark">L</div>
-      <div class="navcard__body">
-        <h2 class="navcard__title">List</h2>
-        <p class="navcard__sub">Browse all flashcards</p>
-      </div>
-      <span class="navcard__arrow" aria-hidden="true">↗</span>
-    </a>
-
-    <button type="button" class="navcard navcard--action" (click)="openDialog()">
-      <div class="navcard__mark">D</div>
-      <div class="navcard__body">
-        <h2 class="navcard__title">Manage Decks</h2>
-        <p class="navcard__sub">Rename and organise decks</p>
-      </div>
-      <span class="navcard__arrow" aria-hidden="true">↗</span>
-    </button>
-
+<main class="content-area">
+  <div class="ui-container h-full">
+    <router-outlet></router-outlet>
   </div>
-</div>
-
-<div class="content-area">
-  <router-outlet></router-outlet>
-</div>
+</main>

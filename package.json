@@ -34,7 +34,7 @@
     "rxjs": "7.8.2",
     "tailwindcss": "4.3.3",
     "tslib": "2.8.1",
-    "ui-styles": "github:Marvin1912/ui-styles#9083ba1e196f2174364989b2499a28c7ed43f08b",
+    "ui-styles": "github:Marvin1912/ui-styles#010c10a609e5fba582e7e8b3ba4f110eb2d8b288",
     "zone.js": "0.16.3"
   },
   "devDependencies": {
