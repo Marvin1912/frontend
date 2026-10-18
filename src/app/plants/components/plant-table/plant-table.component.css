@@ -1,188 +1,83 @@
 :host {
   display: block;
-  min-height: 100%;
-  background: var(--bg);
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(34, 211, 94, 0.06) 0%, transparent 70%),
-    radial-gradient(circle at 85% 85%, rgba(77, 166, 255, 0.04) 0%, transparent 50%);
-  background-attachment: fixed;
-  font-family: 'Outfit', sans-serif;
-  color: var(--text);
+}
+
+/* Spinner in ui-empty übernimmt die Textfarbe */
+mat-spinner {
+  --mat-progress-spinner-active-indicator-color: currentColor;
+}
+
+.ui-btn-icon mat-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+/* Bezugsrahmen für die Vorschau; liegt außerhalb des Panels (overflow: hidden) */
+.table-wrap {
   position: relative;
 }
 
-:host::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 28px 28px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.plant-table {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem 4rem;
-  gap: 1rem;
-}
-
-/* Header */
-.table-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.table-header__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--c-p);
-  box-shadow: 0 0 6px var(--c-p);
-  animation: blink 2s ease-in-out infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
-.table-header__label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: var(--text-dim);
-  text-transform: uppercase;
-}
-
-/* Table container */
+/* ── Tabelle ─────────────────────────────────────── */
 .table-container {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  max-height: 75vh;
-  overflow-y: auto;
-  position: relative;
+  overflow-x: auto;
 }
 
-.table-container::-webkit-scrollbar {
-  width: 4px;
-}
-.table-container::-webkit-scrollbar-track {
-  background: var(--surface);
-}
-.table-container::-webkit-scrollbar-thumb {
-  background: var(--border-mid);
-  border-radius: 2px;
+.ui-table {
+  --ui-table-accent: var(--c-p);
 }
 
-/* Material table overrides */
-table {
-  width: 100%;
-  background: transparent !important;
-}
-
-.col-header {
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 0.6rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.12em !important;
-  text-transform: uppercase !important;
-  color: var(--text-dim) !important;
-  background: var(--raised) !important;
-  border-bottom: 1px solid var(--border-mid) !important;
-  height: 36px !important;
-  padding: 0 16px !important;
-}
-
-::ng-deep .mat-mdc-header-row {
-  background: var(--raised) !important;
-}
-
-::ng-deep .mat-mdc-cell {
-  font-size: 0.8rem !important;
-  color: var(--text) !important;
-  background: transparent !important;
-  border-bottom: 1px solid var(--border) !important;
-}
-
-/* Clickable rows */
 .clickable-row {
   cursor: pointer;
-  transition: background-color 0.2s ease;
 }
 
-.clickable-row:hover {
-  background-color: rgba(34, 211, 94, 0.08) !important;
+.clickable-row:focus-visible {
+  outline: 2px solid var(--c-p);
+  outline-offset: -2px;
 }
 
-.clickable-row:hover ::ng-deep .mat-mdc-cell {
-  background-color: transparent !important;
+.col-action {
+  width: 72px;
+  text-align: center;
 }
 
-/* Column widths */
-.mat-column-image,
-.mat-column-delete {
-  width: 10%;
+.cell-name {
+  font-weight: 600;
 }
 
-/* Icon buttons */
-.icon-btn {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 8px !important;
-  border: 1px solid var(--border) !important;
-  background: transparent !important;
-  transition: background 0.2s, border-color 0.2s;
+/* Mobil: Art unter dem Namen statt eigener Spalte */
+.cell-species-inline {
+  display: none;
 }
 
-.icon-btn mat-icon {
-  font-size: 18px !important;
-  width: 18px !important;
-  height: 18px !important;
+@media (max-width: 639px) {
+  .col-species {
+    display: none;
+  }
+
+  .cell-species-inline {
+    display: block;
+    margin-top: .15rem;
+    color: var(--text-muted);
+  }
+
+  .col-action {
+    width: 52px;
+  }
 }
 
-.icon-btn--blue mat-icon {
-  color: var(--c-a) !important;
-}
-
-.icon-btn--blue:hover {
-  background: rgba(77, 166, 255, 0.1) !important;
-  border-color: var(--c-a) !important;
-}
-
-.icon-btn--pink mat-icon {
-  color: var(--c-e) !important;
-}
-
-.icon-btn--pink:hover {
-  background: rgba(251, 113, 133, 0.1) !important;
-  border-color: var(--c-e) !important;
-}
-
-/* Preview container */
+/* ── Vorschau ────────────────────────────────────── */
 .plant-preview-container {
   position: absolute;
-  z-index: 1000;
-  pointer-events: auto;
-  animation: fadeInScale 0.2s ease-out;
+  z-index: 20;
+  animation: fadeInScale .2s ease-out;
 }
 
 @keyframes fadeInScale {
   from {
     opacity: 0;
-    transform: translateY(-10px) scale(0.95);
+    transform: translateY(-10px) scale(.95);
   }
   to {
     opacity: 1;
@@ -190,24 +85,15 @@ table {
   }
 }
 
-/* Mobile: weniger Außenabstand, damit Image- und Delete-Spalte sichtbar bleiben */
-@media (max-width: 768px) {
-  .plant-table {
-    padding: 1rem;
+@media (prefers-reduced-motion: reduce) {
+  .plant-preview-container {
+    animation: none;
   }
+}
 
-  .table-container {
-    overflow-x: auto;
-  }
-
-  .mat-mdc-header-cell,
-  .mat-mdc-cell {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
-
-  .mat-column-image,
-  .mat-column-delete {
-    width: 56px;
+/* Touch-Geräte: kein Hover, also keine Vorschau */
+@media (hover: none) {
+  .plant-preview-container {
+    display: none;
   }
 }

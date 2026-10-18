@@ -11,7 +11,7 @@ import {environment} from '../../../../environments/environment';
     MatIcon
   ],
   templateUrl: './plant-preview.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './plant-preview.component.css'
 })
 export class PlantPreviewComponent implements OnChanges {

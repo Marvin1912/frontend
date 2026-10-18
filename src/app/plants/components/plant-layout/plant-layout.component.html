@@ -1,37 +1,30 @@
-<div class="plant-layout">
-  <header class="topbar">
-    <div class="topbar__left">
-      <button [routerLink]="homeLink" class="ui-btn-home" aria-label="Go home">
-        <mat-icon>home</mat-icon>
+<header class="ui-topbar ui-topbar--green sticky top-0 z-10">
+  <div class="ui-topbar-group">
+    <button type="button" [routerLink]="homeLink()" class="ui-btn-home" aria-label="Go home">
+      <mat-icon>home</mat-icon>
+    </button>
+    <button type="button" [matMenuTriggerFor]="menu" class="ui-btn-home" aria-label="Open menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" class="ui-menu-panel">
+      <button mat-menu-item routerLink="/plant-root/gallery">
+        <span>Plants</span>
       </button>
-      <button [matMenuTriggerFor]="menu" class="ui-btn-home" aria-label="Open menu">
-        <mat-icon>more_vert</mat-icon>
+      <button mat-menu-item routerLink="/plant-root/management">
+        <span>Edit Plants</span>
       </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item routerLink="/plant-root/gallery">
-          <span>Plants</span>
-        </button>
-        <button mat-menu-item routerLink="/plant-root/management">
-          <span>Edit Plants</span>
-        </button>
-        <button mat-menu-item routerLink="/plant-root/create">
-          <span>Create Plant</span>
-        </button>
-        <button mat-menu-item routerLink="/plant-root">
-          <span>Home</span>
-        </button>
-      </mat-menu>
-    </div>
+      <button mat-menu-item routerLink="/plant-root/create">
+        <span>Create Plant</span>
+      </button>
+      <button mat-menu-item routerLink="/plant-root">
+        <span>Home</span>
+      </button>
+    </mat-menu>
+    <span class="ui-topbar-icon" aria-hidden="true"><mat-icon inline>local_florist</mat-icon></span>
+    <h1 class="ui-topbar-title">Plants</h1>
+  </div>
+</header>
 
-    <div class="topbar__brand">
-      <span class="topbar__hex">⬡</span>
-      <span class="topbar__name">PLANTS</span>
-    </div>
-
-    <div class="topbar__right"></div>
-  </header>
-
-  <main class="content">
-    <router-outlet></router-outlet>
-  </main>
-</div>
+<main class="content">
+  <router-outlet></router-outlet>
+</main>

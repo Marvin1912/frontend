@@ -1,107 +1,124 @@
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
 :host {
   display: block;
-  height: 100%;
-  overflow: hidden;
 }
 
-.gallery {
-  height: 100%;
-  overflow-y: auto;
-  padding: 24px;
+.ui-btn mat-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
 }
 
+/* Spinner in ui-empty übernimmt die Textfarbe */
+mat-spinner {
+  --mat-progress-spinner-active-indicator-color: currentColor;
+}
+
+.ui-empty .ui-btn {
+  margin-top: var(--ui-space-2);
+  text-decoration: none;
+}
+
+/* ── Raster ──────────────────────────────────────── */
 .gallery__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  gap: var(--ui-space-3);
   align-items: start;
 }
 
-/* Plant card */
+@media (min-width: 640px) {
+  .gallery__grid { gap: var(--ui-space-4); }
+}
+
+/* ── Karte ───────────────────────────────────────── */
 .plant-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  opacity: 0;
-  animation: fadeUp 0.45s ease forwards;
 }
 
-.plant-card--water {
-  border-left: 3px solid var(--c-e);
-  background: linear-gradient(135deg, rgba(251,113,133,0.05) 0%, var(--surface) 40%);
+/* Fällige Pflanzen: Akzentkante links und leichter Verlauf */
+.plant-card--due {
+  border-left: 3px solid var(--ui-panel-accent);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--ui-panel-accent) 6%, transparent) 0%, transparent 40%), var(--ui-panel-bg);
 }
 
-.plant-card--fertilize {
-  border-left: 3px solid var(--c-v);
-  background: linear-gradient(135deg, rgba(251,191,36,0.05) 0%, var(--surface) 40%);
+.plant-card__head {
+  align-items: flex-start;
+  gap: var(--ui-space-2);
 }
 
-/* Header */
-.plant-card__header {
-  padding: 14px 16px 10px;
+.plant-card__titles {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: .15rem;
+  min-width: 0;
 }
 
 .plant-card__name {
-  font-family: 'Outfit', sans-serif;
+  margin: 0;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text);
-  text-decoration: none;
-  transition: color 0.2s;
+  overflow-wrap: anywhere;
 }
 
-.plant-card__name:hover {
-  color: var(--c-p);
+.plant-card__name a {
+  color: var(--text);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.plant-card__name a:hover,
+.plant-card__name a:focus-visible {
+  color: var(--ui-panel-accent);
 }
 
 .plant-card__species {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
   color: var(--text-muted);
-  letter-spacing: 0.04em;
+  font-size: var(--ui-text-sm);
+  overflow-wrap: anywhere;
 }
 
-/* Image */
 .plant-card__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 180px;
   overflow: hidden;
 }
 
 .plant-card__image img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  display: block;
 }
 
-/* Info grid */
+.plant-card__placeholder {
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+  color: var(--text-dim);
+}
+
+/* ── Kennzahlen ──────────────────────────────────── */
 .plant-card__info {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  padding: 12px 14px;
-  flex: 1;
+  gap: var(--ui-space-2);
+  margin: 0;
+  padding: var(--ui-space-3) var(--ui-space-4);
 }
 
 .info-tile {
-  background: var(--raised);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 8px 10px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: .15rem;
+  min-width: 0;
+  padding: var(--ui-space-2) .6rem;
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: var(--ui-radius-sm);
 }
 
 .info-tile--full {
@@ -109,48 +126,31 @@
 }
 
 .info-tile__label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.55rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
   color: var(--text-dim);
+  font-size: var(--ui-text-xs);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 
 .info-tile__value {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
+  margin: 0;
   color: var(--text);
+  font-size: var(--ui-text-sm);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 
-/* Actions */
+/* ── Aktionen ────────────────────────────────────── */
 .plant-card__actions {
   display: flex;
-  gap: 8px;
-  padding: 10px 14px 14px;
+  gap: var(--ui-space-2);
+  padding: var(--ui-space-3) var(--ui-space-4) var(--ui-space-4);
   border-top: 1px solid var(--border);
 }
 
-.action-btn {
+.plant-card__actions .ui-btn {
   flex: 1;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-muted);
-  font-family: 'Outfit', sans-serif;
-  font-size: 0.8rem;
-  padding: 7px 12px;
-  cursor: pointer;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
-}
-
-.action-btn--water:hover {
-  color: var(--c-a);
-  border-color: var(--c-a);
-  background: rgba(77,166,255,0.08);
-}
-
-.action-btn--fertilize:hover {
-  color: var(--c-v);
-  border-color: var(--c-v);
-  background: rgba(251,191,36,0.08);
+  justify-content: center;
+  min-height: 40px;
 }

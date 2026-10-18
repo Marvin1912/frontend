@@ -1,11 +1,5 @@
-import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle
-} from '@angular/material/dialog';
+import {Component, Inject, ChangeDetectionStrategy, signal} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormsModule} from '@angular/forms';
 import {Plant} from '../../models/plant.model';
 import {ImageService} from '../../services/image.service';
@@ -13,18 +7,17 @@ import {ImageService} from '../../services/image.service';
 @Component({
   selector: 'app-image-upload-dialog',
   imports: [
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
     FormsModule,
   ],
   templateUrl: './image-upload-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './image-upload-dialog.component.css'
 })
 export class ImageUploadDialogComponent {
 
-  selectedFile?: File;
+  selectedFile = signal<File | undefined>(undefined);
+  uploading = signal(false);
+  error = signal<string | null>(null);
 
   constructor(
     public dialogRef: MatDialogRef<ImageUploadDialogComponent>,
@@ -36,22 +29,29 @@ export class ImageUploadDialogComponent {
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
-      this.selectedFile = input.files[0];
+      this.selectedFile.set(input.files[0]);
     }
   }
 
   onSubmit() {
-    if (!this.selectedFile) {
+    const file = this.selectedFile();
+    if (!file) {
       return;
     }
 
-    this.imageService.createImage(this.selectedFile).subscribe({
+    this.uploading.set(true);
+    this.dialogRef.disableClose = true;
+    this.error.set(null);
+    this.imageService.createImage(file).subscribe({
       next: (response) => {
         const uuid = this.imageService.extractUuidFromResponse(response);
         this.dialogRef.close(uuid);
       },
       error: (err) => {
         console.error('Upload failed', err);
+        this.uploading.set(false);
+        this.dialogRef.disableClose = false;
+        this.error.set('Upload failed. Please try again.');
       },
     });
   }

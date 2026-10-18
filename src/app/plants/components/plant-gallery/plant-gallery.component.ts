@@ -1,6 +1,7 @@
 import {Component, OnInit, signal, ChangeDetectionStrategy} from '@angular/core';
 import {DatePipe} from '@angular/common';
-import {MatButtonModule} from '@angular/material/button';
+import {MatIcon} from '@angular/material/icon';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {PlantService} from '../../services/plant.service';
 import {Plant} from '../../models/plant.model';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -10,15 +11,16 @@ import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-plant-gallery',
-  imports: [MatButtonModule, RouterLink],
+  imports: [DatePipe, MatIcon, MatProgressSpinner, RouterLink],
   templateUrl: './plant-gallery.component.html',
   styleUrl: './plant-gallery.component.css',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DatePipe]
 })
 export class PlantGalleryComponent implements OnInit {
 
   plants = signal<Plant[]>([]);
+  loadState = signal<'loading' | 'loaded' | 'error'>('loading');
 
   constructor(
     private plantService: PlantService,
@@ -27,27 +29,20 @@ export class PlantGalleryComponent implements OnInit {
   ) {
   }
 
-  private today(): string {
-    return new Date().toISOString().split('T')[0];
-  }
-
-  private needsWatering(plant: Plant): boolean {
-    return plant.nextWateredDate ? plant.nextWateredDate <= this.today() : false;
-  }
-
-  private needsFertilizing(plant: Plant): boolean {
-    return plant.nextFertilizedDate ? plant.nextFertilizedDate <= this.today() : false;
-  }
+  // lokales Datum (yyyy-MM-dd); toISOString() liefert UTC und kurz nach Mitternacht den Vortag.
+  // Wird beim Sortieren aktualisiert statt bei jeder Fälligkeitsprüfung neu berechnet.
+  private today = '';
 
   private sortPlants(plants: Plant[]): Plant[] {
+    this.today = this.datePipe.transform(new Date(), 'yyyy-MM-dd') ?? '';
     return plants.sort((a, b) => {
-      const aNeedsWater = this.needsWatering(a);
-      const bNeedsWater = this.needsWatering(b);
+      const aNeedsWater = this.isWateringDue(a);
+      const bNeedsWater = this.isWateringDue(b);
       if (aNeedsWater && !bNeedsWater) return -1;
       if (!aNeedsWater && bNeedsWater) return 1;
 
-      const aNeedsFert = this.needsFertilizing(a);
-      const bNeedsFert = this.needsFertilizing(b);
+      const aNeedsFert = this.isFertilizingDue(a);
+      const bNeedsFert = this.isFertilizingDue(b);
       if (aNeedsFert && !bNeedsFert) return -1;
       if (!aNeedsFert && bNeedsFert) return 1;
 
@@ -58,10 +53,14 @@ export class PlantGalleryComponent implements OnInit {
   ngOnInit(): void {
     this.plantService.getPlants()
       .pipe(tap({
-        next: plants => this.plants.set(this.sortPlants(plants))
+        next: plants => {
+          this.plants.set(this.sortPlants(plants));
+          this.loadState.set('loaded');
+        }
       }))
       .subscribe({
         error: err => {
+          this.loadState.set('error');
           this.snackBar.open(`Error fetching plants: ${err}`, 'Dismiss', {
             duration: 5000
           })
@@ -122,10 +121,10 @@ export class PlantGalleryComponent implements OnInit {
   }
 
   isWateringDue(plant: Plant): boolean {
-    return plant.nextWateredDate ? plant.nextWateredDate <= this.today() : false;
+    return plant.nextWateredDate ? plant.nextWateredDate <= this.today : false;
   }
 
   isFertilizingDue(plant: Plant): boolean {
-    return plant.nextFertilizedDate ? plant.nextFertilizedDate <= this.today() : false;
+    return plant.nextFertilizedDate ? plant.nextFertilizedDate <= this.today : false;
   }
 }

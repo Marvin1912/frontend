@@ -57,7 +57,7 @@ describe('PlantDetailComponent', () => {
     beforeEach(() => {
       component.plant = {...plant};
       component.tempPlant = {...plant};
-      component.tmpLastWatered = new Date('2024-02-01');
+      component.tmpLastWatered = '2024-02-01';
       component.tmpLastFertilized = null;
       component.isEditMode = true;
     });

@@ -4,12 +4,8 @@ import {PlantService} from '../../services/plant.service';
 import {Plant} from '../../models/plant.model';
 import { DatePipe } from '@angular/common';
 import {MatIcon} from '@angular/material/icon';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatOption} from '@angular/material/core';
-import {MatSelect, MatSuffix} from '@angular/material/select';
+import {FormsModule} from '@angular/forms';
 import {PlantLocation} from '../../models/plant-location.enum';
-import {MatInput} from '@angular/material/input';
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {environment} from '../../../../environments/environment';
 import {ImageService} from '../../services/image.service';
@@ -19,19 +15,11 @@ import {ImageService} from '../../services/image.service';
   imports: [
     MatIcon,
     FormsModule,
-    MatOption,
-    MatSelect,
-    ReactiveFormsModule,
-    MatInput,
-    MatDatepickerInput,
-    MatDatepicker,
-    MatDatepickerToggle,
-    MatSuffix
+    DatePipe
   ],
   templateUrl: './plant-edit.component.html',
   styleUrl: './plant-edit.component.css',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  providers: [DatePipe]
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class PlantEditComponent implements OnInit {
 
@@ -41,8 +29,9 @@ export class PlantEditComponent implements OnInit {
   imageUrl: string | null = null;
   selectedFile?: File;
   isEditMode: boolean = false;
-  tmpLastWatered: Date | null = null;
-  tmpLastFertilized: Date | null = null;
+  // Werte der nativen Datumsfelder im Format yyyy-MM-dd
+  tmpLastWatered: string | null = null;
+  tmpLastFertilized: string | null = null;
 
   plantLocationOptions = Object
     .values(PlantLocation)
@@ -52,8 +41,7 @@ export class PlantEditComponent implements OnInit {
     private route: ActivatedRoute,
     private platService: PlantService,
     private imageService: ImageService,
-    private snackBar: MatSnackBar,
-    private datePipe: DatePipe
+    private snackBar: MatSnackBar
   ) {
   }
 
@@ -77,12 +65,15 @@ export class PlantEditComponent implements OnInit {
 
     if (!this.isEditMode) {
       this.tempPlant = {...this.plant} as Plant;
+      this.selectedFile = undefined;
       if (this.plant) {
-        this.tmpLastWatered = new Date(Date.parse(this.plant.lastWateredDate ?? '1970-01-01'));
-        this.tmpLastFertilized = this.plant.lastFertilizedDate ? new Date(this.plant.lastFertilizedDate) : null;
+        // type="date" akzeptiert nur yyyy-MM-dd
+        this.tmpLastWatered = this.plant.lastWateredDate?.slice(0, 10) ?? null;
+        this.tmpLastFertilized = this.plant.lastFertilizedDate?.slice(0, 10) ?? null;
       }
     } else {
       this.tempPlant = null;
+      this.selectedFile = undefined;
     }
 
     this.isEditMode = !this.isEditMode;
@@ -105,6 +96,7 @@ export class PlantEditComponent implements OnInit {
     if (this.selectedFile) {
       this.imageService.createImage(this.selectedFile).subscribe({
         next: response => {
+          this.selectedFile = undefined;
           const imageUuid = this.imageService.extractUuidFromResponse(response) ?? this.plant?.image ?? '';
           this.tempPlant = this.buildUpdatedPlant(imageUuid);
           this.updatePlant(true);
@@ -120,10 +112,9 @@ export class PlantEditComponent implements OnInit {
   }
 
   private buildUpdatedPlant(image?: string): Plant {
-    const lastWateredDate =
-      this.datePipe.transform(this.tmpLastWatered, 'yyyy-MM-dd') ?? this.plant?.lastWateredDate;
-    const lastFertilizedDate =
-      this.datePipe.transform(this.tmpLastFertilized, 'yyyy-MM-dd') ?? this.plant?.lastFertilizedDate;
+    // Leeres Datumsfeld behält den bisherigen Wert
+    const lastWateredDate = this.tmpLastWatered || this.plant?.lastWateredDate;
+    const lastFertilizedDate = this.tmpLastFertilized || this.plant?.lastFertilizedDate;
 
     return {
       ...this.tempPlant,

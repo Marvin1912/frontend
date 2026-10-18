@@ -1,14 +1,19 @@
-<h2 mat-dialog-title>Delete Plant {{ data.plant.name }}</h2>
+<div class="ui-dialog">
+  <h2 class="ui-dialog-title">Delete plant {{ data.plant.name }}?</h2>
+  <p class="m-0">The plant {{ data.plant.name }} will be removed permanently.</p>
 
-<mat-dialog-content>
-  <span>Do you really want to delete the plant {{ data.plant.name }}?</span>
-</mat-dialog-content>
+  @if (error()) {
+    <div class="ui-alert ui-alert--danger dialog-alert" role="alert">{{ error() }}</div>
+  }
 
-<mat-dialog-actions align="center">
-  <button mat-dialog-close class="ui-btn btn-confirm" aria-label="Confirm" (click)="deletePlant()">
-    <mat-icon>check_circle</mat-icon>
-  </button>
-  <button mat-dialog-close class="ui-btn btn-cancel" aria-label="Cancel">
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-dialog-actions>
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn" [disabled]="deleting()" mat-dialog-close>
+      <mat-icon aria-hidden="true">close</mat-icon>
+      <span>Cancel</span>
+    </button>
+    <button type="button" class="ui-btn ui-btn--rose" [disabled]="deleting()" (click)="deletePlant()">
+      <mat-icon aria-hidden="true">delete</mat-icon>
+      <span>Delete</span>
+    </button>
+  </div>
+</div>

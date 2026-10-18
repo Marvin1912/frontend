@@ -1,44 +1,85 @@
-<div class="gallery">
-  <div class="gallery__grid">
-    @for (plant of plants(); track plant.id; let i = $index) {
-      <div class="plant-card"
-           [class.plant-card--water]="isWateringDue(plant)"
-           [class.plant-card--fertilize]="!isWateringDue(plant) && isFertilizingDue(plant)"
-           [style.animation-delay]="(i * 0.07) + 's'">
-        <div class="plant-card__header">
-          <a class="plant-card__name" routerLink="/plant-root/view/{{plant.id}}">{{ plant.name }}</a>
-          <span class="plant-card__species">{{ plant.species }}</span>
-        </div>
-        <div class="plant-card__image">
-          <img [src]="getImageUrl(plant)" alt="{{ plant.name }}">
-        </div>
-        <div class="plant-card__info">
-          <div class="info-tile">
-            <span class="info-tile__label">Last watered</span>
-            <span class="info-tile__value">{{ plant.lastWateredDate }}</span>
+<div class="ui-container gallery">
+  @if (loadState() === 'loading') {
+    <div class="ui-empty" role="status">
+      <mat-spinner diameter="32"></mat-spinner>
+      <p class="m-0">Loading plants…</p>
+    </div>
+  } @else if (loadState() === 'error') {
+    <div class="ui-empty ui-empty--error" role="alert">
+      <mat-icon aria-hidden="true">error_outline</mat-icon>
+      <p class="m-0">Plants could not be loaded</p>
+    </div>
+  } @else if (plants().length === 0) {
+    <div class="ui-empty" role="status">
+      <mat-icon aria-hidden="true">local_florist</mat-icon>
+      <p class="m-0">No plants yet</p>
+      <a class="ui-btn ui-btn--green" routerLink="/plant-root/create">Create a plant</a>
+    </div>
+  } @else {
+    <div class="gallery__grid">
+      @for (plant of plants(); track plant.id) {
+        <article class="ui-panel plant-card"
+                 [class.ui-panel--rose]="isWateringDue(plant)"
+                 [class.ui-panel--amber]="!isWateringDue(plant) && isFertilizingDue(plant)"
+                 [class.ui-panel--green]="!isWateringDue(plant) && !isFertilizingDue(plant)"
+                 [class.plant-card--due]="isWateringDue(plant) || isFertilizingDue(plant)">
+          <div class="ui-panel-head plant-card__head">
+            <div class="plant-card__titles">
+              <h2 class="plant-card__name">
+                <a routerLink="/plant-root/view/{{plant.id}}">{{ plant.name }}</a>
+              </h2>
+              <span class="plant-card__species">{{ plant.species }}</span>
+            </div>
+            @if (isWateringDue(plant)) {
+              <span class="ui-badge ui-badge--rose">Water due</span>
+            } @else if (isFertilizingDue(plant)) {
+              <span class="ui-badge ui-badge--amber">Fertilize due</span>
+            }
           </div>
-          <div class="info-tile">
-            <span class="info-tile__label">Next watered</span>
-            <span class="info-tile__value">{{ plant.nextWateredDate ?? 'n/a' }}</span>
+
+          <div class="plant-card__image">
+            @if (plant.image) {
+              <img [src]="getImageUrl(plant)" [alt]="plant.name" loading="lazy">
+            } @else {
+              <mat-icon class="plant-card__placeholder" aria-hidden="true">image_not_supported</mat-icon>
+            }
           </div>
-          <div class="info-tile">
-            <span class="info-tile__label">Last fertilized</span>
-            <span class="info-tile__value">{{ plant.lastFertilizedDate ?? 'n/a' }}</span>
+
+          <dl class="plant-card__info">
+            <div class="info-tile">
+              <dt class="info-tile__label">Last watered</dt>
+              <dd class="info-tile__value">{{ (plant.lastWateredDate | date: 'dd.MM.yyyy') ?? 'n/a' }}</dd>
+            </div>
+            <div class="info-tile">
+              <dt class="info-tile__label">Next watered</dt>
+              <dd class="info-tile__value">{{ (plant.nextWateredDate | date: 'dd.MM.yyyy') ?? 'n/a' }}</dd>
+            </div>
+            <div class="info-tile">
+              <dt class="info-tile__label">Last fertilized</dt>
+              <dd class="info-tile__value">{{ (plant.lastFertilizedDate | date: 'dd.MM.yyyy') ?? 'n/a' }}</dd>
+            </div>
+            <div class="info-tile">
+              <dt class="info-tile__label">Next fertilized</dt>
+              <dd class="info-tile__value">{{ (plant.nextFertilizedDate | date: 'dd.MM.yyyy') ?? 'n/a' }}</dd>
+            </div>
+            <div class="info-tile info-tile--full">
+              <dt class="info-tile__label">Location</dt>
+              <dd class="info-tile__value">{{ plant.location }}</dd>
+            </div>
+          </dl>
+
+          <div class="plant-card__actions">
+            <button type="button" class="ui-btn ui-btn--blue" (click)="setWateredNow(plant)">
+              <mat-icon aria-hidden="true">water_drop</mat-icon>
+              <span>Watered</span>
+            </button>
+            <button type="button" class="ui-btn ui-btn--amber" (click)="setFertilizedNow(plant)">
+              <mat-icon aria-hidden="true">science</mat-icon>
+              <span>Fertilized</span>
+            </button>
           </div>
-          <div class="info-tile">
-            <span class="info-tile__label">Next fertilized</span>
-            <span class="info-tile__value">{{ plant.nextFertilizedDate ?? 'n/a' }}</span>
-          </div>
-          <div class="info-tile info-tile--full">
-            <span class="info-tile__label">Location</span>
-            <span class="info-tile__value">{{ plant.location }}</span>
-          </div>
-        </div>
-        <div class="plant-card__actions">
-          <button class="action-btn action-btn--water" (click)="setWateredNow(plant)">Watered</button>
-          <button class="action-btn action-btn--fertilize" (click)="setFertilizedNow(plant)">Fertilized</button>
-        </div>
-      </div>
-    }
-  </div>
+        </article>
+      }
+    </div>
+  }
 </div>

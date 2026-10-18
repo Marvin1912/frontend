@@ -1,9 +1,7 @@
-<h2 mat-dialog-title>{{ data.name }}</h2>
-
-<mat-dialog-content>
-  <img [src]="data.imageUrl" alt="Plant image" class="image" />
-</mat-dialog-content>
-
-<mat-dialog-actions align="end">
-  <button mat-dialog-close class="ui-btn">Close</button>
-</mat-dialog-actions>
+<div class="ui-dialog">
+  <h2 class="ui-dialog-title">{{ data.name }}</h2>
+  <img [src]="data.imageUrl" [alt]="data.name" class="image"/>
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn" mat-dialog-close>Close</button>
+  </div>
+</div>

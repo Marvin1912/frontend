@@ -1,22 +1,13 @@
 import {Component, Inject, ChangeDetectionStrategy} from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogTitle
-} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogClose} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-image-view-dialog',
   imports: [
-    MatDialogContent,
-    MatDialogTitle,
-    MatDialogClose,
-    MatDialogActions
+    MatDialogClose
   ],
   templateUrl: './image-view-dialog.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './image-view-dialog.component.css'
 })
 export class ImageViewDialogComponent {

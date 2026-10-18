@@ -1,124 +1,165 @@
-<div class="plant-create">
-  <mat-horizontal-stepper linear>
+<div class="ui-container create-page">
+  <section class="ui-panel ui-panel--green">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Create plant</h2>
+      <span class="ui-badge ui-badge--green">{{ step() + 1 }} / {{ steps.length }} · {{ steps[step()].label }}</span>
+    </div>
 
-    <mat-step [stepControl]="basicInfoForm">
-      <form [formGroup]="basicInfoForm" class="create-form">
-        <ng-template matStepLabel>
-          @if (!isSmallScreen) {
-            Basic Info
-          }
-        </ng-template>
+    <nav class="stepper" aria-label="Steps">
+      <ol class="stepper__list">
+        @for (s of steps; track s.label; let i = $index) {
+          <li class="stepper__item">
+            <button type="button" class="stepper__step"
+                    [class.is-active]="i === step()"
+                    [class.is-done]="i < step()"
+                    [disabled]="!canGoTo(i)"
+                    [attr.aria-current]="i === step() ? 'step' : null"
+                    [attr.aria-label]="s.label"
+                    (click)="goTo(i)">
+              <span class="stepper__num" aria-hidden="true">
+                @if (i < step()) { ✓ } @else { {{ i + 1 }} }
+              </span>
+              <span class="stepper__label">{{ s.label }}</span>
+            </button>
+          </li>
+        }
+      </ol>
+    </nav>
 
-        <div class="flex flex-col sm:flex-row gap-3 basic-info">
-          <mat-form-field appearance="outline" class="flex-1 min-w-0">
-            <mat-label>Name</mat-label>
-            <input matInput formControlName="name" required>
-          </mat-form-field>
+    <div class="ui-panel-body">
+      @switch (step()) {
+        @case (0) {
+          <form [formGroup]="basicInfoForm" class="create-form" (ngSubmit)="next()">
+            <div class="field-row">
+              <div class="field">
+                <label class="ui-input-label" for="plant-name">Name</label>
+                <input id="plant-name" class="ui-input ui-input--green" formControlName="name" autocomplete="off"
+                       [attr.aria-invalid]="isInvalid(basicInfoForm, 'name')"
+                       [attr.aria-describedby]="isInvalid(basicInfoForm, 'name') ? 'plant-name-error' : null">
+                @if (isInvalid(basicInfoForm, 'name')) {
+                  <p id="plant-name-error" class="field-error">Name is required</p>
+                }
+              </div>
+              <div class="field">
+                <label class="ui-input-label" for="plant-species">Species</label>
+                <input id="plant-species" class="ui-input ui-input--green" formControlName="species" autocomplete="off"
+                       [attr.aria-invalid]="isInvalid(basicInfoForm, 'species')"
+                       [attr.aria-describedby]="isInvalid(basicInfoForm, 'species') ? 'plant-species-error' : null">
+                @if (isInvalid(basicInfoForm, 'species')) {
+                  <p id="plant-species-error" class="field-error">Species is required</p>
+                }
+              </div>
+            </div>
 
-          <mat-form-field appearance="outline" class="flex-1 min-w-0">
-            <mat-label>Species</mat-label>
-            <input matInput formControlName="species" required>
-          </mat-form-field>
-        </div>
+            <div class="field">
+              <label class="ui-input-label" for="plant-description">Description</label>
+              <textarea id="plant-description" class="ui-input ui-input--green" formControlName="description" rows="8"
+                        [attr.aria-invalid]="isInvalid(basicInfoForm, 'description')"
+                        [attr.aria-describedby]="isInvalid(basicInfoForm, 'description') ? 'plant-description-error' : null"></textarea>
+              @if (isInvalid(basicInfoForm, 'description')) {
+                <p id="plant-description-error" class="field-error">Description is required</p>
+              }
+            </div>
 
-        <div class="flex flex-col sm:flex-row gap-3 basic-info">
-          <mat-form-field appearance="outline" class="flex-1 min-w-0">
-            <mat-label>Description</mat-label>
-            <textarea matInput formControlName="description" rows="10"></textarea>
-          </mat-form-field>
-        </div>
+            <div class="form-nav">
+              <button type="submit" class="ui-btn ui-btn--green">Next</button>
+            </div>
+          </form>
+        }
 
-        <div class="form-nav">
-          <button matStepperNext class="ui-btn btn-nav--primary" [disabled]="!basicInfoForm.valid">Next</button>
-        </div>
-      </form>
-    </mat-step>
+        @case (1) {
+          <form [formGroup]="locationForm" class="create-form" (ngSubmit)="next()">
+            <div class="field">
+              <label class="ui-input-label" for="plant-location">Location</label>
+              <select id="plant-location" class="ui-input ui-input--green" formControlName="location"
+                      [attr.aria-invalid]="isInvalid(locationForm, 'location')"
+                      [attr.aria-describedby]="isInvalid(locationForm, 'location') ? 'plant-location-error' : null">
+                <option value="" disabled>Choose a location…</option>
+                @for (loc of plantLocationOptions; track loc) {
+                  <option [value]="loc">{{ loc }}</option>
+                }
+              </select>
+              @if (isInvalid(locationForm, 'location')) {
+                <p id="plant-location-error" class="field-error">Location is required</p>
+              }
+            </div>
 
-    <mat-step [stepControl]="locationForm">
-      <form [formGroup]="locationForm" class="create-form">
-        <ng-template matStepLabel>
-          @if (!isSmallScreen) {
-            Location
-          }
-        </ng-template>
+            <div class="form-nav">
+              <button type="button" class="ui-btn" (click)="back()">Back</button>
+              <button type="submit" class="ui-btn ui-btn--green">Next</button>
+            </div>
+          </form>
+        }
 
-        <mat-form-field appearance="outline">
-          <mat-label>Location</mat-label>
-          <mat-select formControlName="location" required>
-            @for (loc of plantLocationOptions; track loc) {
-              <mat-option [value]="loc">
-                {{ loc }}
-              </mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
+        @case (2) {
+          <form [formGroup]="careForm" class="create-form" (ngSubmit)="next()">
+            <div class="field-row">
+              <div class="field">
+                <label class="ui-input-label" for="plant-watering">Watering Frequency (days)</label>
+                <input id="plant-watering" class="ui-input ui-input--green" type="number" min="1"
+                       formControlName="wateringFrequency"
+                       [attr.aria-invalid]="isInvalid(careForm, 'wateringFrequency')"
+                       [attr.aria-describedby]="isInvalid(careForm, 'wateringFrequency') ? 'plant-watering-error' : null">
+                @if (isInvalid(careForm, 'wateringFrequency')) {
+                  <p id="plant-watering-error" class="field-error">At least 1 day</p>
+                }
+              </div>
+              <div class="field">
+                <label class="ui-input-label" for="plant-last-watered">Last Watered Date</label>
+                <input id="plant-last-watered" class="ui-input ui-input--green" type="date"
+                       formControlName="lastWateredDate"
+                       [attr.aria-invalid]="isInvalid(careForm, 'lastWateredDate')"
+                       [attr.aria-describedby]="isInvalid(careForm, 'lastWateredDate') ? 'plant-last-watered-error' : null">
+                @if (isInvalid(careForm, 'lastWateredDate')) {
+                  <p id="plant-last-watered-error" class="field-error">Date is required</p>
+                }
+              </div>
+            </div>
 
-        <div class="form-nav">
-          <button matStepperPrevious class="ui-btn">Back</button>
-          <button matStepperNext class="ui-btn btn-nav--primary" [disabled]="!locationForm.valid">Next</button>
-        </div>
-      </form>
-    </mat-step>
+            <div class="field-row">
+              <div class="field">
+                <label class="ui-input-label" for="plant-fertilizing">Fertilizing Frequency (days)</label>
+                <input id="plant-fertilizing" class="ui-input ui-input--green" type="number" min="1"
+                       formControlName="fertilizingFrequency" aria-describedby="plant-fertilizing-hint">
+                <p id="plant-fertilizing-hint" class="field-hint">Optional</p>
+              </div>
+            </div>
 
-    <mat-step [stepControl]="careForm">
-      <form [formGroup]="careForm" class="create-form">
-        <ng-template matStepLabel>
-          @if (!isSmallScreen) {
-            Care Details
-          }
-        </ng-template>
+            <div class="field">
+              <label class="ui-input-label" for="plant-care">Care Instructions</label>
+              <textarea id="plant-care" class="ui-input ui-input--green" formControlName="careInstructions" rows="8"
+                        [attr.aria-invalid]="isInvalid(careForm, 'careInstructions')"
+                        [attr.aria-describedby]="isInvalid(careForm, 'careInstructions') ? 'plant-care-error' : null"></textarea>
+              @if (isInvalid(careForm, 'careInstructions')) {
+                <p id="plant-care-error" class="field-error">Care instructions are required</p>
+              }
+            </div>
 
-        <div class="flex flex-col sm:flex-row gap-3 care-info">
-          <mat-form-field appearance="outline" class="flex-1 min-w-0">
-            <mat-label>Watering Frequency (days)</mat-label>
-            <input matInput type="number" formControlName="wateringFrequency" required>
-          </mat-form-field>
+            <div class="form-nav">
+              <button type="button" class="ui-btn" (click)="back()">Back</button>
+              <button type="submit" class="ui-btn ui-btn--green">Next</button>
+            </div>
+          </form>
+        }
 
-          <mat-form-field appearance="outline" class="flex-1 min-w-0">
-            <mat-label>Last Watered Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="lastWateredDate" required>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-        </div>
+        @case (3) {
+          <form class="create-form" (ngSubmit)="onSubmit()">
+            <div class="field">
+              <label class="ui-input-label" for="plant-image">Image</label>
+              <input id="plant-image" type="file" accept="image/*" class="ui-input ui-input--green file-input"
+                     aria-describedby="plant-image-hint" (change)="onFileChange($event)">
+              <p id="plant-image-hint" class="field-hint">
+                {{ selectedFile ? selectedFile.name : 'Optional' }}
+              </p>
+            </div>
 
-        <div class="flex flex-col sm:flex-row gap-3 care-info">
-          <mat-form-field appearance="outline" class="flex-1 min-w-0">
-            <mat-label>Fertilizing Frequency (days)</mat-label>
-            <input matInput type="number" formControlName="fertilizingFrequency">
-          </mat-form-field>
-        </div>
-
-        <div class="flex flex-col sm:flex-row gap-3 care-info">
-          <mat-form-field appearance="outline" class="flex-1 min-w-0">
-            <mat-label>Care Instructions</mat-label>
-            <textarea matInput formControlName="careInstructions" rows="10"></textarea>
-          </mat-form-field>
-        </div>
-
-        <div class="form-nav">
-          <button matStepperPrevious class="ui-btn">Back</button>
-          <button matStepperNext class="ui-btn btn-nav--primary" [disabled]="!careForm.valid">Next</button>
-        </div>
-      </form>
-    </mat-step>
-
-    <mat-step [stepControl]="imageForm">
-      <form [formGroup]="imageForm" class="create-form">
-        <ng-template matStepLabel>
-          @if (!isSmallScreen) {
-            Image
-          }
-        </ng-template>
-
-        <input type="file" class="file-input" (change)="onFileChange($event)">
-
-        <div class="form-nav">
-          <button matStepperPrevious class="ui-btn">Back</button>
-          <button class="ui-btn btn-nav--primary" (click)="onSubmit()">Submit</button>
-        </div>
-      </form>
-    </mat-step>
-
-  </mat-horizontal-stepper>
+            <div class="form-nav">
+              <button type="button" class="ui-btn" (click)="back()">Back</button>
+              <button type="submit" class="ui-btn ui-btn--green" [disabled]="submitting()">Submit</button>
+            </div>
+          </form>
+        }
+      }
+    </div>
+  </section>
 </div>

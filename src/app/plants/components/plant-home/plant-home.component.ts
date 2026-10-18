@@ -7,7 +7,7 @@ import {RouterLink} from "@angular/router";
     RouterLink
   ],
   templateUrl: './plant-home.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './plant-home.component.css'
 })
 export class PlantHomeComponent {

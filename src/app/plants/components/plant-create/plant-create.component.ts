@@ -1,61 +1,52 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, signal} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import {DatePipe} from '@angular/common';
 import {PlantService} from '../../services/plant.service';
-import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
-import {MatOption, MatSelect} from '@angular/material/select';
 import {PlantLocation} from '../../models/plant-location.enum';
 import {Plant} from '../../models/plant.model';
-import {MatStep, MatStepLabel, MatStepper, MatStepperNext, MatStepperPrevious} from '@angular/material/stepper';
-import {MatInput} from '@angular/material/input';
-
 import {Router} from '@angular/router';
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from "@angular/material/datepicker";
-import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-plant-create',
   imports: [
+    // FormsModule: NgForm am Bild-Schritt (ohne formGroup) liefert ngSubmit
     FormsModule,
     MatSnackBarModule,
-    MatFormField,
-    MatFormFieldModule,
-    MatSelect,
-    MatOption,
-    MatStep,
-    MatStepper,
     ReactiveFormsModule,
-    MatStepLabel,
-    MatInput,
-    MatStepperNext,
-    MatStepperPrevious,
-    MatDatepicker,
-    MatDatepickerInput,
-    MatDatepickerToggle
   ],
   standalone: true,
   styleUrl: './plant-create.component.css',
   changeDetection: ChangeDetectionStrategy.Eager,
-  templateUrl: './plant-create.component.html'
+  templateUrl: './plant-create.component.html',
+  providers: [DatePipe]
 })
 export class PlantCreateComponent {
 
   basicInfoForm: FormGroup;
   locationForm: FormGroup;
   careForm: FormGroup;
-  imageForm: FormGroup;
+
+  readonly steps: { label: string, form: () => FormGroup | null }[] = [
+    {label: 'Basic Info', form: () => this.basicInfoForm},
+    {label: 'Location', form: () => this.locationForm},
+    {label: 'Care Details', form: () => this.careForm},
+    {label: 'Image', form: () => null},
+  ];
+
+  step = signal(0);
+  submitting = signal(false);
 
   plantLocationOptions = Object.values(PlantLocation)
     .filter(value => PlantLocation.UNDEFINED !== value);
   selectedFile: File | null = null;
-  isSmallScreen = false;
 
   constructor(
     private fb: FormBuilder,
     private plantService: PlantService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private breakpointObserver: BreakpointObserver
+    private datePipe: DatePipe
   ) {
     this.basicInfoForm = this.fb.group({
       name: ['', Validators.required],
@@ -69,18 +60,40 @@ export class PlantCreateComponent {
 
     this.careForm = this.fb.group({
       wateringFrequency: [0, [Validators.required, Validators.min(1)]],
-      lastWateredDate: [new Date()],
+      // natives Datumsfeld: yyyy-MM-dd im lokalen Datum
+      lastWateredDate: [this.datePipe.transform(new Date(), 'yyyy-MM-dd'), Validators.required],
       careInstructions: ['', Validators.required],
       fertilizingFrequency: [null]
     });
+  }
 
-    this.imageForm = this.fb.group({
-      image: [null]
-    });
+  isInvalid(form: FormGroup, name: string): boolean {
+    const control = form.get(name);
+    return !!control && control.invalid && control.touched;
+  }
 
-    this.breakpointObserver.observe([Breakpoints.Handset, Breakpoints.XSmall]).subscribe({
-      next: value => this.isSmallScreen = value.matches
-    });
+  // Linear: ein Schritt ist erreichbar, wenn alle vorherigen gültig sind
+  canGoTo(index: number): boolean {
+    return this.steps.slice(0, index).every(s => s.form()?.valid ?? true);
+  }
+
+  goTo(index: number) {
+    if (this.canGoTo(index)) {
+      this.step.set(index);
+    }
+  }
+
+  next() {
+    const form = this.steps[this.step()].form();
+    if (form?.invalid) {
+      form.markAllAsTouched();
+      return;
+    }
+    this.step.update(s => Math.min(s + 1, this.steps.length - 1));
+  }
+
+  back() {
+    this.step.update(s => Math.max(s - 1, 0));
   }
 
   onFileChange(event: Event) {
@@ -108,6 +121,7 @@ export class PlantCreateComponent {
       nextFertilizedDate: null
     };
 
+    this.submitting.set(true);
     this.plantService.createPlant(plant, this.selectedFile)
       .subscribe({
         next: (response) => {
@@ -115,6 +129,7 @@ export class PlantCreateComponent {
           this.navigateToPlant('/plant-root' + location)
         },
         error: () => {
+          this.submitting.set(false);
           this.snackBar.open(
             'Failed to create plant.',
             'Dismiss',
