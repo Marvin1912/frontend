@@ -1,124 +1,109 @@
-/* ── Design Tokens ───────────────────────────────── */
 :host {
-  --bg:          #06080e;
-  --surface:     #0c1018;
-  --raised:      #111826;
-  --border:      rgba(255, 255, 255, 0.07);
-  --border-mid:  rgba(255, 255, 255, 0.13);
-
-  --text:        #c8d4e8;
-  --text-muted:  #7a93b0;
-  --text-dim:    #3d5470;
-
-  --c-n:  #2dd4bf;  --cg-n: rgba(45, 212, 191, 0.18);
-
   display: block;
-  height: 100%;
-  overflow-y: auto;
-  font-family: 'Outfit', sans-serif;
-  color: var(--text);
 }
 
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 1.25rem 1rem;
-}
-
-/* ── Controls ────────────────────────────────────── */
-.controls {
+/* Layout */
+.article-page {
   display: flex;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: var(--ui-space-4);
+  max-width: 960px;
+}
+
+/* Material-Icons in ui-btn/ui-btn-icon auf Button-Schriftgröße bringen */
+.ui-btn mat-icon,
+.ui-btn-icon mat-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
+
+.panel-actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--ui-space-2);
+  white-space: nowrap;
+}
+
+/* Filter panel */
+.filter-panel {
+  display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  margin-bottom: 1rem;
+  align-items: flex-end;
+  gap: var(--ui-space-3) var(--ui-space-4);
+
+  /* mat-checkbox an ui-input--teal angleichen */
+  --mat-checkbox-label-text-color: var(--text-muted);
+  --mat-checkbox-label-text-font: var(--ui-font-family);
+  --mat-checkbox-label-text-size: .85rem;
+  --mat-checkbox-unselected-icon-color: var(--text-dim);
+  --mat-checkbox-unselected-hover-icon-color: var(--c-n);
+  --mat-checkbox-unselected-focus-icon-color: var(--c-n);
+  --mat-checkbox-selected-icon-color: var(--c-n);
+  --mat-checkbox-selected-hover-icon-color: var(--c-n);
+  --mat-checkbox-selected-focus-icon-color: var(--c-n);
+  --mat-checkbox-selected-checkmark-color: var(--bg);
 }
 
-.filter-field {
-  flex: 1;
-  min-width: 140px;
+.filter-panel__field {
+  flex: 1 1 12rem;
 }
 
-/* Material form field dark theme overrides */
-::ng-deep .filter-field .mat-mdc-text-field-wrapper {
-  background: var(--surface) !important;
+.filter-panel__check {
+  margin-left: calc(-1 * var(--ui-space-2));
 }
 
-::ng-deep .filter-field .mdc-notched-outline__leading,
-::ng-deep .filter-field .mdc-notched-outline__notch,
-::ng-deep .filter-field .mdc-notched-outline__trailing {
-  border-color: var(--border-mid) !important;
+@media (max-width: 639px) {
+  .filter-panel__field {
+    flex-basis: 100%;
+  }
 }
 
-::ng-deep .filter-field .mat-mdc-select-value-text {
-  color: var(--text) !important;
+/* Spinner in Akzentfarbe */
+.ui-empty {
+  --mat-progress-spinner-active-indicator-color: var(--c-n);
 }
 
-::ng-deep .filter-field .mat-mdc-floating-label {
-  color: var(--text-muted) !important;
+.spin {
+  animation: spin 1s linear infinite;
 }
 
-::ng-deep .filter-field .mat-mdc-select-arrow {
-  color: var(--text-muted) !important;
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-::ng-deep .mat-mdc-option {
-  color: var(--text) !important;
+@media (prefers-reduced-motion: reduce) {
+  .spin { animation: none; }
 }
 
-::ng-deep .mat-mdc-select-panel {
-  background: var(--surface) !important;
-  border: 1px solid var(--border-mid) !important;
-}
-
-.refresh-btn {
-  background: var(--c-n) !important;
-  color: #06080e !important;
-  font-weight: 600 !important;
-  height: 48px;
-}
-
-.refresh-btn:disabled {
-  opacity: 0.5 !important;
-}
-
-/* ── Loading / Empty ─────────────────────────────── */
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 3rem;
-  color: var(--text-muted);
-}
-
-::ng-deep .loading .mat-mdc-progress-spinner circle {
-  stroke: var(--c-n) !important;
-}
-
-.empty {
-  text-align: center;
-  padding: 3rem;
-  color: var(--text-muted);
-  font-size: 0.95rem;
-}
-
-/* ── Article List ────────────────────────────────── */
+/* Article list */
 .article-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--ui-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition: opacity .2s;
+}
+
+/* Beim Nachladen bleibt die Liste stehen, damit Scrollposition und Pagination nicht springen */
+.article-list.is-loading {
+  opacity: .5;
+  pointer-events: none;
 }
 
 .article-card {
   display: block;
-  padding: 1rem 1.25rem;
+  padding: var(--ui-space-4) 1.25rem;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--ui-radius-lg);
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
 }
 
 .article-card:hover {
@@ -127,129 +112,98 @@
   transform: translateY(-2px);
 }
 
+.article-card:focus-visible {
+  outline: 2px solid var(--c-n);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article-card,
+  .article-card:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
 .article-meta {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
   flex-wrap: wrap;
+  gap: var(--ui-space-2);
+  margin-bottom: var(--ui-space-2);
 }
 
-.badge {
-  display: inline-block;
-  line-height: 1;
+.article-meta__end {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+  margin-left: auto;
   white-space: nowrap;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-}
-
-.badge.category {
-  background: rgba(45, 212, 191, 0.12);
-  color: var(--c-n);
-}
-
-.badge.source {
-  background: var(--raised);
-  color: var(--text-muted);
 }
 
 .date {
-  font-size: 0.7rem;
+  font-size: .7rem;
   color: var(--text-dim);
-  margin-left: auto;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.mark-read-btn {
-  width: 28px !important;
-  height: 28px !important;
-  padding: 0 !important;
-  line-height: 28px !important;
-  color: var(--text-dim);
-  flex-shrink: 0;
-}
-
-.mark-read-btn:hover {
-  color: var(--c-n);
-}
-
-.mark-read-btn .mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
+  font-variant-numeric: tabular-nums;
 }
 
 .read-indicator {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
-  color: var(--c-n);
   flex-shrink: 0;
-}
-
-.show-read-checkbox {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  margin-left: 0.25rem;
-}
-
-::ng-deep .show-read-checkbox .mdc-checkbox__background {
-  border-color: var(--text-dim) !important;
-}
-
-::ng-deep .show-read-checkbox .mdc-checkbox--selected .mdc-checkbox__background {
-  background-color: var(--c-n) !important;
-  border-color: var(--c-n) !important;
+  width: 30px;
+  font-size: 18px;
+  height: 18px;
+  text-align: center;
+  color: var(--c-n);
 }
 
 .article-title {
-  margin: 0 0 0.35rem 0;
+  margin: 0 0 .35rem;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--text);
   line-height: 1.35;
+  color: var(--text);
+  overflow-wrap: anywhere;
 }
 
 .article-desc {
   margin: 0;
-  font-size: 0.82rem;
-  color: var(--text-muted);
+  font-size: .82rem;
   line-height: 1.5;
+  color: var(--text-muted);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* ── Pagination ──────────────────────────────────── */
+@media (max-width: 419px) {
+  .article-card {
+    padding: var(--ui-space-3);
+  }
+
+  .article-desc {
+    -webkit-line-clamp: 3;
+  }
+}
+
+/* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  padding: 1rem 0;
-}
-
-.pagination button {
-  color: var(--text-muted) !important;
-  border-color: var(--border-mid) !important;
-}
-
-.pagination button:hover:not(:disabled) {
-  color: var(--c-n) !important;
-  border-color: var(--c-n) !important;
-}
-
-.pagination button:disabled {
-  opacity: 0.3 !important;
+  gap: var(--ui-space-4);
+  padding-bottom: var(--ui-space-4);
 }
 
 .page-info {
-  font-size: 0.8rem;
+  font-size: .8rem;
   color: var(--text-dim);
-  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 419px) {
+  .pagination__label {
+    display: none;
+  }
 }

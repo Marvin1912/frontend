@@ -1,14 +1,16 @@
-<h2 mat-dialog-title>Delete Feed</h2>
+<div class="ui-dialog">
+  <h2 id="feed-delete-title" class="ui-dialog-title">Delete Feed</h2>
 
-<mat-dialog-content>
-  <span>Do you really want to delete the feed <strong>{{ data.feed.name }}</strong>?</span>
-</mat-dialog-content>
+  <p class="m-0">Do you really want to delete the feed <strong class="feed-name">{{ data.feed.name }}</strong>?</p>
 
-<mat-dialog-actions align="center">
-  <button mat-mini-fab class="btn-confirm" (click)="confirm()">
-    <mat-icon>check_circle</mat-icon>
-  </button>
-  <button mat-mini-fab mat-dialog-close class="btn-cancel">
-    <mat-icon>close</mat-icon>
-  </button>
-</mat-dialog-actions>
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn ui-btn--rose" mat-dialog-close cdkFocusInitial>
+      <mat-icon aria-hidden="true">close</mat-icon>
+      Cancel
+    </button>
+    <button type="button" class="ui-btn ui-btn--teal" (click)="confirm()">
+      <mat-icon aria-hidden="true">check_circle</mat-icon>
+      Delete
+    </button>
+  </div>
+</div>

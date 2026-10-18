@@ -1,8 +1,5 @@
 import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
-import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatCheckboxModule} from '@angular/material/checkbox';
@@ -14,9 +11,6 @@ import {ArticleService} from '../../services/article.service';
   selector: 'app-article-list',
   imports: [
     FormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatCheckboxModule,
@@ -40,6 +34,7 @@ export class ArticleListComponent implements OnInit {
   totalElements = 0;
   showRead = false;
   loading = false;
+  loadError = false;
   fetching = false;
 
   constructor(
@@ -64,6 +59,7 @@ export class ArticleListComponent implements OnInit {
 
   loadArticles(): void {
     this.loading = true;
+    this.loadError = false;
     this.cdr.markForCheck();
     this.articleService
       .getArticles(
@@ -83,6 +79,7 @@ export class ArticleListComponent implements OnInit {
         },
         error: () => {
           this.loading = false;
+          this.loadError = true;
           this.cdr.markForCheck();
         }
       });

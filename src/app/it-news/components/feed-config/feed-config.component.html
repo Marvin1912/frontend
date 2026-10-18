@@ -1,69 +1,79 @@
-<div class="container">
-  <div class="controls">
-    <span class="section-title">Feed Configuration</span>
-    <button mat-flat-button (click)="openAddDialog()" class="add-btn">
-      <mat-icon>add</mat-icon> Add Feed
-    </button>
-  </div>
-
-  @if (loading()) {
-    <div class="loading">
-      <mat-progress-spinner mode="indeterminate" diameter="28"></mat-progress-spinner>
-      <span>Loading feeds...</span>
+<div class="ui-container feed-page">
+  <section class="ui-panel ui-panel--teal">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Feed Configuration</h2>
+      <div class="panel-actions">
+        @if (!loading() && !loadError()) {
+          <span class="ui-badge ui-badge--teal">{{ feeds().length }} feeds</span>
+        }
+        <button type="button" class="ui-btn ui-btn--teal" (click)="openAddDialog()">
+          <mat-icon aria-hidden="true">add</mat-icon>
+          Add Feed
+        </button>
+      </div>
     </div>
-  }
 
-  @if (!loading() && feeds().length > 0) {
-    <div class="table-wrapper">
-      <table mat-table [dataSource]="feeds()">
-
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Name</th>
-          <td mat-cell *matCellDef="let feed">{{ feed.name }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="url">
-          <th mat-header-cell *matHeaderCellDef>URL</th>
-          <td mat-cell *matCellDef="let feed" class="url-cell">{{ feed.url }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="category">
-          <th mat-header-cell *matHeaderCellDef>Category</th>
-          <td mat-cell *matCellDef="let feed">
-            <span class="badge category">{{ feed.category }}</span>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="active">
-          <th mat-header-cell *matHeaderCellDef>Active</th>
-          <td mat-cell *matCellDef="let feed">
-            <mat-slide-toggle
-              [checked]="feed.active"
-              (change)="toggleActive(feed)"
-              class="active-toggle">
-            </mat-slide-toggle>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let feed" class="actions-cell">
-            <button mat-icon-button (click)="openEditDialog(feed)" class="action-btn" aria-label="Edit feed">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button (click)="openDeleteDialog(feed)" class="action-btn delete-btn" aria-label="Delete feed">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </div>
-  }
-
-  @if (!loading() && feeds().length === 0) {
-    <div class="empty">No feed sources configured yet.</div>
-  }
+    @if (loading()) {
+      <div class="ui-empty" role="status">
+        <mat-progress-spinner mode="indeterminate" diameter="28"></mat-progress-spinner>
+        <p class="m-0">Loading feeds…</p>
+      </div>
+    } @else if (loadError()) {
+      <div class="ui-empty ui-empty--error" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <p class="m-0">Feeds could not be loaded</p>
+      </div>
+    } @else if (feeds().length === 0) {
+      <div class="ui-empty" role="status">
+        <mat-icon aria-hidden="true">rss_feed</mat-icon>
+        <p class="m-0">No feed sources configured yet.</p>
+      </div>
+    } @else {
+      <div class="table-container">
+        <table class="ui-table">
+          <thead>
+            <tr>
+              <th class="ui-table-head col-name">Name</th>
+              <th class="ui-table-head col-url">URL</th>
+              <th class="ui-table-head col-category">Category</th>
+              <th class="ui-table-head col-active">Active</th>
+              <th class="ui-table-head col-actions"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (feed of feeds(); track feed.id) {
+              <tr class="ui-table-row">
+                <td class="ui-table-cell col-name" [title]="feed.name">
+                  <span class="feed-name">{{ feed.name }}</span>
+                  <span class="ui-badge ui-badge--teal name-category">{{ feed.category }}</span>
+                </td>
+                <td class="ui-table-cell col-url url-cell" [title]="feed.url">{{ feed.url }}</td>
+                <td class="ui-table-cell col-category">
+                  <span class="ui-badge ui-badge--teal">{{ feed.category }}</span>
+                </td>
+                <td class="ui-table-cell col-active">
+                  <mat-slide-toggle
+                    [checked]="feed.active"
+                    (change)="toggleActive(feed)"
+                    [aria-label]="'Feed ' + feed.name + ' active'"
+                    class="active-toggle">
+                  </mat-slide-toggle>
+                </td>
+                <td class="ui-table-cell col-actions">
+                  <div class="row-actions">
+                    <button type="button" class="ui-btn-icon" (click)="openEditDialog(feed)" [attr.aria-label]="'Edit feed ' + feed.name">
+                      <mat-icon aria-hidden="true">edit</mat-icon>
+                    </button>
+                    <button type="button" class="ui-btn-icon ui-btn--rose" (click)="openDeleteDialog(feed)" [attr.aria-label]="'Delete feed ' + feed.name">
+                      <mat-icon aria-hidden="true">delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </section>
 </div>

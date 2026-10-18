@@ -1,108 +1,41 @@
-/* ── Design Tokens ───────────────────────────────── */
-:host {
-  --bg:          #06080e;
-  --surface:     #0c1018;
-  --raised:      #111826;
-  --border:      rgba(255, 255, 255, 0.07);
-  --border-mid:  rgba(255, 255, 255, 0.13);
-  --text:        #c8d4e8;
-  --text-muted:  #7a93b0;
-  --c-n:         #2dd4bf;
-  --c-e:         #fb7185;
-}
-
-/* ── Dialog Surface ─────────────────────────────── */
-::ng-deep .mat-mdc-dialog-container .mdc-dialog__surface {
-  background: var(--surface) !important;
-  border: 1px solid var(--border-mid) !important;
-  border-radius: 12px !important;
-  color: var(--text) !important;
-}
-
-::ng-deep .mat-mdc-dialog-title {
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 0.95rem !important;
-  font-weight: 700 !important;
-  color: var(--text) !important;
-  letter-spacing: 0.03em;
-}
-
-::ng-deep .mat-mdc-dialog-content {
-  color: var(--text-muted) !important;
-  font-family: 'Outfit', sans-serif !important;
-}
-
-::ng-deep .mat-mdc-dialog-actions {
-  padding: 12px 24px 16px !important;
-}
-
-/* ── Form ───────────────────────────────────────── */
-.feed-form {
+.feed-form__fields {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  min-width: 320px;
-  padding-top: 0.5rem;
+  gap: var(--ui-space-3);
 }
 
-.form-field {
-  width: 100%;
+.field-error {
+  margin: var(--ui-space-1) 0 0;
+  color: var(--c-e);
+  font-size: .72rem;
 }
 
-::ng-deep .form-field .mat-mdc-text-field-wrapper {
-  background: var(--raised) !important;
+/* Ungültige Felder nach Interaktion: Rahmen und Fokus in Rose */
+.ui-input.ng-invalid.ng-touched {
+  --ui-input-accent: var(--c-e);
+  --ui-input-border: color-mix(in srgb, var(--c-e) 55%, transparent);
 }
 
-::ng-deep .form-field .mdc-notched-outline__leading,
-::ng-deep .form-field .mdc-notched-outline__notch,
-::ng-deep .form-field .mdc-notched-outline__trailing {
-  border-color: var(--border-mid) !important;
-}
-
-::ng-deep .form-field .mat-mdc-floating-label {
-  color: var(--text-muted) !important;
-}
-
-::ng-deep .form-field .mat-mdc-input-element {
-  color: var(--text) !important;
-}
-
-::ng-deep .form-field.mat-focused .mdc-notched-outline__leading,
-::ng-deep .form-field.mat-focused .mdc-notched-outline__notch,
-::ng-deep .form-field.mat-focused .mdc-notched-outline__trailing {
-  border-color: var(--c-n) !important;
-}
-
-::ng-deep .form-field.mat-focused .mat-mdc-floating-label {
-  color: var(--c-n) !important;
-}
-
-/* ── Active Toggle ──────────────────────────────── */
+/* mat-slide-toggle in Akzentfarbe */
 .active-toggle {
-  margin: 0.5rem 0;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-::ng-deep .active-toggle .mdc-switch--selected .mdc-switch__track::after {
-  background: rgba(45, 212, 191, 0.4) !important;
-}
-
-::ng-deep .active-toggle .mdc-switch--selected .mdc-switch__handle::after {
-  background: var(--c-n) !important;
-}
-
-/* ── Buttons ────────────────────────────────────── */
-.btn-save {
-  background: var(--c-n) !important;
-  color: #06080e !important;
-  font-weight: 600 !important;
-}
-
-.btn-save:disabled {
-  opacity: 0.4 !important;
-}
-
-.btn-cancel {
-  color: var(--text-muted) !important;
+  --mat-slide-toggle-label-text-color: var(--text-muted);
+  --mat-slide-toggle-label-text-font: var(--ui-font-family);
+  --mat-slide-toggle-label-text-size: .85rem;
+  --mat-slide-toggle-selected-track-color: color-mix(in srgb, var(--c-n) 40%, transparent);
+  --mat-slide-toggle-selected-hover-track-color: color-mix(in srgb, var(--c-n) 40%, transparent);
+  --mat-slide-toggle-selected-focus-track-color: color-mix(in srgb, var(--c-n) 40%, transparent);
+  --mat-slide-toggle-selected-pressed-track-color: color-mix(in srgb, var(--c-n) 40%, transparent);
+  --mat-slide-toggle-selected-handle-color: var(--c-n);
+  --mat-slide-toggle-selected-hover-handle-color: var(--c-n);
+  --mat-slide-toggle-selected-focus-handle-color: var(--c-n);
+  --mat-slide-toggle-selected-pressed-handle-color: var(--c-n);
+  --mat-slide-toggle-unselected-track-color: var(--raised);
+  --mat-slide-toggle-unselected-hover-track-color: var(--raised);
+  --mat-slide-toggle-unselected-focus-track-color: var(--raised);
+  --mat-slide-toggle-unselected-pressed-track-color: var(--raised);
+  --mat-slide-toggle-unselected-handle-color: var(--text-dim);
+  --mat-slide-toggle-unselected-hover-handle-color: var(--text-muted);
+  --mat-slide-toggle-unselected-focus-handle-color: var(--text-muted);
+  --mat-slide-toggle-unselected-pressed-handle-color: var(--text-muted);
+  --mat-slide-toggle-track-outline-color: var(--border-mid);
 }
