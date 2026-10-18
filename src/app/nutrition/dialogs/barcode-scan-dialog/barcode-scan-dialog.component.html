@@ -1,67 +1,67 @@
-<h2 mat-dialog-title>Barcode scannen</h2>
+<div class="ui-dialog form">
+  <h2 class="ui-dialog-title m-0">Barcode scannen</h2>
 
-<mat-dialog-content>
-  <div class="scan-body">
+  @if (foundFood) {
+    <div class="found" role="status">
+      <mat-icon class="found__icon" aria-hidden="true">check_circle</mat-icon>
+      <p class="found__text">
+        Gefunden: {{ foundFood.name }}@if (foundFood.brand) {, {{ foundFood.brand }}}
+      </p>
+    </div>
+  } @else {
 
-    @if (foundFood) {
-      <div class="found">
-        <mat-icon class="found__icon">check_circle</mat-icon>
-        <p class="found__text">
-          Gefunden: {{ foundFood.name }}@if (foundFood.brand) {, {{ foundFood.brand }}}
-        </p>
+    @if (cameraSupported) {
+      <div class="viewport" [class.viewport--off]="!cameraActive">
+        <video #video class="viewport__video" muted playsinline></video>
+        <div class="viewport__frame" aria-hidden="true"></div>
+        @if (looking) {
+          <div class="viewport__overlay">Suche…</div>
+        }
       </div>
-    } @else {
-
-      @if (cameraSupported) {
-        <div class="viewport" [class.viewport--off]="!cameraActive">
-          <video #video class="viewport__video" muted playsinline></video>
-          <div class="viewport__frame" aria-hidden="true"></div>
-          @if (looking) {
-            <div class="viewport__overlay">Suche…</div>
-          }
-        </div>
-      }
-
-      @if (message) {
-        <p class="msg">{{ message }}</p>
-      } @else if (cameraActive) {
-        <p class="hint">Barcode vor die Kamera halten.</p>
-      }
-
-      <form class="manual" (ngSubmit)="lookupManual()">
-        <mat-form-field appearance="outline" class="manual__field">
-          <mat-label>Barcode (EAN)</mat-label>
-          <input matInput inputmode="numeric" autocomplete="off" [formControl]="manualEan" />
-          @if (manualEan.hasError('pattern')) {
-            <mat-error>8–14 Ziffern</mat-error>
-          } @else {
-            <mat-hint>8–14 Ziffern</mat-hint>
-          }
-        </mat-form-field>
-        <button mat-flat-button type="submit" class="btn-lookup" [disabled]="looking">
-          <mat-icon>search</mat-icon>
-          Suchen
-        </button>
-      </form>
-
     }
 
-  </div>
-</mat-dialog-content>
+    @if (message) {
+      <div class="ui-alert ui-alert--danger" role="alert">{{ message }}</div>
+    } @else if (looking && !cameraActive) {
+      <p class="hint" role="status">Suche…</p>
+    } @else if (cameraActive) {
+      <p class="hint">Barcode vor die Kamera halten.</p>
+    }
 
-<mat-dialog-actions align="center">
-  @if (foundFood) {
-    <button mat-flat-button class="btn-rescan" (click)="rescan()">
-      <mat-icon>refresh</mat-icon>
-      Erneut scannen
-    </button>
-    <button mat-flat-button class="btn-confirm" (click)="confirmFound()">
-      <mat-icon>check</mat-icon>
-      Übernehmen
-    </button>
-  } @else {
-    <button mat-mini-fab mat-dialog-close class="btn-cancel" aria-label="Abbrechen">
-      <mat-icon>close</mat-icon>
-    </button>
+    <form class="manual" (ngSubmit)="lookupManual()">
+      <div class="field manual__field">
+        <label class="ui-input-label" for="barcode-ean">Barcode (EAN)</label>
+        <input id="barcode-ean" class="ui-input ui-input--teal" inputmode="numeric" autocomplete="off"
+               [formControl]="manualEan"
+               [attr.aria-invalid]="manualEan.hasError('pattern') && manualEan.touched"
+               aria-describedby="barcode-ean-hint" />
+        <p id="barcode-ean-hint" [class]="manualEan.hasError('pattern') && manualEan.touched ? 'field-error' : 'field-hint'">
+          8–14 Ziffern
+        </p>
+      </div>
+      <button type="submit" class="ui-btn ui-btn--teal btn-lookup" [disabled]="looking">
+        <mat-icon aria-hidden="true">search</mat-icon>
+        <span>Suchen</span>
+      </button>
+    </form>
+
   }
-</mat-dialog-actions>
+
+  <div class="ui-dialog-actions">
+    @if (foundFood) {
+      <button type="button" class="ui-btn" (click)="rescan()">
+        <mat-icon aria-hidden="true">refresh</mat-icon>
+        <span>Erneut scannen</span>
+      </button>
+      <button type="button" class="ui-btn ui-btn--teal" (click)="confirmFound()">
+        <mat-icon aria-hidden="true">check</mat-icon>
+        <span>Übernehmen</span>
+      </button>
+    } @else {
+      <button type="button" class="ui-btn" mat-dialog-close>
+        <mat-icon aria-hidden="true">close</mat-icon>
+        <span>Abbrechen</span>
+      </button>
+    }
+  </div>
+</div>

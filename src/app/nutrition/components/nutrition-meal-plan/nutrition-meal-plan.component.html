@@ -1,146 +1,160 @@
-<div class="plan">
+<div class="ui-container page page--wide">
 
   @if (loading) {
-    <div class="state">
+    <div class="ui-empty" role="status">
       <mat-spinner diameter="32" />
+      <p class="m-0">Essensplan wird geladen…</p>
     </div>
   } @else if (unavailable || !plan) {
-    <p class="empty">Essensplan konnte nicht geladen werden.</p>
+    <div class="ui-empty ui-empty--error" role="alert">
+      <mat-icon aria-hidden="true">error_outline</mat-icon>
+      <p class="m-0">Essensplan konnte nicht geladen werden.</p>
+    </div>
   } @else {
 
-    <header class="masthead">
-      <span class="eyebrow">{{ plan.eyebrow }}</span>
-      <h1>{{ plan.title }}</h1>
-      <p>{{ plan.description }}</p>
+    <header class="ui-panel ui-panel--lime">
+      <div class="ui-panel-body masthead">
+        <span class="eyebrow">{{ plan.eyebrow }}</span>
+        <h1 class="masthead__title">{{ plan.title }}</h1>
+        <p class="masthead__text">{{ plan.description }}</p>
+      </div>
     </header>
 
     @for (section of plan.sections; track section.id) {
-      <section class="panel panel-table">
-        <header class="panel__head">
-          <span class="panel__dot panel__dot--g"></span>
-          <span class="panel__label">{{ section.title }}</span>
-          <span class="panel__note">{{ section.note }}</span>
-        </header>
-
-        @let groups = mealGroups(section);
-        @for (group of groups; track group.type) {
-          <div class="meal-group">
-            <header class="meal-group__head">
-              <span class="meal-group__dot meal-group__dot--{{ group.dotClass }}"></span>
-              <span class="meal-group__label">{{ group.label }}</span>
-            </header>
-            @if (group.rows.length > 0) {
-              <div class="table-container">
-                <table class="table-meal-group">
-                  <thead>
-                    <tr>
-                      <th class="col-header">Lebensmittel</th>
-                      <th class="col-header col-num">Menge</th>
-                      <th class="col-header col-num">Kcal</th>
-                      <th class="col-header col-num">Protein</th>
-                      <th class="col-header col-num">KH</th>
-                      <th class="col-header col-num">Fett</th>
-                      <th class="col-header col-actions"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @for (entry of displayRows(group.rows); track entry.row.id) {
-                      <tr [class.row-alternative]="entry.isAlternative" [class.row-alternative--counted]="entry.isAlternative && entry.isCounted">
-                        <td>
-                          {{ entry.row.foodName }}
-                          @if (entry.isAlternative && entry.isCounted) {
-                            <span class="badge-counted">zählt in Summe</span>
-                          }
-                        </td>
-                        <td class="col-num col-qty">{{ entry.row.quantityG | number:'1.0-0':'de' }} g</td>
-                        <td class="col-num">{{ entry.row.kcal | number:'1.0-0':'de' }}</td>
-                        <td class="col-num">{{ entry.row.proteinG | number:'1.0-1':'de' }}</td>
-                        <td class="col-num">{{ entry.row.carbsG | number:'1.0-1':'de' }}</td>
-                        <td class="col-num">{{ entry.row.fatG | number:'1.0-1':'de' }}</td>
-                        <td class="col-actions">
-                          <button mat-icon-button aria-label="Alternative hinzufügen" (click)="openAddAlternativeDialog(section.id, entry.row)">
-                            <mat-icon>alt_route</mat-icon>
-                          </button>
-                          <button mat-icon-button aria-label="Eintrag bearbeiten" (click)="openEditRowDialog(section.id, entry.row)">
-                            <mat-icon>edit</mat-icon>
-                          </button>
-                          <button mat-icon-button aria-label="Eintrag löschen" (click)="openDeleteRowDialog(entry.row)">
-                            <mat-icon>delete</mat-icon>
-                          </button>
-                        </td>
-                      </tr>
-                      @if (entry.showDividerAfter) {
-                        <tr class="row-divider">
-                          <td colspan="7" class="row-divider__label">oder</td>
-                        </tr>
-                      }
-                    }
-                  </tbody>
-                  <tfoot>
-                    @let subtotal = sectionTotals(group.rows);
-                    <tr>
-                      <td class="totals-label">Summe</td>
-                      <td></td>
-                      <td class="col-num">{{ subtotal.kcal | number:'1.0-0':'de' }}</td>
-                      <td class="col-num">{{ subtotal.proteinG | number:'1.0-1':'de' }}</td>
-                      <td class="col-num">{{ subtotal.carbsG | number:'1.0-1':'de' }}</td>
-                      <td class="col-num">{{ subtotal.fatG | number:'1.0-1':'de' }}</td>
-                      <td></td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            }
-            <button mat-stroked-button type="button" class="btn-add-row" (click)="openAddRowDialog(section.id, group.type)">
-              <mat-icon>add_circle</mat-icon>
-              Eintrag hinzufügen
-            </button>
-          </div>
-        }
-
-        @let sectionSum = sectionTotals(section.rows);
-        <div class="section-total">
-          <span class="section-total__label">Gesamt</span>
-          <span class="section-total__value">{{ sectionSum.kcal | number:'1.0-0':'de' }} kcal</span>
-          <span class="section-total__value">P {{ sectionSum.proteinG | number:'1.0-1':'de' }}</span>
-          <span class="section-total__value">KH {{ sectionSum.carbsG | number:'1.0-1':'de' }}</span>
-          <span class="section-total__value">F {{ sectionSum.fatG | number:'1.0-1':'de' }}</span>
+      <section class="ui-panel ui-panel--lime">
+        <div class="ui-panel-head section-head">
+          <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>{{ section.title }}</h2>
+          @if (section.note) {
+            <span class="section-note">{{ section.note }}</span>
+          }
         </div>
 
-        @if (section.callout) {
-          <p class="callout">{{ section.callout }}</p>
-        }
+        <div class="ui-panel-body section-body">
+          @let groups = mealGroups(section);
+          @for (group of groups; track group.type) {
+            <div class="meal-group">
+              <h3 class="meal-group__label">
+                <span class="meal-group__dot meal-group__dot--{{ group.dotClass }}" aria-hidden="true"></span>
+                {{ group.label }}
+              </h3>
+              @if (group.rows.length > 0) {
+                <div class="table-container table-frame">
+                  <table class="ui-table table-meal-group">
+                    <thead>
+                      <tr>
+                        <th class="ui-table-head" scope="col">Lebensmittel</th>
+                        <th class="ui-table-head col-num" scope="col">Menge</th>
+                        <th class="ui-table-head col-num" scope="col">Kcal</th>
+                        <th class="ui-table-head col-num" scope="col">Protein</th>
+                        <th class="ui-table-head col-num" scope="col">KH</th>
+                        <th class="ui-table-head col-num" scope="col">Fett</th>
+                        <th class="ui-table-head col-actions" scope="col"><span class="sr-only">Aktionen</span></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (entry of displayRows(group.rows); track entry.row.id) {
+                        <tr class="ui-table-row" [class.row-alternative]="entry.isAlternative"
+                            [class.row-alternative--counted]="entry.isAlternative && entry.isCounted">
+                          <td class="ui-table-cell">
+                            {{ entry.row.foodName }}
+                            @if (entry.isAlternative && entry.isCounted) {
+                              <span class="ui-badge ui-badge--lime badge-counted">zählt in Summe</span>
+                            }
+                          </td>
+                          <td class="ui-table-cell col-num col-qty">{{ entry.row.quantityG | number:'1.0-0':'de' }} g</td>
+                          <td class="ui-table-cell col-num">{{ entry.row.kcal | number:'1.0-0':'de' }}</td>
+                          <td class="ui-table-cell col-num">{{ entry.row.proteinG | number:'1.0-1':'de' }}</td>
+                          <td class="ui-table-cell col-num">{{ entry.row.carbsG | number:'1.0-1':'de' }}</td>
+                          <td class="ui-table-cell col-num">{{ entry.row.fatG | number:'1.0-1':'de' }}</td>
+                          <td class="ui-table-cell col-actions">
+                            <span class="row-actions">
+                              <button type="button" class="ui-btn-icon ui-btn--lime" aria-label="Alternative hinzufügen"
+                                      matTooltip="Alternative hinzufügen" (click)="openAddAlternativeDialog(section.id, entry.row)">
+                                <mat-icon>alt_route</mat-icon>
+                              </button>
+                              <button type="button" class="ui-btn-icon" aria-label="Eintrag bearbeiten"
+                                      matTooltip="Bearbeiten" (click)="openEditRowDialog(section.id, entry.row)">
+                                <mat-icon>edit</mat-icon>
+                              </button>
+                              <button type="button" class="ui-btn-icon ui-btn--rose" aria-label="Eintrag löschen"
+                                      matTooltip="Löschen" (click)="openDeleteRowDialog(entry.row)">
+                                <mat-icon>delete</mat-icon>
+                              </button>
+                            </span>
+                          </td>
+                        </tr>
+                        @if (entry.showDividerAfter) {
+                          <tr class="row-divider">
+                            <td colspan="7" class="ui-table-cell row-divider__cell">oder</td>
+                          </tr>
+                        }
+                      }
+                    </tbody>
+                    <tfoot>
+                      @let subtotal = sectionTotals(group.rows);
+                      <tr class="row-total">
+                        <td class="ui-table-cell">Summe</td>
+                        <td class="ui-table-cell"></td>
+                        <td class="ui-table-cell col-num">{{ subtotal.kcal | number:'1.0-0':'de' }}</td>
+                        <td class="ui-table-cell col-num">{{ subtotal.proteinG | number:'1.0-1':'de' }}</td>
+                        <td class="ui-table-cell col-num">{{ subtotal.carbsG | number:'1.0-1':'de' }}</td>
+                        <td class="ui-table-cell col-num">{{ subtotal.fatG | number:'1.0-1':'de' }}</td>
+                        <td class="ui-table-cell"></td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              }
+              <button type="button" class="ui-btn ui-btn--lime btn-add-row" (click)="openAddRowDialog(section.id, group.type)">
+                <mat-icon aria-hidden="true">add_circle</mat-icon>
+                <span>Eintrag hinzufügen</span>
+              </button>
+            </div>
+          }
+
+          @let sectionSum = sectionTotals(section.rows);
+          <div class="section-total">
+            <span class="section-total__label">Gesamt</span>
+            <span class="section-total__value">{{ sectionSum.kcal | number:'1.0-0':'de' }} kcal</span>
+            <span class="section-total__value">P {{ sectionSum.proteinG | number:'1.0-1':'de' }}</span>
+            <span class="section-total__value">KH {{ sectionSum.carbsG | number:'1.0-1':'de' }}</span>
+            <span class="section-total__value">F {{ sectionSum.fatG | number:'1.0-1':'de' }}</span>
+          </div>
+
+          @if (section.callout) {
+            <div class="ui-alert callout">{{ section.callout }}</div>
+          }
+        </div>
       </section>
     }
 
-    <section class="panel panel-shopping">
-      <header class="panel__head">
-        <span class="panel__dot panel__dot--v"></span>
-        <span class="panel__label">Einkaufsliste</span>
-      </header>
+    <section class="ui-panel ui-panel--amber">
+      <div class="ui-panel-head">
+        <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Einkaufsliste</h2>
+      </div>
       <ul class="shop-list">
         @for (item of shoppingList(plan); track item.foodId) {
-          <li>
-            <span class="item-name">
+          <li class="shop-item">
+            <span class="shop-item__name">
               {{ item.foodName }}
               @if (item.brand) {
-                <span class="item-brand">{{ item.brand }}</span>
+                <span class="shop-item__brand">{{ item.brand }}</span>
               }
             </span>
-            <span class="item-qty">{{ item.totalQuantityG | number:'1.0-0':'de' }} g</span>
+            <span class="shop-item__qty">{{ item.totalQuantityG | number:'1.0-0':'de' }} g</span>
           </li>
         } @empty {
-          <li class="shop-empty">Keine Einträge im Plan.</li>
+          <li class="ui-empty">Keine Einträge im Plan.</li>
         }
       </ul>
     </section>
 
     <footer class="plan-footer">
       <span>{{ plan.footer.note }}</span>
-      <span class="sources">
+      <span>
         @for (source of plan.footer.sources; track source.id; let last = $last) {
           <a target="_blank" rel="noopener" [href]="source.url">{{ source.label }}</a>@if (!last) {
-            <span class="dot-sep">·</span>
+            <span class="dot-sep" aria-hidden="true">·</span>
           }
         }
       </span>

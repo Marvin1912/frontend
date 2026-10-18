@@ -2,17 +2,13 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, injec
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
-import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatTooltip} from '@angular/material/tooltip';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {EMPTY, switchMap} from 'rxjs';
-import {addDays, differenceInCalendarDays, format, isSameDay, startOfDay} from 'date-fns';
+import {catchError, EMPTY, map, of, Subject, switchMap} from 'rxjs';
+import {addDays, differenceInCalendarDays, format, isValid, parseISO} from 'date-fns';
 import {NutritionService} from '../../services/nutrition.service';
 import {
   ActivityType,
@@ -32,7 +28,12 @@ import {
 import {EntryEditDialogComponent} from '../../dialogs/entry-edit-dialog/entry-edit-dialog.component';
 import {EntryDeleteDialogComponent} from '../../dialogs/entry-delete-dialog/entry-delete-dialog.component';
 import {MealTemplatePickerDialogComponent} from '../../dialogs/meal-template-picker-dialog/meal-template-picker-dialog.component';
-import {ActivityEditDialogComponent} from '../../dialogs/activity-edit-dialog/activity-edit-dialog.component';
+import {
+  ActivityEditDialogComponent,
+  ActivityEditDialogData
+} from '../../dialogs/activity-edit-dialog/activity-edit-dialog.component';
+import {nutritionDialogConfig} from '../../dialogs/dialog-config';
+import {todayIso} from '../../forms';
 
 interface MealGroup {
   type: MealType;
@@ -80,14 +81,6 @@ const ACTIVITY_TYPE_LABELS: Record<ActivityType, string> = ACTIVITY_TYPES.reduce
   imports: [
     ReactiveFormsModule,
     DecimalPipe,
-    MatFormField,
-    MatLabel,
-    MatInput,
-    MatDatepicker,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatButton,
-    MatIconButton,
     MatIcon,
     MatProgressSpinner,
     MatTooltip
@@ -97,8 +90,10 @@ const ACTIVITY_TYPE_LABELS: Record<ActivityType, string> = ACTIVITY_TYPES.reduce
 })
 export class NutritionDayComponent implements OnInit {
 
-  date = new FormControl<Date>(new Date(), {nonNullable: true});
-  readonly today = new Date();
+  /** Selected diary day as yyyy-MM-dd (native date input). */
+  date = new FormControl<string>(todayIso(), {nonNullable: true});
+  /** Last valid selected day, used for all requests. */
+  private isoDate = this.date.value;
   summary: DaySummary | null = null;
   loading = false;
   /** Set when the day summary cannot be loaded due to an error. */
@@ -109,24 +104,51 @@ export class NutritionDayComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
+  /** Each emission (re)loads the selected day; switchMap drops a still-running older request. */
+  private reload$ = new Subject<void>();
 
   ngOnInit(): void {
-    this.date.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.load());
+    this.reload$.pipe(
+      switchMap(() => this.nutritionService.getDaySummary(this.isoDate).pipe(
+        map(summary => ({summary})),
+        catchError(() => of({summary: null}))
+      )),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(({summary}) => {
+      this.summary = summary;
+      this.loading = false;
+      this.unavailable = summary ? null : 'Tagesübersicht konnte nicht geladen werden.';
+      this.cdr.markForCheck();
+    });
+
+    this.date.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(value => {
+      // A cleared or half-typed native date input yields '', and typed future days slip past
+      // [max]; keep showing the last valid day for both.
+      if (!isValid(parseISO(value)) || value > todayIso()) return;
+      this.isoDate = value;
+      this.load();
+    });
     this.load();
   }
 
-  private get isoDate(): string {
-    return format(this.date.value, 'yyyy-MM-dd');
+  /** Upper bound for the native date input; a getter so it moves on past midnight. */
+  get today(): string {
+    return todayIso();
   }
 
   /** True when the selected date is today; stepping forward is then disabled. */
   get isToday(): boolean {
-    return isSameDay(this.date.value, new Date());
+    return this.isoDate === todayIso();
+  }
+
+  /** "Heute" stays usable while the input shows something else (e.g. after clearing it). */
+  get canGoToToday(): boolean {
+    return !this.isToday || this.date.value !== this.isoDate;
   }
 
   /** Relative orientation label (Heute / Gestern / Vorgestern) or null. */
   get relativeLabel(): string | null {
-    const diff = differenceInCalendarDays(startOfDay(this.date.value), startOfDay(new Date()));
+    const diff = differenceInCalendarDays(parseISO(this.isoDate), parseISO(todayIso()));
     switch (diff) {
       case 0:
         return 'Heute';
@@ -141,13 +163,17 @@ export class NutritionDayComponent implements OnInit {
 
   /** Step the diary date by the given number of days. */
   stepDay(days: number): void {
-    this.date.setValue(addDays(this.date.value, days));
+    this.date.setValue(format(addDays(parseISO(this.isoDate), days), 'yyyy-MM-dd'));
   }
 
   /** Jump back to today. */
   goToToday(): void {
-    if (!this.isToday) {
-      this.date.setValue(new Date());
+    if (!this.canGoToToday) return;
+    if (this.isToday) {
+      // Only the input was cleared; the day itself is still loaded.
+      this.date.setValue(todayIso(), {emitEvent: false});
+    } else {
+      this.date.setValue(todayIso());
     }
   }
 
@@ -156,19 +182,7 @@ export class NutritionDayComponent implements OnInit {
     this.unavailable = null;
     this.cdr.markForCheck();
 
-    this.nutritionService.getDaySummary(this.isoDate).subscribe({
-      next: summary => {
-        this.summary = summary;
-        this.loading = false;
-        this.cdr.markForCheck();
-      },
-      error: () => {
-        this.summary = null;
-        this.loading = false;
-        this.unavailable = 'Tagesübersicht konnte nicht geladen werden.';
-        this.cdr.markForCheck();
-      }
-    });
+    this.reload$.next();
   }
 
   get activities(): SportActivity[] {
@@ -232,7 +246,7 @@ export class NutritionDayComponent implements OnInit {
 
   openAddDialog(mealType?: MealType): void {
     const data: AddDayEntryDialogData = {mealType: mealType ?? this.defaultMealType()};
-    const ref = this.dialog.open(AddDayEntryDialogComponent, {data});
+    const ref = this.dialog.open(AddDayEntryDialogComponent, nutritionDialogConfig(data, '520px'));
     ref.afterClosed().pipe(
       switchMap((result: FoodEntryInput[] | undefined) => result?.length ? this.nutritionService.addEntries(this.isoDate, result) : EMPTY),
       takeUntilDestroyed(this.destroyRef)
@@ -248,7 +262,7 @@ export class NutritionDayComponent implements OnInit {
 
   openTemplatePickerDialog(mealType?: MealType): void {
     const data = {mealType: mealType ?? this.defaultMealType()};
-    const ref = this.dialog.open(MealTemplatePickerDialogComponent, {data});
+    const ref = this.dialog.open(MealTemplatePickerDialogComponent, nutritionDialogConfig(data, '440px'));
     ref.afterClosed().pipe(
       switchMap(result => result ? this.nutritionService.logMealTemplate(this.isoDate, result.templateId, result.mealType) : EMPTY),
       takeUntilDestroyed(this.destroyRef)
@@ -263,7 +277,7 @@ export class NutritionDayComponent implements OnInit {
   }
 
   openEditDialog(entry: MealEntry): void {
-    const ref = this.dialog.open(EntryEditDialogComponent, {data: entry});
+    const ref = this.dialog.open(EntryEditDialogComponent, nutritionDialogConfig(entry, '440px'));
     ref.afterClosed().pipe(
       switchMap((update: MealEntryUpdate | undefined) => update ? this.nutritionService.updateEntry(entry.id, update) : EMPTY),
       takeUntilDestroyed(this.destroyRef)
@@ -277,7 +291,7 @@ export class NutritionDayComponent implements OnInit {
   }
 
   openDeleteDialog(entry: MealEntry): void {
-    const ref = this.dialog.open(EntryDeleteDialogComponent, {data: {label: this.entryName(entry)}});
+    const ref = this.dialog.open(EntryDeleteDialogComponent, nutritionDialogConfig({label: this.entryName(entry)}));
     ref.afterClosed().pipe(
       switchMap(result => result === 'confirmed' ? this.nutritionService.deleteEntry(entry.id) : EMPTY),
       takeUntilDestroyed(this.destroyRef)
@@ -294,7 +308,7 @@ export class NutritionDayComponent implements OnInit {
   }
 
   openAddActivityDialog(): void {
-    const ref = this.dialog.open(ActivityEditDialogComponent, {data: null});
+    const ref = this.dialog.open(ActivityEditDialogComponent, nutritionDialogConfig<ActivityEditDialogData>(null, '440px'));
     ref.afterClosed().pipe(
       switchMap((result: SportActivityInput | undefined) => result ? this.nutritionService.addSportActivity(this.isoDate, result) : EMPTY),
       takeUntilDestroyed(this.destroyRef)
@@ -308,7 +322,7 @@ export class NutritionDayComponent implements OnInit {
   }
 
   openEditActivityDialog(activity: SportActivity): void {
-    const ref = this.dialog.open(ActivityEditDialogComponent, {data: activity});
+    const ref = this.dialog.open(ActivityEditDialogComponent, nutritionDialogConfig<ActivityEditDialogData>(activity, '440px'));
     ref.afterClosed().pipe(
       switchMap((update: SportActivityUpdate | undefined) => update ? this.nutritionService.updateSportActivity(activity.id, update) : EMPTY),
       takeUntilDestroyed(this.destroyRef)
@@ -322,7 +336,7 @@ export class NutritionDayComponent implements OnInit {
   }
 
   openDeleteActivityDialog(activity: SportActivity): void {
-    const ref = this.dialog.open(EntryDeleteDialogComponent, {data: {label: this.activityLabel(activity)}});
+    const ref = this.dialog.open(EntryDeleteDialogComponent, nutritionDialogConfig({label: this.activityLabel(activity)}));
     ref.afterClosed().pipe(
       switchMap(result => result === 'confirmed' ? this.nutritionService.deleteSportActivity(activity.id) : EMPTY),
       takeUntilDestroyed(this.destroyRef)

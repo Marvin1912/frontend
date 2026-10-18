@@ -9,11 +9,8 @@ import {
   ViewChild
 } from '@angular/core';
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatError, MatFormField, MatHint, MatLabel} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
+import {MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
-import {MatButton, MatMiniFabButton} from '@angular/material/button';
 import {FoodDraft} from '../../models/nutrition.model';
 import {NutritionService} from '../../services/nutrition.service';
 
@@ -45,18 +42,8 @@ const EAN_PATTERN = /^\d{8,14}$/;
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
     MatDialogClose,
-    MatFormField,
-    MatLabel,
-    MatError,
-    MatHint,
-    MatInput,
-    MatIcon,
-    MatButton,
-    MatMiniFabButton
+    MatIcon
   ],
   templateUrl: './barcode-scan-dialog.component.html',
   styleUrl: './barcode-scan-dialog.component.css'
@@ -85,6 +72,7 @@ export class BarcodeScanDialogComponent implements AfterViewInit, OnDestroy {
   private timer?: ReturnType<typeof setInterval>;
   private detecting = false;
   private handled = false;
+  private destroyed = false;
 
   ngAfterViewInit(): void {
     if (this.cameraSupported) {
@@ -93,6 +81,7 @@ export class BarcodeScanDialogComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.destroyed = true;
     this.stopCamera();
   }
 
@@ -100,9 +89,14 @@ export class BarcodeScanDialogComponent implements AfterViewInit, OnDestroy {
     try {
       const Ctor = (window as unknown as {BarcodeDetector: BarcodeDetectorCtor}).BarcodeDetector;
       this.detector = new Ctor({formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e']});
-      this.stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}});
+      const stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}});
       const video = this.videoRef?.nativeElement;
-      if (!video) return;
+      // Dialog closed (or video gone) while the permission prompt was open: release the camera again.
+      if (this.destroyed || !video) {
+        stream.getTracks().forEach(track => track.stop());
+        return;
+      }
+      this.stream = stream;
       video.srcObject = this.stream;
       await video.play();
       this.cameraActive = true;
@@ -178,8 +172,9 @@ export class BarcodeScanDialogComponent implements AfterViewInit, OnDestroy {
     this.handled = false;
     this.message = '';
     this.manualEan.reset('');
+    // Render the <video> element again before the camera attaches to it.
+    this.cdr.detectChanges();
     if (this.cameraSupported) void this.startCamera();
-    this.cdr.markForCheck();
   }
 
   private stopCamera(): void {

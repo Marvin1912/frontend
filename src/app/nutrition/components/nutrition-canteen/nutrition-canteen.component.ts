@@ -1,12 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MatFormField, MatHint, MatLabel} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
-import {MatSelect} from '@angular/material/select';
-import {MatOption} from '@angular/material/core';
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
-import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -29,17 +23,7 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
-    MatFormField,
-    MatLabel,
-    MatHint,
-    MatInput,
     NoWheelDirective,
-    MatSelect,
-    MatOption,
-    MatDatepicker,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatButton,
     MatIcon,
     MatProgressSpinner
   ],
@@ -57,7 +41,8 @@ export class NutritionCanteenComponent implements OnInit {
   /** Optional hint on portion size to sharpen the estimate. */
   portionHint = new FormControl('', {nonNullable: true});
   mealType = new FormControl<MealType>('LUNCH', {nonNullable: true});
-  date = new FormControl<Date>(new Date(), {nonNullable: true});
+  /** Day to log the estimate on, as yyyy-MM-dd (native date input). */
+  date = new FormControl(format(new Date(), 'yyyy-MM-dd'), {nonNullable: true, validators: Validators.required});
   templateName = new FormControl('', {nonNullable: true, validators: Validators.required});
 
   /** Editable macro values; populated once an estimate arrives. */
@@ -173,7 +158,7 @@ export class NutritionCanteenComponent implements OnInit {
   }
 
   log(): void {
-    if (!this.hasEstimate || this.valuesForm.invalid || this.description.invalid || this.logging) return;
+    if (!this.hasEstimate || this.valuesForm.invalid || this.description.invalid || this.date.invalid || this.logging) return;
     this.logging = true;
     this.cdr.markForCheck();
 
@@ -186,7 +171,7 @@ export class NutritionCanteenComponent implements OnInit {
       carbsG: Number(v.carbsG),
       fatG: Number(v.fatG)
     };
-    const isoDate = format(this.date.value, 'yyyy-MM-dd');
+    const isoDate = this.date.value;
 
     this.nutritionService.addEntry(isoDate, payload).subscribe({
       next: () => {

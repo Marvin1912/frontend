@@ -1,87 +1,92 @@
-<h2 mat-dialog-title>{{ title }}</h2>
+<form class="ui-dialog form" [formGroup]="form" (ngSubmit)="save()">
+  <h2 class="ui-dialog-title m-0">{{ title }}</h2>
 
-<mat-dialog-content>
-  <form class="edit-form" [formGroup]="form">
-    <mat-form-field appearance="outline" class="field-full">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" />
-      @if (form.get('name')?.hasError('required')) {
-        <mat-error>Name ist erforderlich</mat-error>
+  <div class="field">
+    <label class="ui-input-label" for="food-edit-name">Name</label>
+    <input id="food-edit-name" class="ui-input ui-input--teal" formControlName="name" autocomplete="off"
+           [attr.aria-invalid]="isInvalid('name')"
+           [attr.aria-describedby]="isInvalid('name') ? 'food-edit-name-error' : null" />
+    @if (isInvalid('name')) {
+      <p id="food-edit-name-error" class="field-error">Name ist erforderlich</p>
+    }
+  </div>
+
+  <div class="field">
+    <label class="ui-input-label" for="food-edit-brand">Marke</label>
+    <input id="food-edit-brand" class="ui-input ui-input--teal" formControlName="brand" autocomplete="off" />
+  </div>
+
+  <div class="form-grid">
+    <div class="field">
+      <label class="ui-input-label" for="food-edit-kcalPer100">kcal / 100 g</label>
+      <input id="food-edit-kcalPer100" type="number" step="1" min="0" inputmode="numeric" class="ui-input ui-input--teal"
+             formControlName="kcalPer100"
+             [attr.aria-invalid]="isInvalid('kcalPer100')"
+             [attr.aria-describedby]="isInvalid('kcalPer100') ? 'food-edit-kcalPer100-error' : null" />
+      @if (isInvalid('kcalPer100')) {
+        <p id="food-edit-kcalPer100-error" class="field-error">{{ form.get('kcalPer100')?.hasError('required') ? 'Erforderlich' : 'Muss 0 oder größer sein' }}</p>
       }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="field-full">
-      <mat-label>Marke</mat-label>
-      <input matInput formControlName="brand" />
-    </mat-form-field>
-
-    <div class="grid">
-      <mat-form-field appearance="outline">
-        <mat-label>kcal / 100 g</mat-label>
-        <input matInput type="number" step="1" inputmode="numeric" formControlName="kcalPer100" />
-        @if (form.get('kcalPer100')?.hasError('required')) {
-          <mat-error>Erforderlich</mat-error>
-        } @else if (form.get('kcalPer100')?.hasError('min')) {
-          <mat-error>Muss 0 oder größer sein</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Protein (g)</mat-label>
-        <input matInput type="number" step="0.1" inputmode="decimal" formControlName="proteinPer100" />
-        @if (form.get('proteinPer100')?.hasError('required')) {
-          <mat-error>Erforderlich</mat-error>
-        } @else if (form.get('proteinPer100')?.hasError('min')) {
-          <mat-error>Muss 0 oder größer sein</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Kohlenhydrate (g)</mat-label>
-        <input matInput type="number" step="0.1" inputmode="decimal" formControlName="carbsPer100" />
-        @if (form.get('carbsPer100')?.hasError('required')) {
-          <mat-error>Erforderlich</mat-error>
-        } @else if (form.get('carbsPer100')?.hasError('min')) {
-          <mat-error>Muss 0 oder größer sein</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Fett (g)</mat-label>
-        <input matInput type="number" step="0.1" inputmode="decimal" formControlName="fatPer100" />
-        @if (form.get('fatPer100')?.hasError('required')) {
-          <mat-error>Erforderlich</mat-error>
-        } @else if (form.get('fatPer100')?.hasError('min')) {
-          <mat-error>Muss 0 oder größer sein</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Ballaststoffe (g)</mat-label>
-        <input matInput type="number" step="0.1" inputmode="decimal" formControlName="fiberPer100" />
-        @if (form.get('fiberPer100')?.hasError('min')) {
-          <mat-error>Muss 0 oder größer sein</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Portion (g)</mat-label>
-        <input matInput type="number" step="1" inputmode="numeric" formControlName="defaultServingG" />
-        @if (form.get('defaultServingG')?.hasError('min')) {
-          <mat-error>Muss 0 oder größer sein</mat-error>
-        }
-      </mat-form-field>
     </div>
-  </form>
-</mat-dialog-content>
+    <div class="field">
+      <label class="ui-input-label" for="food-edit-proteinPer100">Protein (g)</label>
+      <input id="food-edit-proteinPer100" type="number" step="0.1" min="0" inputmode="decimal" class="ui-input ui-input--teal"
+             formControlName="proteinPer100"
+             [attr.aria-invalid]="isInvalid('proteinPer100')"
+             [attr.aria-describedby]="isInvalid('proteinPer100') ? 'food-edit-proteinPer100-error' : null" />
+      @if (isInvalid('proteinPer100')) {
+        <p id="food-edit-proteinPer100-error" class="field-error">{{ form.get('proteinPer100')?.hasError('required') ? 'Erforderlich' : 'Muss 0 oder größer sein' }}</p>
+      }
+    </div>
+    <div class="field">
+      <label class="ui-input-label" for="food-edit-carbsPer100">Kohlenhydrate (g)</label>
+      <input id="food-edit-carbsPer100" type="number" step="0.1" min="0" inputmode="decimal" class="ui-input ui-input--teal"
+             formControlName="carbsPer100"
+             [attr.aria-invalid]="isInvalid('carbsPer100')"
+             [attr.aria-describedby]="isInvalid('carbsPer100') ? 'food-edit-carbsPer100-error' : null" />
+      @if (isInvalid('carbsPer100')) {
+        <p id="food-edit-carbsPer100-error" class="field-error">{{ form.get('carbsPer100')?.hasError('required') ? 'Erforderlich' : 'Muss 0 oder größer sein' }}</p>
+      }
+    </div>
+    <div class="field">
+      <label class="ui-input-label" for="food-edit-fatPer100">Fett (g)</label>
+      <input id="food-edit-fatPer100" type="number" step="0.1" min="0" inputmode="decimal" class="ui-input ui-input--teal"
+             formControlName="fatPer100"
+             [attr.aria-invalid]="isInvalid('fatPer100')"
+             [attr.aria-describedby]="isInvalid('fatPer100') ? 'food-edit-fatPer100-error' : null" />
+      @if (isInvalid('fatPer100')) {
+        <p id="food-edit-fatPer100-error" class="field-error">{{ form.get('fatPer100')?.hasError('required') ? 'Erforderlich' : 'Muss 0 oder größer sein' }}</p>
+      }
+    </div>
+    <div class="field">
+      <label class="ui-input-label" for="food-edit-fiberPer100">Ballaststoffe (g)</label>
+      <input id="food-edit-fiberPer100" type="number" step="0.1" min="0" inputmode="decimal" class="ui-input ui-input--teal"
+             formControlName="fiberPer100"
+             [attr.aria-invalid]="isInvalid('fiberPer100')"
+             [attr.aria-describedby]="isInvalid('fiberPer100') ? 'food-edit-fiberPer100-error' : null" />
+      @if (isInvalid('fiberPer100')) {
+        <p id="food-edit-fiberPer100-error" class="field-error">Muss 0 oder größer sein</p>
+      }
+    </div>
+    <div class="field">
+      <label class="ui-input-label" for="food-edit-defaultServingG">Portion (g)</label>
+      <input id="food-edit-defaultServingG" type="number" step="1" min="0" inputmode="numeric" class="ui-input ui-input--teal"
+             formControlName="defaultServingG"
+             [attr.aria-invalid]="isInvalid('defaultServingG')"
+             [attr.aria-describedby]="isInvalid('defaultServingG') ? 'food-edit-defaultServingG-error' : null" />
+      @if (isInvalid('defaultServingG')) {
+        <p id="food-edit-defaultServingG-error" class="field-error">Muss 0 oder größer sein</p>
+      }
+    </div>
+  </div>
 
-<mat-dialog-actions align="center">
-  <button mat-flat-button type="button" class="btn-confirm" [disabled]="form.invalid" (click)="save()">
-    <mat-icon>check_circle</mat-icon>
-    Speichern
-  </button>
-  <button mat-stroked-button type="button" mat-dialog-close class="btn-cancel">
-    <mat-icon>close</mat-icon>
-    Abbrechen
-  </button>
-</mat-dialog-actions>
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn" mat-dialog-close>
+      <mat-icon aria-hidden="true">close</mat-icon>
+      <span>Abbrechen</span>
+    </button>
+    <button type="submit" class="ui-btn ui-btn--teal" [disabled]="form.invalid">
+      <mat-icon aria-hidden="true">check</mat-icon>
+      <span>Speichern</span>
+    </button>
+  </div>
+</form>

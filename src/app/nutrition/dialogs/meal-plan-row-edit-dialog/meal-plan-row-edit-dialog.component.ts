@@ -2,20 +2,17 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, Eleme
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatError, MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
-import {MatSelect} from '@angular/material/select';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatOption} from '@angular/material/core';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatButton} from '@angular/material/button';
 import {catchError, debounceTime, distinctUntilChanged, EMPTY, finalize, of, startWith, switchMap, tap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
 import {Food, MealPlanRow, MealPlanRowInput, MealType} from '../../models/nutrition.model';
-import {FoodEditDialogComponent} from '../food-edit-dialog/food-edit-dialog.component';
+import {FoodEditDialogComponent, FoodEditDialogData} from '../food-edit-dialog/food-edit-dialog.component';
+import {nutritionDialogConfig} from '../dialog-config';
 
 export interface MealPlanRowEditDialogData {
   sectionId: string;
@@ -48,26 +45,15 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
   imports: [
     ReactiveFormsModule,
     DecimalPipe,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
     MatDialogClose,
-    MatFormField,
-    MatLabel,
-    MatError,
-    MatSuffix,
-    MatInput,
     NoWheelDirective,
-    MatSelect,
     MatOption,
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatIcon,
-    MatProgressSpinner,
-    MatButton
+    MatProgressSpinner
   ],
-  templateUrl: './meal-plan-row-edit-dialog.component.html',
-  styleUrl: './meal-plan-row-edit-dialog.component.css'
+  templateUrl: './meal-plan-row-edit-dialog.component.html'
 })
 export class MealPlanRowEditDialogComponent implements OnInit {
 
@@ -177,7 +163,7 @@ export class MealPlanRowEditDialogComponent implements OnInit {
   }
 
   openCreateFoodDialog(): void {
-    const ref = this.dialog.open(FoodEditDialogComponent, {data: {food: null, source: 'MANUAL'}});
+    const ref = this.dialog.open(FoodEditDialogComponent, nutritionDialogConfig<FoodEditDialogData>({food: null, source: 'MANUAL'}, '480px'));
     ref.afterClosed().pipe(
       switchMap(result => result ? this.nutritionService.createFood(result) : EMPTY),
       takeUntilDestroyed(this.destroyRef)

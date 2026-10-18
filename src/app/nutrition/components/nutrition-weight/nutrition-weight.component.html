@@ -1,76 +1,90 @@
-<div class="weight">
+<div class="ui-container page">
 
   <app-targets-card />
 
-  <section class="panel">
-    <header class="panel__head">
-      <span class="panel__dot"></span>
-      <span class="panel__label">GEWICHT ERFASSEN</span>
-    </header>
+  <section class="ui-panel ui-panel--lime">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Gewicht erfassen</h2>
+    </div>
 
-    <form class="add-form" [formGroup]="form" (ngSubmit)="add()">
-      <mat-form-field appearance="outline" class="field-date">
-        <mat-label>Datum</mat-label>
-        <input matInput formControlName="entryDate" [matDatepicker]="picker" [max]="today" />
-        <mat-datepicker-toggle matIconSuffix [for]="picker" />
-        <mat-datepicker #picker />
-      </mat-form-field>
+    <form class="ui-panel-body add-form" [formGroup]="form" (ngSubmit)="add()">
+      <div class="field field-date">
+        <label class="ui-input-label" for="weight-date">Datum</label>
+        <input id="weight-date" type="date" class="ui-input ui-input--lime" formControlName="entryDate" [max]="today"
+               [attr.aria-invalid]="form.get('entryDate')?.invalid"
+               [attr.aria-describedby]="form.get('entryDate')?.hasError('future') ? 'weight-date-error' : null" />
+        @if (form.get('entryDate')?.hasError('future')) {
+          <p id="weight-date-error" class="field-error">Datum darf nicht in der Zukunft liegen</p>
+        }
+      </div>
 
-      <mat-form-field appearance="outline" class="field-weight">
-        <mat-label>Gewicht (kg)</mat-label>
-        <input matInput type="number" step="0.1" inputmode="decimal" formControlName="weightKg" />
-      </mat-form-field>
+      <div class="field field-weight">
+        <label class="ui-input-label" for="weight-kg">Gewicht (kg)</label>
+        <input id="weight-kg" type="number" step="0.1" min="0" inputmode="decimal" class="ui-input ui-input--lime"
+               formControlName="weightKg" />
+      </div>
 
-      <button mat-flat-button type="submit" class="btn-add" [disabled]="form.invalid || saving">
+      <button type="submit" class="ui-btn ui-btn--lime btn-add" [disabled]="form.invalid || saving">
         @if (saving) {
           <mat-spinner diameter="18" />
         } @else {
-          <mat-icon>add</mat-icon>
+          <mat-icon aria-hidden="true">add</mat-icon>
         }
-        Hinzufügen
+        <span>Hinzufügen</span>
       </button>
     </form>
   </section>
 
-  <section class="panel panel-table">
-    <header class="panel__head">
-      <span class="panel__dot"></span>
-      <span class="panel__label">VERLAUF</span>
-    </header>
+  <section class="ui-panel ui-panel--lime">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Verlauf</h2>
+      @if (entries.length) {
+        <span class="ui-badge ui-badge--lime">{{ entries.length }} Einträge</span>
+      }
+    </div>
 
-    @if (entries.data.length) {
+    @if (loading) {
+      <div class="ui-empty" role="status">
+        <mat-spinner diameter="28" />
+        <p class="m-0">Einträge werden geladen…</p>
+      </div>
+    } @else if (entries.length) {
       <div class="table-container">
-        <table mat-table [dataSource]="entries">
-
-          <ng-container matColumnDef="entryDate">
-            <th *matHeaderCellDef mat-header-cell class="col-header">Datum</th>
-            <td *matCellDef="let entry" mat-cell>{{ entry.entryDate | date:'dd.MM.yyyy':'':'de' }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="weightKg">
-            <th *matHeaderCellDef mat-header-cell class="col-header">Gewicht</th>
-            <td *matCellDef="let entry" mat-cell>{{ entry.weightKg | number:'1.1-1':'de' }} kg</td>
-          </ng-container>
-
-          <ng-container matColumnDef="actions">
-            <th *matHeaderCellDef mat-header-cell class="col-header"></th>
-            <td *matCellDef="let entry" mat-cell class="col-actions">
-              <button mat-icon-button class="btn-edit" matTooltip="Bearbeiten" aria-label="Bearbeiten" (click)="openEditDialog(entry)">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button class="btn-del" matTooltip="Löschen" aria-label="Löschen" (click)="openDeleteDialog(entry)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-
-          <tr *matHeaderRowDef="columnsToDisplay" mat-header-row></tr>
-          <tr *matRowDef="let entry; columns: columnsToDisplay;" mat-row></tr>
-
+        <table class="ui-table">
+          <thead>
+            <tr>
+              <th class="ui-table-head" scope="col">Datum</th>
+              <th class="ui-table-head col-num" scope="col">Gewicht</th>
+              <th class="ui-table-head col-actions" scope="col"><span class="sr-only">Aktionen</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of entries; track entry.id) {
+              <tr class="ui-table-row">
+                <td class="ui-table-cell">{{ entry.entryDate | date:'dd.MM.yyyy':'':'de' }}</td>
+                <td class="ui-table-cell col-num">{{ entry.weightKg | number:'1.1-1':'de' }} kg</td>
+                <td class="ui-table-cell col-actions">
+                  <span class="row-actions">
+                    <button type="button" class="ui-btn-icon" aria-label="Bearbeiten" matTooltip="Bearbeiten"
+                            (click)="openEditDialog(entry)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button type="button" class="ui-btn-icon ui-btn--rose" aria-label="Löschen" matTooltip="Löschen"
+                            (click)="openDeleteDialog(entry)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
         </table>
       </div>
     } @else {
-      <p class="empty">Noch keine Gewichtseinträge.</p>
+      <div class="ui-empty" role="status">
+        <mat-icon aria-hidden="true">monitor_weight</mat-icon>
+        <p class="m-0">Noch keine Gewichtseinträge.</p>
+      </div>
     }
   </section>
 

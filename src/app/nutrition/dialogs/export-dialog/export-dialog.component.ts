@@ -1,14 +1,12 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal} from '@angular/core';
 import {AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
+import {MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
-import {MatButton} from '@angular/material/button';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {format, subDays} from 'date-fns';
 import {NutritionService} from '../../services/nutrition.service';
+import {notInFutureValidator, todayIso} from '../../forms';
 
 function dateRangeValidator(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
@@ -26,22 +24,11 @@ function dateRangeValidator(): ValidatorFn {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
     MatDialogClose,
-    MatFormField,
-    MatLabel,
-    MatSuffix,
-    MatDatepicker,
-    MatDatepickerInput,
-    MatDatepickerToggle,
     MatIcon,
-    MatButton,
     MatProgressSpinner
   ],
-  templateUrl: './export-dialog.component.html',
-  styleUrl: './export-dialog.component.css'
+  templateUrl: './export-dialog.component.html'
 })
 export class ExportDialogComponent {
 
@@ -51,16 +38,25 @@ export class ExportDialogComponent {
   private nutritionService = inject(NutritionService);
   private snackBar = inject(MatSnackBar);
 
-  today = new Date();
   exporting = signal(false);
 
   form = this.fb.group(
     {
-      from: [subDays(this.today, 13), Validators.required],
-      to: [this.today, Validators.required]
+      // Native date inputs work on yyyy-MM-dd strings, which also compare correctly as strings.
+      from: [format(subDays(new Date(), 13), 'yyyy-MM-dd'), [Validators.required, notInFutureValidator()]],
+      to: [todayIso(), [Validators.required, notInFutureValidator()]]
     },
     {validators: dateRangeValidator()}
   );
+
+  get today(): string {
+    return todayIso();
+  }
+
+  /** Either date lies after today. */
+  get futureError(): boolean {
+    return !!this.form.get('from')?.hasError('future') || !!this.form.get('to')?.hasError('future');
+  }
 
   get rangeError(): boolean {
     const from = this.form.get('from')?.value;
@@ -69,11 +65,12 @@ export class ExportDialogComponent {
   }
 
   export(): void {
-    if (this.form.invalid) return;
-    const fromStr = format(this.form.value.from as Date, 'yyyy-MM-dd');
-    const toStr = format(this.form.value.to as Date, 'yyyy-MM-dd');
+    if (this.form.invalid || this.exporting()) return;
+    const fromStr = this.form.value.from as string;
+    const toStr = this.form.value.to as string;
 
     this.exporting.set(true);
+    this.dialogRef.disableClose = true;
     this.cdr.markForCheck();
 
     this.nutritionService.exportPdf(fromStr, toStr).subscribe({
@@ -90,6 +87,7 @@ export class ExportDialogComponent {
       },
       error: () => {
         this.exporting.set(false);
+        this.dialogRef.disableClose = false;
         this.cdr.markForCheck();
         this.snackBar.open('PDF-Export fehlgeschlagen', 'OK', {duration: 4000});
       }

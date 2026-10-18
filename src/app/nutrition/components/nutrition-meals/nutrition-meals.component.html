@@ -1,60 +1,63 @@
-<div class="meals">
+<div class="ui-container page">
 
-  <section class="panel">
-    <header class="panel__head">
-      <span class="panel__dot"></span>
-      <span class="panel__label">MAHLZEITEN</span>
-    </header>
-
-    <div class="toolbar">
-      <div class="actions">
-        <button mat-flat-button type="button" class="btn-add" (click)="openAddDialog()">
-          <mat-icon>add</mat-icon>
-          Mahlzeit hinzufügen
-        </button>
-      </div>
+  <section class="ui-panel ui-panel--orange">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Mahlzeiten</h2>
+      <button type="button" class="ui-btn ui-btn--orange" (click)="openAddDialog()">
+        <mat-icon aria-hidden="true">add</mat-icon>
+        <span>Mahlzeit hinzufügen</span>
+      </button>
     </div>
-  </section>
 
-  <section class="panel panel-table">
-    @if (templates.length) {
+    @if (loading) {
+      <div class="ui-empty" role="status">
+        <mat-spinner diameter="28" />
+        <p class="m-0">Mahlzeiten werden geladen…</p>
+      </div>
+    } @else if (loadFailed) {
+      <div class="ui-empty ui-empty--error" role="alert">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <p class="m-0">Mahlzeiten konnten nicht geladen werden.</p>
+      </div>
+    } @else if (templates.length) {
       <div class="table-container">
-        <table mat-table [dataSource]="templates">
-
-          <ng-container matColumnDef="name">
-            <th *matHeaderCellDef mat-header-cell class="col-header">Name</th>
-            <td *matCellDef="let template" mat-cell>{{ template.name }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="items">
-            <th *matHeaderCellDef mat-header-cell class="col-header col-num">Anzahl</th>
-            <td *matCellDef="let template" mat-cell class="col-num">{{ template.items.length }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="kcal">
-            <th *matHeaderCellDef mat-header-cell class="col-header col-num">kcal</th>
-            <td *matCellDef="let template" mat-cell class="col-num">{{ totalKcal(template) | number:'1.0-0':'de' }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="actions">
-            <th *matHeaderCellDef mat-header-cell class="col-header"></th>
-            <td *matCellDef="let template" mat-cell class="col-actions">
-              <button mat-icon-button class="btn-edit" matTooltip="Bearbeiten" aria-label="Bearbeiten" (click)="openEditDialog(template)">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button class="btn-del" matTooltip="Löschen" aria-label="Löschen" (click)="openDeleteDialog(template)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-
-          <tr *matHeaderRowDef="columnsToDisplay" mat-header-row></tr>
-          <tr *matRowDef="let template; columns: columnsToDisplay;" mat-row></tr>
-
+        <table class="ui-table">
+          <thead>
+            <tr>
+              <th class="ui-table-head" scope="col">Name</th>
+              <th class="ui-table-head col-num" scope="col">Anzahl</th>
+              <th class="ui-table-head col-num" scope="col">kcal</th>
+              <th class="ui-table-head col-actions" scope="col"><span class="sr-only">Aktionen</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (template of templates; track template.id) {
+              <tr class="ui-table-row">
+                <td class="ui-table-cell template-name">{{ template.name }}</td>
+                <td class="ui-table-cell col-num">{{ template.items.length }}</td>
+                <td class="ui-table-cell col-num">{{ totalKcal(template) | number:'1.0-0':'de' }}</td>
+                <td class="ui-table-cell col-actions">
+                  <span class="row-actions">
+                    <button type="button" class="ui-btn-icon" [attr.aria-label]="template.name + ' bearbeiten'"
+                            matTooltip="Bearbeiten" (click)="openEditDialog(template)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button type="button" class="ui-btn-icon ui-btn--rose" [attr.aria-label]="template.name + ' löschen'"
+                            matTooltip="Löschen" (click)="openDeleteDialog(template)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
         </table>
       </div>
     } @else {
-      <p class="empty">Noch keine Mahlzeiten. Lege eine an, um sie schnell ins Tagebuch übernehmen zu können.</p>
+      <div class="ui-empty" role="status">
+        <mat-icon aria-hidden="true">restaurant_menu</mat-icon>
+        <p class="m-0 empty-text">Noch keine Mahlzeiten. Lege eine an, um sie schnell ins Tagebuch übernehmen zu können.</p>
+      </div>
     }
   </section>
 

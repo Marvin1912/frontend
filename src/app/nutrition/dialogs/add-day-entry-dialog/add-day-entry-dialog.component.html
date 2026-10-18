@@ -1,134 +1,147 @@
-<h2 mat-dialog-title>Essen hinzufügen</h2>
+<form class="ui-dialog form" [formGroup]="form" (ngSubmit)="save()">
+  <h2 class="ui-dialog-title m-0">Essen hinzufügen</h2>
 
-<mat-dialog-content>
-  <form class="entry-form" [formGroup]="form">
-    <mat-form-field appearance="outline" class="field-full">
-      <mat-label>Mahlzeit</mat-label>
-      <mat-select formControlName="mealType">
-        @for (m of mealTypes; track m.value) {
-          <mat-option [value]="m.value">{{ m.label }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="field-full">
-      <mat-label>Lebensmittel</mat-label>
-      @if (searching) {
-        <mat-spinner matSuffix diameter="18" />
-      } @else {
-        <mat-icon matSuffix>search</mat-icon>
+  <div class="field">
+    <label class="ui-input-label" for="add-entry-meal">Mahlzeit</label>
+    <select id="add-entry-meal" class="ui-input ui-input--lime" formControlName="mealType">
+      @for (m of mealTypes; track m.value) {
+        <option [ngValue]="m.value">{{ m.label }}</option>
       }
-      <input matInput autocomplete="off" formControlName="foodSearch"
-             [matAutocomplete]="auto" placeholder="Suchen…" />
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFood"
-                        (optionSelected)="onFoodSelected($event)">
-        @for (food of results; track food.id) {
-          <mat-option [value]="food">
-            <span class="opt-name">{{ food.name }}</span>
-            @if (food.brand) {
-              <span class="opt-brand">{{ food.brand }}</span>
-            }
-            <span class="opt-kcal">{{ food.kcalPer100 | number:'1.0-0':'de' }} kcal / 100 g</span>
-          </mat-option>
-        }
-      </mat-autocomplete>
-    </mat-form-field>
+    </select>
+  </div>
 
+  <div class="field">
+    <label class="ui-input-label" for="add-entry-food">Lebensmittel</label>
+    <div class="input-affix">
+      <input id="add-entry-food" class="ui-input ui-input--lime" autocomplete="off" formControlName="foodSearch"
+             [matAutocomplete]="auto" placeholder="Suchen…"
+             [attr.aria-describedby]="searchFailed ? 'add-entry-food-error' : null" />
+      <span class="input-affix__suffix" aria-hidden="true">
+        @if (searching) {
+          <mat-spinner diameter="16" />
+        } @else {
+          <mat-icon>search</mat-icon>
+        }
+      </span>
+    </div>
+    <mat-autocomplete #auto="matAutocomplete" class="ui-autocomplete-panel nutrition-scope" [displayWith]="displayFood"
+                      (optionSelected)="onFoodSelected($event)">
+      @for (food of results; track food.id) {
+        <mat-option [value]="food">
+          <span class="opt">
+            <span class="opt__name">{{ food.name }}</span>
+            <span class="opt__meta">
+              @if (food.brand) {
+                {{ food.brand }} ·
+              }
+              {{ food.kcalPer100 | number:'1.0-0':'de' }} kcal / 100 g
+            </span>
+          </span>
+        </mat-option>
+      }
+    </mat-autocomplete>
     @if (searchFailed) {
-      <p class="search-error">Lebensmittel konnten nicht geladen werden.</p>
+      <p id="add-entry-food-error" class="field-error" role="alert">Lebensmittel konnten nicht geladen werden.</p>
     }
+  </div>
 
-    <mat-form-field appearance="outline" class="field-full">
-      <mat-label>Menge</mat-label>
-      <input matInput #quantityInput type="number" step="1" inputmode="numeric" formControlName="quantityG" />
-      <span matSuffix>g</span>
-      @if (quantityG.hasError('required')) {
-        <mat-error>Menge ist erforderlich</mat-error>
-      } @else if (quantityG.hasError('min')) {
-        <mat-error>Muss 0 oder größer sein</mat-error>
-      }
-    </mat-form-field>
+  <div class="field">
+    <label class="ui-input-label" for="add-entry-qty">Menge</label>
+    <div class="input-affix">
+      <input id="add-entry-qty" #quantityInput type="number" step="1" min="0" inputmode="numeric" class="ui-input ui-input--lime"
+             formControlName="quantityG"
+             [attr.aria-invalid]="quantityG.invalid && quantityG.touched"
+             [attr.aria-describedby]="quantityG.invalid && quantityG.touched ? 'add-entry-qty-error' : null" />
+      <span class="input-affix__suffix" aria-hidden="true">g</span>
+    </div>
+    @if (quantityG.invalid && quantityG.touched) {
+      <p id="add-entry-qty-error" class="field-error">
+        {{ quantityG.hasError('required') ? 'Menge ist erforderlich' : 'Muss 0 oder größer sein' }}
+      </p>
+    }
+  </div>
 
-    @if (selected) {
-      <div class="macros">
-        <span class="macros__label">Für {{ quantityG.value || 0 }} g</span>
-        <div class="macros__grid">
-          <div class="macro macro--kcal">
-            <span class="macro__v">{{ scaled(selected.kcalPer100) | number:'1.0-0':'de' }}</span>
-            <span class="macro__u">kcal</span>
-          </div>
-          <div class="macro macro--p">
-            <span class="macro__v">{{ scaled(selected.proteinPer100) | number:'1.0-1':'de' }}</span>
-            <span class="macro__u">P</span>
-          </div>
-          <div class="macro macro--c">
-            <span class="macro__v">{{ scaled(selected.carbsPer100) | number:'1.0-1':'de' }}</span>
-            <span class="macro__u">KH</span>
-          </div>
-          <div class="macro macro--f">
-            <span class="macro__v">{{ scaled(selected.fatPer100) | number:'1.0-1':'de' }}</span>
-            <span class="macro__u">F</span>
-          </div>
+  @if (selected) {
+    <div class="macro-preview">
+      <span class="macro-preview__label">Für {{ quantityG.value || 0 }} g</span>
+      <div class="macro-tiles">
+        <div class="macro-tile macro-tile--kcal">
+          <span class="macro-tile__value">{{ scaled(selected.kcalPer100) | number:'1.0-0':'de' }}</span>
+          <span class="macro-tile__label">kcal</span>
+        </div>
+        <div class="macro-tile macro-tile--protein">
+          <span class="macro-tile__value">{{ scaled(selected.proteinPer100) | number:'1.0-1':'de' }}</span>
+          <span class="macro-tile__label">P</span>
+        </div>
+        <div class="macro-tile macro-tile--carbs">
+          <span class="macro-tile__value">{{ scaled(selected.carbsPer100) | number:'1.0-1':'de' }}</span>
+          <span class="macro-tile__label">KH</span>
+        </div>
+        <div class="macro-tile macro-tile--fat">
+          <span class="macro-tile__value">{{ scaled(selected.fatPer100) | number:'1.0-1':'de' }}</span>
+          <span class="macro-tile__label">F</span>
         </div>
       </div>
-
-      <button mat-stroked-button type="button" class="btn-add-staged" [disabled]="!canAdd" (click)="addToStaged()">
-        <mat-icon>playlist_add</mat-icon>
-        Weiteres hinzufügen
-      </button>
-    }
-  </form>
-
-  @if (staged.length > 0) {
-    <div class="staged-list">
-      @for (item of staged; track item; let i = $index) {
-        <div class="staged-item">
-          <span class="staged-item__name">{{ item.food.name }}</span>
-          <span class="staged-item__meal">{{ mealTypeLabel(item.mealType) }}</span>
-          <span class="staged-item__qty">{{ item.quantityG | number:'1.0-0':'de' }} g</span>
-          <span class="staged-item__kcal">{{ scaledFor(item, item.food.kcalPer100) | number:'1.0-0':'de' }} kcal</span>
-          <button mat-icon-button type="button" class="staged-item__remove" aria-label="Eintrag entfernen" (click)="removeStaged(i)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </div>
-      }
     </div>
 
-    <div class="macros macros--total">
-      <span class="macros__label">Gesamt</span>
-      <div class="macros__grid">
-        <div class="macro macro--kcal">
-          <span class="macro__v">{{ totals.kcal | number:'1.0-0':'de' }}</span>
-          <span class="macro__u">kcal</span>
+    <button type="button" class="ui-btn btn-stage" [disabled]="!canAdd" (click)="addToStaged()">
+      <mat-icon aria-hidden="true">playlist_add</mat-icon>
+      <span>Weiteres hinzufügen</span>
+    </button>
+  }
+
+  @if (staged.length > 0) {
+    <ul class="staged-list" aria-label="Vorgemerkte Einträge">
+      @for (item of staged; track item; let i = $index) {
+        <li class="staged-item">
+          <span class="staged-item__name">{{ item.food.name }}</span>
+          <span class="staged-item__meta">
+            {{ mealTypeLabel(item.mealType) }} · {{ item.quantityG | number:'1.0-0':'de' }} g ·
+            {{ scaledFor(item, item.food.kcalPer100) | number:'1.0-0':'de' }} kcal
+          </span>
+          <button type="button" class="ui-btn-icon ui-btn--rose" [attr.aria-label]="item.food.name + ' entfernen'"
+                  (click)="removeStaged(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </li>
+      }
+    </ul>
+
+    <div class="macro-preview">
+      <span class="macro-preview__label">Gesamt</span>
+      <div class="macro-tiles">
+        <div class="macro-tile macro-tile--kcal">
+          <span class="macro-tile__value">{{ totals.kcal | number:'1.0-0':'de' }}</span>
+          <span class="macro-tile__label">kcal</span>
         </div>
-        <div class="macro macro--p">
-          <span class="macro__v">{{ totals.proteinG | number:'1.0-1':'de' }}</span>
-          <span class="macro__u">P</span>
+        <div class="macro-tile macro-tile--protein">
+          <span class="macro-tile__value">{{ totals.proteinG | number:'1.0-1':'de' }}</span>
+          <span class="macro-tile__label">P</span>
         </div>
-        <div class="macro macro--c">
-          <span class="macro__v">{{ totals.carbsG | number:'1.0-1':'de' }}</span>
-          <span class="macro__u">KH</span>
+        <div class="macro-tile macro-tile--carbs">
+          <span class="macro-tile__value">{{ totals.carbsG | number:'1.0-1':'de' }}</span>
+          <span class="macro-tile__label">KH</span>
         </div>
-        <div class="macro macro--f">
-          <span class="macro__v">{{ totals.fatG | number:'1.0-1':'de' }}</span>
-          <span class="macro__u">F</span>
+        <div class="macro-tile macro-tile--fat">
+          <span class="macro-tile__value">{{ totals.fatG | number:'1.0-1':'de' }}</span>
+          <span class="macro-tile__label">F</span>
         </div>
       </div>
     </div>
   }
-</mat-dialog-content>
 
-<mat-dialog-actions align="center">
-  <button mat-flat-button type="button" class="btn-confirm" [disabled]="!canSave" (click)="save()">
-    <mat-icon>check_circle</mat-icon>
-    @if (staged.length > 0) {
-      Speichern ({{ staged.length + (canAdd ? 1 : 0) }})
-    } @else {
-      Speichern
-    }
-  </button>
-  <button mat-stroked-button type="button" mat-dialog-close class="btn-cancel">
-    <mat-icon>close</mat-icon>
-    Abbrechen
-  </button>
-</mat-dialog-actions>
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn" mat-dialog-close>
+      <mat-icon aria-hidden="true">close</mat-icon>
+      <span>Abbrechen</span>
+    </button>
+    <button type="submit" class="ui-btn ui-btn--teal" [disabled]="!canSave">
+      <mat-icon aria-hidden="true">check</mat-icon>
+      @if (staged.length > 0) {
+        <span>Speichern ({{ staged.length + (canAdd ? 1 : 0) }})</span>
+      } @else {
+        <span>Speichern</span>
+      }
+    </button>
+  </div>
+</form>

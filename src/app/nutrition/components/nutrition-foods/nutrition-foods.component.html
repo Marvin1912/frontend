@@ -1,38 +1,42 @@
-<div class="foods">
+<div class="ui-container page">
 
-  <section class="panel">
-    <header class="panel__head">
-      <span class="panel__dot"></span>
-      <span class="panel__label">LEBENSMITTEL</span>
-    </header>
+  <section class="ui-panel ui-panel--teal">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Lebensmittel</h2>
+    </div>
 
-    <div class="toolbar">
-      <mat-form-field appearance="outline" class="field-search">
-        <mat-label>Suchen</mat-label>
-        @if (searching) {
-          <mat-spinner matPrefix diameter="18" />
-        } @else {
-          <mat-icon matPrefix>search</mat-icon>
-        }
-        <input matInput autocomplete="off" [formControl]="search" />
-      </mat-form-field>
+    <div class="ui-panel-body toolbar">
+      <div class="field field-search">
+        <label class="sr-only" for="foods-search">Suchen</label>
+        <div class="input-affix">
+          <input id="foods-search" type="search" class="ui-input ui-input--teal" autocomplete="off"
+                 placeholder="Suchen…" [formControl]="search" />
+          <span class="input-affix__suffix" aria-hidden="true">
+            @if (searching) {
+              <mat-spinner diameter="16" />
+            } @else {
+              <mat-icon>search</mat-icon>
+            }
+          </span>
+        </div>
+      </div>
 
       <div class="actions">
-        <button mat-flat-button type="button" class="btn-add" (click)="openAddDialog()">
-          <mat-icon>add</mat-icon>
-          Neu
+        <button type="button" class="ui-btn ui-btn--teal" (click)="openAddDialog()">
+          <mat-icon aria-hidden="true">add</mat-icon>
+          <span>Neu</span>
         </button>
-        <button mat-flat-button type="button" class="btn-scan" [disabled]="scanning" (click)="triggerPhoto()">
+        <button type="button" class="ui-btn" [disabled]="scanning" (click)="triggerPhoto()">
           @if (scanning) {
             <mat-spinner diameter="18" />
           } @else {
-            <mat-icon>photo_camera</mat-icon>
+            <mat-icon aria-hidden="true">photo_camera</mat-icon>
           }
-          Foto
+          <span>Foto</span>
         </button>
-        <button mat-flat-button type="button" class="btn-barcode" (click)="openBarcodeDialog()">
-          <mat-icon>barcode_scanner</mat-icon>
-          Barcode
+        <button type="button" class="ui-btn" (click)="openBarcodeDialog()">
+          <mat-icon aria-hidden="true">barcode_scanner</mat-icon>
+          <span>Barcode</span>
         </button>
         <input #photoInput type="file" accept="image/*" capture="environment" hidden
                (change)="onPhotoSelected($event)" />
@@ -40,68 +44,104 @@
     </div>
   </section>
 
-  <section class="panel panel-table">
-    @if (foods.data.length) {
+  <section class="ui-panel ui-panel--teal">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Katalog</h2>
+      @if (foods.length) {
+        <span class="ui-badge ui-badge--teal">{{ foods.length }} Einträge</span>
+      }
+    </div>
+
+    @if (foods.length) {
       <div class="table-container">
-        <table mat-table [dataSource]="foods" matSort>
-
-          <ng-container matColumnDef="name">
-            <th *matHeaderCellDef mat-header-cell mat-sort-header class="col-header">Name</th>
-            <td *matCellDef="let food" mat-cell>
-              <span class="food-name">{{ food.name }}</span>
-              @if (food.brand) {
-                <span class="food-brand">{{ food.brand }}</span>
+        <table class="ui-table">
+          <thead>
+            <tr>
+              @for (col of sortColumns; track col.key) {
+                <th class="ui-table-head" scope="col" [class.col-num]="col.key !== 'name'"
+                    [attr.aria-sort]="ariaSort(col.key)">
+                  <button type="button" class="sort-btn" (click)="toggleSort(col.key)">
+                    <span>{{ col.label }}</span>
+                    <mat-icon class="sort-btn__icon" [class.sort-btn__icon--active]="sortKey === col.key" aria-hidden="true">
+                      {{ sortKey === col.key && sortDir === 'desc' ? 'arrow_downward' : 'arrow_upward' }}
+                    </mat-icon>
+                  </button>
+                </th>
               }
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="kcal">
-            <th *matHeaderCellDef mat-header-cell mat-sort-header class="col-header col-num">kcal</th>
-            <td *matCellDef="let food" mat-cell class="col-num">{{ food.kcalPer100 | number:'1.0-0':'de' }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="protein">
-            <th *matHeaderCellDef mat-header-cell mat-sort-header class="col-header col-num">P</th>
-            <td *matCellDef="let food" mat-cell class="col-num">{{ food.proteinPer100 | number:'1.0-1':'de' }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="carbs">
-            <th *matHeaderCellDef mat-header-cell mat-sort-header class="col-header col-num">KH</th>
-            <td *matCellDef="let food" mat-cell class="col-num">{{ food.carbsPer100 | number:'1.0-1':'de' }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="fat">
-            <th *matHeaderCellDef mat-header-cell mat-sort-header class="col-header col-num">F</th>
-            <td *matCellDef="let food" mat-cell class="col-num">{{ food.fatPer100 | number:'1.0-1':'de' }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="actions">
-            <th *matHeaderCellDef mat-header-cell class="col-header"></th>
-            <td *matCellDef="let food" mat-cell class="col-actions">
-              <button mat-icon-button class="btn-edit" matTooltip="Bearbeiten" aria-label="Bearbeiten" (click)="openEditDialog(food)">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button class="btn-del" matTooltip="Löschen" aria-label="Löschen" (click)="openDeleteDialog(food)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-
-          <tr *matHeaderRowDef="columnsToDisplay" mat-header-row></tr>
-          <tr *matRowDef="let food; columns: columnsToDisplay;" mat-row></tr>
-
+              <th class="ui-table-head col-actions" scope="col"><span class="sr-only">Aktionen</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (food of pagedFoods; track food.id) {
+              <tr class="ui-table-row">
+                <td class="ui-table-cell">
+                  <span class="food-name">{{ food.name }}</span>
+                  @if (food.brand) {
+                    <span class="food-brand">{{ food.brand }}</span>
+                  }
+                </td>
+                <td class="ui-table-cell col-num">{{ food.kcalPer100 | number:'1.0-0':'de' }}</td>
+                <td class="ui-table-cell col-num">{{ food.proteinPer100 | number:'1.0-1':'de' }}</td>
+                <td class="ui-table-cell col-num">{{ food.carbsPer100 | number:'1.0-1':'de' }}</td>
+                <td class="ui-table-cell col-num">{{ food.fatPer100 | number:'1.0-1':'de' }}</td>
+                <td class="ui-table-cell col-actions">
+                  <span class="row-actions">
+                    <button type="button" class="ui-btn-icon" [attr.aria-label]="food.name + ' bearbeiten'"
+                            matTooltip="Bearbeiten" (click)="openEditDialog(food)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button type="button" class="ui-btn-icon ui-btn--rose" [attr.aria-label]="food.name + ' löschen'"
+                            matTooltip="Löschen" (click)="openDeleteDialog(food)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
         </table>
       </div>
-      <mat-paginator [pageSizeOptions]="pageSizeOptions" [pageSize]="25" showFirstLastButtons></mat-paginator>
-      <p class="hint">Werte je 100 g · P Protein · KH Kohlenhydrate · F Fett</p>
+
+      <div class="ui-panel-body footer">
+        <p class="hint">Werte je 100 g · P Protein · KH Kohlenhydrate · F Fett</p>
+
+        <nav class="pager" aria-label="Seiten">
+          <label class="pager__size">
+            <span>Pro Seite</span>
+            <select class="ui-input ui-input--teal pager__select" [value]="pageSize" (change)="onPageSizeChange($event)">
+              @for (size of pageSizeOptions; track size) {
+                <option [value]="size" [selected]="size === pageSize">{{ size }}</option>
+              }
+            </select>
+          </label>
+          <span class="pager__range" aria-live="polite">{{ rangeLabel }}</span>
+          <span class="row-actions">
+            <button type="button" class="ui-btn-icon" aria-label="Erste Seite" [disabled]="pageIndex === 0" (click)="goToPage(0)">
+              <mat-icon>first_page</mat-icon>
+            </button>
+            <button type="button" class="ui-btn-icon" aria-label="Vorherige Seite" [disabled]="pageIndex === 0" (click)="goToPage(pageIndex - 1)">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button type="button" class="ui-btn-icon" aria-label="Nächste Seite" [disabled]="pageIndex >= lastPage" (click)="goToPage(pageIndex + 1)">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+            <button type="button" class="ui-btn-icon" aria-label="Letzte Seite" [disabled]="pageIndex >= lastPage" (click)="goToPage(lastPage)">
+              <mat-icon>last_page</mat-icon>
+            </button>
+          </span>
+        </nav>
+      </div>
     } @else {
-      <p class="empty">
-        @if (searchTerm) {
-          Keine Treffer für «{{ searchTerm }}».
-        } @else {
-          Noch keine Lebensmittel. Lege eins manuell an oder scanne ein Etikett.
-        }
-      </p>
+      <div class="ui-empty" role="status">
+        <mat-icon aria-hidden="true">inventory_2</mat-icon>
+        <p class="m-0 empty-text">
+          @if (searchTerm) {
+            Keine Treffer für «{{ searchTerm }}».
+          } @else {
+            Noch keine Lebensmittel. Lege eins manuell an oder scanne ein Etikett.
+          }
+        </p>
+      </div>
     }
   </section>
 

@@ -2,14 +2,10 @@ import {ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit} from '@a
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {startWith} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
+import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
-import {MatSelect} from '@angular/material/select';
-import {MatOption} from '@angular/material/core';
+import {showError} from '../../forms';
 import {MatIcon} from '@angular/material/icon';
-import {MatButton} from '@angular/material/button';
 import {ActivityType, SportActivity, SportActivityInput} from '../../models/nutrition.model';
 
 const ACTIVITY_TYPES: { value: ActivityType; label: string }[] = [
@@ -34,22 +30,11 @@ export type ActivityEditDialogData = SportActivity | null;
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
     MatDialogClose,
-    MatFormField,
-    MatLabel,
-    MatError,
-    MatInput,
     NoWheelDirective,
-    MatSelect,
-    MatOption,
-    MatIcon,
-    MatButton
+    MatIcon
   ],
-  templateUrl: './activity-edit-dialog.component.html',
-  styleUrl: './activity-edit-dialog.component.css'
+  templateUrl: './activity-edit-dialog.component.html'
 })
 export class ActivityEditDialogComponent implements OnInit {
 
@@ -79,6 +64,10 @@ export class ActivityEditDialogComponent implements OnInit {
       description.setValidators(value === 'OTHER' ? Validators.required : null);
       description.updateValueAndValidity();
     });
+  }
+
+  isInvalid(name: string): boolean {
+    return showError(this.form.get(name));
   }
 
   save(): void {

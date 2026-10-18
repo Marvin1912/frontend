@@ -2,8 +2,8 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, injec
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
+import {MatTooltip} from '@angular/material/tooltip';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {EMPTY, Observable, of, switchMap} from 'rxjs';
@@ -13,6 +13,7 @@ import {
   MealPlanRowEditDialogComponent,
   MealPlanRowEditDialogData
 } from '../../dialogs/meal-plan-row-edit-dialog/meal-plan-row-edit-dialog.component';
+import {nutritionDialogConfig} from '../../dialogs/dialog-config';
 import {EntryDeleteDialogComponent} from '../../dialogs/entry-delete-dialog/entry-delete-dialog.component';
 
 const MEAL_TYPE_LABELS: Record<MealType, string> = {
@@ -55,7 +56,7 @@ interface DisplayRow {
 @Component({
   selector: 'app-nutrition-meal-plan',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatProgressSpinner, MatButton, MatIconButton, MatIcon, DecimalPipe],
+  imports: [MatProgressSpinner, MatIcon, MatTooltip, DecimalPipe],
   templateUrl: './nutrition-meal-plan.component.html',
   styleUrl: './nutrition-meal-plan.component.css'
 })
@@ -220,7 +221,7 @@ export class NutritionMealPlanComponent implements OnInit {
 
   openAddRowDialog(sectionId: string, mealType?: MealType): void {
     const data: MealPlanRowEditDialogData = {sectionId, row: null, defaultMealType: mealType};
-    const ref = this.dialog.open(MealPlanRowEditDialogComponent, {data});
+    const ref = this.dialog.open(MealPlanRowEditDialogComponent, nutritionDialogConfig(data, '520px'));
     ref.afterClosed().pipe(
       switchMap((result: MealPlanRowInput | undefined) => result ? this.nutritionService.addMealPlanRow(sectionId, result) : EMPTY),
       takeUntilDestroyed(this.destroyRef)
@@ -241,7 +242,7 @@ export class NutritionMealPlanComponent implements OnInit {
    */
   openAddAlternativeDialog(sectionId: string, originRow: MealPlanRow): void {
     const data: MealPlanRowEditDialogData = {sectionId, row: null, defaultMealType: originRow.mealType};
-    const ref = this.dialog.open(MealPlanRowEditDialogComponent, {data});
+    const ref = this.dialog.open(MealPlanRowEditDialogComponent, nutritionDialogConfig(data, '520px'));
     ref.afterClosed().pipe(
       switchMap((result: MealPlanRowInput | undefined) => {
         if (!result) return EMPTY;
@@ -268,7 +269,7 @@ export class NutritionMealPlanComponent implements OnInit {
 
   openEditRowDialog(sectionId: string, row: MealPlanRow): void {
     const data: MealPlanRowEditDialogData = {sectionId, row};
-    const ref = this.dialog.open(MealPlanRowEditDialogComponent, {data});
+    const ref = this.dialog.open(MealPlanRowEditDialogComponent, nutritionDialogConfig(data, '520px'));
     ref.afterClosed().pipe(
       switchMap((result: MealPlanRowInput | undefined) => result ? this.nutritionService.updateMealPlanRow(row.id, result) : EMPTY),
       takeUntilDestroyed(this.destroyRef)
@@ -285,7 +286,7 @@ export class NutritionMealPlanComponent implements OnInit {
   }
 
   openDeleteRowDialog(row: MealPlanRow): void {
-    const ref = this.dialog.open(EntryDeleteDialogComponent, {data: {label: this.rowLabel(row)}});
+    const ref = this.dialog.open(EntryDeleteDialogComponent, nutritionDialogConfig({label: this.rowLabel(row)}));
     ref.afterClosed().pipe(
       switchMap(result => result === 'confirmed' ? this.nutritionService.deleteMealPlanRow(row.id) : EMPTY),
       takeUntilDestroyed(this.destroyRef)

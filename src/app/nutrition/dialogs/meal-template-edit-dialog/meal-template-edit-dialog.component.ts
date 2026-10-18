@@ -2,15 +2,12 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, Eleme
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatError, MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
+import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatOption} from '@angular/material/core';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatButton, MatIconButton} from '@angular/material/button';
 import {catchError, debounceTime, distinctUntilChanged, finalize, of, startWith, switchMap, tap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
 import {Food, MealTemplate, MealTemplateInput} from '../../models/nutrition.model';
@@ -36,26 +33,15 @@ interface StagedItem {
   imports: [
     ReactiveFormsModule,
     DecimalPipe,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
     MatDialogClose,
-    MatFormField,
-    MatLabel,
-    MatError,
-    MatSuffix,
-    MatInput,
     NoWheelDirective,
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatOption,
     MatIcon,
-    MatProgressSpinner,
-    MatIconButton,
-    MatButton
+    MatProgressSpinner
   ],
-  templateUrl: './meal-template-edit-dialog.component.html',
-  styleUrl: './meal-template-edit-dialog.component.css'
+  templateUrl: './meal-template-edit-dialog.component.html'
 })
 export class MealTemplateEditDialogComponent implements OnInit {
 
@@ -175,6 +161,8 @@ export class MealTemplateEditDialogComponent implements OnInit {
 
   save(): void {
     if (this.name.invalid) return;
+    // A picked food with a valid quantity counts too (e.g. confirmed with Enter), like in add-day-entry.
+    if (this.canAdd) this.addToStaged();
     const result: MealTemplateInput = {
       name: this.name.value.trim(),
       items: this.staged.map(item => ({foodId: item.foodId, quantityG: item.quantityG}))

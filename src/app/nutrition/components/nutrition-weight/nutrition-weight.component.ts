@@ -2,36 +2,20 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, injec
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DatePipe, DecimalPipe} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow,
-  MatRowDef,
-  MatTable,
-  MatTableDataSource
-} from '@angular/material/table';
-import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
-import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatTooltip} from '@angular/material/tooltip';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {EMPTY, switchMap} from 'rxjs';
-import {format} from 'date-fns';
 import {NutritionService} from '../../services/nutrition.service';
 import {WeightEntry, WeightEntryInput} from '../../models/nutrition.model';
 import {TargetsCardComponent} from '../targets-card/targets-card.component';
 import {WeightEditDialogComponent} from '../../dialogs/weight-edit-dialog/weight-edit-dialog.component';
 import {WeightDeleteDialogComponent} from '../../dialogs/weight-delete-dialog/weight-delete-dialog.component';
+import {nutritionDialogConfig} from '../../dialogs/dialog-config';
+import {notInFutureValidator, todayIso} from '../../forms';
 
 @Component({
   selector: 'app-nutrition-weight',
@@ -40,26 +24,7 @@ import {WeightDeleteDialogComponent} from '../../dialogs/weight-delete-dialog/we
     ReactiveFormsModule,
     DatePipe,
     DecimalPipe,
-    MatTable,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
-    MatFormField,
-    MatLabel,
-    MatSuffix,
-    MatInput,
     NoWheelDirective,
-    MatDatepicker,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatButton,
-    MatIconButton,
     MatIcon,
     MatProgressSpinner,
     MatTooltip,
@@ -74,9 +39,8 @@ export class NutritionWeightComponent implements OnInit {
 
   form!: FormGroup;
   saving = false;
-  readonly today = new Date();
-  entries = new MatTableDataSource<WeightEntry>();
-  columnsToDisplay = ['entryDate', 'weightKg', 'actions'];
+  entries: WeightEntry[] = [];
+  loading = true;
 
   private fb = inject(FormBuilder);
   private nutritionService = inject(NutritionService);
@@ -85,9 +49,14 @@ export class NutritionWeightComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 
+  /** Upper bound for the native date input; a getter so it moves on past midnight. */
+  get today(): string {
+    return todayIso();
+  }
+
   ngOnInit(): void {
     this.form = this.fb.group({
-      entryDate: [new Date(), Validators.required],
+      entryDate: [todayIso(), [Validators.required, notInFutureValidator()]],
       weightKg: [null, [Validators.required, Validators.min(0)]]
     });
     this.loadEntries();
@@ -96,10 +65,13 @@ export class NutritionWeightComponent implements OnInit {
   private loadEntries(): void {
     this.nutritionService.getWeightEntries().subscribe({
       next: entries => {
-        this.entries.data = this.sortDesc(entries);
+        this.entries = this.sortDesc(entries);
+        this.loading = false;
         this.cdr.markForCheck();
       },
       error: () => {
+        this.loading = false;
+        this.cdr.markForCheck();
         this.snackBar.open('Gewichtseinträge konnten nicht geladen werden', 'Schließen', {duration: 5000});
       }
     });
@@ -113,7 +85,7 @@ export class NutritionWeightComponent implements OnInit {
     if (this.form.invalid) return;
     const {entryDate, weightKg} = this.form.value;
     const payload: WeightEntryInput = {
-      entryDate: format(entryDate, 'yyyy-MM-dd'),
+      entryDate,
       weightKg: Number(weightKg)
     };
     this.saving = true;
@@ -121,8 +93,8 @@ export class NutritionWeightComponent implements OnInit {
     this.nutritionService.addWeightEntry(payload).subscribe({
       next: created => {
         this.saving = false;
-        this.entries.data = this.sortDesc([...this.entries.data, created]);
-        this.form.reset({entryDate: new Date(), weightKg: null});
+        this.entries = this.sortDesc([...this.entries, created]);
+        this.form.reset({entryDate: todayIso(), weightKg: null});
         this.targetsCard?.reload();
         this.cdr.markForCheck();
         this.snackBar.open('Gewicht gespeichert', 'OK', {duration: 3000});
@@ -136,13 +108,13 @@ export class NutritionWeightComponent implements OnInit {
   }
 
   openEditDialog(entry: WeightEntry): void {
-    const ref = this.dialog.open(WeightEditDialogComponent, {data: entry});
+    const ref = this.dialog.open(WeightEditDialogComponent, nutritionDialogConfig(entry, '400px'));
     ref.afterClosed().pipe(
       switchMap((result: WeightEntryInput | undefined) => result ? this.nutritionService.updateWeightEntry(entry.id, result) : EMPTY),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: updated => {
-        this.entries.data = this.sortDesc(this.entries.data.map(e => e.id === updated.id ? updated : e));
+        this.entries = this.sortDesc(this.entries.map(e => e.id === updated.id ? updated : e));
         this.targetsCard?.reload();
         this.cdr.markForCheck();
         this.snackBar.open('Gewicht aktualisiert', 'OK', {duration: 3000});
@@ -154,13 +126,13 @@ export class NutritionWeightComponent implements OnInit {
   }
 
   openDeleteDialog(entry: WeightEntry): void {
-    const ref = this.dialog.open(WeightDeleteDialogComponent);
+    const ref = this.dialog.open(WeightDeleteDialogComponent, nutritionDialogConfig());
     ref.afterClosed().pipe(
       switchMap(result => result === 'confirmed' ? this.nutritionService.deleteWeightEntry(entry.id) : EMPTY),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
-        this.entries.data = this.entries.data.filter(e => e.id !== entry.id);
+        this.entries = this.entries.filter(e => e.id !== entry.id);
         this.targetsCard?.reload();
         this.cdr.markForCheck();
         this.snackBar.open('Gewicht gelöscht', 'OK', {duration: 3000});
