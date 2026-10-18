@@ -1,6 +1,4 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, signal} from '@angular/core';
-import {MatTableModule} from '@angular/material/table';
-import {MatIconButton, MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatSlideToggle} from '@angular/material/slide-toggle';
 import {MatDialog} from '@angular/material/dialog';
@@ -14,9 +12,6 @@ import {FeedDeleteDialogComponent} from '../../dialogs/feed-delete-dialog/feed-d
 @Component({
   selector: 'app-feed-config',
   imports: [
-    MatTableModule,
-    MatIconButton,
-    MatButton,
     MatIcon,
     MatSlideToggle,
     MatProgressSpinner
@@ -29,7 +24,7 @@ export class FeedConfigComponent implements OnInit {
 
   feeds = signal<FeedSource[]>([]);
   loading = signal(false);
-  displayedColumns = ['name', 'url', 'category', 'active', 'actions'];
+  loadError = signal(false);
 
   constructor(
     private feedConfigService: FeedConfigService,
@@ -45,6 +40,7 @@ export class FeedConfigComponent implements OnInit {
 
   loadFeeds() {
     this.loading.set(true);
+    this.loadError.set(false);
     this.feedConfigService.getFeeds().subscribe({
       next: (feeds) => {
         this.feeds.set(feeds);
@@ -53,6 +49,7 @@ export class FeedConfigComponent implements OnInit {
       },
       error: () => {
         this.loading.set(false);
+        this.loadError.set(true);
         this.snackBar.open('Failed to load feeds', 'Dismiss', {duration: 5000});
         this.cdr.markForCheck();
       }
@@ -62,7 +59,10 @@ export class FeedConfigComponent implements OnInit {
   openAddDialog() {
     const ref = this.dialog.open(FeedFormDialogComponent, {
       data: {},
-      width: '440px'
+      width: '440px',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'ui-dialog-pane',
+      ariaLabelledBy: 'feed-form-title'
     });
     ref.afterClosed().subscribe((result: FeedSource | undefined) => {
       if (result) {
@@ -80,7 +80,10 @@ export class FeedConfigComponent implements OnInit {
   openEditDialog(feed: FeedSource) {
     const ref = this.dialog.open(FeedFormDialogComponent, {
       data: {feed},
-      width: '440px'
+      width: '440px',
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'ui-dialog-pane',
+      ariaLabelledBy: 'feed-form-title'
     });
     ref.afterClosed().subscribe((result: FeedSource | undefined) => {
       if (result) {
@@ -97,7 +100,10 @@ export class FeedConfigComponent implements OnInit {
 
   openDeleteDialog(feed: FeedSource) {
     const ref = this.dialog.open(FeedDeleteDialogComponent, {
-      data: {feed}
+      data: {feed},
+      maxWidth: 'calc(100vw - 32px)',
+      panelClass: 'ui-dialog-pane',
+      ariaLabelledBy: 'feed-delete-title'
     });
     ref.afterClosed().subscribe((result) => {
       if (result === 'confirmed') {

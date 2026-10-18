@@ -100,6 +100,7 @@ html {
   --c-m:  #a78bfa;  --cg-m: rgba(167, 139, 250, 0.18);
   --c-e:  #fb7185;  --cg-e: rgba(251, 113, 133, 0.18);
   --c-c:  #f97316;  --cg-c: rgba(249, 115,  22, 0.18);
+  --c-n:  #2dd4bf;  --cg-n: rgba(45,  212, 191, 0.18);
 }
 
 /* ── MatDialog mit ui-dialog ─────────────────────── */
@@ -109,6 +110,20 @@ html {
   --mat-dialog-container-color: transparent;
   --mat-dialog-container-elevation-shadow: none;
   --mat-dialog-container-shape: 12px;
+}
+
+/* ── MatMenu passend zu ui-styles ────────────────── */
+/* class für <mat-menu>: dunkle Fläche statt Material-Theme, nur über Tokens. */
+.ui-menu-panel {
+  --mat-menu-container-color: var(--surface);
+  --mat-menu-container-shape: 8px;
+  --mat-menu-container-elevation-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --mat-menu-item-label-text-color: var(--text);
+  --mat-menu-item-label-text-font: Outfit, sans-serif;
+  --mat-menu-item-icon-color: var(--text-muted);
+  --mat-menu-item-hover-state-layer-color: rgba(255, 255, 255, 0.06);
+  --mat-menu-item-focus-state-layer-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-mid);
 }
 
 html, body { height: 100vh; }

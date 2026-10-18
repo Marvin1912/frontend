@@ -1,29 +1,27 @@
-<h2 mat-dialog-title>{{ isEdit ? 'Edit Feed' : 'Add Feed' }}</h2>
+<form class="ui-dialog feed-form" [formGroup]="feedForm" (ngSubmit)="save()">
+  <h2 id="feed-form-title" class="ui-dialog-title">{{ isEdit ? 'Edit Feed' : 'Add Feed' }}</h2>
 
-<mat-dialog-content>
-  <form [formGroup]="feedForm" class="feed-form">
-    <mat-form-field class="form-field">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" placeholder="e.g. Baeldung">
-    </mat-form-field>
-
-    <mat-form-field class="form-field">
-      <mat-label>URL</mat-label>
-      <input matInput formControlName="url" placeholder="https://example.com/feed.xml">
-    </mat-form-field>
-
-    <mat-form-field class="form-field">
-      <mat-label>Category</mat-label>
-      <input matInput formControlName="category" placeholder="e.g. Java">
-    </mat-form-field>
+  <div class="feed-form__fields">
+    @for (field of fields; track field.name) {
+      <div>
+        <label class="ui-input-label" [for]="'feed-' + field.name">{{ field.label }}</label>
+        <input [id]="'feed-' + field.name" class="ui-input ui-input--teal" [formControlName]="field.name"
+               [type]="field.type" [placeholder]="field.placeholder" autocomplete="off"
+               [attr.aria-invalid]="showError(field.name)"
+               [attr.aria-describedby]="showError(field.name) ? 'feed-' + field.name + '-error' : null">
+        @if (showError(field.name)) {
+          <p [id]="'feed-' + field.name + '-error'" class="field-error">{{ field.label }} is required.</p>
+        }
+      </div>
+    }
 
     <mat-slide-toggle formControlName="active" class="active-toggle">Active</mat-slide-toggle>
-  </form>
-</mat-dialog-content>
+  </div>
 
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close class="btn-cancel">Cancel</button>
-  <button mat-flat-button (click)="save()" [disabled]="feedForm.invalid" class="btn-save">
-    {{ isEdit ? 'Update' : 'Create' }}
-  </button>
-</mat-dialog-actions>
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn ui-btn--rose" mat-dialog-close>Cancel</button>
+    <button type="submit" class="ui-btn ui-btn--teal">
+      {{ isEdit ? 'Update' : 'Create' }}
+    </button>
+  </div>
+</form>

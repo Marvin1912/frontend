@@ -1,83 +1,109 @@
-<div class="container">
-  <div class="controls">
-    <mat-form-field appearance="outline" class="filter-field">
-      <mat-label>Category</mat-label>
-      <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onCategoryChange()">
-        <mat-option value="">All Categories</mat-option>
-        @for (cat of categories; track cat) {
-          <mat-option [value]="cat">{{ cat }}</mat-option>
+<div class="ui-container article-page">
+
+  <section class="ui-panel ui-panel--teal">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Articles</h2>
+      <div class="panel-actions">
+        @if (!loading && !loadError) {
+          <span class="ui-badge ui-badge--teal">{{ totalElements }} articles</span>
         }
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="filter-field">
-      <mat-label>Source</mat-label>
-      <mat-select [(ngModel)]="selectedSource" (selectionChange)="onSourceChange()">
-        <mat-option value="">All Sources</mat-option>
-        @for (src of filteredSources; track src.name) {
-          <mat-option [value]="src.name">{{ src.name }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
-    <button mat-flat-button (click)="refreshFeeds()" [disabled]="fetching" class="refresh-btn">
-      <mat-icon>refresh</mat-icon>
-      {{ fetching ? 'Fetching...' : 'Refresh' }}
-    </button>
-
-    <mat-checkbox [(ngModel)]="showRead" (change)="onShowReadChange()" class="show-read-checkbox">
-      Show read
-    </mat-checkbox>
-  </div>
-
-  @if (loading) {
-    <div class="loading">
-      <mat-spinner diameter="36"></mat-spinner>
-      <span>Loading articles...</span>
+        <button type="button" class="ui-btn ui-btn--teal" (click)="refreshFeeds()" [disabled]="fetching">
+          <mat-icon aria-hidden="true" [class.spin]="fetching">refresh</mat-icon>
+          {{ fetching ? 'Fetching…' : 'Refresh' }}
+        </button>
+      </div>
     </div>
-  }
 
-  @if (!loading && articles.length === 0) {
-    <div class="empty">
-      No articles found. Try refreshing the feeds or adjusting your filters.
-    </div>
-  }
-
-  <div class="article-list">
-    @for (article of articles; track article.id) {
-      <a [href]="article.link" target="_blank" rel="noopener noreferrer" class="article-card">
-        <div class="article-meta">
-          <span class="badge category">{{ article.category }}</span>
-          <span class="badge source">{{ article.source }}</span>
-          <span class="date">{{ formatDate(article.publishedAt) }}</span>
-          @if (!article.isRead) {
-            <button mat-icon-button
-                    class="mark-read-btn"
-                    matTooltip="Mark as read"
-                    (click)="markAsRead($event, article)">
-              <mat-icon>done</mat-icon>
-            </button>
-          } @else {
-            <mat-icon class="read-indicator" matTooltip="Already read">done_all</mat-icon>
+    <div class="ui-panel-body filter-panel">
+      <div class="filter-panel__field">
+        <label class="ui-input-label" for="it-news-category">Category</label>
+        <select id="it-news-category" class="ui-input ui-input--teal"
+                [(ngModel)]="selectedCategory"
+                (ngModelChange)="onCategoryChange()">
+          <option value="">All categories</option>
+          @for (cat of categories; track cat) {
+            <option [value]="cat">{{ cat }}</option>
           }
-        </div>
-        <h2 class="article-title">{{ article.title }}</h2>
-        @if (article.description) {
-          <p class="article-desc">{{ article.description }}</p>
-        }
-      </a>
-    }
-  </div>
+        </select>
+      </div>
+
+      <div class="filter-panel__field">
+        <label class="ui-input-label" for="it-news-source">Source</label>
+        <select id="it-news-source" class="ui-input ui-input--teal"
+                [(ngModel)]="selectedSource"
+                (ngModelChange)="onSourceChange()">
+          <option value="">All sources</option>
+          @for (src of filteredSources; track src.name) {
+            <option [value]="src.name">{{ src.name }}</option>
+          }
+        </select>
+      </div>
+
+      <mat-checkbox [(ngModel)]="showRead" (change)="onShowReadChange()" class="filter-panel__check">
+        Show read
+      </mat-checkbox>
+    </div>
+  </section>
+
+  @if (loadError && !loading) {
+    <div class="ui-empty ui-empty--error" role="alert">
+      <mat-icon aria-hidden="true">error_outline</mat-icon>
+      <p class="m-0">Articles could not be loaded</p>
+    </div>
+  } @else if (articles.length === 0) {
+    <div class="ui-empty" role="status">
+      @if (loading) {
+        <mat-spinner diameter="32"></mat-spinner>
+        <p class="m-0">Loading articles…</p>
+      } @else {
+        <mat-icon aria-hidden="true">inbox</mat-icon>
+        <p class="m-0">No articles found. Try refreshing the feeds or adjusting your filters.</p>
+      }
+    </div>
+  } @else {
+    <ul class="article-list" role="list" [class.is-loading]="loading" [attr.aria-busy]="loading">
+      @for (article of articles; track article.id) {
+        <li>
+          <a [href]="article.link" target="_blank" rel="noopener noreferrer" class="article-card">
+            <div class="article-meta">
+              <span class="ui-badge ui-badge--teal">{{ article.category }}</span>
+              <span class="ui-badge">{{ article.source }}</span>
+              <span class="article-meta__end">
+                <time class="date" [attr.datetime]="article.publishedAt">{{ formatDate(article.publishedAt) }}</time>
+                @if (!article.isRead) {
+                  <button type="button"
+                          class="ui-btn-icon ui-btn--teal"
+                          matTooltip="Mark as read"
+                          aria-label="Mark as read"
+                          (click)="markAsRead($event, article)">
+                    <mat-icon aria-hidden="true">done</mat-icon>
+                  </button>
+                } @else {
+                  <mat-icon class="read-indicator" matTooltip="Already read" role="img" aria-hidden="false" aria-label="Already read">done_all</mat-icon>
+                }
+              </span>
+            </div>
+            <h3 class="article-title">{{ article.title }}</h3>
+            @if (article.description) {
+              <p class="article-desc">{{ article.description }}</p>
+            }
+          </a>
+        </li>
+      }
+    </ul>
+  }
 
   @if (totalPages > 1) {
-    <div class="pagination">
-      <button mat-stroked-button (click)="prevPage()" [disabled]="currentPage === 0">
-        <mat-icon>chevron_left</mat-icon> Previous
+    <nav class="pagination" aria-label="Pagination">
+      <button type="button" class="ui-btn" (click)="prevPage()" [disabled]="currentPage === 0" aria-label="Previous page">
+        <mat-icon aria-hidden="true">chevron_left</mat-icon>
+        <span class="pagination__label">Previous</span>
       </button>
-      <span class="page-info">Page {{ currentPage + 1 }} of {{ totalPages }} ({{ totalElements }} articles)</span>
-      <button mat-stroked-button (click)="nextPage()" [disabled]="currentPage >= totalPages - 1">
-        Next <mat-icon>chevron_right</mat-icon>
+      <span class="page-info">Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+      <button type="button" class="ui-btn" (click)="nextPage()" [disabled]="currentPage >= totalPages - 1" aria-label="Next page">
+        <span class="pagination__label">Next</span>
+        <mat-icon aria-hidden="true">chevron_right</mat-icon>
       </button>
-    </div>
+    </nav>
   }
 </div>
