@@ -1,17 +1,16 @@
-import {Component, DestroyRef, inject, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {ActivatedRoute, NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {filter} from 'rxjs';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatDialog} from '@angular/material/dialog';
 import {ExportDialogComponent} from '../../dialogs/export-dialog/export-dialog.component';
+import {nutritionDialogConfig} from '../../dialogs/dialog-config';
 
 @Component({
   selector: 'app-nutrition-layout',
   imports: [
-    MatIconButton,
     MatIcon,
     RouterLink,
     RouterOutlet,
@@ -20,33 +19,29 @@ import {ExportDialogComponent} from '../../dialogs/export-dialog/export-dialog.c
     MatMenuItem
   ],
   templateUrl: './nutrition-layout.component.html',
+  styleUrl: './nutrition-layout.component.css',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './nutrition-layout.component.css'
+  host: {class: 'ui-bg nutrition-scope'}
 })
-export class NutritionLayoutComponent implements OnInit {
+export class NutritionLayoutComponent {
 
-  homeLink = '/';
+  homeLink = signal('/');
 
-  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private dialog = inject(MatDialog);
 
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor() {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd), takeUntilDestroyed())
+      .subscribe(() => {
+        const home = this.getDeepestChild(this.route).snapshot.data['home'];
+        this.homeLink.set(home || '/');
+      });
   }
 
   openExportDialog(): void {
-    this.dialog.open(ExportDialogComponent);
-  }
-
-  ngOnInit(): void {
-    this.router.events
-      .pipe(
-        filter(event => event instanceof NavigationEnd),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe(() => {
-        const home = this.getDeepestChild(this.route).snapshot.data['home'];
-        this.homeLink = home || '/';
-      });
+    this.dialog.open(ExportDialogComponent, nutritionDialogConfig(undefined, '400px'));
   }
 
   private getDeepestChild(route: ActivatedRoute): ActivatedRoute {

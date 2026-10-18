@@ -2,16 +2,12 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, Eleme
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatError, MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
+import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
-import {MatSelect} from '@angular/material/select';
 import {MatOption} from '@angular/material/core';
 import {MatAutocomplete, MatAutocompleteSelectedEvent, MatAutocompleteTrigger} from '@angular/material/autocomplete';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatButton, MatIconButton} from '@angular/material/button';
 import {catchError, debounceTime, distinctUntilChanged, finalize, of, startWith, switchMap, tap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
 import {Food, FoodEntryInput, Macros, MealType} from '../../models/nutrition.model';
@@ -41,27 +37,15 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
   imports: [
     ReactiveFormsModule,
     DecimalPipe,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
     MatDialogClose,
-    MatFormField,
-    MatLabel,
-    MatError,
-    MatSuffix,
-    MatInput,
     NoWheelDirective,
-    MatSelect,
     MatOption,
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatIcon,
-    MatProgressSpinner,
-    MatIconButton,
-    MatButton
+    MatProgressSpinner
   ],
-  templateUrl: './add-day-entry-dialog.component.html',
-  styleUrl: './add-day-entry-dialog.component.css'
+  templateUrl: './add-day-entry-dialog.component.html'
 })
 export class AddDayEntryDialogComponent implements OnInit {
 

@@ -1,129 +1,137 @@
-<div class="dash">
+<div class="ui-container page">
 
   @if (loading) {
-    <div class="state">
+    <div class="ui-empty" role="status">
       <mat-spinner diameter="32" />
+      <p class="m-0">Daten werden geladen…</p>
     </div>
   } @else {
 
     <!-- ── Weight trend ───────────────────────────── -->
-    <section class="panel">
-      <header class="panel__head">
-        <span class="panel__dot panel__dot--w"></span>
-        <span class="panel__label">GEWICHTSVERLAUF</span>
+    <section class="ui-panel ui-panel--lime">
+      <div class="ui-panel-head">
+        <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Gewichtsverlauf</h2>
         @if (latestWeight !== null) {
-          <span class="panel__stat">
+          <span class="panel-stat">
             {{ latestWeight | number:'1.1-1':'de' }} kg
             @if (weightDelta !== null) {
-              <span class="delta" [class.delta--up]="weightDelta > 0" [class.delta--down]="weightDelta < 0">
+              <span class="ui-badge" [class.ui-badge--rose]="weightDelta > 0" [class.ui-badge--teal]="weightDelta <= 0">
                 {{ weightDelta > 0 ? '+' : '' }}{{ weightDelta | number:'1.1-1':'de' }}
               </span>
             }
           </span>
         }
-      </header>
+      </div>
 
       @if (hasWeight) {
-        <div class="chart">
+        <div class="ui-panel-body">
           <svg [attr.viewBox]="'0 0 ' + vbW + ' ' + vbH" preserveAspectRatio="none" class="svg"
                role="img" [attr.aria-label]="weightChartLabel">
-            <polygon class="area area--w" [attr.points]="weightArea" />
-            <polyline class="line line--w" [attr.points]="weightLine" />
+            <polygon class="area--w" [attr.points]="weightArea" />
+            <polyline class="line--w" [attr.points]="weightLine" />
             @for (p of weightPoints; track p.label + p.x) {
-              <circle class="dot dot--w" [attr.cx]="p.x" [attr.cy]="p.y" r="2.4"
+              <circle class="dot--w" [attr.cx]="p.x" [attr.cy]="p.y" r="2.4"
                       role="img" [attr.aria-label]="p.tooltip"
                       [matTooltip]="p.tooltip" />
             }
           </svg>
-        </div>
-        <div class="axis">
-          <span>{{ weightPoints[0].label }}</span>
-          <span>{{ weightPoints[weightPoints.length - 1].label }}</span>
+          <div class="axis">
+            <span>{{ weightPoints[0].label }}</span>
+            <span>{{ weightPoints[weightPoints.length - 1].label }}</span>
+          </div>
         </div>
       } @else {
-        <p class="empty">Noch keine Gewichtseinträge.</p>
+        <div class="ui-empty" role="status">
+          <p class="m-0">Noch keine Gewichtseinträge.</p>
+        </div>
       }
     </section>
 
     <!-- ── Intake vs. target ──────────────────────── -->
-    <section class="panel">
-      <header class="panel__head">
-        <span class="panel__dot panel__dot--k"></span>
-        <span class="panel__label">KALORIEN ({{ intakeDays.length }} TAGE)</span>
+    <section class="ui-panel ui-panel--blue">
+      <div class="ui-panel-head">
+        <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Kalorien ({{ intakeDays.length }} Tage)</h2>
         @if (intakeTargetKcal !== null) {
-          <span class="panel__stat">Ziel {{ intakeTargetKcal | number:'1.0-0':'de' }} kcal</span>
+          <span class="panel-stat">Ziel {{ intakeTargetKcal | number:'1.0-0':'de' }} kcal</span>
         }
-      </header>
+      </div>
 
-      <mat-button-toggle-group class="range-toggle" name="intakeRange" aria-label="Zeitraum"
-                                [value]="intakeRangeDays"
-                                (change)="onIntakeRangeChange($event.value)">
-        @for (range of intakeRanges; track range) {
-          <mat-button-toggle [value]="range">{{ range }} Tage</mat-button-toggle>
+      <div class="ui-panel-body body">
+        <div class="segmented" role="group" aria-label="Zeitraum">
+          @for (range of intakeRanges; track range) {
+            <button type="button" class="ui-btn" [class.ui-btn--blue]="range === intakeRangeDays"
+                    [attr.aria-pressed]="range === intakeRangeDays"
+                    (click)="onIntakeRangeChange(range)">
+              {{ range }} Tage
+            </button>
+          }
+        </div>
+
+        @if (hasIntake) {
+          <div>
+            <svg [attr.viewBox]="'0 0 ' + vbW + ' ' + vbH" class="svg"
+                 role="img" [attr.aria-label]="intakeChartLabel">
+              <defs>
+                <pattern id="overHatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(135)">
+                  <rect width="6" height="6" class="hatch-bg" />
+                  <rect width="3" height="6" class="hatch-fg" />
+                </pattern>
+              </defs>
+              @for (d of intakeDays; track d.date) {
+                <rect class="bar bar--{{ d.state }}"
+                      [attr.x]="d.x" [attr.y]="d.y" [attr.width]="barWidth" [attr.height]="d.h" rx="1.5"
+                      role="img" [attr.aria-label]="d.tooltip"
+                      [matTooltip]="d.tooltip" />
+              }
+              @if (intakeTargetY !== null) {
+                <line class="target-line"
+                      [attr.x1]="axisX1" [attr.x2]="axisX2" [attr.y1]="intakeTargetY" [attr.y2]="intakeTargetY" />
+              }
+            </svg>
+            <div class="axis">
+              <span>{{ intakeDays[0].label }}</span>
+              <span>{{ intakeDays[intakeDays.length - 1].label }}</span>
+            </div>
+          </div>
+          <p class="legend">
+            <span class="legend__item legend__item--within">im Ziel</span>
+            <span class="legend__item legend__item--under">darunter</span>
+            <span class="legend__item legend__item--over">darüber</span>
+          </p>
+        } @else {
+          <div class="ui-empty" role="status">
+            <p class="m-0">Noch keine erfassten Tage.</p>
+          </div>
         }
-      </mat-button-toggle-group>
-
-      @if (hasIntake) {
-        <div class="chart">
-          <svg [attr.viewBox]="'0 0 ' + vbW + ' ' + vbH" class="svg"
-               role="img" [attr.aria-label]="intakeChartLabel">
-            <defs>
-              <pattern id="overHatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(135)">
-                <rect width="6" height="6" class="hatch-bg" />
-                <rect width="3" height="6" class="hatch-fg" />
-              </pattern>
-            </defs>
-            @for (d of intakeDays; track d.date) {
-              <rect class="bar bar--{{ d.state }}"
-                    [attr.x]="d.x" [attr.y]="d.y" [attr.width]="barWidth" [attr.height]="d.h" rx="1.5"
-                    role="img" [attr.aria-label]="d.tooltip"
-                    [matTooltip]="d.tooltip" />
-            }
-            @if (intakeTargetY !== null) {
-              <line class="target-line"
-                    [attr.x1]="axisX1" [attr.x2]="axisX2" [attr.y1]="intakeTargetY" [attr.y2]="intakeTargetY" />
-            }
-          </svg>
-        </div>
-        <div class="axis">
-          <span>{{ intakeDays[0].label }}</span>
-          <span>{{ intakeDays[intakeDays.length - 1].label }}</span>
-        </div>
-        <p class="legend">
-          <span class="legend__item legend__item--within">im Ziel</span>
-          <span class="legend__item legend__item--under">darunter</span>
-          <span class="legend__item legend__item--over">darüber</span>
-        </p>
-      } @else {
-        <p class="empty">Noch keine erfassten Tage.</p>
-      }
+      </div>
     </section>
 
     <!-- ── Adherence summary ──────────────────────── -->
-    <section class="panel">
-      <header class="panel__head">
-        <span class="panel__dot panel__dot--a"></span>
-        <span class="panel__label">BILANZ</span>
-      </header>
+    <section class="ui-panel ui-panel--amber">
+      <div class="ui-panel-head">
+        <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Bilanz</h2>
+      </div>
 
-      <div class="stats">
-        <div class="stat">
-          <span class="stat__v">
-            @if (avgKcal !== null) {
-              {{ avgKcal | number:'1.0-0':'de' }}
-            } @else {
-              –
-            }
-          </span>
-          <span class="stat__u">Ø kcal / Tag</span>
-        </div>
-        <div class="stat">
-          <span class="stat__v">{{ daysOnTarget }}<span class="stat__sub">/{{ daysWithData }}</span></span>
-          <span class="stat__u">Tage im Ziel</span>
-        </div>
-        <div class="stat">
-          <span class="stat__v">{{ daysWithData }}</span>
-          <span class="stat__u">Tage erfasst</span>
+      <div class="ui-panel-body">
+        <div class="macro-tiles macro-tiles--3">
+          <div class="macro-tile stat">
+            <span class="macro-tile__value">
+              @if (avgKcal !== null) {
+                {{ avgKcal | number:'1.0-0':'de' }}
+              } @else {
+                –
+              }
+            </span>
+            <span class="macro-tile__label">Ø kcal / Tag</span>
+          </div>
+          <div class="macro-tile stat">
+            <span class="macro-tile__value">{{ daysOnTarget }}<span class="stat__sub">/{{ daysWithData }}</span></span>
+            <span class="macro-tile__label">Tage im Ziel</span>
+          </div>
+          <div class="macro-tile stat">
+            <span class="macro-tile__value">{{ daysWithData }}</span>
+            <span class="macro-tile__label">Tage erfasst</span>
+          </div>
         </div>
       </div>
     </section>

@@ -1,158 +1,158 @@
-<div class="canteen">
+<div class="ui-container page">
 
-  <section class="panel">
-    <header class="panel__head">
-      <span class="panel__dot"></span>
-      <span class="panel__label">KANTINE</span>
-    </header>
+  <section class="ui-panel ui-panel--blue">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Kantine</h2>
+    </div>
 
-    <p class="lead">
-      Beschreibe dein Mittagessen in eigenen Worten – die KI schätzt Kalorien und Makros,
-      die du anpassen und als Eintrag speichern kannst.
-    </p>
+    <div class="ui-panel-body form">
+      <p class="lead m-0">
+        Beschreibe dein Mittagessen in eigenen Worten – die KI schätzt Kalorien und Makros,
+        die du anpassen und als Eintrag speichern kannst.
+      </p>
 
-    <mat-form-field appearance="outline" class="field-full">
-      <mat-label>Beschreibung</mat-label>
-      <textarea matInput rows="3" [formControl]="description"
-                placeholder="z. B. Schnitzel mit Pommes und Salat, großer Teller…"></textarea>
-    </mat-form-field>
+      <div class="field">
+        <label class="ui-input-label" for="canteen-description">Beschreibung</label>
+        <textarea id="canteen-description" rows="3" class="ui-input ui-input--blue" [formControl]="description"
+                  placeholder="z. B. Schnitzel mit Pommes und Salat, großer Teller…"></textarea>
+      </div>
 
-    <mat-form-field appearance="outline" class="field-full">
-      <mat-label>Portionsgröße (optional)</mat-label>
-      <input matInput [formControl]="portionHint"
-             placeholder="z. B. großer Teller, ca. 350 g…" />
-      <mat-hint>Hilft der KI, die Menge besser einzuschätzen.</mat-hint>
-    </mat-form-field>
+      <div class="field">
+        <label class="ui-input-label" for="canteen-portion">Portionsgröße (optional)</label>
+        <input id="canteen-portion" class="ui-input ui-input--blue" [formControl]="portionHint"
+               placeholder="z. B. großer Teller, ca. 350 g…" aria-describedby="canteen-portion-hint" />
+        <p id="canteen-portion-hint" class="field-hint">Hilft der KI, die Menge besser einzuschätzen.</p>
+      </div>
 
-    <div class="estimate-row">
-      <button mat-flat-button type="button" class="btn-estimate"
-              [disabled]="description.invalid || estimating || estimatingPhoto" (click)="estimate()">
-        @if (estimating) {
-          <mat-spinner diameter="18" />
-        } @else {
-          <mat-icon>auto_awesome</mat-icon>
-        }
-        Schätzen
-      </button>
-
-      <button mat-flat-button type="button" class="btn-photo"
-              [disabled]="estimating || estimatingPhoto" (click)="triggerPhoto()">
-        @if (estimatingPhoto) {
-          <mat-spinner diameter="18" />
-        } @else {
-          <mat-icon>photo_camera</mat-icon>
-        }
-        Foto
-      </button>
-      <input #photoInput type="file" accept="image/*" capture="environment" hidden
-             (change)="onPhotoSelected($event)" />
-
-      <button mat-flat-button type="button" class="btn-gallery"
-              [disabled]="estimating || estimatingPhoto" (click)="triggerGallery()">
-        @if (estimatingPhoto) {
-          <mat-spinner diameter="18" />
-        } @else {
-          <mat-icon>photo_library</mat-icon>
-        }
-        Galerie
-      </button>
-      <input #galleryInput type="file" accept="image/*" hidden
-             (change)="onPhotoSelected($event)" />
-
-      @if (estimating) {
-        <button mat-stroked-button type="button" class="btn-cancel" (click)="cancelEstimate()">
-          <mat-icon>close</mat-icon>
-          Abbrechen
+      <div class="estimate-row">
+        <button type="button" class="ui-btn ui-btn--blue"
+                [disabled]="description.invalid || estimating || estimatingPhoto" (click)="estimate()">
+          @if (estimating) {
+            <mat-spinner diameter="18" />
+          } @else {
+            <mat-icon aria-hidden="true">auto_awesome</mat-icon>
+          }
+          <span>Schätzen</span>
         </button>
-      }
+
+        <button type="button" class="ui-btn"
+                [disabled]="estimating || estimatingPhoto" (click)="triggerPhoto()">
+          @if (estimatingPhoto) {
+            <mat-spinner diameter="18" />
+          } @else {
+            <mat-icon aria-hidden="true">photo_camera</mat-icon>
+          }
+          <span>Foto</span>
+        </button>
+        <input #photoInput type="file" accept="image/*" capture="environment" hidden
+               (change)="onPhotoSelected($event)" />
+
+        <button type="button" class="ui-btn"
+                [disabled]="estimating || estimatingPhoto" (click)="triggerGallery()">
+          @if (estimatingPhoto) {
+            <mat-spinner diameter="18" />
+          } @else {
+            <mat-icon aria-hidden="true">photo_library</mat-icon>
+          }
+          <span>Galerie</span>
+        </button>
+        <input #galleryInput type="file" accept="image/*" hidden
+               (change)="onPhotoSelected($event)" />
+
+        @if (estimating) {
+          <button type="button" class="ui-btn ui-btn--rose" (click)="cancelEstimate()">
+            <mat-icon aria-hidden="true">close</mat-icon>
+            <span>Abbrechen</span>
+          </button>
+        }
+      </div>
     </div>
   </section>
 
   @if (hasEstimate) {
-    <section class="panel">
-      <header class="panel__head">
-        <span class="panel__dot panel__dot--n"></span>
-        <span class="panel__label">SCHÄTZUNG</span>
-      </header>
-
-      <form class="grid" [formGroup]="valuesForm">
-        <mat-form-field appearance="outline">
-          <mat-label>kcal</mat-label>
-          <input matInput type="number" step="1" inputmode="numeric" formControlName="kcal" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Protein (g)</mat-label>
-          <input matInput type="number" step="0.1" inputmode="decimal" formControlName="proteinG" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Kohlenhydrate (g)</mat-label>
-          <input matInput type="number" step="0.1" inputmode="decimal" formControlName="carbsG" />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Fett (g)</mat-label>
-          <input matInput type="number" step="0.1" inputmode="decimal" formControlName="fatG" />
-        </mat-form-field>
-      </form>
-
-      <p class="disclaimer">
-        <mat-icon>warning</mat-icon>
-        <span>Geschätzter Wert – kann abweichen. Vor dem Eintragen bei Bedarf anpassen.</span>
-      </p>
-
-      @if (assumptions) {
-        <p class="assumptions">
-          <mat-icon>info</mat-icon>
-          <span>{{ assumptions }}</span>
-        </p>
-      }
-
-      <div class="log-row">
-        <mat-form-field appearance="outline" class="field-date">
-          <mat-label>Datum</mat-label>
-          <input matInput [matDatepicker]="picker" [formControl]="date" />
-          <mat-datepicker-toggle matIconSuffix [for]="picker" />
-          <mat-datepicker #picker />
-        </mat-form-field>
-
-        <mat-form-field appearance="outline" class="field-meal">
-          <mat-label>Mahlzeit</mat-label>
-          <mat-select [formControl]="mealType">
-            @for (m of mealTypes; track m.value) {
-              <mat-option [value]="m.value">{{ m.label }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
+    <section class="ui-panel ui-panel--teal">
+      <div class="ui-panel-head">
+        <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Schätzung</h2>
       </div>
 
-      <button mat-flat-button type="button" class="btn-log"
-              [disabled]="valuesForm.invalid || logging" (click)="log()">
-        @if (logging) {
-          <mat-spinner diameter="18" />
-        } @else {
-          <mat-icon>add_task</mat-icon>
+      <div class="ui-panel-body form">
+        <form class="form-grid" [formGroup]="valuesForm">
+          <div class="field">
+            <label class="ui-input-label" for="canteen-kcal">kcal</label>
+            <input id="canteen-kcal" type="number" step="1" min="0" inputmode="numeric" class="ui-input ui-input--teal"
+                   formControlName="kcal" />
+          </div>
+          <div class="field">
+            <label class="ui-input-label" for="canteen-protein">Protein (g)</label>
+            <input id="canteen-protein" type="number" step="0.1" min="0" inputmode="decimal" class="ui-input ui-input--teal"
+                   formControlName="proteinG" />
+          </div>
+          <div class="field">
+            <label class="ui-input-label" for="canteen-carbs">Kohlenhydrate (g)</label>
+            <input id="canteen-carbs" type="number" step="0.1" min="0" inputmode="decimal" class="ui-input ui-input--teal"
+                   formControlName="carbsG" />
+          </div>
+          <div class="field">
+            <label class="ui-input-label" for="canteen-fat">Fett (g)</label>
+            <input id="canteen-fat" type="number" step="0.1" min="0" inputmode="decimal" class="ui-input ui-input--teal"
+                   formControlName="fatG" />
+          </div>
+        </form>
+
+        <div class="ui-alert notice" role="note">
+          <mat-icon aria-hidden="true" class="notice__icon notice__icon--warn">warning</mat-icon>
+          <span>Geschätzter Wert – kann abweichen. Vor dem Eintragen bei Bedarf anpassen.</span>
+        </div>
+
+        @if (assumptions) {
+          <div class="ui-alert ui-alert--info notice">
+            <mat-icon aria-hidden="true" class="notice__icon">info</mat-icon>
+            <span>{{ assumptions }}</span>
+          </div>
         }
-        Eintragen
-      </button>
 
-      <div class="save-template-row">
-        <mat-form-field appearance="outline" class="field-full">
-          <mat-label>Als Mahlzeit speichern</mat-label>
-          <input matInput [formControl]="templateName"
-                 placeholder="z. B. Kantine Schnitzel" />
-        </mat-form-field>
+        <div class="form-grid">
+          <div class="field">
+            <label class="ui-input-label" for="canteen-date">Datum</label>
+            <input id="canteen-date" type="date" class="ui-input ui-input--teal" [formControl]="date" />
+          </div>
+          <div class="field">
+            <label class="ui-input-label" for="canteen-meal">Mahlzeit</label>
+            <select id="canteen-meal" class="ui-input ui-input--teal" [formControl]="mealType">
+              @for (m of mealTypes; track m.value) {
+                <option [ngValue]="m.value">{{ m.label }}</option>
+              }
+            </select>
+          </div>
+        </div>
 
-        <button mat-stroked-button type="button" class="btn-save-template"
-                [disabled]="templateName.invalid || saving" (click)="saveAsTemplate()">
-          @if (saving) {
+        <button type="button" class="ui-btn ui-btn--teal btn-log"
+                [disabled]="valuesForm.invalid || description.invalid || date.invalid || logging" (click)="log()">
+          @if (logging) {
             <mat-spinner diameter="18" />
           } @else {
-            <mat-icon>bookmark_add</mat-icon>
+            <mat-icon aria-hidden="true">add_task</mat-icon>
           }
-          Speichern
+          <span>Eintragen</span>
         </button>
+
+        <div class="save-template">
+          <div class="field save-template__field">
+            <label class="ui-input-label" for="canteen-template">Als Mahlzeit speichern</label>
+            <input id="canteen-template" class="ui-input ui-input--teal" [formControl]="templateName"
+                   placeholder="z. B. Kantine Schnitzel" />
+          </div>
+
+          <button type="button" class="ui-btn"
+                  [disabled]="templateName.invalid || saving" (click)="saveAsTemplate()">
+            @if (saving) {
+              <mat-spinner diameter="18" />
+            } @else {
+              <mat-icon aria-hidden="true">bookmark_add</mat-icon>
+            }
+            <span>Speichern</span>
+          </button>
+        </div>
       </div>
     </section>
   }

@@ -1,26 +1,15 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow,
-  MatRowDef,
-  MatTable
-} from '@angular/material/table';
-import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatTooltip} from '@angular/material/tooltip';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {EMPTY, switchMap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
 import {MealTemplate} from '../../models/nutrition.model';
+import {nutritionDialogConfig} from '../../dialogs/dialog-config';
 import {MealTemplateEditDialogComponent} from '../../dialogs/meal-template-edit-dialog/meal-template-edit-dialog.component';
 import {MealTemplateDeleteDialogComponent} from '../../dialogs/meal-template-delete-dialog/meal-template-delete-dialog.component';
 
@@ -29,19 +18,8 @@ import {MealTemplateDeleteDialogComponent} from '../../dialogs/meal-template-del
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DecimalPipe,
-    MatTable,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
-    MatButton,
-    MatIconButton,
     MatIcon,
+    MatProgressSpinner,
     MatTooltip
   ],
   templateUrl: './nutrition-meals.component.html',
@@ -50,7 +28,8 @@ import {MealTemplateDeleteDialogComponent} from '../../dialogs/meal-template-del
 export class NutritionMealsComponent implements OnInit {
 
   templates: MealTemplate[] = [];
-  columnsToDisplay = ['name', 'items', 'kcal', 'actions'];
+  loading = true;
+  loadFailed = false;
 
   private nutritionService = inject(NutritionService);
   private dialog = inject(MatDialog);
@@ -67,9 +46,17 @@ export class NutritionMealsComponent implements OnInit {
   }
 
   private reload(): void {
-    this.nutritionService.getMealTemplates().subscribe(templates => {
-      this.templates = templates;
-      this.cdr.markForCheck();
+    this.nutritionService.getMealTemplates().subscribe({
+      next: templates => {
+        this.templates = templates;
+        this.loading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.loading = false;
+        this.loadFailed = true;
+        this.cdr.markForCheck();
+      }
     });
   }
 
@@ -78,7 +65,7 @@ export class NutritionMealsComponent implements OnInit {
   }
 
   openEditDialog(template: MealTemplate | null): void {
-    const ref = this.dialog.open(MealTemplateEditDialogComponent, {data: {template}});
+    const ref = this.dialog.open(MealTemplateEditDialogComponent, nutritionDialogConfig({template}, '520px'));
     ref.afterClosed().pipe(
       switchMap(result => {
         if (!result) return EMPTY;
@@ -92,6 +79,12 @@ export class NutritionMealsComponent implements OnInit {
         if (template) {
           this.templates = this.templates.map(t => t.id === updated.id ? updated : t);
           this.snackBar.open('Mahlzeit aktualisiert', 'OK', {duration: 3000});
+        } else if (this.loadFailed) {
+          // The list never loaded, so appending would show only the new template: load it all now.
+          this.loadFailed = false;
+          this.loading = true;
+          this.reload();
+          this.snackBar.open('Mahlzeit gespeichert', 'OK', {duration: 3000});
         } else {
           this.templates = [...this.templates, updated];
           this.snackBar.open('Mahlzeit gespeichert', 'OK', {duration: 3000});
@@ -106,7 +99,7 @@ export class NutritionMealsComponent implements OnInit {
   }
 
   openDeleteDialog(template: MealTemplate): void {
-    const ref = this.dialog.open(MealTemplateDeleteDialogComponent, {data: {name: template.name}});
+    const ref = this.dialog.open(MealTemplateDeleteDialogComponent, nutritionDialogConfig({name: template.name}));
     ref.afterClosed().pipe(
       switchMap(result => result === 'confirmed' ? this.nutritionService.deleteMealTemplate(template.id) : EMPTY),
       takeUntilDestroyed(this.destroyRef)

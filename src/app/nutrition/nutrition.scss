@@ -1,0 +1,300 @@
+/* Gemeinsame Bausteine der Nutrition-Views und -Dialoge, einmal global ausgeliefert.
+   Gilt unter .nutrition-scope: am Layout (Views) sowie per panelClass/class an Dialogen
+   und Autocomplete-Panels, die im CDK-Overlay außerhalb des Layouts liegen.
+   Farben, Flächen und Formularfelder kommen aus ui-styles; hier nur das App-Layout. */
+
+.nutrition-scope {
+  /* Makro-Farben, einheitlich in allen Views, Dialogen und Charts */
+  --n-kcal:    #a3e635;
+  --n-protein: #2dd4bf;
+  --n-carbs:   #4da6ff;
+  --n-fat:     #fb7185;
+
+  /* ── Icons und Spinner ───────────────────────────── */
+  .ui-btn mat-icon,
+  .ui-btn-icon mat-icon {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
+
+  /* Spinner übernehmen die Textfarbe (ui-empty, Buttons) */
+  mat-spinner,
+  mat-progress-spinner {
+    --mat-progress-spinner-active-indicator-color: currentColor;
+  }
+
+  /* ── Seiten ──────────────────────────────────────── */
+  .page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ui-space-4);
+    max-width: 760px;
+  }
+
+  @media (min-width: 640px) {
+    .page {
+      gap: var(--ui-space-6);
+    }
+  }
+
+  .panel-actions {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: var(--ui-space-1);
+  }
+
+  .panel-stat {
+    color: var(--text-muted);
+    font-size: var(--ui-text-sm);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .lead {
+    margin: 0 0 var(--ui-space-4);
+    color: var(--text-muted);
+    font-size: .85rem;
+    line-height: 1.5;
+  }
+
+  /* ── Formulare ───────────────────────────────────── */
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ui-space-3);
+    margin: 0;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ui-space-3);
+  }
+
+  @media (max-width: 419px) {
+    .form-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  .field-hint,
+  .field-error {
+    margin: var(--ui-space-1) 0 0;
+    font-size: .72rem;
+  }
+
+  .field-hint {
+    color: var(--text-dim);
+  }
+
+  .field-error {
+    color: var(--c-e);
+  }
+
+  /* Ungültige Felder nach Interaktion: Rahmen und Fokus in Rose */
+  .ui-input.ng-invalid.ng-touched {
+    --ui-input-accent: var(--c-e);
+    --ui-input-border: color-mix(in srgb, var(--c-e) 55%, transparent);
+  }
+
+  /* Feld mit Einheit oder Icon am rechten Rand */
+  .input-affix {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-affix .ui-input {
+    padding-right: 2.75rem;
+  }
+
+  .input-affix__suffix {
+    position: absolute;
+    right: var(--ui-space-3);
+    display: flex;
+    align-items: center;
+    color: var(--text-dim);
+    font-size: var(--ui-text-sm);
+    pointer-events: none;
+  }
+
+  .input-affix__suffix mat-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
+
+  /* ── Makro-Kacheln ───────────────────────────────── */
+  .macro-tiles {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--ui-space-2);
+  }
+
+  .macro-tiles--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .macro-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .15rem;
+    min-width: 0;
+    padding: var(--ui-space-2) var(--ui-space-1);
+    background: var(--raised);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--tile-accent, var(--border-mid));
+    border-radius: var(--ui-radius);
+    text-align: center;
+  }
+
+  .macro-tile--kcal    { --tile-accent: var(--n-kcal); }
+  .macro-tile--protein { --tile-accent: var(--n-protein); }
+  .macro-tile--carbs   { --tile-accent: var(--n-carbs); }
+  .macro-tile--fat     { --tile-accent: var(--n-fat); }
+
+  .macro-tile__value {
+    color: var(--tile-accent, var(--text));
+    font-size: 1.05rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+
+  .macro-tile__unit {
+    margin-left: 1px;
+    font-size: .75rem;
+    font-weight: 600;
+  }
+
+  .macro-tile__label {
+    max-width: 100%;
+    color: var(--text-dim);
+    font-size: var(--ui-text-xs);
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  /* Schmale Kacheln: lange Labels wie „Kohlenhydrate" passen ohne Sperrung */
+  @media (max-width: 419px) {
+    .macro-tile__label {
+      font-size: .58rem;
+      letter-spacing: .02em;
+    }
+  }
+
+  /* ── Tabellen ────────────────────────────────────── */
+  .table-container {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .col-num {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .col-actions {
+    width: 1%;
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .row-actions {
+    display: inline-flex;
+    gap: var(--ui-space-1);
+  }
+
+  /* ── Zeitraum-Umschalter ─────────────────────────── */
+  .segmented {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ui-space-1);
+  }
+
+  /* ── Lebensmittel-Suche (mat-autocomplete am ui-input) ── */
+  .opt {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+  }
+
+  .opt__name {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .opt__meta {
+    color: var(--text-muted);
+    font-size: .7rem;
+  }
+
+  /* ── Vorschau und vorgemerkte Einträge ───────────── */
+  .macro-preview {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ui-space-2);
+  }
+
+  .macro-preview__label {
+    color: var(--text-dim);
+    font-size: var(--ui-text-xs);
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .staged-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: var(--ui-radius);
+  }
+
+  .staged-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--ui-space-2);
+    padding: var(--ui-space-1) var(--ui-space-1) var(--ui-space-1) var(--ui-space-3);
+    border-bottom: 1px solid var(--border);
+    font-size: var(--ui-text-sm);
+  }
+
+  .staged-item:last-child {
+    border-bottom: none;
+  }
+
+  .staged-item__name {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: var(--text);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .staged-item__meta {
+    color: var(--text-muted);
+    font-size: .72rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .btn-stage {
+    align-self: flex-start;
+  }
+}

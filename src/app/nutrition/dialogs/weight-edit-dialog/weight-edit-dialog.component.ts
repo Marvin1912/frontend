@@ -1,37 +1,21 @@
 import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
+import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
 import {MatIcon} from '@angular/material/icon';
-import {MatMiniFabButton} from '@angular/material/button';
-import {format, parseISO} from 'date-fns';
 import {WeightEntry, WeightEntryInput} from '../../models/nutrition.model';
+import {notInFutureValidator, todayIso} from '../../forms';
 
 @Component({
   selector: 'app-weight-edit-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
     MatDialogClose,
-    MatFormField,
-    MatLabel,
-    MatSuffix,
-    MatInput,
     NoWheelDirective,
-    MatDatepicker,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatIcon,
-    MatMiniFabButton
+    MatIcon
   ],
-  templateUrl: './weight-edit-dialog.component.html',
-  styleUrl: './weight-edit-dialog.component.css'
+  templateUrl: './weight-edit-dialog.component.html'
 })
 export class WeightEditDialogComponent implements OnInit {
 
@@ -41,9 +25,14 @@ export class WeightEditDialogComponent implements OnInit {
 
   form!: FormGroup;
 
+  get today(): string {
+    return todayIso();
+  }
+
   ngOnInit(): void {
     this.form = this.fb.group({
-      entryDate: [parseISO(this.data.entryDate), Validators.required],
+      // Native date input works on yyyy-MM-dd strings, the same format the API uses.
+      entryDate: [this.data.entryDate, [Validators.required, notInFutureValidator()]],
       weightKg: [this.data.weightKg, [Validators.required, Validators.min(0)]]
     });
   }
@@ -52,7 +41,7 @@ export class WeightEditDialogComponent implements OnInit {
     if (this.form.invalid) return;
     const {entryDate, weightKg} = this.form.value;
     const result: WeightEntryInput = {
-      entryDate: format(entryDate, 'yyyy-MM-dd'),
+      entryDate,
       weightKg: Number(weightKg)
     };
     this.dialogRef.close(result);

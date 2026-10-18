@@ -2,13 +2,9 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, injec
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatSelect} from '@angular/material/select';
-import {MatOption} from '@angular/material/core';
+import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatButton} from '@angular/material/button';
 import {NutritionService} from '../../services/nutrition.service';
 import {MealTemplate, MealType} from '../../models/nutrition.model';
 
@@ -34,17 +30,9 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
   imports: [
     ReactiveFormsModule,
     DecimalPipe,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
     MatDialogClose,
-    MatFormField,
-    MatLabel,
-    MatSelect,
-    MatOption,
     MatIcon,
-    MatProgressSpinner,
-    MatButton
+    MatProgressSpinner
   ],
   templateUrl: './meal-template-picker-dialog.component.html',
   styleUrl: './meal-template-picker-dialog.component.css'

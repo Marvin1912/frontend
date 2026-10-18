@@ -1,11 +1,9 @@
 import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatError, MatFormField, MatLabel} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
+import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
+import {showError} from '../../forms';
 import {MatIcon} from '@angular/material/icon';
-import {MatButton} from '@angular/material/button';
 import {Food, FoodDraft, FoodInput, FoodSource} from '../../models/nutrition.model';
 
 /**
@@ -27,20 +25,11 @@ export interface FoodEditDialogData {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
     MatDialogClose,
-    MatFormField,
-    MatLabel,
-    MatError,
-    MatInput,
     NoWheelDirective,
-    MatIcon,
-    MatButton
+    MatIcon
   ],
-  templateUrl: './food-edit-dialog.component.html',
-  styleUrl: './food-edit-dialog.component.css'
+  templateUrl: './food-edit-dialog.component.html'
 })
 export class FoodEditDialogComponent implements OnInit {
 
@@ -69,6 +58,10 @@ export class FoodEditDialogComponent implements OnInit {
   private servingFrom(source: Food | FoodDraft | undefined): number | null {
     if (!source) return null;
     return 'defaultServingG' in source ? source.defaultServingG : source.servingG;
+  }
+
+  isInvalid(name: string): boolean {
+    return showError(this.form.get(name));
   }
 
   save(): void {

@@ -1,118 +1,120 @@
-<section class="card">
-  <header class="card__head">
-    <span class="card__dot"></span>
-    <span class="card__label">TAGESZIELE</span>
-  </header>
+<section class="ui-panel ui-panel--lime">
+  <div class="ui-panel-head">
+    <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Tagesziele</h2>
+  </div>
 
   @if (loading) {
-    <div class="card__state">
-      <mat-progress-spinner mode="indeterminate" diameter="28" />
+    <div class="ui-empty" role="status">
+      <mat-spinner diameter="28" />
+      <p class="m-0">Ziele werden geladen…</p>
     </div>
   } @else if (unavailable) {
-    <div class="card__state card__state--empty">
-      <mat-icon>info</mat-icon>
-      <p>{{ unavailable }}</p>
+    <div class="ui-empty" role="status">
+      <mat-icon aria-hidden="true">info</mat-icon>
+      <p class="m-0 empty-text">{{ unavailable }}</p>
     </div>
   } @else if (targets) {
-    <div class="kcal">
-      <div class="kcal__main">
-        <span class="kcal__value">{{ targets.targetKcal | number:'1.0-0':'de' }}</span>
-        <span class="kcal__unit">kcal / Tag</span>
-      </div>
-      <div class="kcal__sub">
-        <div class="kcal__sub-item">
-          <span class="kcal__sub-label">Grundumsatz (BMR)</span>
-          <span class="kcal__sub-value">{{ targets.bmr | number:'1.0-0':'de' }} kcal</span>
+    <div class="ui-panel-body body">
+      <div class="kcal">
+        <div class="kcal__main">
+          <span class="kcal__value">{{ targets.targetKcal | number:'1.0-0':'de' }}</span>
+          <span class="kcal__unit">kcal / Tag</span>
         </div>
-        <div class="kcal__sub-item">
-          <span class="kcal__sub-label">Erhaltungsbedarf</span>
-          <span class="kcal__sub-value">{{ targets.maintenanceKcal | number:'1.0-0':'de' }} kcal</span>
+        <dl class="kcal__sub">
+          <div class="kcal__sub-item">
+            <dt>Grundumsatz (BMR)</dt>
+            <dd>{{ targets.bmr | number:'1.0-0':'de' }} kcal</dd>
+          </div>
+          <div class="kcal__sub-item">
+            <dt>Erhaltungsbedarf</dt>
+            <dd>{{ targets.maintenanceKcal | number:'1.0-0':'de' }} kcal</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="macro-tiles macro-tiles--3">
+        <div class="macro-tile macro-tile--protein">
+          <span class="macro-tile__value">{{ targets.proteinG | number:'1.0-0':'de' }}<span class="macro-tile__unit">&nbsp;g</span></span>
+          <span class="macro-tile__label">Protein</span>
+        </div>
+        <div class="macro-tile macro-tile--carbs">
+          <span class="macro-tile__value">{{ targets.carbsG | number:'1.0-0':'de' }}<span class="macro-tile__unit">&nbsp;g</span></span>
+          <span class="macro-tile__label">Kohlenhydrate</span>
+        </div>
+        <div class="macro-tile macro-tile--fat">
+          <span class="macro-tile__value">{{ targets.fatG | number:'1.0-0':'de' }}<span class="macro-tile__unit">&nbsp;g</span></span>
+          <span class="macro-tile__label">Fett</span>
         </div>
       </div>
+
+      <p class="basis" [class.basis--manual]="targets.basis === 'BASAL_KCAL'">
+        <mat-icon aria-hidden="true">{{ targets.basis === 'BASAL_KCAL' ? 'tune' : 'functions' }}</mat-icon>
+        <span>
+          {{ targets.basis === 'BASAL_KCAL'
+            ? 'BMR aus manuellem Wert'
+            : 'BMR aus Mifflin–St-Jeor-Formel' }}
+        </span>
+      </p>
+
+      @if (ratioLoading) {
+        <div class="ratio-period ratio-period--state" role="status">
+          <mat-spinner diameter="20" aria-label="Verhältnis wird geladen" />
+        </div>
+      } @else if (ratioUnavailable) {
+        <div class="ratio-period ratio-period--state">
+          <p class="ratio-period__empty">{{ ratioUnavailable }}</p>
+        </div>
+      } @else if (ratioSummary) {
+        <div class="ratio-period">
+          <span class="ratio-period__label">Letzte 30 Tage</span>
+          @if (ratioSummary.last30Days.trackedDays === 0) {
+            <p class="ratio-period__empty">Keine Einträge in diesem Zeitraum.</p>
+          } @else {
+            <div class="macro-tiles macro-tiles--3">
+              <div class="macro-tile macro-tile--protein">
+                <span class="macro-tile__value">{{ ratioSummary.last30Days.avgProteinPerKg | number:'1.2-2':'de' }}<span class="macro-tile__unit">&nbsp;g/kg</span></span>
+                <span class="macro-tile__label">Protein</span>
+              </div>
+              <div class="macro-tile macro-tile--carbs">
+                <span class="macro-tile__value">{{ ratioSummary.last30Days.avgCarbsPerKg | number:'1.2-2':'de' }}<span class="macro-tile__unit">&nbsp;g/kg</span></span>
+                <span class="macro-tile__label">Kohlenhydrate</span>
+              </div>
+              <div class="macro-tile macro-tile--fat">
+                <span class="macro-tile__value">{{ ratioSummary.last30Days.avgFatPerKg | number:'1.2-2':'de' }}<span class="macro-tile__unit">&nbsp;g/kg</span></span>
+                <span class="macro-tile__label">Fett</span>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="ratio-period">
+          @if (ratioSummary.totalPeriod.from) {
+            <span class="ratio-period__label">Gesamter Zeitraum, seit {{ ratioSummary.totalPeriod.from | date:'dd.MM.yyyy':'':'de' }}</span>
+          } @else {
+            <span class="ratio-period__label">Gesamter Zeitraum</span>
+          }
+          @if (!ratioSummary.totalPeriod.from) {
+            <p class="ratio-period__empty">Noch keine Mahlzeiten erfasst.</p>
+          } @else if (ratioSummary.totalPeriod.trackedDays === 0) {
+            <p class="ratio-period__empty">Keine Einträge in diesem Zeitraum.</p>
+          } @else {
+            <div class="macro-tiles macro-tiles--3">
+              <div class="macro-tile macro-tile--protein">
+                <span class="macro-tile__value">{{ ratioSummary.totalPeriod.avgProteinPerKg | number:'1.2-2':'de' }}<span class="macro-tile__unit">&nbsp;g/kg</span></span>
+                <span class="macro-tile__label">Protein</span>
+              </div>
+              <div class="macro-tile macro-tile--carbs">
+                <span class="macro-tile__value">{{ ratioSummary.totalPeriod.avgCarbsPerKg | number:'1.2-2':'de' }}<span class="macro-tile__unit">&nbsp;g/kg</span></span>
+                <span class="macro-tile__label">Kohlenhydrate</span>
+              </div>
+              <div class="macro-tile macro-tile--fat">
+                <span class="macro-tile__value">{{ ratioSummary.totalPeriod.avgFatPerKg | number:'1.2-2':'de' }}<span class="macro-tile__unit">&nbsp;g/kg</span></span>
+                <span class="macro-tile__label">Fett</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
     </div>
-
-    <div class="macros">
-      <div class="macro macro--p">
-        <span class="macro__value">{{ targets.proteinG | number:'1.0-0':'de' }}&nbsp;<span class="macro__unit">g</span></span>
-        <span class="macro__label">Protein</span>
-      </div>
-      <div class="macro macro--c">
-        <span class="macro__value">{{ targets.carbsG | number:'1.0-0':'de' }}&nbsp;<span class="macro__unit">g</span></span>
-        <span class="macro__label">Kohlenhydrate</span>
-      </div>
-      <div class="macro macro--f">
-        <span class="macro__value">{{ targets.fatG | number:'1.0-0':'de' }}&nbsp;<span class="macro__unit">g</span></span>
-        <span class="macro__label">Fett</span>
-      </div>
-    </div>
-
-    <div class="basis" [class.basis--manual]="targets.basis === 'BASAL_KCAL'">
-      <mat-icon>{{ targets.basis === 'BASAL_KCAL' ? 'tune' : 'functions' }}</mat-icon>
-      <span>
-        {{ targets.basis === 'BASAL_KCAL'
-          ? 'BMR aus manuellem Wert'
-          : 'BMR aus Mifflin–St-Jeor-Formel' }}
-      </span>
-    </div>
-
-    @if (ratioLoading) {
-      <div class="ratio-period card__state">
-        <mat-progress-spinner mode="indeterminate" diameter="20" />
-      </div>
-    } @else if (ratioUnavailable) {
-      <div class="ratio-period card__state card__state--empty">
-        <p>{{ ratioUnavailable }}</p>
-      </div>
-    } @else if (ratioSummary) {
-      <div class="ratio-period">
-        <span class="ratio-period__label">Letzte 30 Tage</span>
-        @if (ratioSummary.last30Days.trackedDays === 0) {
-          <p class="ratio-period__empty">Keine Einträge in diesem Zeitraum.</p>
-        } @else {
-          <div class="macros macros--ratio">
-            <div class="macro macro--p">
-              <span class="macro__value">{{ ratioSummary.last30Days.avgProteinPerKg | number:'1.2-2':'de' }}&nbsp;<span class="macro__unit">g/kg</span></span>
-              <span class="macro__label">Protein</span>
-            </div>
-            <div class="macro macro--c">
-              <span class="macro__value">{{ ratioSummary.last30Days.avgCarbsPerKg | number:'1.2-2':'de' }}&nbsp;<span class="macro__unit">g/kg</span></span>
-              <span class="macro__label">Kohlenhydrate</span>
-            </div>
-            <div class="macro macro--f">
-              <span class="macro__value">{{ ratioSummary.last30Days.avgFatPerKg | number:'1.2-2':'de' }}&nbsp;<span class="macro__unit">g/kg</span></span>
-              <span class="macro__label">Fett</span>
-            </div>
-          </div>
-        }
-      </div>
-
-      <div class="ratio-period">
-        @if (ratioSummary.totalPeriod.from) {
-          <span class="ratio-period__label">Gesamter Zeitraum, seit {{ ratioSummary.totalPeriod.from | date:'dd.MM.yyyy':'':'de' }}</span>
-        } @else {
-          <span class="ratio-period__label">Gesamter Zeitraum</span>
-        }
-        @if (!ratioSummary.totalPeriod.from) {
-          <p class="ratio-period__empty">Noch keine Mahlzeiten erfasst.</p>
-        } @else if (ratioSummary.totalPeriod.trackedDays === 0) {
-          <p class="ratio-period__empty">Keine Einträge in diesem Zeitraum.</p>
-        } @else {
-          <div class="macros macros--ratio">
-            <div class="macro macro--p">
-              <span class="macro__value">{{ ratioSummary.totalPeriod.avgProteinPerKg | number:'1.2-2':'de' }}&nbsp;<span class="macro__unit">g/kg</span></span>
-              <span class="macro__label">Protein</span>
-            </div>
-            <div class="macro macro--c">
-              <span class="macro__value">{{ ratioSummary.totalPeriod.avgCarbsPerKg | number:'1.2-2':'de' }}&nbsp;<span class="macro__unit">g/kg</span></span>
-              <span class="macro__label">Kohlenhydrate</span>
-            </div>
-            <div class="macro macro--f">
-              <span class="macro__value">{{ ratioSummary.totalPeriod.avgFatPerKg | number:'1.2-2':'de' }}&nbsp;<span class="macro__unit">g/kg</span></span>
-              <span class="macro__label">Fett</span>
-            </div>
-          </div>
-        }
-      </div>
-    }
   }
 </section>

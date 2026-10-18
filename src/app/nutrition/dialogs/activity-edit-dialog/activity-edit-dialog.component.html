@@ -1,43 +1,48 @@
-<h2 mat-dialog-title>{{ title }}</h2>
+<form class="ui-dialog form" [formGroup]="form" (ngSubmit)="save()">
+  <h2 class="ui-dialog-title m-0">{{ title }}</h2>
 
-<mat-dialog-content>
-  <form class="edit-form" [formGroup]="form">
-    <mat-form-field appearance="outline" class="field-full">
-      <mat-label>Aktivität</mat-label>
-      <mat-select formControlName="activityType">
-        @for (a of activityTypes; track a.value) {
-          <mat-option [value]="a.value">{{ a.label }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="field-full">
-      <mat-label>Beschreibung</mat-label>
-      <input matInput formControlName="description" />
-      @if (form.get('description')?.hasError('required')) {
-        <mat-error>Beschreibung ist bei "Sonstiges" erforderlich</mat-error>
+  <div class="field">
+    <label class="ui-input-label" for="activity-type">Aktivität</label>
+    <select id="activity-type" class="ui-input ui-input--rose" formControlName="activityType"
+            [attr.aria-invalid]="isInvalid('activityType')">
+      <option [ngValue]="null" disabled>Aktivität wählen…</option>
+      @for (a of activityTypes; track a.value) {
+        <option [ngValue]="a.value">{{ a.label }}</option>
       }
-    </mat-form-field>
+    </select>
+  </div>
 
-    <mat-form-field appearance="outline" class="field-full">
-      <mat-label>Verbrannte kcal</mat-label>
-      <input matInput type="number" step="1" inputmode="numeric" formControlName="kcalBurned" />
-      @if (form.get('kcalBurned')?.hasError('required')) {
-        <mat-error>Erforderlich</mat-error>
-      } @else if (form.get('kcalBurned')?.hasError('min')) {
-        <mat-error>Muss 0 oder größer sein</mat-error>
-      }
-    </mat-form-field>
-  </form>
-</mat-dialog-content>
+  <div class="field">
+    <label class="ui-input-label" for="activity-description">Beschreibung</label>
+    <input id="activity-description" class="ui-input ui-input--rose" formControlName="description"
+           [attr.aria-invalid]="isInvalid('description')"
+           [attr.aria-describedby]="isInvalid('description') ? 'activity-description-error' : null" />
+    @if (isInvalid('description')) {
+      <p id="activity-description-error" class="field-error">Beschreibung ist bei "Sonstiges" erforderlich</p>
+    }
+  </div>
 
-<mat-dialog-actions align="center">
-  <button mat-flat-button type="button" class="btn-confirm" [disabled]="form.invalid" (click)="save()">
-    <mat-icon>check_circle</mat-icon>
-    Speichern
-  </button>
-  <button mat-stroked-button type="button" mat-dialog-close class="btn-cancel">
-    <mat-icon>close</mat-icon>
-    Abbrechen
-  </button>
-</mat-dialog-actions>
+  <div class="field">
+    <label class="ui-input-label" for="activity-kcal">Verbrannte kcal</label>
+    <input id="activity-kcal" type="number" step="1" min="0" inputmode="numeric" class="ui-input ui-input--rose"
+           formControlName="kcalBurned"
+           [attr.aria-invalid]="isInvalid('kcalBurned')"
+           [attr.aria-describedby]="isInvalid('kcalBurned') ? 'activity-kcal-error' : null" />
+    @if (isInvalid('kcalBurned')) {
+      <p id="activity-kcal-error" class="field-error">
+        {{ form.get('kcalBurned')?.hasError('required') ? 'Erforderlich' : 'Muss 0 oder größer sein' }}
+      </p>
+    }
+  </div>
+
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn" mat-dialog-close>
+      <mat-icon aria-hidden="true">close</mat-icon>
+      <span>Abbrechen</span>
+    </button>
+    <button type="submit" class="ui-btn ui-btn--teal" [disabled]="form.invalid">
+      <mat-icon aria-hidden="true">check</mat-icon>
+      <span>Speichern</span>
+    </button>
+  </div>
+</form>

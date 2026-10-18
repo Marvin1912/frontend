@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
 @use './theme-colors' as theme;
+@use './app/nutrition/nutrition';
 
 /* ── Material 3 Theme (Design System, Milestone "UI/UX Redesign") ──
    Basis für alle grocery-Redesign-Issues (#313–#319). Petrol/Tannengrün
@@ -123,6 +124,22 @@ html {
   --mat-menu-item-icon-color: var(--text-muted);
   --mat-menu-item-hover-state-layer-color: rgba(255, 255, 255, 0.06);
   --mat-menu-item-focus-state-layer-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-mid);
+}
+
+/* ── MatAutocomplete passend zu ui-styles ────────── */
+/* class für <mat-autocomplete> an einem nativen ui-input: dunkle Fläche, nur über Tokens. */
+.ui-autocomplete-panel {
+  --mat-autocomplete-background-color: var(--surface);
+  --mat-autocomplete-container-shape: 8px;
+  --mat-autocomplete-container-elevation-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --mat-option-label-text-color: var(--text);
+  --mat-option-label-text-font: Outfit, sans-serif;
+  --mat-option-label-text-size: 0.85rem;
+  --mat-option-hover-state-layer-color: rgba(255, 255, 255, 0.06);
+  --mat-option-focus-state-layer-color: rgba(255, 255, 255, 0.08);
+  --mat-option-selected-state-layer-color: rgba(255, 255, 255, 0.1);
+  --mat-option-selected-state-label-text-color: var(--text);
   border: 1px solid var(--border-mid);
 }
 

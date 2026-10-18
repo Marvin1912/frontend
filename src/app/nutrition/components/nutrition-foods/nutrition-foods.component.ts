@@ -1,25 +1,7 @@
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject, OnInit, ViewChild} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {DecimalPipe} from '@angular/common';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {
-  MatCell,
-  MatCellDef,
-  MatColumnDef,
-  MatHeaderCell,
-  MatHeaderCellDef,
-  MatHeaderRow,
-  MatHeaderRowDef,
-  MatRow,
-  MatRowDef,
-  MatTable,
-  MatTableDataSource
-} from '@angular/material/table';
-import {MatFormField, MatLabel, MatPrefix} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatButton, MatIconButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatTooltip} from '@angular/material/tooltip';
@@ -28,9 +10,19 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {debounceTime, distinctUntilChanged, EMPTY, finalize, startWith, switchMap, tap} from 'rxjs';
 import {NutritionService} from '../../services/nutrition.service';
 import {Food, FoodDraft, FoodInput} from '../../models/nutrition.model';
+import {nutritionDialogConfig} from '../../dialogs/dialog-config';
 import {FoodEditDialogComponent, FoodEditDialogData} from '../../dialogs/food-edit-dialog/food-edit-dialog.component';
 import {FoodDeleteDialogComponent} from '../../dialogs/food-delete-dialog/food-delete-dialog.component';
 import {BarcodeScanDialogComponent} from '../../dialogs/barcode-scan-dialog/barcode-scan-dialog.component';
+
+type SortKey = 'name' | 'kcal' | 'protein' | 'carbs' | 'fat';
+
+const SORT_VALUE: Record<Exclude<SortKey, 'name'>, (food: Food) => number> = {
+  kcal: food => food.kcalPer100,
+  protein: food => food.proteinPer100,
+  carbs: food => food.carbsPer100,
+  fat: food => food.fatPer100
+};
 
 @Component({
   selector: 'app-nutrition-foods',
@@ -38,41 +30,34 @@ import {BarcodeScanDialogComponent} from '../../dialogs/barcode-scan-dialog/barc
   imports: [
     ReactiveFormsModule,
     DecimalPipe,
-    MatTable,
-    MatColumnDef,
-    MatHeaderCell,
-    MatHeaderCellDef,
-    MatCellDef,
-    MatCell,
-    MatHeaderRow,
-    MatHeaderRowDef,
-    MatRow,
-    MatRowDef,
-    MatFormField,
-    MatLabel,
-    MatPrefix,
-    MatInput,
-    MatButton,
-    MatIconButton,
     MatIcon,
     MatProgressSpinner,
-    MatTooltip,
-    MatSortModule,
-    MatPaginatorModule
+    MatTooltip
   ],
   templateUrl: './nutrition-foods.component.html',
   styleUrl: './nutrition-foods.component.css'
 })
-export class NutritionFoodsComponent implements OnInit, AfterViewInit {
+export class NutritionFoodsComponent implements OnInit {
 
   @ViewChild('photoInput') photoInput!: { nativeElement: HTMLInputElement };
-  @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  readonly sortColumns: { key: SortKey; label: string }[] = [
+    {key: 'name', label: 'Name'},
+    {key: 'kcal', label: 'kcal'},
+    {key: 'protein', label: 'P'},
+    {key: 'carbs', label: 'KH'},
+    {key: 'fat', label: 'F'}
+  ];
+  readonly pageSizeOptions = [10, 25, 50, 100];
 
   search = new FormControl('', {nonNullable: true});
-  foods = new MatTableDataSource<Food>();
-  columnsToDisplay = ['name', 'kcal', 'protein', 'carbs', 'fat', 'actions'];
-  pageSizeOptions = [10, 25, 50, 100];
+  foods: Food[] = [];
+  /** Current page of the (optionally) sorted foods; recomputed only when data, sort or page change. */
+  pagedFoods: Food[] = [];
+  sortKey: SortKey | null = null;
+  sortDir: 'asc' | 'desc' = 'asc';
+  pageSize = 25;
+  pageIndex = 0;
   scanning = false;
   searching = false;
 
@@ -80,16 +65,62 @@ export class NutritionFoodsComponent implements OnInit, AfterViewInit {
     return this.search.value.trim();
   }
 
+  get lastPage(): number {
+    return Math.max(0, Math.ceil(this.foods.length / this.pageSize) - 1);
+  }
+
+
+  get rangeLabel(): string {
+    const start = this.pageIndex * this.pageSize;
+    const end = Math.min(start + this.pageSize, this.foods.length);
+    return `${start + 1}–${end} von ${this.foods.length}`;
+  }
+
+  /** Cycles a column through ascending → descending → unsorted, like MatSort. */
+  toggleSort(key: SortKey): void {
+    if (this.sortKey !== key) {
+      this.sortKey = key;
+      this.sortDir = 'asc';
+    } else if (this.sortDir === 'asc') {
+      this.sortDir = 'desc';
+    } else {
+      this.sortKey = null;
+    }
+    this.goToPage(0);
+  }
+
+  ariaSort(key: SortKey): 'ascending' | 'descending' | 'none' {
+    if (this.sortKey !== key) return 'none';
+    return this.sortDir === 'asc' ? 'ascending' : 'descending';
+  }
+
+  /** Moves to a page (clamped to the data) and rebuilds the visible rows. */
+  goToPage(index: number): void {
+    this.pageIndex = Math.min(Math.max(index, 0), this.lastPage);
+    const sorted = this.sortKey ? [...this.foods].sort(this.comparator(this.sortKey, this.sortDir)) : this.foods;
+    const start = this.pageIndex * this.pageSize;
+    this.pagedFoods = sorted.slice(start, start + this.pageSize);
+  }
+
+  onPageSizeChange(event: Event): void {
+    this.pageSize = Number((event.target as HTMLSelectElement).value);
+    this.goToPage(0);
+  }
+
+  private comparator(key: SortKey, dir: 'asc' | 'desc'): (a: Food, b: Food) => number {
+    const sign = dir === 'asc' ? 1 : -1;
+    if (key === 'name') {
+      return (a, b) => sign * a.name.localeCompare(b.name, 'de');
+    }
+    const value = SORT_VALUE[key];
+    return (a, b) => sign * (value(a) - value(b));
+  }
+
   private nutritionService = inject(NutritionService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
-
-  ngAfterViewInit(): void {
-    this.foods.sort = this.sort;
-    this.foods.paginator = this.paginator;
-  }
 
   ngOnInit(): void {
     this.search.valueChanges.pipe(
@@ -108,17 +139,16 @@ export class NutritionFoodsComponent implements OnInit, AfterViewInit {
       )),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(foods => {
-      this.foods.data = foods;
-      if (this.foods.paginator) {
-        this.foods.paginator.firstPage();
-      }
+      this.foods = foods;
+      this.goToPage(0);
       this.cdr.markForCheck();
     });
   }
 
   private reload(): void {
     this.nutritionService.searchFoods(this.search.value.trim()).subscribe(foods => {
-      this.foods.data = foods;
+      this.foods = foods;
+      this.goToPage(this.pageIndex);
       this.cdr.markForCheck();
     });
   }
@@ -132,13 +162,14 @@ export class NutritionFoodsComponent implements OnInit, AfterViewInit {
   }
 
   openDeleteDialog(food: Food): void {
-    const ref = this.dialog.open(FoodDeleteDialogComponent, {data: {name: food.name}});
+    const ref = this.dialog.open(FoodDeleteDialogComponent, nutritionDialogConfig({name: food.name}));
     ref.afterClosed().pipe(
       switchMap(result => result === 'confirmed' ? this.nutritionService.deleteFood(food.id) : EMPTY),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
-        this.foods.data = this.foods.data.filter(f => f.id !== food.id);
+        this.foods = this.foods.filter(f => f.id !== food.id);
+        this.goToPage(this.pageIndex);
         this.cdr.markForCheck();
         this.snackBar.open('Lebensmittel gelöscht', 'OK', {duration: 3000});
       },
@@ -163,7 +194,7 @@ export class NutritionFoodsComponent implements OnInit, AfterViewInit {
   }
 
   openBarcodeDialog(): void {
-    const ref = this.dialog.open(BarcodeScanDialogComponent);
+    const ref = this.dialog.open(BarcodeScanDialogComponent, nutritionDialogConfig(undefined, '440px'));
     ref.afterClosed().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((draft: FoodDraft | undefined) => {
       if (!draft) return;
       // Same review-and-save flow as the photo scan, tagged as a BARCODE source.
@@ -200,7 +231,7 @@ export class NutritionFoodsComponent implements OnInit, AfterViewInit {
   }
 
   private openFoodDialog(data: FoodEditDialogData, existing: Food | null): void {
-    const ref = this.dialog.open(FoodEditDialogComponent, {data});
+    const ref = this.dialog.open(FoodEditDialogComponent, nutritionDialogConfig(data, '480px'));
     ref.afterClosed().pipe(
       switchMap((result: FoodInput | undefined) => {
         if (!result) return EMPTY;
@@ -210,7 +241,8 @@ export class NutritionFoodsComponent implements OnInit, AfterViewInit {
     ).subscribe({
       next: updated => {
         if (existing) {
-          this.foods.data = this.foods.data.map(f => f.id === updated.id ? updated : f);
+          this.foods = this.foods.map(f => f.id === updated.id ? updated : f);
+          this.goToPage(this.pageIndex);
           this.cdr.markForCheck();
           this.snackBar.open('Lebensmittel aktualisiert', 'OK', {duration: 3000});
         } else {

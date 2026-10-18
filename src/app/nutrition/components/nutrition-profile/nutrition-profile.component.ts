@@ -1,38 +1,23 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {HttpErrorResponse} from '@angular/common/http';
-import {MatError, MatFormField, MatHint, MatLabel, MatSuffix} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
-import {MatOption, MatSelect} from '@angular/material/select';
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
-import {MatButton} from '@angular/material/button';
 import {MatIcon} from '@angular/material/icon';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {format, parseISO} from 'date-fns';
 import {NutritionService} from '../../services/nutrition.service';
 import {ActivityLevel, Goal, ProfileInput, Sex} from '../../models/nutrition.model';
 import {TargetsCardComponent} from '../targets-card/targets-card.component';
+import {notInFutureValidator, showError, todayIso} from '../../forms';
 
 @Component({
   selector: 'app-nutrition-profile',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
-    MatFormField,
-    MatLabel,
-    MatHint,
-    MatError,
-    MatSuffix,
-    MatInput,
     NoWheelDirective,
-    MatSelect,
-    MatOption,
-    MatDatepicker,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatButton,
     MatIcon,
+    MatProgressSpinner,
     TargetsCardComponent
   ],
   templateUrl: './nutrition-profile.component.html',
@@ -44,7 +29,10 @@ export class NutritionProfileComponent implements OnInit {
 
   form!: FormGroup;
   saving = false;
-  readonly today = new Date();
+  /** Upper bound for the native date input; a getter so it moves on past midnight. */
+  get today(): string {
+    return todayIso();
+  }
 
   readonly sexes: {value: Sex; label: string}[] = [
     {value: 'MALE', label: 'Männlich'},
@@ -73,7 +61,7 @@ export class NutritionProfileComponent implements OnInit {
   ngOnInit(): void {
     this.form = this.fb.group({
       sex: ['MALE' as Sex, Validators.required],
-      birthDate: [null as Date | null, Validators.required],
+      birthDate: [null as string | null, [Validators.required, notInFutureValidator()]],
       heightCm: [null as number | null, [Validators.required, Validators.min(0)]],
       activityLevel: ['MODERATE' as ActivityLevel, Validators.required],
       goal: ['MAINTAIN' as Goal, Validators.required],
@@ -87,7 +75,7 @@ export class NutritionProfileComponent implements OnInit {
       next: profile => {
         this.form.patchValue({
           sex: profile.sex,
-          birthDate: parseISO(profile.birthDate),
+          birthDate: profile.birthDate,
           heightCm: profile.heightCm,
           activityLevel: profile.activityLevel,
           goal: profile.goal,
@@ -106,12 +94,16 @@ export class NutritionProfileComponent implements OnInit {
     });
   }
 
+  isInvalid(name: string): boolean {
+    return showError(this.form.get(name));
+  }
+
   save(): void {
     if (this.form.invalid) return;
     const v = this.form.value;
     const payload: ProfileInput = {
       sex: v.sex,
-      birthDate: format(v.birthDate, 'yyyy-MM-dd'),
+      birthDate: v.birthDate,
       heightCm: Number(v.heightCm),
       activityLevel: v.activityLevel,
       goal: v.goal,

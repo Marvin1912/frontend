@@ -1,60 +1,33 @@
-<div class="nutrition-layout">
-  <header class="topbar">
-    <div class="topbar__left">
-      <button mat-icon-button class="nav-btn" aria-label="Go home" [routerLink]="homeLink">
-        <mat-icon>home</mat-icon>
-      </button>
-      <button mat-icon-button class="nav-btn" aria-label="Open menu" [matMenuTriggerFor]="menu">
-        <mat-icon>more_vert</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        <a mat-menu-item routerLink="/nutrition">
-          <span>Home</span>
-        </a>
-        <a mat-menu-item routerLink="/nutrition/dashboard">
-          <span>Dashboard</span>
-        </a>
-        <a mat-menu-item routerLink="/nutrition/day">
-          <span>Tagebuch</span>
-        </a>
-        <a mat-menu-item routerLink="/nutrition/canteen">
-          <span>Kantine</span>
-        </a>
-        <a mat-menu-item routerLink="/nutrition/weight">
-          <span>Gewicht</span>
-        </a>
-        <a mat-menu-item routerLink="/nutrition/ratios">
-          <span>Verhältnis</span>
-        </a>
-        <a mat-menu-item routerLink="/nutrition/foods">
-          <span>Lebensmittel</span>
-        </a>
-        <a mat-menu-item routerLink="/nutrition/meals">
-          <span>Mahlzeiten</span>
-        </a>
-        <a mat-menu-item routerLink="/nutrition/meal-plan">
-          <span>Essensplan</span>
-        </a>
-        <a mat-menu-item routerLink="/nutrition/profile">
-          <span>Profil</span>
-        </a>
-      </mat-menu>
-    </div>
+<header class="ui-topbar ui-topbar--lime sticky top-0 z-10">
+  <div class="ui-topbar-group">
+    <button type="button" [routerLink]="homeLink()" class="ui-btn-home" aria-label="Go home">
+      <mat-icon>home</mat-icon>
+    </button>
+    <button type="button" [matMenuTriggerFor]="menu" class="ui-btn-home" aria-label="Open menu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" class="ui-menu-panel">
+      <a mat-menu-item routerLink="/nutrition">Home</a>
+      <a mat-menu-item routerLink="/nutrition/dashboard">Dashboard</a>
+      <a mat-menu-item routerLink="/nutrition/day">Tagebuch</a>
+      <a mat-menu-item routerLink="/nutrition/canteen">Kantine</a>
+      <a mat-menu-item routerLink="/nutrition/weight">Gewicht</a>
+      <a mat-menu-item routerLink="/nutrition/ratios">Verhältnis</a>
+      <a mat-menu-item routerLink="/nutrition/foods">Lebensmittel</a>
+      <a mat-menu-item routerLink="/nutrition/meals">Mahlzeiten</a>
+      <a mat-menu-item routerLink="/nutrition/meal-plan">Essensplan</a>
+      <a mat-menu-item routerLink="/nutrition/profile">Profil</a>
+    </mat-menu>
+    <span class="ui-topbar-icon" aria-hidden="true"><mat-icon inline>restaurant</mat-icon></span>
+    <h1 class="ui-topbar-title">Nutrition</h1>
+  </div>
+  <div class="ui-topbar-group">
+    <button type="button" class="ui-btn-icon" aria-label="PDF exportieren" (click)="openExportDialog()">
+      <mat-icon>file_download</mat-icon>
+    </button>
+  </div>
+</header>
 
-    <div class="topbar__brand">
-      <span class="topbar__hex">⬡</span>
-      <span class="topbar__name">NUTRITION</span>
-    </div>
-
-    <div class="topbar__right">
-      <button mat-icon-button class="nav-btn" aria-label="PDF exportieren"
-              (click)="openExportDialog()">
-        <mat-icon>file_download</mat-icon>
-      </button>
-    </div>
-  </header>
-
-  <main class="content">
-    <router-outlet />
-  </main>
-</div>
+<main class="content">
+  <router-outlet />
+</main>

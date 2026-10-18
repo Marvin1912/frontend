@@ -1,127 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
-
 :host {
-  --surface:     #0c1018;
-  --raised:      #111826;
-  --border:      rgba(255, 255, 255, 0.07);
-  --border-mid:  rgba(255, 255, 255, 0.13);
+  display: block;
 
-  --text:        #c8d4e8;
-  --text-muted:  #7a93b0;
-  --text-dim:    #3d5470;
-
-  --c-w:  #a3e635;
-  --c-k:  #4da6ff;
-  --c-a:  #fbbf24;
   --c-within: #2dd4bf;
   --c-under:  #4da6ff;
   --c-over:   #fb7185;
-
-  display: block;
-  height: 100%;
-  overflow-y: auto;
-  font-family: 'Outfit', sans-serif;
-  color: var(--text);
 }
 
-.dash {
+.panel-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}
+
+.body {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  padding: 2rem clamp(1rem, 6vw, 4rem);
-  max-width: 760px;
-  margin: 0 auto;
-  box-sizing: border-box;
+  gap: var(--ui-space-3);
 }
-
-/* ── Panels ──────────────────────────────────────── */
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1rem 1.1rem 1.1rem;
-}
-
-.panel__head {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.9rem;
-}
-
-.panel__dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-}
-
-.panel__dot--w { background: var(--c-w); box-shadow: 0 0 6px var(--c-w); }
-.panel__dot--k { background: var(--c-k); box-shadow: 0 0 6px var(--c-k); }
-.panel__dot--a { background: var(--c-a); box-shadow: 0 0 6px var(--c-a); }
-
-.panel__label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: var(--text-dim);
-  text-transform: uppercase;
-}
-
-.panel__stat {
-  margin-left: auto;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
-
-.delta {
-  margin-left: 0.25rem;
-  font-weight: 700;
-}
-
-.delta--up { color: var(--c-over); }
-.delta--down { color: var(--c-within); }
 
 /* ── Charts ──────────────────────────────────────── */
-.chart {
-  width: 100%;
-}
-
 .svg {
+  display: block;
   width: 100%;
   height: 150px;
-  display: block;
   overflow: visible;
 }
 
 .line--w {
   fill: none;
-  stroke: var(--c-w);
+  stroke: var(--n-kcal);
   stroke-width: 2;
   stroke-linejoin: round;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--c-w) 55%, transparent));
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--n-kcal) 55%, transparent));
 }
 
 .area--w {
-  fill: var(--c-w);
-  opacity: 0.10;
+  fill: var(--n-kcal);
+  opacity: .1;
   stroke: none;
 }
 
 .dot--w {
   fill: var(--surface);
-  stroke: var(--c-w);
+  stroke: var(--n-kcal);
   stroke-width: 1.5;
+  cursor: pointer;
 }
 
-.bar { transition: opacity 0.2s; cursor: pointer; }
+.bar { transition: opacity .2s; cursor: pointer; }
 .bar--within { fill: var(--c-within); }
-.bar--under  { fill: var(--c-under); opacity: 0.65; }
+.bar--under  { fill: var(--c-under); opacity: .65; }
 .bar--over   { fill: url(#overHatch); }
-
-.dot--w { cursor: pointer; }
 
 .hatch-bg { fill: var(--c-over); }
 .hatch-fg { fill: color-mix(in srgb, var(--c-over) 70%, black); }
@@ -130,30 +60,31 @@
   stroke: var(--text-muted);
   stroke-width: 1;
   stroke-dasharray: 3 3;
-  opacity: 0.7;
+  opacity: .7;
 }
 
 .axis {
   display: flex;
   justify-content: space-between;
-  margin-top: 0.35rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.58rem;
+  margin-top: .35rem;
   color: var(--text-dim);
+  font-size: .65rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .legend {
   display: flex;
-  gap: 0.9rem;
-  margin: 0.6rem 0 0;
-  font-size: 0.62rem;
+  flex-wrap: wrap;
+  gap: var(--ui-space-3);
+  margin: 0;
   color: var(--text-muted);
+  font-size: .7rem;
 }
 
 .legend__item {
   display: flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: .3rem;
 }
 
 .legend__item::before {
@@ -164,7 +95,7 @@
 }
 
 .legend__item--within::before { background: var(--c-within); }
-.legend__item--under::before  { background: var(--c-under); opacity: 0.65; }
+.legend__item--under::before  { background: var(--c-under); opacity: .65; }
 .legend__item--over::before {
   background: repeating-linear-gradient(
     135deg,
@@ -173,91 +104,17 @@
   );
 }
 
-/* ── Range toggle ────────────────────────────────── */
-.range-toggle {
-  display: flex;
-  margin-bottom: 0.75rem;
-}
-
-::ng-deep .range-toggle .mat-button-toggle {
-  background: var(--raised);
-  color: var(--text-muted);
-}
-
-::ng-deep .range-toggle .mat-button-toggle-label-content {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.62rem;
-  line-height: 32px;
-  padding: 0 0.75rem;
-}
-
-::ng-deep .range-toggle .mat-button-toggle-checked {
-  background: color-mix(in srgb, var(--c-k) 18%, transparent);
-  color: var(--c-k);
-}
-
-::ng-deep .range-toggle.mat-button-toggle-group {
-  border-color: var(--border-mid);
-}
-
-::ng-deep .range-toggle .mat-button-toggle + .mat-button-toggle {
-  border-left: 1px solid var(--border-mid);
-}
-
-/* ── Stats ───────────────────────────────────────── */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.75rem;
-}
-
+/* ── Bilanz ──────────────────────────────────────── */
 .stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
-  padding: 0.85rem 0.5rem;
-  background: var(--raised);
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  --tile-accent: var(--c-v);
+  padding-block: var(--ui-space-3);
 }
 
-.stat__v {
-  font-family: 'JetBrains Mono', monospace;
+.stat .macro-tile__value {
   font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--c-a);
-  font-variant-numeric: tabular-nums;
 }
 
 .stat__sub {
-  font-size: 0.8rem;
   color: var(--text-dim);
-}
-
-.stat__u {
-  font-size: 0.6rem;
-  letter-spacing: 0.04em;
-  color: var(--text-dim);
-  text-align: center;
-}
-
-/* ── States ──────────────────────────────────────── */
-.state {
-  display: flex;
-  justify-content: center;
-  padding: 3rem;
-}
-
-::ng-deep .state mat-spinner circle { stroke: var(--c-k) !important; }
-
-.empty {
-  margin: 0;
-  padding: 1.25rem;
-  text-align: center;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  background: var(--raised);
-  border: 1px dashed var(--border-mid);
-  border-radius: 10px;
+  font-size: .8rem;
 }

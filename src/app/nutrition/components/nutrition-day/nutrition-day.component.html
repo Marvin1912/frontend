@@ -1,154 +1,154 @@
-<div class="day">
+<div class="ui-container page">
 
-  <section class="panel">
-    <header class="panel__head">
-      <span class="panel__dot"></span>
-      <span class="panel__label">TAGEBUCH</span>
-    </header>
+  <section class="ui-panel ui-panel--lime">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Tagebuch</h2>
+      @if (relativeLabel) {
+        <span class="ui-badge ui-badge--teal">{{ relativeLabel }}</span>
+      }
+    </div>
 
-    <div class="toolbar">
+    <div class="ui-panel-body toolbar">
       <div class="date-nav">
-        <div class="date-nav__stepper">
-          <button mat-icon-button type="button" class="btn-step" matTooltip="Vorheriger Tag"
-                  aria-label="Vorheriger Tag" (click)="stepDay(-1)">
-            <mat-icon>chevron_left</mat-icon>
-          </button>
+        <button type="button" class="ui-btn-icon btn-step" aria-label="Vorheriger Tag" matTooltip="Vorheriger Tag"
+                (click)="stepDay(-1)">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
 
-          <mat-form-field appearance="outline" class="field-date">
-            <mat-label>Datum</mat-label>
-            <input matInput [matDatepicker]="picker" [formControl]="date" [max]="today" />
-            <mat-datepicker-toggle matIconSuffix [for]="picker" />
-            <mat-datepicker #picker />
-          </mat-form-field>
+        <label class="sr-only" for="day-date">Datum</label>
+        <input id="day-date" type="date" class="ui-input ui-input--lime date-input" [formControl]="date" [max]="today" />
 
-          <button mat-icon-button type="button" class="btn-step" matTooltip="Nächster Tag"
-                  aria-label="Nächster Tag" [disabled]="isToday" (click)="stepDay(1)">
-            <mat-icon>chevron_right</mat-icon>
-          </button>
-        </div>
+        <button type="button" class="ui-btn-icon btn-step" aria-label="Nächster Tag" matTooltip="Nächster Tag"
+                [disabled]="isToday" (click)="stepDay(1)">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
 
-        <div class="date-nav__extra">
-          @if (relativeLabel) {
-            <span class="date-rel">{{ relativeLabel }}</span>
-          }
-
-          <button mat-stroked-button type="button" class="btn-today"
-                  [disabled]="isToday" (click)="goToToday()">
-            Heute
-          </button>
-        </div>
+        <button type="button" class="ui-btn" [disabled]="!canGoToToday" (click)="goToToday()">Heute</button>
       </div>
 
-      <button mat-flat-button type="button" class="btn-add" (click)="openAddDialog()">
-        <mat-icon>add</mat-icon>
-        Essen
+      <button type="button" class="ui-btn ui-btn--lime btn-add" (click)="openAddDialog()">
+        <mat-icon aria-hidden="true">add</mat-icon>
+        <span>Essen</span>
       </button>
     </div>
   </section>
 
   @if (loading) {
-    <div class="state">
+    <div class="ui-empty" role="status">
       <mat-spinner diameter="32" />
+      <p class="m-0">Tag wird geladen…</p>
     </div>
   } @else if (unavailable) {
-    <p class="empty">{{ unavailable }}</p>
+    <div class="ui-empty ui-empty--error" role="alert">
+      <mat-icon aria-hidden="true">error_outline</mat-icon>
+      <p class="m-0">{{ unavailable }}</p>
+    </div>
   } @else if (summary) {
 
     @if (hasTargets) {
-    <section class="panel summary">
-      <header class="panel__head">
-        <span class="panel__dot panel__dot--n"></span>
-        <span class="panel__label">ÜBERSICHT</span>
-      </header>
+      <section class="ui-panel ui-panel--teal">
+        <div class="ui-panel-head">
+          <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Übersicht</h2>
+        </div>
 
-      <div class="bars">
-        @for (b of bars; track b.label) {
-          <div class="bar bar--{{ b.cls }}">
-            <div class="bar__top">
-              <span class="bar__name">{{ b.label }}</span>
-              <span class="bar__nums"
-                    [matTooltip]="b.cls === 'kcal' && totalKcalBurned > 0
-                      ? (summary!.totals.kcal | number:'1.0-0':'de') + ' kcal gegessen − ' + (totalKcalBurned | number:'1.0-0':'de') + ' kcal Sport = ' + (b.consumed | number:'1.0-0':'de') + ' kcal netto'
-                      : ''">
-                {{ b.consumed | number:'1.0-0':'de' }} / {{ b.target | number:'1.0-0':'de' }} {{ b.unit }}
+        <div class="ui-panel-body bars">
+          @for (b of bars; track b.label) {
+            <div class="bar bar--{{ b.cls }}">
+              <div class="bar__top">
+                <span class="bar__name">{{ b.label }}</span>
+                <span class="bar__nums"
+                      [matTooltip]="b.cls === 'kcal' && totalKcalBurned > 0
+                        ? (summary!.totals.kcal | number:'1.0-0':'de') + ' kcal gegessen − ' + (totalKcalBurned | number:'1.0-0':'de') + ' kcal Sport = ' + (b.consumed | number:'1.0-0':'de') + ' kcal netto'
+                        : ''">
+                  {{ b.consumed | number:'1.0-0':'de' }} / {{ b.target | number:'1.0-0':'de' }} {{ b.unit }}
+                </span>
+              </div>
+              <div class="bar__track" role="progressbar" [attr.aria-label]="b.label"
+                   aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="b.pct">
+                <div class="bar__fill" [class.bar__fill--over]="b.over" [style.width.%]="b.pct"></div>
+              </div>
+              <span class="bar__rem" [class.bar__rem--over]="b.over">
+                @if (b.remaining > 0) {
+                  noch {{ b.remaining | number:'1.0-0':'de' }} {{ b.unit }}
+                } @else {
+                  {{ -b.remaining | number:'1.0-0':'de' }} {{ b.unit }} über Ziel
+                }
               </span>
             </div>
-            <div class="bar__track">
-              <div class="bar__fill" [class.bar__fill--over]="b.over" [style.width.%]="b.pct"></div>
-            </div>
-            <span class="bar__rem" [class.bar__rem--over]="b.over">
-              @if (b.remaining > 0) {
-                noch {{ b.remaining | number:'1.0-0':'de' }} {{ b.unit }}
-              } @else {
-                {{ -b.remaining | number:'1.0-0':'de' }} {{ b.unit }} über Ziel
-              }
-            </span>
-          </div>
-        }
-      </div>
-    </section>
+          }
+        </div>
+      </section>
     } @else {
-      <p class="empty">Tagesziele nicht verfügbar. Bitte zuerst ein Profil und einen Gewichtseintrag erfassen.</p>
+      <div class="ui-alert ui-alert--info" role="status">
+        Tagesziele nicht verfügbar. Bitte zuerst ein Profil und einen Gewichtseintrag erfassen.
+      </div>
     }
 
-    <div class="meals">
-      @for (group of groups; track group.type) {
-        <section class="panel meal">
-          <header class="meal__head">
-            <span class="meal__title">{{ group.label }}</span>
-            <span class="meal__kcal">{{ group.kcal | number:'1.0-0':'de' }} kcal</span>
-            <button mat-icon-button class="btn-meal-template" matTooltip="Mahlzeit-Vorlage loggen" aria-label="Mahlzeit-Vorlage loggen" (click)="openTemplatePickerDialog(group.type)">
+    @for (group of groups; track group.type) {
+      <section class="ui-panel ui-panel--lime">
+        <div class="ui-panel-head">
+          <h2 class="meal__title">{{ group.label }}</h2>
+          <div class="panel-actions">
+            <span class="panel-stat meal__kcal">{{ group.kcal | number:'1.0-0':'de' }} kcal</span>
+            <button type="button" class="ui-btn-icon ui-btn--teal" aria-label="Mahlzeit-Vorlage loggen"
+                    matTooltip="Mahlzeit-Vorlage loggen" (click)="openTemplatePickerDialog(group.type)">
               <mat-icon>restaurant_menu</mat-icon>
             </button>
-            <button mat-icon-button class="btn-meal-add" matTooltip="Hinzufügen" aria-label="Hinzufügen" (click)="openAddDialog(group.type)">
+            <button type="button" class="ui-btn-icon ui-btn--lime" [attr.aria-label]="group.label + ' hinzufügen'"
+                    matTooltip="Hinzufügen" (click)="openAddDialog(group.type)">
               <mat-icon>add</mat-icon>
             </button>
-          </header>
+          </div>
+        </div>
 
-          @if (group.entries.length > 0) {
-            <ul class="entries">
-              @for (entry of group.entries; track entry.id) {
-                <li class="entry">
-                  <div class="entry__main">
-                    <span class="entry__name">{{ entryName(entry) }}</span>
-                    <span class="entry__meta">
-                      @if (entry.quantityG !== null) {
-                        {{ entry.quantityG | number:'1.0-0':'de' }} g ·
-                      }
-                      {{ entry.kcal | number:'1.0-0':'de' }} kcal ·
-                      P {{ entry.proteinG | number:'1.0-1':'de' }} ·
-                      KH {{ entry.carbsG | number:'1.0-1':'de' }} ·
-                      F {{ entry.fatG | number:'1.0-1':'de' }}
-                    </span>
-                  </div>
-                  <div class="entry__actions">
-                    <button mat-icon-button class="btn-edit" matTooltip="Bearbeiten" aria-label="Bearbeiten" (click)="openEditDialog(entry)">
-                      <mat-icon>edit</mat-icon>
-                    </button>
-                    <button mat-icon-button class="btn-del" matTooltip="Löschen" aria-label="Löschen" (click)="openDeleteDialog(entry)">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </div>
-                </li>
-              }
-            </ul>
-          } @else {
-            <button type="button" class="meal__empty" (click)="openAddDialog(group.type)">
-              Noch nichts erfasst – hinzufügen
-            </button>
-          }
-        </section>
-      }
-    </div>
+        @if (group.entries.length > 0) {
+          <ul class="entries">
+            @for (entry of group.entries; track entry.id) {
+              <li class="entry">
+                <div class="entry__main">
+                  <span class="entry__name">{{ entryName(entry) }}</span>
+                  <span class="entry__meta">
+                    @if (entry.quantityG !== null) {
+                      {{ entry.quantityG | number:'1.0-0':'de' }} g ·
+                    }
+                    {{ entry.kcal | number:'1.0-0':'de' }} kcal ·
+                    P {{ entry.proteinG | number:'1.0-1':'de' }} ·
+                    KH {{ entry.carbsG | number:'1.0-1':'de' }} ·
+                    F {{ entry.fatG | number:'1.0-1':'de' }}
+                  </span>
+                </div>
+                <span class="row-actions">
+                  <button type="button" class="ui-btn-icon" aria-label="Bearbeiten" matTooltip="Bearbeiten"
+                          (click)="openEditDialog(entry)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button type="button" class="ui-btn-icon ui-btn--rose" aria-label="Löschen" matTooltip="Löschen"
+                          (click)="openDeleteDialog(entry)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </span>
+              </li>
+            }
+          </ul>
+        } @else {
+          <button type="button" class="meal__empty" (click)="openAddDialog(group.type)">
+            Noch nichts erfasst – hinzufügen
+          </button>
+        }
+      </section>
+    }
 
-    <section class="panel meal activities">
-      <header class="meal__head">
-        <span class="meal__title">AKTIVITÄTEN</span>
-        <span class="meal__kcal">{{ totalKcalBurned | number:'1.0-0':'de' }} kcal</span>
-        <button mat-icon-button class="btn-meal-add" matTooltip="Hinzufügen" aria-label="Hinzufügen" (click)="openAddActivityDialog()">
-          <mat-icon>add</mat-icon>
-        </button>
-      </header>
+    <section class="ui-panel ui-panel--rose">
+      <div class="ui-panel-head">
+        <h2 class="meal__title">Aktivitäten</h2>
+        <div class="panel-actions">
+          <span class="panel-stat meal__kcal meal__kcal--burned">{{ totalKcalBurned | number:'1.0-0':'de' }} kcal</span>
+          <button type="button" class="ui-btn-icon ui-btn--rose" aria-label="Aktivität hinzufügen"
+                  matTooltip="Hinzufügen" (click)="openAddActivityDialog()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
 
       @if (activities.length > 0) {
         <ul class="entries">
@@ -156,18 +156,18 @@
             <li class="entry">
               <div class="entry__main">
                 <span class="entry__name">{{ activityLabel(activity) }}</span>
-                <span class="entry__meta">
-                  {{ activity.kcalBurned | number:'1.0-0':'de' }} kcal
-                </span>
+                <span class="entry__meta">{{ activity.kcalBurned | number:'1.0-0':'de' }} kcal</span>
               </div>
-              <div class="entry__actions">
-                <button mat-icon-button class="btn-edit" matTooltip="Bearbeiten" aria-label="Bearbeiten" (click)="openEditActivityDialog(activity)">
+              <span class="row-actions">
+                <button type="button" class="ui-btn-icon" aria-label="Bearbeiten" matTooltip="Bearbeiten"
+                        (click)="openEditActivityDialog(activity)">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button class="btn-del" matTooltip="Löschen" aria-label="Löschen" (click)="openDeleteActivityDialog(activity)">
+                <button type="button" class="ui-btn-icon ui-btn--rose" aria-label="Löschen" matTooltip="Löschen"
+                        (click)="openDeleteActivityDialog(activity)">
                   <mat-icon>delete</mat-icon>
                 </button>
-              </div>
+              </span>
             </li>
           }
         </ul>

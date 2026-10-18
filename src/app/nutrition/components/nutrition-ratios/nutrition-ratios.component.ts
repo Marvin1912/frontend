@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
 import {DatePipe, DecimalPipe} from '@angular/common';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import {MatIcon} from '@angular/material/icon';
 import {ChartConfiguration} from 'chart.js';
 import {BaseChartDirective} from 'ng2-charts';
 import {catchError, of} from 'rxjs';
@@ -15,18 +15,19 @@ const RATIO_RANGES = [30, 90, 180] as const;
 /** Default number of days of ratio history to load. */
 const DEFAULT_RATIO_DAYS = 90;
 
-const COLOR_PROTEIN = '#4da6ff';
-const COLOR_CARBS = '#a3e635';
-const COLOR_FAT = '#fbbf24';
-const COLOR_KCAL = '#fb7185';
+/** Same macro colours as `--n-*` in nutrition.scss. */
+const COLOR_PROTEIN = '#2dd4bf';
+const COLOR_CARBS = '#4da6ff';
+const COLOR_FAT = '#fb7185';
+const COLOR_KCAL = '#a3e635';
 const AXIS_COLOR = '#7a93b0';
 const GRID_COLOR = 'rgba(255, 255, 255, 0.07)';
-const AXIS_FONT = {family: 'JetBrains Mono', size: 10};
+const AXIS_FONT = {family: 'Outfit', size: 11};
 
 @Component({
   selector: 'app-nutrition-ratios',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DatePipe, DecimalPipe, MatProgressSpinner, MatButtonToggleModule, BaseChartDirective],
+  imports: [DatePipe, DecimalPipe, MatProgressSpinner, MatIcon, BaseChartDirective],
   templateUrl: './nutrition-ratios.component.html',
   styleUrl: './nutrition-ratios.component.css'
 })

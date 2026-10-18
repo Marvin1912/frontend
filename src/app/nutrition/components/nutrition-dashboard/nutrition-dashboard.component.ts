@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} f
 import {DecimalPipe} from '@angular/common';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import {catchError, forkJoin, of} from 'rxjs';
 import {format, parseISO, subDays} from 'date-fns';
 import {NutritionService} from '../../services/nutrition.service';
@@ -49,7 +48,7 @@ interface WeightPoint {
 @Component({
   selector: 'app-nutrition-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe, MatProgressSpinner, MatTooltipModule, MatButtonToggleModule],
+  imports: [DecimalPipe, MatProgressSpinner, MatTooltipModule],
   templateUrl: './nutrition-dashboard.component.html',
   styleUrl: './nutrition-dashboard.component.css'
 })

@@ -1,13 +1,8 @@
 import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
-import {MatInput} from '@angular/material/input';
+import {MAT_DIALOG_DATA, MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {NoWheelDirective} from '../../directives/no-wheel.directive';
-import {MatSelect} from '@angular/material/select';
-import {MatOption} from '@angular/material/core';
 import {MatIcon} from '@angular/material/icon';
-import {MatButton} from '@angular/material/button';
 import {MealEntry, MealEntryUpdate, MealType} from '../../models/nutrition.model';
 
 const MEAL_TYPES: { value: MealType; label: string }[] = [
@@ -27,19 +22,9 @@ const MEAL_TYPES: { value: MealType; label: string }[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
     MatDialogClose,
-    MatFormField,
-    MatLabel,
-    MatSuffix,
-    MatInput,
     NoWheelDirective,
-    MatSelect,
-    MatOption,
-    MatIcon,
-    MatButton
+    MatIcon
   ],
   templateUrl: './entry-edit-dialog.component.html',
   styleUrl: './entry-edit-dialog.component.css'
