@@ -1,19 +1,12 @@
 import {Component, OnInit, signal, WritableSignal, ChangeDetectionStrategy} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
+import {RouterLink} from '@angular/router';
 import {FormsModule} from '@angular/forms';
-import {MatCardModule} from '@angular/material/card';
-import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {MatTableModule} from '@angular/material/table';
-import {MatSelectModule} from '@angular/material/select';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatDialogModule} from '@angular/material/dialog';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 
 import {ArithmeticSession} from '../../model/arithmetic-session';
-import {OperationType} from '../../model/arithmetic-enums';
+import {Difficulty, OperationType} from '../../model/arithmetic-enums';
 import {ArithmeticService} from '../../services/arithmetic.service';
 import {MatTooltip} from '@angular/material/tooltip';
 
@@ -21,17 +14,10 @@ import {MatTooltip} from '@angular/material/tooltip';
   selector: 'app-arithmetic-list',
   standalone: true,
   imports: [
-    CommonModule,
-    RouterModule,
+    RouterLink,
     FormsModule,
-    MatCardModule,
-    MatButtonModule,
     MatIconModule,
-    MatTableModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatProgressBarModule,
-    MatDialogModule,
+    MatProgressSpinnerModule,
     MatSnackBarModule,
     MatTooltip
   ],
@@ -40,9 +26,22 @@ import {MatTooltip} from '@angular/material/tooltip';
   styleUrls: ['./arithmetic-list.component.css']
 })
 export class ArithmeticListComponent implements OnInit {
+  private static readonly DIFFICULTY_ORDER: Record<Difficulty, number> = {
+    [Difficulty.EASY]: 0,
+    [Difficulty.MEDIUM]: 1,
+    [Difficulty.HARD]: 2
+  };
+
   sessions: ArithmeticSession[] = [];
   filteredSessions: ArithmeticSession[] = [];
-  displayedColumns: string[] = ['date', 'difficulty', 'operations', 'score', 'accuracy', 'duration', 'actions'];
+  readonly sortableColumns: { key: string; label: string; sortable: boolean }[] = [
+    {key: 'date', label: 'Datum', sortable: true},
+    {key: 'difficulty', label: 'Schwierigkeit', sortable: true},
+    {key: 'operations', label: 'Operationen', sortable: false},
+    {key: 'score', label: 'Punktzahl', sortable: true},
+    {key: 'accuracy', label: 'Genauigkeit', sortable: true},
+    {key: 'duration', label: 'Dauer', sortable: true}
+  ];
 
   // Statistics
   totalSessions: number = 0;
@@ -51,6 +50,7 @@ export class ArithmeticListComponent implements OnInit {
   averageScore: number = 0;
   averageAccuracy: number = 0;
   totalPracticeTime: number = 0;
+  stats: { label: string; value: string; icon: string }[] = [];
 
   // Filtering and sorting
   selectedDifficulty: string = 'all';
@@ -90,6 +90,7 @@ export class ArithmeticListComponent implements OnInit {
       error: (error) => {
         console.error('Error loading sessions:', error);
         this.snackBar.open('Fehler beim Laden der Sitzungen', 'OK', {duration: 3000});
+        this.calculateStatistics();
         this.loading.set(false);
       }
     });
@@ -99,10 +100,12 @@ export class ArithmeticListComponent implements OnInit {
     this.totalSessions = this.sessions.length;
 
     if (this.sessions.length === 0) {
+      this.totalProblems = 0;
       this.totalProblemsCompleted = 0;
       this.averageScore = 0;
       this.averageAccuracy = 0;
       this.totalPracticeTime = 0;
+      this.updateStats();
       return;
     }
 
@@ -116,6 +119,17 @@ export class ArithmeticListComponent implements OnInit {
     this.averageAccuracy = Math.round(totalAccuracy / this.sessions.length);
 
     this.totalPracticeTime = this.sessions.reduce((sum, session) => sum + session.totalTimeSpent, 0);
+    this.updateStats();
+  }
+
+  private updateStats(): void {
+    this.stats = [
+      {label: 'Sitzungen', value: `${this.totalSessions}`, icon: 'history'},
+      {label: 'Aufgaben', value: `${this.totalProblemsCompleted}`, icon: 'calculate'},
+      {label: 'Punktzahl', value: `${this.averageScore}/${this.totalProblems}`, icon: 'trending_up'},
+      {label: 'Ø\u00a0Genauigkeit', value: `${this.averageAccuracy}%`, icon: 'target'},
+      {label: 'Trainingszeit', value: this.formatTime(this.totalPracticeTime), icon: 'schedule'}
+    ];
   }
 
   applyFiltersAndSorting(): void {
@@ -142,6 +156,9 @@ export class ArithmeticListComponent implements OnInit {
           const timeA = a.startTime ? a.startTime.getTime() : 0;
           const timeB = b.startTime ? b.startTime.getTime() : 0;
           comparison = timeB - timeA;
+          break;
+        case 'difficulty':
+          comparison = this.difficultyRank(b) - this.difficultyRank(a);
           break;
         case 'score':
           comparison = b.score - a.score;
@@ -178,6 +195,15 @@ export class ArithmeticListComponent implements OnInit {
 
   toggleSessionExpansion(sessionId: string): void {
     this.expandedSession = this.expandedSession === sessionId ? null : sessionId;
+    if (this.expandedSession) {
+      // Details stehen unter der Tabelle: nach dem Rendern in den sichtbaren Bereich holen
+      setTimeout(() => document.getElementById('ma-session-details')
+        ?.scrollIntoView({behavior: 'smooth', block: 'start'}));
+    }
+  }
+
+  private difficultyRank(session: ArithmeticSession): number {
+    return ArithmeticListComponent.DIFFICULTY_ORDER[session.settings.difficulty] ?? -1;
   }
 
   deleteSession(sessionId: string): void {
@@ -275,6 +301,34 @@ export class ArithmeticListComponent implements OnInit {
 
   getSessionDuration(session: ArithmeticSession): number {
     return session.totalTimeSpent;
+  }
+
+  get expandedSessionData(): ArithmeticSession | null {
+    // Nur sichtbare Sitzungen: ein weggefilterter Eintrag schließt die Details
+    return this.filteredSessions.find(s => s.id === this.expandedSession) ?? null;
+  }
+
+  difficultyLabel(session: ArithmeticSession): string {
+    switch (session.settings.difficulty) {
+      case Difficulty.EASY: return 'Einfach';
+      case Difficulty.MEDIUM: return 'Mittel';
+      default: return 'Schwer';
+    }
+  }
+
+  difficultyPalette(session: ArithmeticSession): 'green' | 'amber' | 'rose' {
+    switch (session.settings.difficulty) {
+      case Difficulty.EASY: return 'green';
+      case Difficulty.MEDIUM: return 'amber';
+      default: return 'rose';
+    }
+  }
+
+  // score ist die Anzahl richtiger Antworten, daher Einfärbung über die Genauigkeit
+  accuracyLevel(session: ArithmeticSession): 'high' | 'medium' | 'low' {
+    if (session.accuracy >= 80) return 'high';
+    if (session.accuracy >= 60) return 'medium';
+    return 'low';
   }
 
   getSessionOperationsDisplay(session: ArithmeticSession): string[] {

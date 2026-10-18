@@ -1,232 +1,195 @@
-<div class="session-container" (keydown)="onKeydown($event)">
-  <!-- Loading State -->
+<div class="ui-container session-container" (keydown)="onKeydown($event)">
+  <!-- Ladezustand -->
   @if (isLoading) {
-    <div class="loading-container">
-      <mat-spinner diameter="50"></mat-spinner>
-      <p class="loading-text">Training wird vorbereitet...</p>
+    <div class="ui-empty" role="status">
+      <mat-spinner diameter="32"></mat-spinner>
+      <p class="m-0">Training wird vorbereitet…</p>
     </div>
   }
 
-  <!-- Main Session Content -->
   @if (!isLoading && currentSession) {
     <div class="session-content">
-      <!-- Header with Timer and Progress -->
-      <div class="session-header">
-        <div class="progress-section">
-          <div class="progress-info">
-            <span class="problem-counter">Aufgabe {{ currentProblemNumber }} von {{ totalProblems }}</span>
-            <span class="remaining-problems">{{ remainingProblems }} verbleibend</span>
+      <!-- Fortschritt, Timer und Punktestand -->
+      <section class="ui-panel ui-panel--violet" aria-label="Fortschritt">
+        <div class="ui-panel-body session-header">
+          <div class="progress-section">
+            <div class="progress-info">
+              <span class="problem-counter">Aufgabe {{ currentProblemNumber }} von {{ totalProblems }}</span>
+              <span class="remaining-problems">{{ remainingProblems }} verbleibend</span>
+            </div>
+            <div class="progress-track" role="progressbar"
+                 aria-label="Fortschritt" aria-valuemin="0" aria-valuemax="100"
+                 [attr.aria-valuenow]="getSessionProgress()">
+              <div [class]="'progress-fill progress-fill--' + getProgressColor()"
+                   [style.width.%]="getSessionProgress()"></div>
+            </div>
           </div>
-          <mat-progress-bar
-            mode="determinate"
-            [value]="getSessionProgress()"
-            [color]="getProgressColor()">
-          </mat-progress-bar>
+          <div class="stat-chips">
+            @if (sessionTimeLimit) {
+              <span class="stat-chip" [class.time-warning]="isTimeRunningOut">
+                <mat-icon aria-hidden="true">timer</mat-icon>
+                <span>{{ formatDetailedTime(timeRemaining) }}</span>
+              </span>
+            }
+            <span class="stat-chip stat-chip--score" title="Punktzahl">
+              <mat-icon aria-hidden="true">star</mat-icon>
+              <span>{{ currentScore }}</span>
+            </span>
+            <span class="stat-chip stat-chip--accuracy" title="Genauigkeit">
+              <mat-icon aria-hidden="true">check_circle</mat-icon>
+              <span>{{ currentAccuracy.toFixed(1) }}%</span>
+            </span>
+          </div>
         </div>
-        @if (sessionTimeLimit) {
-          <div class="timer-section" [class.time-warning]="isTimeRunningOut">
-            <mat-icon class="timer-icon">timer</mat-icon>
-            <span class="timer-text">{{ formatDetailedTime(timeRemaining) }}</span>
-          </div>
-        }
-        <div class="score-section">
-          <div class="score-display">
-            <mat-icon class="score-icon">star</mat-icon>
-            <span class="score-text">{{ currentScore }}</span>
-          </div>
-          <div class="accuracy-display">
-            <mat-icon class="accuracy-icon">check_circle</mat-icon>
-            <span class="accuracy-text">{{ currentAccuracy.toFixed(1) }}%</span>
-          </div>
-        </div>
-      </div>
-      <!-- Session Started Content -->
+      </section>
+
       @if (isSessionStarted && !isSessionCompleted) {
         <div class="training-area">
-          <!-- Problem Display -->
-          <div class="problem-display">
-            <mat-card class="problem-card" [class.correct-feedback]="showFeedback && lastAnswerCorrect" [class.incorrect-feedback]="showFeedback && !lastAnswerCorrect">
-              <mat-card-content class="problem-content">
-                <div class="problem-expression">
-                  {{ currentProblemDisplay }}
+          <!-- Aufgabe -->
+          <section class="ui-panel problem-card"
+                   [class.correct-feedback]="showFeedback && lastAnswerCorrect"
+                   [class.incorrect-feedback]="showFeedback && !lastAnswerCorrect">
+            <div class="problem-content">
+              <div class="problem-expression">{{ currentProblemDisplay }}</div>
+              @if (showFeedback) {
+                <div class="feedback-message" role="status">
+                  @if (lastAnswerCorrect) {
+                    <mat-icon class="feedback-icon" aria-hidden="true">check_circle</mat-icon>
+                    <span>Richtig!</span>
+                  } @else {
+                    <mat-icon class="feedback-icon" aria-hidden="true">close</mat-icon>
+                    <span>Falsch! Die richtige Antwort ist {{ currentProblem?.answer }}</span>
+                  }
                 </div>
-                @if (showFeedback) {
-                  <div class="feedback-message">
-                    @if (lastAnswerCorrect) {
-                      <mat-icon class="feedback-icon correct">check_circle</mat-icon>
-                      <span class="feedback-text correct">Richtig!</span>
+              }
+            </div>
+          </section>
+
+          @if (!showFeedback) {
+            <!-- Antwort -->
+            <section class="ui-panel answer-card">
+              <form class="ui-panel-body answer-form" [formGroup]="answerForm" (ngSubmit)="onSubmitAnswer()">
+                <label class="ui-input-label" for="ma-answer">Ihre Antwort</label>
+                <input id="ma-answer" class="ui-input ui-input--violet answer-input" type="number"
+                       formControlName="userAnswer" placeholder="0" autocomplete="off"
+                       [attr.aria-invalid]="answerInvalid"
+                       [attr.aria-describedby]="answerInvalid ? 'ma-answer-error' : null">
+                @if (answerInvalid) {
+                  <p id="ma-answer-error" class="field-error">
+                    @if (answerForm.get('userAnswer')?.hasError('required')) {
+                      Bitte geben Sie eine Antwort ein
+                    } @else {
+                      Bitte geben Sie eine gültige Zahl ein
                     }
-                    @if (!lastAnswerCorrect) {
-                      <mat-icon class="feedback-icon incorrect">close</mat-icon>
-                      <span class="feedback-text incorrect">Falsch! Die richtige Antwort ist {{ currentProblem?.answer }}</span>
-                    }
-                  </div>
+                  </p>
                 }
-              </mat-card-content>
-            </mat-card>
-          </div>
-          <!-- Answer Input Area -->
-          @if (!showFeedback) {
-            <div class="answer-input-area">
-              <mat-card class="answer-card">
-                <mat-card-content>
-                  <form [formGroup]="answerForm" (ngSubmit)="onSubmitAnswer()">
-                    <mat-form-field appearance="outline" class="answer-input-field">
-                      <mat-label>Ihre Antwort</mat-label>
-                      <input matInput type="number" formControlName="userAnswer" placeholder="0" autocomplete="off">
-                      <mat-icon matSuffix>calculator</mat-icon>
-                      @if (answerForm.get('userAnswer')?.hasError('required')) {
-                        <mat-error>
-                          Bitte geben Sie eine Antwort ein
-                        </mat-error>
-                      }
-                      @if (answerForm.get('userAnswer')?.hasError('pattern')) {
-                        <mat-error>
-                          Bitte geben Sie eine gültige Zahl ein
-                        </mat-error>
-                      }
-                    </mat-form-field>
-                    <div class="answer-buttons">
-                      <button mat-raised-button
-                        type="submit"
-                        color="primary"
-                        [disabled]="!answerForm.valid"
-                        class="submit-btn">
-                        <mat-icon>check</mat-icon>
-                        Antwort prüfen
-                      </button>
-                      <button mat-button
-                        type="button"
-                        (click)="answerForm.reset()"
-                        class="clear-btn">
-                        <mat-icon>clear</mat-icon>
-                        Löschen
-                      </button>
-                    </div>
-                  </form>
-                </mat-card-content>
-              </mat-card>
+                <div class="answer-buttons">
+                  <button type="submit" class="ui-btn ui-btn--violet" [disabled]="!answerForm.valid">
+                    <mat-icon aria-hidden="true">check</mat-icon>
+                    Antwort prüfen
+                  </button>
+                  <button type="button" class="ui-btn" (click)="answerForm.reset()">
+                    <mat-icon aria-hidden="true">clear</mat-icon>
+                    Löschen
+                  </button>
+                </div>
+              </form>
+            </section>
+
+            <!-- Ziffernblock für Mobilgeräte -->
+            <div class="number-pad" role="group" aria-label="Ziffernblock">
+              @for (digit of padDigits; track digit) {
+                <button type="button" class="ui-btn pad-btn" (click)="appendNumber(digit)">{{ digit }}</button>
+              }
+              <button type="button" class="ui-btn pad-btn pad-btn--muted" (click)="toggleNegative()" aria-label="Vorzeichen wechseln">+/-</button>
+              <button type="button" class="ui-btn pad-btn" (click)="appendNumber('0')">0</button>
+              <button type="button" class="ui-btn pad-btn pad-btn--muted" (click)="backspace()" aria-label="Letzte Ziffer löschen">
+                <mat-icon aria-hidden="true">backspace</mat-icon>
+              </button>
             </div>
           }
-          <!-- On-screen Number Pad for Mobile -->
-          @if (!showFeedback) {
-            <div class="number-pad">
-              <div class="pad-row">
-                <button mat-button class="pad-btn" (click)="appendNumber('7')">7</button>
-                <button mat-button class="pad-btn" (click)="appendNumber('8')">8</button>
-                <button mat-button class="pad-btn" (click)="appendNumber('9')">9</button>
-              </div>
-              <div class="pad-row">
-                <button mat-button class="pad-btn" (click)="appendNumber('4')">4</button>
-                <button mat-button class="pad-btn" (click)="appendNumber('5')">5</button>
-                <button mat-button class="pad-btn" (click)="appendNumber('6')">6</button>
-              </div>
-              <div class="pad-row">
-                <button mat-button class="pad-btn" (click)="appendNumber('1')">1</button>
-                <button mat-button class="pad-btn" (click)="appendNumber('2')">2</button>
-                <button mat-button class="pad-btn" (click)="appendNumber('3')">3</button>
-              </div>
-              <div class="pad-row">
-                <button mat-button class="pad-btn negative" (click)="toggleNegative()">+/-</button>
-                <button mat-button class="pad-btn" (click)="appendNumber('0')">0</button>
-                <button mat-button class="pad-btn" (click)="backspace()">
-                  <mat-icon>backspace</mat-icon>
-                </button>
-              </div>
-            </div>
-          }
-          <!-- Session Control Buttons -->
+
+          <!-- Steuerung -->
           <div class="session-controls">
-            <button mat-button
-              color="warn"
-              (click)="endSession()"
-              class="control-btn">
-              <mat-icon>stop</mat-icon>
+            <button type="button" class="ui-btn ui-btn--rose" (click)="endSession()">
+              <mat-icon aria-hidden="true">stop</mat-icon>
               Beenden
             </button>
-            <button mat-button
-              (click)="skipProblem()"
-              class="control-btn">
-              <mat-icon>skip_next</mat-icon>
+            <button type="button" class="ui-btn" (click)="skipProblem()">
+              <mat-icon aria-hidden="true">skip_next</mat-icon>
               Überspringen
             </button>
-            @if (!isPaused) {
-              <button mat-button
-                (click)="pauseSession()"
-                class="control-btn">
-                <mat-icon>pause</mat-icon>
+            @if (isPaused) {
+              <button type="button" class="ui-btn ui-btn--green" (click)="resumeSession()">
+                <mat-icon aria-hidden="true">play_arrow</mat-icon>
+                Fortsetzen
+              </button>
+            } @else {
+              <button type="button" class="ui-btn ui-btn--amber" (click)="pauseSession()">
+                <mat-icon aria-hidden="true">pause</mat-icon>
                 Pause
               </button>
             }
-            @if (isPaused) {
-              <button mat-raised-button
-                color="primary"
-                (click)="resumeSession()"
-                class="control-btn">
-                <mat-icon>play_arrow</mat-icon>
-                Fortsetzen
-              </button>
-            }
           </div>
         </div>
       }
-      <!-- Session Completed -->
+
+      <!-- Abschluss -->
       @if (isSessionCompleted) {
-        <div class="session-completed">
-          <mat-card class="completion-card">
-            <mat-card-content class="completion-content">
-              <mat-icon class="completion-icon">emoji_events</mat-icon>
-              <h2 class="completion-title">Training abgeschlossen!</h2>
-              <div class="completion-stats">
-                <div class="stat-item">
-                  <span class="stat-label">Endpunktzahl</span>
-                  <span class="stat-value">{{ currentScore }}</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-label">Genauigkeit</span>
-                  <span class="stat-value">{{ currentAccuracy.toFixed(1) }}%</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-label">Zeit</span>
-                  <span class="stat-value">{{ formatDetailedTime(timeElapsed) }}</span>
-                </div>
-                <div class="stat-item">
-                  <span class="stat-label">Richtige Antworten</span>
-                  <span class="stat-value">{{ currentSession.correctAnswers }}/{{ totalProblems }}</span>
-                </div>
+        <section class="ui-panel ui-panel--violet completion-card">
+          <div class="completion-content">
+            <mat-icon class="completion-icon" aria-hidden="true">emoji_events</mat-icon>
+            <h2 class="completion-title">Training abgeschlossen!</h2>
+            <dl class="completion-stats">
+              <div class="stat-item">
+                <dt class="stat-label">Endpunktzahl</dt>
+                <dd class="stat-value">{{ currentScore }}</dd>
               </div>
-              <div class="completion-actions">
-                <button mat-raised-button color="primary" (click)="restartTraining()">
-                  <mat-icon>refresh</mat-icon>
-                  Neu starten
-                </button>
-                <button mat-button (click)="viewResults()">
-                  <mat-icon>list</mat-icon>
-                  Ergebnisse ansehen
-                </button>
-                <button mat-button (click)="goToMain()">
-                  <mat-icon>home</mat-icon>
-                  Zurück zum Menü
-                </button>
+              <div class="stat-item">
+                <dt class="stat-label">Genauigkeit</dt>
+                <dd class="stat-value">{{ currentAccuracy.toFixed(1) }}%</dd>
               </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
+              <div class="stat-item">
+                <dt class="stat-label">Zeit</dt>
+                <dd class="stat-value">{{ formatDetailedTime(timeElapsed) }}</dd>
+              </div>
+              <div class="stat-item">
+                <dt class="stat-label">Richtige Antworten</dt>
+                <dd class="stat-value">{{ currentSession.correctAnswers }}/{{ totalProblems }}</dd>
+              </div>
+            </dl>
+            <div class="completion-actions">
+              <button type="button" class="ui-btn ui-btn--violet" (click)="restartTraining()">
+                <mat-icon aria-hidden="true">refresh</mat-icon>
+                Neu starten
+              </button>
+              <button type="button" class="ui-btn" (click)="viewResults()">
+                <mat-icon aria-hidden="true">list</mat-icon>
+                Ergebnisse ansehen
+              </button>
+              <button type="button" class="ui-btn" (click)="goToMain()">
+                <mat-icon aria-hidden="true">home</mat-icon>
+                Zurück zum Menü
+              </button>
+            </div>
+          </div>
+        </section>
       }
-      <!-- Paused Overlay -->
+
+      <!-- Pause -->
       @if (isPaused) {
         <div class="paused-overlay">
-          <mat-card class="paused-card">
-            <mat-card-content class="paused-content">
-              <mat-icon class="paused-icon">pause_circle</mat-icon>
-              <h3 class="paused-title">Training pausiert</h3>
-              <p class="paused-text">Ihr Fortschritt wird automatisch gespeichert.</p>
-              <button mat-raised-button color="primary" (click)="resumeSession()">
-                <mat-icon>play_arrow</mat-icon>
+          <div class="ui-dialog paused-card" role="dialog" cdkTrapFocus [cdkTrapFocusAutoCapture]="true" aria-modal="true" aria-labelledby="ma-paused-title">
+            <mat-icon class="paused-icon" aria-hidden="true">pause_circle</mat-icon>
+            <h3 id="ma-paused-title" class="ui-dialog-title">Training pausiert</h3>
+            <p class="m-0">Ihr Fortschritt wird automatisch gespeichert.</p>
+            <div class="ui-dialog-actions">
+              <button type="button" class="ui-btn ui-btn--green" (click)="resumeSession()">
+                <mat-icon aria-hidden="true">play_arrow</mat-icon>
                 Fortsetzen
               </button>
-            </mat-card-content>
-          </mat-card>
+            </div>
+          </div>
         </div>
       }
     </div>

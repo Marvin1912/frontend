@@ -1,12 +1,12 @@
-<div class="topbar">
-  <div class="topbar__left">
-    <button class="topbar__btn" [routerLink]="homeLink">
+<header class="ui-topbar ui-topbar--violet sticky top-0 z-10">
+  <div class="ui-topbar-group">
+    <button type="button" [routerLink]="homeLink()" class="ui-btn-home" aria-label="Go home">
       <mat-icon>home</mat-icon>
     </button>
-    <button class="topbar__btn" [matMenuTriggerFor]="menu">
+    <button type="button" [matMenuTriggerFor]="menu" class="ui-btn-home" aria-label="Open menu">
       <mat-icon>more_vert</mat-icon>
     </button>
-    <mat-menu #menu="matMenu">
+    <mat-menu #menu="matMenu" class="ui-menu-panel">
       <button mat-menu-item routerLink="/mental-arithmetic/session">
         <span>Start Training</span>
       </button>
@@ -20,10 +20,11 @@
         <span>Home</span>
       </button>
     </mat-menu>
+    <span class="ui-topbar-icon" aria-hidden="true"><mat-icon inline>calculate</mat-icon></span>
+    <h1 class="ui-topbar-title">Mental Arithmetic</h1>
   </div>
-  <span class="topbar__icon">⬡</span>
-  <span class="topbar__title">Mental Arithmetic</span>
-</div>
-<div class="layout">
+</header>
+
+<main class="content">
   <router-outlet></router-outlet>
-</div>
+</main>

@@ -1,318 +1,170 @@
-.settings-card {
-  max-width: 600px;
-  margin: 0 auto;
-  background: var(--surface, #0c1018);
-  border: 1px solid var(--border, rgba(255, 255, 255, 0.07));
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  animation: fadeUp 0.5s ease both;
+:host {
+  display: block;
 }
 
-.mat-mdc-card-header {
-  background: var(--raised, #111826);
-  border-bottom: 1px solid var(--border, rgba(255, 255, 255, 0.07));
-  border-radius: 16px 16px 0 0;
-  padding: 20px;
+.settings-page {
+  max-width: 640px;
 }
 
-.mat-mdc-card-title h2 {
-  margin: 0;
-  font-weight: 600;
-  font-size: 1.25rem;
-  color: var(--text, #c8d4e8);
-  letter-spacing: 0.02em;
+.ui-btn mat-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
 }
 
+/* ── Formular ────────────────────────────────────── */
 .settings-form {
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-6);
 }
 
 .section {
-  margin-bottom: 32px;
-  animation: fadeUp 0.5s ease both;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
 }
 
-.section:nth-child(1) { animation-delay: 0.05s; }
-.section:nth-child(2) { animation-delay: 0.1s; }
-.section:nth-child(3) { animation-delay: 0.15s; }
-.section:nth-child(4) { animation-delay: 0.2s; }
-
 .section-title {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text, #c8d4e8);
-  margin-bottom: 16px;
   display: flex;
   align-items: center;
+  gap: var(--ui-space-2);
+  margin-bottom: var(--ui-space-3);
+  padding: 0;
+  color: var(--text);
+  font-size: var(--ui-text-md);
+  font-weight: 600;
 }
 
 .section-title::before {
   content: '';
-  display: inline-block;
   width: 3px;
-  height: 18px;
-  background-color: #a78bfa;
-  margin-right: 8px;
+  height: 1rem;
   border-radius: 2px;
+  background: var(--c-m);
 }
 
-/* Operations Selection */
-.operations-group {
+/* ── Auswahl-Kacheln (Checkbox/Radio) ────────────── */
+.option-group {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: var(--ui-space-2);
 }
 
-.operation-checkbox {
-  display: flex !important;
+.option-tile {
+  display: flex;
   align-items: center;
-  padding: 12px;
-  border: 1px solid var(--border-mid, rgba(255, 255, 255, 0.13));
-  border-radius: 8px;
-  background: var(--raised, #111826);
-  transition: all 0.2s ease;
-  margin-bottom: 8px;
+  gap: var(--ui-space-3);
+  padding: var(--ui-space-3);
+  background: var(--raised);
+  border: 1px solid var(--border-mid);
+  border-radius: var(--ui-radius);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease;
 }
 
-.operation-checkbox:hover {
-  border-color: #a78bfa;
-  background: rgba(167, 139, 250, 0.05);
+.option-tile:hover {
+  border-color: var(--c-m);
+  background: color-mix(in srgb, var(--c-m) 5%, var(--raised));
 }
 
-.operation-checkbox.mat-mdc-checkbox-checked {
-  border-color: #a78bfa;
-  background: rgba(167, 139, 250, 0.1);
+.option-tile:has(input:checked) {
+  border-color: var(--c-m);
+  background: color-mix(in srgb, var(--c-m) 10%, var(--raised));
 }
 
-.operation-checkbox mat-icon {
-  margin-right: 12px;
-  font-size: 24px;
-  color: #a78bfa;
+.option-tile:has(input:focus-visible) {
+  outline: 2px solid var(--c-m);
+  outline-offset: 2px;
 }
 
-.operation-checkbox span {
-  font-size: 16px;
+.option-tile input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--c-m);
+  /* dunkle native Checkbox/Radio statt weißer Fläche */
+  color-scheme: dark;
+  cursor: pointer;
+}
+
+.option-tile mat-icon {
+  flex-shrink: 0;
+  color: var(--c-m);
+}
+
+.option-text {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  min-width: 0;
+}
+
+.option-label {
+  font-size: var(--ui-text-md);
   font-weight: 500;
-  color: var(--text, #c8d4e8);
 }
 
-/* Difficulty Selection */
-.difficulty-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.option-desc {
+  color: var(--text-muted);
+  font-size: var(--ui-text-sm);
 }
 
-.difficulty-option {
-  display: flex !important;
-  align-items: center;
-  padding: 16px;
-  border: 1px solid var(--border-mid, rgba(255, 255, 255, 0.13));
-  border-radius: 8px;
-  background: var(--raised, #111826);
-  transition: all 0.2s ease;
-  margin-bottom: 8px;
+/* ── Zahlenfelder ────────────────────────────────── */
+.number-fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ui-space-4);
 }
 
-.difficulty-option:hover {
-  border-color: #a78bfa;
-  background: rgba(167, 139, 250, 0.05);
+@media (min-width: 640px) {
+  .number-fields {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
-.difficulty-option.mat-mdc-radio-checked {
-  border-color: #a78bfa;
-  background: rgba(167, 139, 250, 0.1);
+.field-hint,
+.field-error {
+  margin: var(--ui-space-1) 0 0;
+  font-size: .72rem;
 }
 
-.difficulty-content {
-  display: flex;
-  flex-direction: column;
-  margin-left: 8px;
+.field-hint {
+  color: var(--text-dim);
 }
 
-.difficulty-label {
-  font-size: 16px;
-  font-weight: 500;
-  color: var(--text, #c8d4e8);
+.field-error {
+  color: var(--c-e);
 }
 
-.difficulty-desc {
-  font-size: 14px;
-  color: var(--text-muted, #7a93b0);
-  margin-top: 4px;
+/* Ungültige Felder nach Interaktion: Rahmen und Fokus in Rose */
+.ui-input.ng-invalid.ng-touched {
+  --ui-input-accent: var(--c-e);
+  --ui-input-border: color-mix(in srgb, var(--c-e) 55%, transparent);
 }
 
-/* Form Fields */
-.full-width {
-  width: 100%;
-}
-
-.mat-mdc-form-field {
-  margin-bottom: 16px;
-}
-
-input[type="number"] {
-  font-size: 16px;
-  text-align: center;
-}
-
-/* Validation */
-.error-message {
-  color: #fb7185;
-  font-size: 14px;
-  margin-top: 8px;
-  display: block;
-}
-
-.validation-summary {
-  display: flex;
-  align-items: center;
-  padding: 12px;
-  background-color: rgba(251, 113, 133, 0.08);
-  border: 1px solid rgba(251, 113, 133, 0.3);
-  border-radius: 8px;
-  margin-top: 16px;
-}
-
-.error-icon {
-  color: #fb7185;
-  margin-right: 8px;
-  font-size: 20px;
-}
-
-.error-text {
-  color: #fb7185;
-  font-size: 14px;
-}
-
-/* Action Buttons */
+/* ── Aktionen ────────────────────────────────────── */
 .action-buttons {
   display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  gap: 16px;
+  flex-direction: column;
+  gap: var(--ui-space-2);
 }
 
-.save-button,
-.start-button {
-  flex: 1;
-  height: 48px;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+.action-buttons .ui-btn {
+  justify-content: center;
+  min-height: 44px;
 }
 
-.save-button {
-  background-color: var(--raised, #111826);
-  border: 1px solid var(--border-mid, rgba(255, 255, 255, 0.13));
-  color: var(--text-muted, #7a93b0);
-}
-
-.save-button:hover:not(:disabled) {
-  border-color: var(--text-muted, #7a93b0);
-  color: var(--text, #c8d4e8);
-}
-
-.save-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.start-button {
-  background: rgba(167, 139, 250, 0.15);
-  border: 1px solid rgba(167, 139, 250, 0.4);
-  color: #a78bfa;
-  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.15);
-}
-
-.start-button:hover:not(:disabled) {
-  background: rgba(167, 139, 250, 0.25);
-  box-shadow: 0 6px 20px rgba(167, 139, 250, 0.25);
-  transform: translateY(-2px);
-}
-
-.start-button:disabled {
-  background: var(--raised, #111826);
-  border-color: var(--border, rgba(255, 255, 255, 0.07));
-  color: var(--text-dim, #3d5470);
-  box-shadow: none;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Material Icons in buttons */
-.action-buttons mat-icon {
-  margin-right: 8px;
-  font-size: 20px;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .settings-card {
-    border-radius: 12px;
-  }
-
-  .settings-form {
-    padding: 16px;
-  }
-
+@media (min-width: 640px) {
   .action-buttons {
-    flex-direction: column;
-    gap: 12px;
+    flex-direction: row;
   }
 
-  .save-button,
-  .start-button {
-    width: 100%;
+  .action-buttons .ui-btn {
+    flex: 1;
   }
-
-  .section-title {
-    font-size: 0.95rem;
-  }
-
-  .operation-checkbox,
-  .difficulty-option {
-    padding: 12px;
-  }
-
-  .difficulty-label {
-    font-size: 15px;
-  }
-
-  .difficulty-desc {
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 480px) {
-  .settings-form {
-    padding: 12px;
-  }
-
-  .mat-mdc-card-header {
-    padding: 16px;
-  }
-
-  .mat-mdc-card-title h2 {
-    font-size: 1.1rem;
-  }
-
-  .section {
-    margin-bottom: 24px;
-  }
-
-  .section-title {
-    font-size: 0.9rem;
-  }
-
-  .action-buttons {
-    padding: 16px;
-  }
-}
-
-/* Entrance Animations */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to   { opacity: 1; transform: translateY(0); }
 }

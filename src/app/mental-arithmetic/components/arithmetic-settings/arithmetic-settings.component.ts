@@ -1,14 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSliderModule } from '@angular/material/slider';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
 import { ArithmeticSettings, Difficulty, OperationType } from '../../model/arithmetic-settings';
@@ -19,14 +12,6 @@ import { ArithmeticService } from '../../services/arithmetic.service';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    MatRadioModule,
-    MatButtonModule,
-    MatSliderModule,
     MatIconModule
   ],
   templateUrl: './arithmetic-settings.component.html',
@@ -42,7 +27,8 @@ export class ArithmeticSettingsComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private arithmeticService: ArithmeticService,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -135,6 +121,7 @@ export class ArithmeticSettingsComponent implements OnInit {
     const settings = this.buildSettings();
     if (settings) {
       this.arithmeticService.saveSettingsToStorage(settings).subscribe({
+        next: () => this.snackBar.open('Einstellungen gespeichert', 'OK', { duration: 3000 }),
         error: (error) => console.error('Error saving settings:', error)
       });
     }
@@ -152,32 +139,15 @@ export class ArithmeticSettingsComponent implements OnInit {
     }
   }
 
-  getErrorMessage(): string {
-    const operationsGroup = this.settingsForm.get('operations');
-    if (operationsGroup?.hasError('atLeastOneRequired')) {
-      return 'Wählen Sie mindestens eine Rechenart aus';
-    }
+  operationsError(): string {
+    return this.settingsForm.get('operations')?.hasError('atLeastOneRequired')
+      ? 'Wählen Sie mindestens eine Rechenart aus'
+      : '';
+  }
 
-    const problemCount = this.settingsForm.get('problemCount');
-    if (problemCount?.hasError('required')) {
-      return 'Anzahl der Aufgaben ist erforderlich';
-    }
-    if (problemCount?.hasError('min')) {
-      return 'Mindestens 5 Aufgaben';
-    }
-    if (problemCount?.hasError('max')) {
-      return 'Maximal 50 Aufgaben';
-    }
-
-    const timeLimit = this.settingsForm.get('timeLimit');
-    if (timeLimit?.hasError('min')) {
-      return 'Mindestens 1 Minute';
-    }
-    if (timeLimit?.hasError('max')) {
-      return 'Maximal 60 Minuten';
-    }
-
-    return '';
+  isInvalid(controlName: string): boolean {
+    const control = this.settingsForm.get(controlName);
+    return !!control && control.invalid && control.touched;
   }
 
 }

@@ -1,20 +1,22 @@
-<div class="card-container">
-  <div class="navcard navcard--start" (click)="onStartTraining()">
-    <div class="navcard__mark">▶</div>
-    <h2 class="navcard__title">Start Training</h2>
-    <p class="navcard__sub">Begin your mental arithmetic training!</p>
-    <span class="navcard__arrow">↗</span>
+<nav class="ui-container main-page" aria-label="Mental Arithmetic">
+  <div class="ui-grid">
+    <a class="ui-navcard ui-navcard--green" routerLink="/mental-arithmetic/session">
+      <div class="ui-navcard-mark">▶</div>
+      <h2 class="ui-navcard-title">Start Training</h2>
+      <p class="ui-navcard-sub">Begin your mental arithmetic training!</p>
+      <span class="ui-navcard-arrow" aria-hidden="true">↗</span>
+    </a>
+    <a class="ui-navcard ui-navcard--amber" routerLink="/mental-arithmetic/settings">
+      <div class="ui-navcard-mark">⚙</div>
+      <h2 class="ui-navcard-title">Settings</h2>
+      <p class="ui-navcard-sub">Configure difficulty and operations!</p>
+      <span class="ui-navcard-arrow" aria-hidden="true">↗</span>
+    </a>
+    <a class="ui-navcard ui-navcard--blue" routerLink="/mental-arithmetic/arithmetic-list">
+      <div class="ui-navcard-mark">📊</div>
+      <h2 class="ui-navcard-title">Statistics & History</h2>
+      <p class="ui-navcard-sub">View your training progress and performance!</p>
+      <span class="ui-navcard-arrow" aria-hidden="true">↗</span>
+    </a>
   </div>
-  <div class="navcard navcard--settings" routerLink="/mental-arithmetic/settings">
-    <div class="navcard__mark">⚙</div>
-    <h2 class="navcard__title">Settings</h2>
-    <p class="navcard__sub">Configure difficulty and operations!</p>
-    <span class="navcard__arrow">↗</span>
-  </div>
-  <div class="navcard navcard--history" routerLink="/mental-arithmetic/arithmetic-list">
-    <div class="navcard__mark">📊</div>
-    <h2 class="navcard__title">Statistics & History</h2>
-    <p class="navcard__sub">View your training progress and performance!</p>
-    <span class="navcard__arrow">↗</span>
-  </div>
-</div>
+</nav>
