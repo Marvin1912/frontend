@@ -12,7 +12,7 @@
           }
           <div class="dashboard__rooms">
             @for (reading of view.rooms; track reading.sensorId) {
-              <app-temperature-card variant="cell" [reading]="reading" />
+              <app-temperature-card variant="cell" [reading]="reading" [ventilation]="view.ventilation.get(reading.sensorId) ?? null" />
             } @empty {
               <div class="dashboard__placeholder dashboard__placeholder--span">No indoor sensors reporting.</div>
             }

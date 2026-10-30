@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {AsyncPipe} from '@angular/common';
 import {RouterLink} from '@angular/router';
-import {catchError, combineLatest, map, of, timer} from 'rxjs';
+import {catchError, combineLatest, map, of, scan, timer} from 'rxjs';
 import {ClimateService} from '../../services/climate.service';
 import {TemperatureReading} from '../../models/temperature-reading.model';
 import {HourlyWeatherForecast} from '../../models/weather-forecast.model';
@@ -9,12 +9,14 @@ import {TemperatureCardComponent} from '../temperature-card/temperature-card.com
 import {PlantsSummaryTileComponent} from '../plants-summary-tile/plants-summary-tile.component';
 import {PortfolioTileComponent} from '../portfolio-tile/portfolio-tile.component';
 import {WeatherSensitivityTileComponent} from '../weather-sensitivity-tile/weather-sensitivity-tile.component';
+import {VentilationAdvice, ventilationAdvice} from '../../utils/ventilation.util';
 
 interface ClimateView {
   status: 'ready' | 'empty' | 'error';
   hero: TemperatureReading | null;
   rooms: TemperatureReading[];
   hourlyForecast: HourlyWeatherForecast[];
+  ventilation: ReadonlyMap<string, VentilationAdvice>;
 }
 
 const ROOM_ROTATION_MS = 30_000;
@@ -32,20 +34,26 @@ export class TouchDashboardComponent {
 
   private climate = inject(ClimateService);
 
+  private ventilation$ = this.climate.readings$.pipe(
+    scan((previous, readings) => ventilationAdvice(readings, previous), new Map<string, VentilationAdvice>())
+  );
+
   view$ = combineLatest([
     this.climate.readings$,
     this.climate.hourlyForecast$,
+    this.ventilation$,
     timer(0, ROOM_ROTATION_MS)
   ]).pipe(
-    map(([readings, hourlyForecast, tick]) => this.toView(readings, hourlyForecast, tick)),
-    catchError(() => of<ClimateView>({status: 'error', hero: null, rooms: [], hourlyForecast: []}))
+    map(([readings, hourlyForecast, ventilation, tick]) => this.toView(readings, hourlyForecast, ventilation, tick)),
+    catchError(() => of<ClimateView>({status: 'error', hero: null, rooms: [], hourlyForecast: [], ventilation: new Map()}))
   );
 
-  private toView(readings: TemperatureReading[], hourlyForecast: HourlyWeatherForecast[], tick: number): ClimateView {
-    if (!readings.length) return {status: 'empty', hero: null, rooms: [], hourlyForecast: []};
+  private toView(readings: TemperatureReading[], hourlyForecast: HourlyWeatherForecast[],
+                 ventilation: ReadonlyMap<string, VentilationAdvice>, tick: number): ClimateView {
+    if (!readings.length) return {status: 'empty', hero: null, rooms: [], hourlyForecast: [], ventilation};
     const hero = readings.find(r => r.location === 'outdoor') ?? null;
     const indoor = readings.filter(r => r.location === 'indoor');
-    return {status: 'ready', hero, rooms: this.windowFrom(indoor, tick), hourlyForecast};
+    return {status: 'ready', hero, rooms: this.windowFrom(indoor, tick), hourlyForecast, ventilation};
   }
 
   private windowFrom(indoor: TemperatureReading[], tick: number): TemperatureReading[] {

@@ -3,6 +3,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {TemperatureReading} from '../../models/temperature-reading.model';
 import {HourlyWeatherForecast} from '../../models/weather-forecast.model';
 import {weatherIconFor} from '../../utils/weather-icon.util';
+import {VentilationAdvice} from '../../utils/ventilation.util';
 
 type Freshness = 'fresh' | 'aging' | 'stale';
 export type TemperatureCardVariant = 'hero' | 'cell';
@@ -25,6 +26,16 @@ export class TemperatureCardComponent {
   reading = input.required<TemperatureReading>();
   variant = input<TemperatureCardVariant>('cell');
   hourlyForecast = input<HourlyWeatherForecast[]>([]);
+  ventilation = input<VentilationAdvice | null>(null);
+
+  ventilationLabel = computed(() => {
+    switch (this.ventilation()) {
+      case 'ventilate': return 'Ventilate';
+      case 'keep-closed': return 'Keep closed';
+      case 'unknown': return 'Humid';
+      default: return null;
+    }
+  });
 
   temperatureDisplay = computed(() => this.reading().temperatureC.toFixed(1));
 
