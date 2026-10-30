@@ -9,14 +9,14 @@ import {TemperatureCardComponent} from '../temperature-card/temperature-card.com
 import {PlantsSummaryTileComponent} from '../plants-summary-tile/plants-summary-tile.component';
 import {PortfolioTileComponent} from '../portfolio-tile/portfolio-tile.component';
 import {WeatherSensitivityTileComponent} from '../weather-sensitivity-tile/weather-sensitivity-tile.component';
-import {VentilationAdvice, ventilationAdvice} from '../../utils/ventilation.util';
+import {VentilationState, ventilationAdvice} from '../../utils/ventilation.util';
 
 interface ClimateView {
   status: 'ready' | 'empty' | 'error';
   hero: TemperatureReading | null;
   rooms: TemperatureReading[];
   hourlyForecast: HourlyWeatherForecast[];
-  ventilation: ReadonlyMap<string, VentilationAdvice>;
+  ventilation: ReadonlyMap<string, VentilationState>;
 }
 
 const ROOM_ROTATION_MS = 30_000;
@@ -35,7 +35,7 @@ export class TouchDashboardComponent {
   private climate = inject(ClimateService);
 
   private ventilation$ = this.climate.readings$.pipe(
-    scan((previous, readings) => ventilationAdvice(readings, previous), new Map<string, VentilationAdvice>())
+    scan((previous, readings) => ventilationAdvice(readings, previous), new Map<string, VentilationState>())
   );
 
   view$ = combineLatest([
@@ -49,7 +49,7 @@ export class TouchDashboardComponent {
   );
 
   private toView(readings: TemperatureReading[], hourlyForecast: HourlyWeatherForecast[],
-                 ventilation: ReadonlyMap<string, VentilationAdvice>, tick: number): ClimateView {
+                 ventilation: ReadonlyMap<string, VentilationState>, tick: number): ClimateView {
     if (!readings.length) return {status: 'empty', hero: null, rooms: [], hourlyForecast: [], ventilation};
     const hero = readings.find(r => r.location === 'outdoor') ?? null;
     const indoor = readings.filter(r => r.location === 'indoor');

@@ -147,6 +147,20 @@
   color: var(--text-dim);
 }
 
+.card__humidity-target {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  margin-left: 0.3rem;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--c-p);
+}
+
+.card__humidity-target-arrow {
+  color: var(--text-dim);
+}
+
 .card__hourly-icons {
   display: flex;
   align-items: center;
