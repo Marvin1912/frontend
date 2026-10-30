@@ -1,6 +1,12 @@
 <div class="card">
   <div class="card__header">
     <span class="card__label">{{ reading().label }}</span>
+    @if (ventilationLabel(); as label) {
+      <span class="card__ventilation" [attr.data-advice]="ventilation()?.advice" role="status">
+        <mat-icon class="card__ventilation-icon" aria-hidden="true">warning</mat-icon>
+        {{ label }}
+      </span>
+    }
     <span class="card__dot" aria-hidden="true" [attr.data-freshness]="freshness()"></span>
   </div>
   <div class="card__humidity__container">
@@ -13,6 +19,11 @@
         <span class="card__humidity-value">{{ humidityDisplay() }}</span>
         <span class="card__humidity-unit">%</span>
         <span class="card__humidity-icon" aria-hidden="true">💧</span>
+        @if (ventilation()?.targetPct; as target) {
+          <span class="card__humidity-target" [attr.aria-label]="'Target ' + target + ' %'">
+            <span class="card__humidity-target-arrow" aria-hidden="true">→</span>{{ target }}<span class="card__humidity-unit">%</span>
+          </span>
+        }
       </div>
     }
   </div>

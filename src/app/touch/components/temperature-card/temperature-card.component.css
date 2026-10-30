@@ -71,6 +71,31 @@
   box-shadow: 0 0 8px var(--cg-e);
 }
 
+.card__ventilation {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: auto;
+  margin-right: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--c-v);
+}
+
+.card__ventilation[data-advice='keep-closed'] {
+  color: var(--c-e);
+}
+
+.card__ventilation-icon {
+  font-size: 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  filter: drop-shadow(0 0 6px var(--cg-v));
+}
+
+.card__ventilation[data-advice='keep-closed'] .card__ventilation-icon {
+  filter: drop-shadow(0 0 6px var(--cg-e));
+}
+
 .card__temp {
   display: flex;
   align-items: baseline;
@@ -119,6 +144,20 @@
 }
 
 .card__humidity-unit {
+  color: var(--text-dim);
+}
+
+.card__humidity-target {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  margin-left: 0.3rem;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: var(--c-p);
+}
+
+.card__humidity-target-arrow {
   color: var(--text-dim);
 }
 
