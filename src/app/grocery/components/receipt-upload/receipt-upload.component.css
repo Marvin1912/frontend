@@ -311,3 +311,19 @@
     animation: none;
   }
 }
+
+/* ── Bon-Datum in der Prüfung ────────────────────── */
+.receipt-date {
+  margin-bottom: var(--ui-space-3);
+}
+
+.receipt-date__input--missing {
+  --ui-input-accent: var(--c-e);
+  --ui-input-border: color-mix(in srgb, var(--c-e) 55%, transparent);
+}
+
+.receipt-date__hint {
+  margin-top: var(--ui-space-1);
+  color: var(--c-e);
+  font-size: .72rem;
+}

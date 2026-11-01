@@ -75,10 +75,20 @@
         <div class="ui-container page">
           <section class="ui-panel ui-panel--orange" aria-labelledby="market-title">
             <div class="ui-panel-head">
-              <h2 class="ui-panel-label" id="market-title"><span class="ui-panel-dot"></span>Supermarkt</h2>
+              <h2 class="ui-panel-label" id="market-title"><span class="ui-panel-dot"></span>Bon</h2>
             </div>
             <div class="ui-panel-body">
-              <div class="segmented" role="group" aria-labelledby="market-title">
+              <label class="field receipt-date">
+                <span class="ui-input-label">Datum</span>
+                <input class="ui-input ui-input--orange" type="date" required aria-label="Datum vom Bon"
+                       [class.receipt-date__input--missing]="!receiptDate"
+                       [value]="receiptDate" (change)="saveReceiptDate($any($event.target).value)" />
+                @if (!receiptDate) {
+                  <span class="receipt-date__hint" role="alert">Datum nicht erkannt – bitte vom Bon eintragen.</span>
+                }
+              </label>
+              <span class="ui-input-label" id="market-label">Supermarkt</span>
+              <div class="segmented" role="group" aria-labelledby="market-label">
                 @for (market of supermarkets; track market.value) {
                   <button type="button" class="ui-btn" [class]="supermarket === market.value ? 'ui-btn--' + market.palette : ''"
                           [attr.aria-pressed]="supermarket === market.value"

@@ -4,6 +4,7 @@ import {Router} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {CurrencyPipe} from '@angular/common';
+import {forkJoin} from 'rxjs';
 import {ReceiptService} from '../../services/receipt.service';
 import {ReceiptItem, Supermarket} from '../../models/receipt.model';
 import {SUPERMARKETS} from '../../models/supermarket';
@@ -41,6 +42,8 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
   receiptId = '';
   items: ReceiptItem[] = [];
   supermarket: Supermarket | null = null;
+  /** Purchase date printed on the receipt, ISO `YYYY-MM-DD` (as used by `<input type="date">`). */
+  receiptDate = '';
 
   private mediaStream: MediaStream | null = null;
   private video?: HTMLVideoElement;
@@ -105,6 +108,14 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  saveReceiptDate(value: string): void {
+    if (!this.receiptId || !value || value === this.receiptDate) return;
+    this.receiptDate = value;
+    this.receiptService.updateReceiptDate(this.receiptId, value).subscribe({
+      error: () => this.snackBar.open('Datum konnte nicht gespeichert werden', 'Schließen', {duration: 4000})
+    });
+  }
+
   saveItem(item: ReceiptItem): void {
     this.receiptService.updateReceiptItem(this.receiptId, item).subscribe({
       next: updated => {
@@ -115,6 +126,10 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
   }
 
   onSave(): void {
+    if (!this.receiptDate) {
+      this.snackBar.open('Bitte das Datum vom Bon eintragen', 'Schließen', {duration: 4000});
+      return;
+    }
     this.step = 'success';
     this.snackBar.open('Bon gespeichert', undefined, {duration: 2500});
     setTimeout(() => {
@@ -129,9 +144,11 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
       next: response => {
         const id = response.headers.get('Location')?.split('/receipts/')[1] ?? '';
         this.receiptId = id;
-        this.receiptService.getReceiptItems(id).subscribe({
-          next: items => {
+        forkJoin({items: this.receiptService.getReceiptItems(id), receipt: this.receiptService.getReceipt(id)}).subscribe({
+          next: ({items, receipt}) => {
             this.items = items;
+            this.receiptDate = receipt?.receiptDate ?? '';
+            this.supermarket = receipt?.supermarket ?? null;
             this.recognizing = false;
             this.step = 'review';
           },
