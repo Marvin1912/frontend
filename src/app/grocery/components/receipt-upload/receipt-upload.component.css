@@ -327,3 +327,9 @@
   color: var(--c-e);
   font-size: .72rem;
 }
+
+.review__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ui-space-2);
+}

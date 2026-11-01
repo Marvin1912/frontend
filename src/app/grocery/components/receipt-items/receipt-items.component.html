@@ -22,6 +22,10 @@
                   [disabled]="loading" (click)="openAddDialog()">
             <mat-icon aria-hidden="true">add</mat-icon>
           </button>
+          <button type="button" class="ui-btn-icon ui-btn--rose" aria-label="Bon löschen"
+                  [disabled]="loading || loadFailed" (click)="deleteReceipt()">
+            <mat-icon aria-hidden="true">delete</mat-icon>
+          </button>
         </div>
       </div>
 
