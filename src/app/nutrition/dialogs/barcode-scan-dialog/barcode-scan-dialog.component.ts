@@ -8,7 +8,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
 import {FoodDraft} from '../../models/nutrition.model';
@@ -41,6 +41,8 @@ const EAN_PATTERN = /^\d{8,14}$/;
   selector: 'app-barcode-scan-dialog',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    // NgForm (FormsModule) turns the manual-entry <form> into ngSubmit instead of a native page submit.
+    FormsModule,
     ReactiveFormsModule,
     MatDialogClose,
     MatIcon
