@@ -171,7 +171,8 @@ export class NutritionExcludedDaysComponent implements OnInit {
           label: format(date, 'dd.MM.yyyy'),
           weekday: format(date, 'EEEEEE', {locale: de}),
           kcal: day.totals.kcal,
-          entryCount: day.entries.length,
+          // The backend omits empty lists (Jackson NON_EMPTY), so days without entries lack the field.
+          entryCount: day.entries?.length ?? 0,
           excluded: day.excluded,
           reason: reasonByDate.get(day.date) ?? '',
           saving: false
