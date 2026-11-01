@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {
   DaySummary,
+  ExcludedDay,
   Food,
   FoodDraft,
   FoodInput,
@@ -127,6 +128,21 @@ export class NutritionService {
   /** Day summaries for every date in [from, to] (inclusive), in a single request. */
   getDaySummaries(from: string, to: string): Observable<DaySummary[]> {
     return this.http.get<DaySummary[]>(`${this.host}/days`, {params: {from, to}});
+  }
+
+  /** Excluded days within [from, to] (inclusive), ascending by date. */
+  getExcludedDays(from: string, to: string): Observable<ExcludedDay[]> {
+    return this.http.get<ExcludedDay[]>(`${this.host}/excluded-days`, {params: {from, to}});
+  }
+
+  /** Exclude a day from evaluations, or update its reason if already excluded. Idempotent. */
+  excludeDay(date: string, reason?: string | null): Observable<ExcludedDay> {
+    return this.http.put<ExcludedDay>(`${this.host}/excluded-days/${date}`, {reason: reason ?? null});
+  }
+
+  /** Include a previously excluded day in evaluations again. Idempotent. */
+  includeDay(date: string): Observable<void> {
+    return this.http.delete<void>(`${this.host}/excluded-days/${date}`);
   }
 
   /** Log a meal entry on a day, either food-based or ad-hoc. */

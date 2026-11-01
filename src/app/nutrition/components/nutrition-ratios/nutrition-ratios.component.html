@@ -74,8 +74,13 @@
           </thead>
           <tbody>
             @for (day of days; track day.date) {
-              <tr class="ui-table-row">
-                <td class="ui-table-cell">{{ day.date | date:'dd.MM.yyyy':'':'de' }}</td>
+              <tr class="ui-table-row" [class.row--excluded]="day.excluded">
+                <td class="ui-table-cell">
+                  {{ day.date | date:'dd.MM.yyyy':'':'de' }}
+                  @if (day.excluded) {
+                    <span class="excluded-tag">ausgeschlossen</span>
+                  }
+                </td>
                 <td class="ui-table-cell col-num">{{ day.weightKg !== null ? (day.weightKg | number:'1.1-1':'de') + ' kg' : '–' }}</td>
                 <td class="ui-table-cell col-num">{{ day.kcal | number:'1.0-0':'de' }}</td>
                 <td class="ui-table-cell col-num">{{ day.proteinG | number:'1.0-0':'de' }} g</td>

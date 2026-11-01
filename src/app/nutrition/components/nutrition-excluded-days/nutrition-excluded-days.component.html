@@ -1,0 +1,104 @@
+<div class="ui-container page">
+
+  <section class="ui-panel ui-panel--sky">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Zeitraum</h2>
+    </div>
+    <div class="ui-panel-body body">
+      <p class="hint m-0">
+        Ausgeschlossene Tage (z.&nbsp;B. Restaurant, Reisen) fließen nicht in Durchschnitte, Bilanz und Verhältnisse ein.
+      </p>
+
+      <div class="segmented" role="group" aria-label="Zeitraum">
+        @for (range of ranges; track range) {
+          <button type="button" class="ui-btn" [class.ui-btn--sky]="range === rangeDays"
+                  [attr.aria-pressed]="range === rangeDays"
+                  (click)="onPresetChange(range)">
+            {{ range }} Tage
+          </button>
+        }
+      </div>
+
+      <form class="range-form" [formGroup]="rangeForm" (ngSubmit)="applyCustomRange()">
+        <div class="field field-date">
+          <label class="ui-input-label" for="excluded-from">Von</label>
+          <input id="excluded-from" type="date" class="ui-input ui-input--sky" formControlName="from" [max]="today"
+                 [attr.aria-invalid]="rangeError || futureError" />
+        </div>
+        <div class="field field-date">
+          <label class="ui-input-label" for="excluded-to">Bis</label>
+          <input id="excluded-to" type="date" class="ui-input ui-input--sky" formControlName="to" [max]="today"
+                 [attr.aria-invalid]="rangeError || futureError" />
+        </div>
+        <button type="submit" class="ui-btn ui-btn--sky btn-apply" [disabled]="rangeForm.invalid">
+          <mat-icon aria-hidden="true">date_range</mat-icon>
+          <span>Anzeigen</span>
+        </button>
+      </form>
+
+      @if (futureError) {
+        <div class="ui-alert ui-alert--danger" role="alert">Daten dürfen nicht in der Zukunft liegen.</div>
+      } @else if (rangeError) {
+        <div class="ui-alert ui-alert--danger" role="alert">„Von" muss vor „Bis" liegen.</div>
+      }
+    </div>
+  </section>
+
+  <section class="ui-panel ui-panel--sky">
+    <div class="ui-panel-head">
+      <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Tage</h2>
+      @if (!loading && rows.length) {
+        <span class="ui-badge ui-badge--sky">{{ excludedCount }} von {{ rows.length }} ausgeschlossen</span>
+      }
+    </div>
+
+    @if (loading) {
+      <div class="ui-empty" role="status">
+        <mat-spinner diameter="28" />
+        <p class="m-0">Tage werden geladen…</p>
+      </div>
+    } @else if (loadError) {
+      <div class="ui-empty" role="status">
+        <mat-icon aria-hidden="true">error_outline</mat-icon>
+        <p class="m-0">Tage konnten nicht geladen werden.</p>
+      </div>
+    } @else {
+      <ul class="day-list" role="list">
+        @for (row of rows; track row.date) {
+          <li class="day" [class.day--excluded]="row.excluded">
+            <div class="day__main">
+              <span class="day__date">
+                <span class="day__weekday">{{ row.weekday }}</span>
+                {{ row.label }}
+              </span>
+              <span class="day__meta">
+                @if (row.entryCount) {
+                  {{ row.kcal | number:'1.0-0':'de' }} kcal · {{ row.entryCount }} {{ row.entryCount === 1 ? 'Eintrag' : 'Einträge' }}
+                } @else {
+                  keine Einträge
+                }
+              </span>
+            </div>
+
+            <mat-slide-toggle class="day__toggle" [checked]="!row.excluded" [disabled]="row.saving"
+                              [attr.data-date]="row.date"
+                              (change)="onToggle(row, $event.checked)">
+              In Berechnung
+            </mat-slide-toggle>
+
+            @if (row.excluded) {
+              <input type="text" class="ui-input ui-input--sky day__reason" maxlength="255"
+                     placeholder="Grund (optional), z. B. Restaurant"
+                     [attr.aria-label]="'Grund für ' + row.label"
+                     [value]="row.reason"
+                     #reasonInput
+                     (blur)="onReasonCommit(row, reasonInput.value)"
+                     (keydown.enter)="reasonInput.blur()" />
+            }
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+</div>

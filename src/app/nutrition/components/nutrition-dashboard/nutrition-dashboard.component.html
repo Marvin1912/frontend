@@ -97,6 +97,9 @@
             <span class="legend__item legend__item--within">im Ziel</span>
             <span class="legend__item legend__item--under">darunter</span>
             <span class="legend__item legend__item--over">darüber</span>
+            @if (daysExcluded > 0) {
+              <span class="legend__item legend__item--excluded">ausgeschlossen</span>
+            }
           </p>
         } @else {
           <div class="ui-empty" role="status">
@@ -110,6 +113,9 @@
     <section class="ui-panel ui-panel--amber">
       <div class="ui-panel-head">
         <h2 class="ui-panel-label"><span class="ui-panel-dot"></span>Bilanz</h2>
+        @if (daysExcluded > 0) {
+          <a class="ui-badge" routerLink="/nutrition/excluded-days">{{ daysExcluded }} ausgeschlossen</a>
+        }
       </div>
 
       <div class="ui-panel-body">

@@ -52,6 +52,7 @@
 .bar--within { fill: var(--c-within); }
 .bar--under  { fill: var(--c-under); opacity: .65; }
 .bar--over   { fill: url(#overHatch); }
+.bar--excluded { fill: var(--text-dim); opacity: .35; }
 
 .hatch-bg { fill: var(--c-over); }
 .hatch-fg { fill: color-mix(in srgb, var(--c-over) 70%, black); }
@@ -96,6 +97,7 @@
 
 .legend__item--within::before { background: var(--c-within); }
 .legend__item--under::before  { background: var(--c-under); opacity: .65; }
+.legend__item--excluded::before { background: var(--text-dim); opacity: .35; }
 .legend__item--over::before {
   background: repeating-linear-gradient(
     135deg,

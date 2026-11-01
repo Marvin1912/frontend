@@ -86,7 +86,7 @@ export class NutritionRatiosComponent implements OnInit {
       datasets: [
         {
           label: 'Protein (g/kg)',
-          data: days.map(d => d.proteinPerKg),
+          data: days.map(d => d.excluded ? null : d.proteinPerKg),
           borderColor: COLOR_PROTEIN,
           backgroundColor: COLOR_PROTEIN,
           fill: false,
@@ -96,7 +96,7 @@ export class NutritionRatiosComponent implements OnInit {
         },
         {
           label: 'Kohlenhydrate (g/kg)',
-          data: days.map(d => d.carbsPerKg),
+          data: days.map(d => d.excluded ? null : d.carbsPerKg),
           borderColor: COLOR_CARBS,
           backgroundColor: COLOR_CARBS,
           fill: false,
@@ -106,7 +106,7 @@ export class NutritionRatiosComponent implements OnInit {
         },
         {
           label: 'Fett (g/kg)',
-          data: days.map(d => d.fatPerKg),
+          data: days.map(d => d.excluded ? null : d.fatPerKg),
           borderColor: COLOR_FAT,
           backgroundColor: COLOR_FAT,
           fill: false,
@@ -128,7 +128,7 @@ export class NutritionRatiosComponent implements OnInit {
       datasets: [
         {
           label: 'kcal/kg',
-          data: days.map(d => d.kcalPerKg),
+          data: days.map(d => d.excluded ? null : d.kcalPerKg),
           borderColor: COLOR_KCAL,
           backgroundColor: COLOR_KCAL,
           fill: false,

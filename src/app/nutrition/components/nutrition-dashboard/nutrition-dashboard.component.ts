@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit} f
 import {DecimalPipe} from '@angular/common';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {RouterLink} from '@angular/router';
 import {catchError, forkJoin, of} from 'rxjs';
 import {format, parseISO, subDays} from 'date-fns';
 import {NutritionService} from '../../services/nutrition.service';
@@ -32,8 +33,8 @@ interface IntakeDay {
   /** Bar top (consumed) and bar height in view-box units. */
   y: number;
   h: number;
-  /** within | under | over target */
-  state: 'within' | 'under' | 'over';
+  /** within | under | over target, or excluded from evaluation */
+  state: 'within' | 'under' | 'over' | 'excluded';
   tooltip: string;
 }
 
@@ -48,7 +49,7 @@ interface WeightPoint {
 @Component({
   selector: 'app-nutrition-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DecimalPipe, MatProgressSpinner, MatTooltipModule],
+  imports: [DecimalPipe, MatProgressSpinner, MatTooltipModule, RouterLink],
   templateUrl: './nutrition-dashboard.component.html',
   styleUrl: './nutrition-dashboard.component.css'
 })
@@ -85,6 +86,7 @@ export class NutritionDashboardComponent implements OnInit {
   avgKcal: number | null = null;
   daysOnTarget = 0;
   daysWithData = 0;
+  daysExcluded = 0;
 
   private nutritionService = inject(NutritionService);
   private cdr = inject(ChangeDetectorRef);
@@ -209,9 +211,10 @@ export class NutritionDashboardComponent implements OnInit {
       const x = PAD_L + slot * i + (slot - this.barWidth) / 2;
       const y = PAD_T + innerH - h;
       const dateLabel = format(parseISO(date), 'dd.MM.yyyy');
-      const tooltip = burned > 0
+      const excluded = summary?.excluded ?? false;
+      const tooltip = (burned > 0
         ? `${dateLabel}: ${Math.round(eaten)} kcal − ${Math.round(burned)} verbrannt = ${Math.round(kcal)} kcal`
-        : `${dateLabel}: ${Math.round(kcal)} kcal`;
+        : `${dateLabel}: ${Math.round(kcal)} kcal`) + (excluded ? ' (ausgeschlossen)' : '');
       return {
         date,
         label: format(parseISO(date), 'dd.MM.'),
@@ -221,7 +224,7 @@ export class NutritionDashboardComponent implements OnInit {
         x,
         y,
         h,
-        state: this.targetState(kcal, dayTarget),
+        state: excluded ? 'excluded' : this.targetState(kcal, dayTarget),
         tooltip
       };
     });
@@ -241,7 +244,8 @@ export class NutritionDashboardComponent implements OnInit {
   }
 
   private buildAdherence(target: number | null): void {
-    const withData = this.intakeDays.filter(d => d.consumed > 0);
+    this.daysExcluded = this.intakeDays.filter(d => d.state === 'excluded').length;
+    const withData = this.intakeDays.filter(d => d.state !== 'excluded' && d.consumed > 0);
     this.daysWithData = withData.length;
     if (withData.length === 0) {
       this.avgKcal = null;
