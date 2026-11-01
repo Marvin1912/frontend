@@ -59,6 +59,8 @@ export interface WeightRatioDay {
   proteinPerKg: number | null;
   carbsPerKg: number | null;
   fatPerKg: number | null;
+  /** Day is excluded from evaluations (averages, adherence). */
+  excluded: boolean;
 }
 
 /** One period's averaged weight/nutrient ratios (GET /nutrition/weight/ratios/summary). */
@@ -209,6 +211,14 @@ export interface DaySummary {
   remaining: Macros | null;
   activities: SportActivity[];
   totalKcalBurned: number;
+  /** Day is excluded from evaluations (averages, adherence), e.g. eating out. */
+  excluded: boolean;
+}
+
+/** A day excluded from nutrition evaluations (GET /nutrition/excluded-days). */
+export interface ExcludedDay {
+  date: string;
+  reason: string | null;
 }
 
 /**

@@ -46,6 +46,7 @@ import {NutritionDashboardComponent} from './nutrition/components/nutrition-dash
 import {NutritionMealsComponent} from './nutrition/components/nutrition-meals/nutrition-meals.component';
 import {NutritionMealPlanComponent} from './nutrition/components/nutrition-meal-plan/nutrition-meal-plan.component';
 import {NutritionRatiosComponent} from './nutrition/components/nutrition-ratios/nutrition-ratios.component';
+import {NutritionExcludedDaysComponent} from './nutrition/components/nutrition-excluded-days/nutrition-excluded-days.component';
 
 export const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -131,6 +132,7 @@ export const routes: Routes = [
       {path: 'canteen', component: NutritionCanteenComponent, data: {home: '/nutrition'}},
       {path: 'weight', component: NutritionWeightComponent, data: {home: '/nutrition'}},
       {path: 'ratios', component: NutritionRatiosComponent, data: {home: '/nutrition'}},
+      {path: 'excluded-days', component: NutritionExcludedDaysComponent, data: {home: '/nutrition'}},
       {path: 'foods', component: NutritionFoodsComponent, data: {home: '/nutrition'}},
       {path: 'meals', component: NutritionMealsComponent, data: {home: '/nutrition'}},
       {path: 'meal-plan', component: NutritionMealPlanComponent, data: {home: '/nutrition'}},

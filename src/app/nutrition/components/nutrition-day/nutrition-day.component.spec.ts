@@ -33,7 +33,8 @@ function summaryWith(entries: MealEntry[]): DaySummary {
     targets: null,
     remaining: null,
     activities: [],
-    totalKcalBurned: 0
+    totalKcalBurned: 0,
+    excluded: false
   };
 }
 

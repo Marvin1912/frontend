@@ -1,23 +1,12 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, signal} from '@angular/core';
-import {AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {MatDialogClose, MatDialogRef} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {format, subDays} from 'date-fns';
 import {NutritionService} from '../../services/nutrition.service';
-import {notInFutureValidator, todayIso} from '../../forms';
-
-function dateRangeValidator(): ValidatorFn {
-  return (group: AbstractControl): ValidationErrors | null => {
-    const from = group.get('from')?.value;
-    const to = group.get('to')?.value;
-    if (from && to && from > to) {
-      return {dateRange: true};
-    }
-    return null;
-  };
-}
+import {dateRangeValidator, notInFutureValidator, todayIso} from '../../forms';
 
 @Component({
   selector: 'app-export-dialog',

@@ -1,0 +1,89 @@
+:host {
+  display: block;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ui-space-3);
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: .85rem;
+}
+
+/* ── Zeitraum ────────────────────────────────────── */
+.range-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--ui-space-3);
+  margin: 0;
+}
+
+.field-date { flex: 1 1 160px; }
+
+.btn-apply {
+  flex: 0 0 auto;
+  min-height: 38px;
+}
+
+/* ── Tage ────────────────────────────────────────── */
+.day-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.day {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: var(--ui-space-2) var(--ui-space-3);
+  padding: var(--ui-space-3) var(--ui-space-4);
+  border-top: 1px solid var(--border);
+}
+
+.day:first-child {
+  border-top: none;
+}
+
+.day--excluded .day__main {
+  opacity: .55;
+}
+
+.day__main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.day__date {
+  font-variant-numeric: tabular-nums;
+}
+
+.day__weekday {
+  display: inline-block;
+  min-width: 1.8em;
+  color: var(--text-muted);
+}
+
+.day__meta {
+  color: var(--text-dim);
+  font-size: .8rem;
+}
+
+.day--excluded .day__date {
+  text-decoration: line-through;
+}
+
+.day__reason {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 419px) {
+  .btn-apply {
+    flex: 1 1 100%;
+  }
+}
