@@ -69,9 +69,37 @@ describe('ReceiptUploadComponent', () => {
     component.onGallerySelected({target: input} as unknown as Event);
     httpMock.expectOne(`${environment.apiUrl}/receipts/abc/items`)
       .flush([{id: '1', name: 'Milch', singlePrice: 1.19, quantity: 1, price: 1.19}]);
+    httpMock.expectOne(`${environment.apiUrl}/receipts`).flush([
+      {id: 'abc', receiptDate: '2026-08-21', totalAmount: 1.19, creationDate: '2026-11-01T11:47:48', supermarket: null}
+    ]);
     fixture.detectChanges();
 
     expect(component.step).toBe('review');
     expect(fixture.nativeElement.textContent).toContain('Positionen');
+    const dateInput: HTMLInputElement = fixture.nativeElement.querySelector('input[type=date]');
+    expect(dateInput.value).toBe('2026-08-21');
+  });
+
+  it('saves a corrected receipt date', () => {
+    component.receiptId = 'abc';
+    component.receiptDate = '2020-11-08';
+
+    component.saveReceiptDate('2026-08-21');
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/receipts/abc/date`);
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual({receiptDate: '2026-08-21'});
+    req.flush({});
+    expect(component.receiptDate).toBe('2026-08-21');
+  });
+
+  it('does not finish the review without a receipt date', () => {
+    component.step = 'review';
+    component.receiptId = 'abc';
+    component.receiptDate = '';
+
+    component.onSave();
+
+    expect(component.step).toBe('review');
   });
 });

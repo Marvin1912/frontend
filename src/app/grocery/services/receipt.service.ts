@@ -51,6 +51,11 @@ export class ReceiptService {
     return this.http.patch<Receipt>(`${this.host}/receipts/${id}/supermarket`, {supermarket});
   }
 
+  /** Corrects the purchase date printed on the receipt (ISO `YYYY-MM-DD`). */
+  updateReceiptDate(id: string, receiptDate: string): Observable<Receipt> {
+    return this.http.patch<Receipt>(`${this.host}/receipts/${id}/date`, {receiptDate});
+  }
+
   getArticleGroupPriceSummaries(): Observable<ProductPriceSummary[]> {
     return this.http.get<ProductPriceSummary[]>(`${this.host}/receipts/groups`);
   }
