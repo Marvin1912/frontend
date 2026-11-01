@@ -3,7 +3,9 @@ import {NgZone} from '@angular/core';
 import {registerLocaleData} from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import {HttpTestingController} from '@angular/common/http/testing';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
+import {MatDialog} from '@angular/material/dialog';
+import {Router} from '@angular/router';
 
 import {ReceiptUploadComponent} from './receipt-upload.component';
 import {ReceiptService} from '../../services/receipt.service';
@@ -91,6 +93,20 @@ describe('ReceiptUploadComponent', () => {
     expect(req.request.body).toEqual({receiptDate: '2026-08-21'});
     req.flush({});
     expect(component.receiptDate).toBe('2026-08-21');
+  });
+
+  it('discards the scanned receipt after confirmation', () => {
+    vi.spyOn(TestBed.inject(MatDialog), 'open').mockReturnValue({afterClosed: () => of('confirmed')} as never);
+    const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    component.step = 'review';
+    component.receiptId = 'abc';
+
+    component.onDiscard();
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/receipts/abc`);
+    expect(req.request.method).toBe('DELETE');
+    req.flush(null);
+    expect(navigate).toHaveBeenCalledWith(['/grocery']);
   });
 
   it('does not finish the review without a receipt date', () => {

@@ -141,10 +141,15 @@
           <span class="sum-footer__label">Summe</span>
           <span class="amount sum-footer__amount">{{ runningTotal | currency:'EUR':'symbol':'1.2-2':'de' }}</span>
         </span>
-        <button type="button" class="ui-btn ui-btn--orange review__save" (click)="onSave()">
-          <mat-icon aria-hidden="true">check</mat-icon>
-          <span>Speichern</span>
-        </button>
+        <span class="review__actions">
+          <button type="button" class="ui-btn-icon ui-btn--rose" aria-label="Bon verwerfen" (click)="onDiscard()">
+            <mat-icon aria-hidden="true">delete</mat-icon>
+          </button>
+          <button type="button" class="ui-btn ui-btn--orange review__save" (click)="onSave()">
+            <mat-icon aria-hidden="true">check</mat-icon>
+            <span>Speichern</span>
+          </button>
+        </span>
       </footer>
     </div>
   }

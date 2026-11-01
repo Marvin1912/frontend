@@ -1,17 +1,18 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {CurrencyPipe, DatePipe, DecimalPipe} from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatIcon} from '@angular/material/icon';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {forkJoin} from 'rxjs';
+import {EMPTY, forkJoin, switchMap} from 'rxjs';
 import {Receipt, ReceiptItem, Supermarket} from '../../models/receipt.model';
 import {ReceiptService} from '../../services/receipt.service';
 import {ReceiptItemEditDialogComponent} from '../../dialogs/receipt-item-edit-dialog/receipt-item-edit-dialog.component';
 import {ReceiptItemAddDialogComponent} from '../../dialogs/receipt-item-add-dialog/receipt-item-add-dialog.component';
 import {SupermarketSelectDialogComponent, SupermarketSelectDialogData} from '../../dialogs/supermarket-select-dialog/supermarket-select-dialog.component';
 import {groceryDialogConfig} from '../../dialogs/dialog-config';
+import {ReceiptDeleteDialogComponent, ReceiptDeleteDialogData} from '../../dialogs/receipt-delete-dialog/receipt-delete-dialog.component';
 import {findSupermarket, SupermarketOption} from '../../models/supermarket';
 import {SwipeRevealDirective} from '../../directives/swipe-reveal.directive';
 
@@ -32,6 +33,7 @@ export class ReceiptItemsComponent {
 
   private receiptService = inject(ReceiptService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
 
@@ -55,6 +57,22 @@ export class ReceiptItemsComponent {
 
   get total(): number {
     return this.items.reduce((sum, item) => sum + item.price, 0);
+  }
+
+  deleteReceipt(): void {
+    const date = this.receipt?.receiptDate ?? this.receipt?.creationDate;
+    const label = date ? `Bon vom ${new Date(date).toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric'})}` : 'Bon';
+    this.dialog.open<ReceiptDeleteDialogComponent, ReceiptDeleteDialogData, string>(
+      ReceiptDeleteDialogComponent, groceryDialogConfig({label, itemCount: this.items.length})
+    ).afterClosed().pipe(
+      switchMap(result => result === 'confirmed' ? this.receiptService.deleteReceipt(this.receiptId) : EMPTY)
+    ).subscribe({
+      next: () => {
+        this.snackBar.open('Bon gelöscht', undefined, {duration: 2500});
+        void this.router.navigate(['/grocery/receipts']);
+      },
+      error: () => this.snackBar.open('Bon konnte nicht gelöscht werden', 'Schließen', {duration: 5000})
+    });
   }
 
   supermarket(): SupermarketOption | undefined {

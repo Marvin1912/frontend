@@ -3,11 +3,14 @@ import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {MatDialog} from '@angular/material/dialog';
 import {CurrencyPipe} from '@angular/common';
-import {forkJoin} from 'rxjs';
+import {EMPTY, forkJoin, switchMap} from 'rxjs';
 import {ReceiptService} from '../../services/receipt.service';
 import {ReceiptItem, Supermarket} from '../../models/receipt.model';
 import {SUPERMARKETS} from '../../models/supermarket';
+import {groceryDialogConfig} from '../../dialogs/dialog-config';
+import {ReceiptDeleteDialogComponent, ReceiptDeleteDialogData} from '../../dialogs/receipt-delete-dialog/receipt-delete-dialog.component';
 
 type ScanStep = 'capture' | 'processing' | 'review' | 'success';
 
@@ -53,6 +56,7 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private ngZone = inject(NgZone);
+  private dialog = inject(MatDialog);
 
   ngAfterViewInit(): void {
     this.startCamera();
@@ -122,6 +126,22 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
         this.items = this.items.map(i => i.id === updated.id ? updated : i);
       },
       error: () => this.snackBar.open('Änderung konnte nicht gespeichert werden', 'Schließen', {duration: 4000})
+    });
+  }
+
+  /** Discards the just scanned receipt (e.g. a blurry or duplicate scan) after confirmation. */
+  onDiscard(): void {
+    if (!this.receiptId) return;
+    this.dialog.open<ReceiptDeleteDialogComponent, ReceiptDeleteDialogData, string>(
+      ReceiptDeleteDialogComponent, groceryDialogConfig({label: 'Der gescannte Bon', itemCount: this.items.length})
+    ).afterClosed().pipe(
+      switchMap(result => result === 'confirmed' ? this.receiptService.deleteReceipt(this.receiptId) : EMPTY)
+    ).subscribe({
+      next: () => {
+        this.snackBar.open('Bon verworfen', undefined, {duration: 2500});
+        if (!this.destroyed) void this.router.navigate(['/grocery']);
+      },
+      error: () => this.snackBar.open('Bon konnte nicht gelöscht werden', 'Schließen', {duration: 5000})
     });
   }
 

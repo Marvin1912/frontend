@@ -1,0 +1,18 @@
+<div class="ui-dialog">
+  <h2 class="ui-dialog-title">Bon löschen?</h2>
+  <p class="m-0">
+    {{ data.label }} mit {{ data.itemCount }} {{ data.itemCount === 1 ? 'Position' : 'Positionen' }}
+    wird endgültig entfernt.
+  </p>
+
+  <div class="ui-dialog-actions">
+    <button type="button" class="ui-btn" mat-dialog-close>
+      <mat-icon aria-hidden="true">close</mat-icon>
+      <span>Abbrechen</span>
+    </button>
+    <button type="button" class="ui-btn ui-btn--rose" (click)="confirm()">
+      <mat-icon aria-hidden="true">delete</mat-icon>
+      <span>Löschen</span>
+    </button>
+  </div>
+</div>
