@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, inject, OnDestroy, ViewChild, ChangeDetectionStrategy} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, NgZone, OnDestroy, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
@@ -49,6 +49,7 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
   private receiptService = inject(ReceiptService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
+  private ngZone = inject(NgZone);
 
   ngAfterViewInit(): void {
     this.startCamera();
@@ -78,11 +79,13 @@ export class ReceiptUploadComponent implements AfterViewInit, OnDestroy {
     if (!ctx) return;
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    canvas.toBlob(blob => {
+    // zone.js does not patch canvas.toBlob: its callback runs outside the Angular zone, so the
+    // upload subscriptions started from it would never trigger change detection (UI stuck at "Erkennen").
+    canvas.toBlob(blob => this.ngZone.run(() => {
       if (!blob) return;
       this.stopCamera();
       this.processFile(new File([blob], `bon-${Date.now()}.jpg`, {type: 'image/jpeg'}));
-    }, 'image/jpeg', 0.9);
+    }), 'image/jpeg', 0.9);
   }
 
   onGallerySelected(event: Event): void {
