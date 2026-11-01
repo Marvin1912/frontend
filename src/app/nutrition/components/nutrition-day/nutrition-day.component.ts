@@ -104,17 +104,25 @@ export class NutritionDayComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
-  /** Each emission (re)loads the selected day; switchMap drops a still-running older request. */
-  private reload$ = new Subject<void>();
+  /**
+   * Each emission (re)loads the selected day; switchMap drops a still-running older request.
+   * The flag marks a silent refresh that keeps the current content visible.
+   */
+  private reload$ = new Subject<boolean>();
 
   ngOnInit(): void {
     this.reload$.pipe(
-      switchMap(() => this.nutritionService.getDaySummary(this.isoDate).pipe(
-        map(summary => ({summary})),
-        catchError(() => of({summary: null}))
+      switchMap(silent => this.nutritionService.getDaySummary(this.isoDate).pipe(
+        map(summary => ({summary, silent})),
+        catchError(() => of({summary: null, silent}))
       )),
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe(({summary}) => {
+    ).subscribe(({summary, silent}) => {
+      if (!summary && silent) {
+        // Keep showing the last known state instead of replacing the whole day with an error.
+        this.snackBar.open('Tagesübersicht konnte nicht aktualisiert werden', 'Schließen', {duration: 5000});
+        return;
+      }
       this.summary = summary;
       this.loading = false;
       this.unavailable = summary ? null : 'Tagesübersicht konnte nicht geladen werden.';
@@ -182,7 +190,12 @@ export class NutritionDayComponent implements OnInit {
     this.unavailable = null;
     this.cdr.markForCheck();
 
-    this.reload$.next();
+    this.reload$.next(false);
+  }
+
+  /** Re-fetches the day after a change without swapping the content for the loading spinner. */
+  private refresh(): void {
+    this.reload$.next(true);
   }
 
   get activities(): SportActivity[] {
@@ -252,7 +265,7 @@ export class NutritionDayComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: created => {
-        this.load();
+        this.refresh();
         const message = created.length === 1 ? '1 Eintrag hinzugefügt' : `${created.length} Einträge hinzugefügt`;
         this.snackBar.open(message, 'OK', {duration: 3000});
       },
@@ -268,7 +281,7 @@ export class NutritionDayComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: created => {
-        this.load();
+        this.refresh();
         const message = created.length === 1 ? '1 Eintrag aus Vorlage hinzugefügt' : `${created.length} Einträge aus Vorlage hinzugefügt`;
         this.snackBar.open(message, 'OK', {duration: 3000});
       },
@@ -283,7 +296,7 @@ export class NutritionDayComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
-        this.load();
+        this.refresh();
         this.snackBar.open('Eintrag aktualisiert', 'OK', {duration: 3000});
       },
       error: () => this.snackBar.open('Eintrag konnte nicht aktualisiert werden', 'Schließen', {duration: 5000})
@@ -297,7 +310,7 @@ export class NutritionDayComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
-        this.load();
+        this.refresh();
         this.snackBar.open('Eintrag gelöscht', 'OK', {duration: 3000});
       },
       error: err => {
@@ -314,7 +327,7 @@ export class NutritionDayComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
-        this.load();
+        this.refresh();
         this.snackBar.open('Aktivität hinzugefügt', 'OK', {duration: 3000});
       },
       error: () => this.snackBar.open('Aktivität konnte nicht gespeichert werden', 'Schließen', {duration: 5000})
@@ -328,7 +341,7 @@ export class NutritionDayComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
-        this.load();
+        this.refresh();
         this.snackBar.open('Aktivität aktualisiert', 'OK', {duration: 3000});
       },
       error: () => this.snackBar.open('Aktivität konnte nicht aktualisiert werden', 'Schließen', {duration: 5000})
@@ -342,7 +355,7 @@ export class NutritionDayComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
       next: () => {
-        this.load();
+        this.refresh();
         this.snackBar.open('Aktivität gelöscht', 'OK', {duration: 3000});
       },
       error: err => {
