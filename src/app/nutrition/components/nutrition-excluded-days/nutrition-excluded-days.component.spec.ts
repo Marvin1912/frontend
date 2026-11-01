@@ -73,6 +73,15 @@ describe('NutritionExcludedDaysComponent', () => {
     expect(component.excludedCount).toBe(1);
   });
 
+  it('handles days without entries, which the backend omits from the payload', () => {
+    const {entries: _, ...withoutEntries} = day('2026-10-29');
+    nutritionService.getDaySummaries.mockReturnValue(of([withoutEntries as DaySummary]));
+    fixture.detectChanges();
+
+    expect(component.loading).toBe(false);
+    expect(component.rows[0].entryCount).toBe(0);
+  });
+
   it('reloads with the chosen preset', () => {
     fixture.detectChanges();
     component.onPresetChange(90);
